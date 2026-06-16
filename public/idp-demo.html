@@ -397,6 +397,8 @@ button{cursor:pointer;border:none;background:none;font:inherit}
   animation:modal-in .2s ease;
   overflow:hidden;
 }
+.modal.modal-wide{max-width:980px;max-height:calc(100vh - 36px);display:flex;flex-direction:column}
+.modal.modal-wide .modal-body{overflow:auto}
 @keyframes modal-in{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
 
 .modal-header{
@@ -459,6 +461,46 @@ button{cursor:pointer;border:none;background:none;font:inherit}
 .btn-run:hover{background:#2563eb;box-shadow:0 4px 14px rgba(59,130,246,.4)}
 .btn-run i{font-size:12px}
 
+/* ─── Kubernetes scale workflow ───────────────────────────────────────────── */
+.scale-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+.scale-panel{border:1.5px solid #e2e8f0;border-radius:12px;background:#fff;overflow:hidden}
+.scale-panel-head{padding:13px 15px;border-bottom:1px solid #eef2f7;background:#f8fafc}
+.scale-panel-head h3{font-size:13px;font-weight:800;color:#0f172a}
+.scale-panel-head p{font-size:11.5px;color:#64748b;line-height:1.4;margin-top:3px}
+.scale-panel-body{padding:15px;display:flex;flex-direction:column;gap:13px}
+.scale-info-list{display:grid;gap:9px}
+.scale-info-item{display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start}
+.scale-info-icon{width:28px;height:28px;border-radius:8px;background:#ede9fe;color:#6366f1;display:flex;align-items:center;justify-content:center;font-size:12px}
+.scale-info-item strong{display:block;font-size:12px;color:#0f172a}
+.scale-info-item span{display:block;font-size:11.5px;color:#64748b;line-height:1.4;margin-top:2px}
+.scale-switch-row{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc}
+.scale-switch-row input{width:17px;height:17px;accent-color:#6366f1}
+.scale-switch-row strong{display:block;font-size:12px;color:#0f172a}
+.scale-switch-row span{font-size:11px;color:#64748b}
+.scale-preview{display:grid;gap:10px}
+.scale-kpi-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.scale-kpi{border:1.5px solid #e2e8f0;border-radius:10px;padding:9px;background:#fff}
+.scale-kpi span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#64748b;font-weight:800}
+.scale-kpi strong{display:block;font-size:18px;color:#0f172a;margin-top:3px}
+.scale-code{background:#0f172a;color:#dbeafe;border-radius:12px;padding:14px;overflow:auto;font-family:"SF Mono",Consolas,monospace;font-size:12px;line-height:1.55;white-space:pre}
+.scale-code.small{max-height:210px}
+.scale-artifacts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.scale-artifact-link{display:inline-flex;align-items:center;gap:7px;border:1.5px solid #dbeafe;background:#eff6ff;color:#1d4ed8;border-radius:9px;padding:8px 10px;font-size:12px;font-weight:800}
+.scale-artifact-link:hover{background:#dbeafe}
+.scale-result-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:#ecfdf5;border:1.5px solid #bbf7d0;color:#047857;margin-bottom:14px}
+.scale-result-head i{font-size:18px}
+.scale-result-head strong{display:block;font-size:13px}
+.scale-result-head span{font-size:11.5px}
+.scale-result-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.scale-result-card{border:1.5px solid #e2e8f0;border-radius:11px;padding:12px;background:#fff}
+.scale-result-card span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#64748b;font-weight:800}
+.scale-result-card strong{display:block;font-size:18px;color:#0f172a;margin-top:4px}
+.scale-steps{display:grid;gap:8px;margin-bottom:14px}
+.scale-step{display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:center;padding:9px 10px;border:1.5px solid #e2e8f0;border-radius:10px;background:#fff}
+.scale-step i{width:28px;height:28px;border-radius:8px;background:#dcfce7;color:#047857;display:flex;align-items:center;justify-content:center;font-size:12px}
+.scale-step strong{font-size:12px;color:#0f172a}.scale-step span{font-size:11px;color:#64748b}.scale-step em{font-style:normal;font-size:10px;color:#64748b;font-weight:800}
+@media(max-width:820px){.scale-layout,.scale-result-grid{grid-template-columns:1fr}.scale-kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.modal.modal-wide{max-height:calc(100vh - 20px)}}
+
 /* ─── Success toast ──────────────────────────────────────────────────────────── */
 .toast{
   position:fixed;bottom:24px;right:24px;z-index:300;
@@ -481,6 +523,64 @@ button{cursor:pointer;border:none;background:none;font:inherit}
   color:#94a3b8;
 }
 .no-results i{font-size:40px;margin-bottom:12px;display:block;color:#cbd5e1}
+
+/* ─── Misc helpers ──────────────────────────────────────────────────────────── */
+.sb-item + .sb-section-title{margin-top:8px}
+.stat-delta-live{color:#10b981}
+.kl-chevron{font-size:9px}
+.ft-icon-k8s{color:#326CE5;font-size:11px}
+.ft-icon-cloud{color:#FF9900;font-size:11px}
+.ft-icon-security{color:#7c3aed;font-size:11px}
+.ft-icon-cicd{color:#e11d48;font-size:11px}
+
+/* ─── View panels ──────────────────────────────────────────────────────────── */
+.idp-view{display:none;width:100%}
+.vp{padding:28px 28px 40px}
+.vp-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-top:20px}
+.vp-table{width:100%;border-collapse:collapse;font-size:13px}
+.vp-table th{padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#64748b;background:#f8fafc;border-bottom:1px solid #e2e8f0}
+.vp-table td{padding:12px 14px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.vp-table tr:last-child td{border-bottom:none}
+.vp-table tr:hover td{background:#f8fafc}
+.env-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.env-pill.healthy{background:#d1fae5;color:#065f46}
+.env-pill.active{background:#dbeafe;color:#1e40af}
+.env-pill.standby{background:#fef3c7;color:#92400e}
+.env-pill.error{background:#fee2e2;color:#991b1b}
+.env-pill.expiring{background:#ffedd5;color:#9a3412}
+.env-pill.expired{background:#fee2e2;color:#991b1b}
+.env-pill.manual{background:#f1f5f9;color:#475569}
+.env-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.secret-path{font-family:monospace;font-size:12px;color:#1e293b;font-weight:500}
+.audit-meta{display:flex;flex-direction:column;gap:2px}
+.audit-time{font-size:11px;color:#94a3b8}
+.audit-actor{font-size:12px;font-weight:600;color:#1e293b}
+.audit-result{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px}
+.audit-result.success{background:#d1fae5;color:#065f46}
+.audit-result.warning{background:#fef3c7;color:#92400e}
+.audit-result.error{background:#fee2e2;color:#991b1b}
+.team-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:20px}
+.team-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px}
+.team-card-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.team-avatar{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0}
+.team-card-meta{flex:1}
+.team-card-name{font-weight:700;font-size:14px;color:#1e293b}
+.team-card-sub{font-size:12px;color:#64748b}
+.team-card-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:12px}
+.team-card-row:last-child{border-bottom:none}
+.team-card-val{font-weight:600;color:#1e293b}
+.setting-section{background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-top:16px}
+.setting-section-title{padding:14px 20px;font-weight:700;font-size:13px;color:#1e293b;border-bottom:1px solid #f1f5f9;background:#f8fafc}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #f1f5f9;gap:12px}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:13px;font-weight:500;color:#1e293b}
+.setting-desc{font-size:11px;color:#94a3b8;margin-top:2px}
+.sw-toggle{display:inline-flex;align-items:center;gap:6px;cursor:pointer;-webkit-user-select:none;user-select:none}
+.sw-track{width:36px;height:20px;border-radius:20px;background:#e2e8f0;position:relative;transition:background .2s;flex-shrink:0}
+.sw-track.on{background:#3b82f6}
+.sw-thumb{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw-track.on .sw-thumb{transform:translateX(16px)}
+.integ-logo{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:#f1f5f9;margin-right:10px;flex-shrink:0}
 
 /* ─── Responsive ──────────────────────────────────────────────────────────────── */
 @media(max-width:768px){
@@ -529,12 +629,16 @@ button{cursor:pointer;border:none;background:none;font:inherit}
         <i class="fa-solid fa-house"></i>
         <span class="sb-label" data-i18n="nav.home">Startseite</span>
       </a>
+      <a class="sb-item" href="idp-platform.html">
+        <i class="fa-solid fa-layer-group"></i>
+        <span class="sb-label">Platform Overview</span>
+      </a>
       <a class="sb-item" href="catalog-demo.html">
         <i class="fa-solid fa-cubes"></i>
         <span class="sb-label" data-i18n="nav.catalog">Katalog</span>
         <span class="sb-badge">58</span>
       </a>
-      <a class="sb-item active" href="#">
+      <a class="sb-item active" href="#" data-view="selfservice">
         <i class="fa-solid fa-bolt"></i>
         <span class="sb-label" data-i18n="nav.selfserve">Self-Service</span>
         <span class="sb-badge" id="totalBadge">12</span>
@@ -548,30 +652,30 @@ button{cursor:pointer;border:none;background:none;font:inherit}
         <span class="sb-label" data-i18n="nav.dashboards">Dashboards</span>
       </a>
 
-      <div class="sb-section-title" style="margin-top:8px" data-i18n="nav.platform">Platform</div>
+      <div class="sb-section-title" data-i18n="nav.platform">Platform</div>
       <a class="sb-item" href="#">
         <i class="fa-solid fa-server"></i>
         <span class="sb-label" data-i18n="nav.services">Services</span>
       </a>
-      <a class="sb-item" href="#">
+      <a class="sb-item" href="#" data-view="environments">
         <i class="fa-brands fa-docker"></i>
         <span class="sb-label" data-i18n="nav.environments">Environments</span>
       </a>
-      <a class="sb-item" href="#">
+      <a class="sb-item" href="#" data-view="secrets">
         <i class="fa-solid fa-shield-halved"></i>
         <span class="sb-label" data-i18n="nav.secrets">Secrets</span>
       </a>
-      <a class="sb-item" href="#">
+      <a class="sb-item" href="#" data-view="auditlog">
         <i class="fa-solid fa-clock-rotate-left"></i>
         <span class="sb-label" data-i18n="nav.audit">Audit Log</span>
       </a>
 
-      <div class="sb-section-title" style="margin-top:8px" data-i18n="nav.admin">Admin</div>
-      <a class="sb-item" href="#">
+      <div class="sb-section-title" data-i18n="nav.admin">Admin</div>
+      <a class="sb-item" href="#" data-view="teams">
         <i class="fa-solid fa-users"></i>
         <span class="sb-label" data-i18n="nav.teams">Teams</span>
       </a>
-      <a class="sb-item" href="#">
+      <a class="sb-item" href="#" data-view="settings">
         <i class="fa-solid fa-gear"></i>
         <span class="sb-label" data-i18n="nav.settings">Einstellungen</span>
       </a>
@@ -618,10 +722,10 @@ button{cursor:pointer;border:none;background:none;font:inherit}
 
         <!-- Language picker -->
         <div class="kl-topbar" id="klWrap">
-          <button class="kl-topbar-btn" onclick="klToggle()" id="klBtn" aria-haspopup="listbox" aria-expanded="false">
+          <button type="button" class="kl-topbar-btn" onclick="klToggle()" id="klBtn" aria-haspopup="listbox" aria-expanded="false">
             <span id="klFlag">🇩🇪</span>
             <span id="klCode">DE</span>
-            <i class="fa-solid fa-chevron-down" style="font-size:9px"></i>
+            <i class="fa-solid fa-chevron-down kl-chevron"></i>
           </button>
           <div class="kl-topbar-panel" id="klPanel" role="listbox">
             <div class="kl-topt active" data-kl="de" onclick="pickLang('de')">🇩🇪 Deutsch</div>
@@ -636,6 +740,7 @@ button{cursor:pointer;border:none;background:none;font:inherit}
 
     <!-- Content -->
     <main class="idp-content">
+      <div id="view-selfservice">
 
       <!-- Page header -->
       <div class="page-header">
@@ -644,7 +749,7 @@ button{cursor:pointer;border:none;background:none;font:inherit}
             <h1 class="page-title" data-i18n="page.title">Self-Service</h1>
             <p class="page-sub" data-i18n="page.sub">Infrastruktur provisionieren, Services deployen und Plattformressourcen verwalten — ohne Ticket.</p>
           </div>
-          <button class="new-action-btn" onclick="openModal('custom')">
+          <button type="button" class="new-action-btn" onclick="openModal('custom')">
             <i class="fa-solid fa-plus"></i>
             <span data-i18n="btn.newAction">Neue Aktion</span>
           </button>
@@ -666,7 +771,7 @@ button{cursor:pointer;border:none;background:none;font:inherit}
         <div class="stat-card">
           <span class="stat-num">98%</span>
           <span class="stat-label" data-i18n="stat.success">Erfolgsrate</span>
-          <span class="stat-delta" style="color:#10b981">● Live</span>
+          <span class="stat-delta stat-delta-live">● Live</span>
         </div>
         <div class="stat-card">
           <span class="stat-num">4</span>
@@ -677,27 +782,27 @@ button{cursor:pointer;border:none;background:none;font:inherit}
 
       <!-- Filter tabs -->
       <div class="filter-row" id="filterRow">
-        <button class="filter-tab active" data-filter="all" onclick="setFilter('all',this)">
+        <button type="button" class="filter-tab active" data-filter="all" onclick="setFilter('all',this)">
           <span data-i18n="filter.all">Alle</span>
           <span class="ft-count" id="countAll">12</span>
         </button>
-        <button class="filter-tab" data-filter="kubernetes" onclick="setFilter('kubernetes',this)">
-          <i class="fa-solid fa-dharmachakra" style="color:#326CE5;font-size:11px"></i>
+        <button type="button" class="filter-tab" data-filter="kubernetes" onclick="setFilter('kubernetes',this)">
+          <i class="fa-solid fa-dharmachakra ft-icon-k8s"></i>
           Kubernetes
           <span class="ft-count" id="countKubernetes">3</span>
         </button>
-        <button class="filter-tab" data-filter="cloud" onclick="setFilter('cloud',this)">
-          <i class="fa-solid fa-cloud" style="color:#FF9900;font-size:11px"></i>
+        <button type="button" class="filter-tab" data-filter="cloud" onclick="setFilter('cloud',this)">
+          <i class="fa-solid fa-cloud ft-icon-cloud"></i>
           Cloud / AWS
           <span class="ft-count" id="countCloud">3</span>
         </button>
-        <button class="filter-tab" data-filter="security" onclick="setFilter('security',this)">
-          <i class="fa-solid fa-shield-halved" style="color:#7c3aed;font-size:11px"></i>
+        <button type="button" class="filter-tab" data-filter="security" onclick="setFilter('security',this)">
+          <i class="fa-solid fa-shield-halved ft-icon-security"></i>
           <span data-i18n="filter.security">Sicherheit</span>
           <span class="ft-count" id="countSecurity">3</span>
         </button>
-        <button class="filter-tab" data-filter="cicd" onclick="setFilter('cicd',this)">
-          <i class="fa-solid fa-code-branch" style="color:#e11d48;font-size:11px"></i>
+        <button type="button" class="filter-tab" data-filter="cicd" onclick="setFilter('cicd',this)">
+          <i class="fa-solid fa-code-branch ft-icon-cicd"></i>
           CI/CD
           <span class="ft-count" id="countCicd">3</span>
         </button>
@@ -715,33 +820,39 @@ button{cursor:pointer;border:none;background:none;font:inherit}
           <option value="complexity" data-i18n="sort.complexity">Komplexität</option>
         </select>
         <div class="sf-view-btns">
-          <button class="sf-view-btn active" title="Grid" onclick="setView('grid',this)"><i class="fa-solid fa-grid-2"></i></button>
-          <button class="sf-view-btn" title="List" onclick="setView('list',this)"><i class="fa-solid fa-list"></i></button>
+          <button type="button" class="sf-view-btn active" title="Grid" aria-label="Grid-Ansicht" onclick="setView('grid',this)"><i class="fa-solid fa-grid-2"></i></button>
+          <button type="button" class="sf-view-btn" title="List" aria-label="Listen-Ansicht" onclick="setView('list',this)"><i class="fa-solid fa-list"></i></button>
         </div>
       </div>
 
       <!-- Cards -->
       <div class="cards-grid" id="cardsGrid"></div>
 
+      </div><!-- /view-selfservice -->
+      <div id="view-environments" class="idp-view"></div>
+      <div id="view-secrets" class="idp-view"></div>
+      <div id="view-auditlog" class="idp-view"></div>
+      <div id="view-teams" class="idp-view"></div>
+      <div id="view-settings" class="idp-view"></div>
     </main>
   </div>
 </div>
 
 <!-- ═══ MODAL ════════════════════════════════════════════════════════════════════ -->
 <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
-  <div class="modal" role="dialog" aria-modal="true">
+  <div class="modal" id="actionModal" role="dialog" aria-modal="true">
     <div class="modal-header">
       <div class="modal-icon" id="modalIcon"></div>
       <div class="modal-title-block">
         <div class="modal-title" id="modalTitle"></div>
         <div class="modal-subtitle" id="modalSubtitle"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body" id="modalBody"></div>
     <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()" data-i18n="btn.cancel">Abbrechen</button>
-      <button class="btn-run" id="runBtn" onclick="runAction()">
+      <button type="button" class="btn-cancel" onclick="closeModal()" data-i18n="btn.cancel">Abbrechen</button>
+      <button type="button" class="btn-run" id="runBtn" onclick="runAction()">
         <i class="fa-solid fa-play"></i>
         <span data-i18n="btn.run">Ausführen</span>
       </button>
@@ -775,6 +886,11 @@ var I18N = {
     'search.placeholder': 'Aktion suchen…',
     'modal.run': 'Aktion wird ausgeführt…',
     'toast.success': 'Aktion erfolgreich gestartet',
+    'modal.offline': 'Server nicht erreichbar',
+    'modal.offline.hint': 'Starte server.js, um Workflows zu persistieren.',
+    'modal.success.title': 'Workflow ausgeführt',
+    'modal.success.sub': 'Aktion protokolliert und gespeichert.',
+    'btn.runagain': 'Erneut ausführen',
     'complexity.low': 'Einfach', 'complexity.mid': 'Mittel', 'complexity.high': 'Komplex',
     'label.run': 'Ausführen',
     'field.serviceName': 'Service-Name', 'field.env': 'Umgebung', 'field.region': 'Region',
@@ -787,6 +903,57 @@ var I18N = {
     'hint.serviceName': 'z.B. payment-service, auth-api',
     'hint.namespace': 'Nur Kleinbuchstaben, Bindestriche erlaubt',
     'hint.bucket': 'Global eindeutig, nur Kleinbuchstaben',
+    'env.sub':'Kubernetes-Namespaces, Cloud-Umgebungen und Dev-Workspaces verwalten.',
+    'env.btn.create':'Environment erstellen','env.stat.archived':'↓ 1 archiviert',
+    'env.stat.active':'Aktiv','env.stat.standby':'Standby',
+    'env.stat.estmonth':'Est. / Monat','env.stat.vsprev':'↓ 4% vs. Vormonat',
+    'env.tbl.title':'Alle Environments','env.filter.all':'Alle Typen',
+    'env.col.type':'Typ','env.col.cluster':'Cluster','env.col.branch':'Branch',
+    'env.col.owner':'Owner','env.col.ttl':'TTL','env.col.cost':'Kosten',
+    'env.col.status':'Status','env.btn.open':'Öffnen',
+    'sec.sub':'Vault-Secrets, Rotationszyklen und Zugriffsberechtigungen im Überblick.',
+    'sec.btn.add':'Secret anlegen','sec.stat.current':'● Aktuell',
+    'sec.stat.expiring':'Läuft bald ab','sec.stat.rotdue':'Rotation fällig',
+    'sec.stat.expired':'Abgelaufen','sec.stat.rotnow':'Sofort rotieren',
+    'sec.tbl.title':'Alle Secrets','sec.filter.all':'Alle Status',
+    'sec.col.path':'Pfad','sec.col.rotated':'Rotiert am',
+    'sec.col.next':'Nächste Rotation','sec.col.access':'Zugriff','sec.btn.rotate':'Rotieren',
+    'aud.sub':'Alle IDP-Aktionen mit Zeitstempel, Benutzer und Ergebnis — lückenlos nachvollziehbar.',
+    'aud.btn.export':'Export CSV','aud.stat.vsweek':'↑ 23% vs. Vorwoche',
+    'aud.stat.success':'Erfolgreich','aud.stat.warnings':'Warnungen','aud.stat.errors':'Fehler',
+    'aud.tbl.title':'Ereignisprotokoll','aud.filter.types':'Alle Typen','aud.filter.users':'Alle Benutzer',
+    'aud.col.timeuser':'Zeit / Benutzer','aud.col.action':'Aktion',
+    'aud.col.target':'Ziel','aud.col.result':'Ergebnis',
+    'aud.res.ok':'OK','aud.res.warn':'Warnung','aud.res.err':'Fehler',
+    'tms.sub':'Teams, Mitglieder und Service-Ownership verwalten.',
+    'tms.btn.create':'Team erstellen','tms.stat.members':'Mitglieder',
+    'tms.stat.vsmonth':'↑ 2 diesen Monat','tms.stat.incidents':'Offene Incidents',
+    'tms.card.active':'Aktiv','tms.card.members':'Mitglieder','tms.card.oncall':'On-Call',
+    'tms.card.incidents':'Offene Incidents','tms.card.slo':'SLO Compliance','tms.card.details':'Details',
+    'cfg.sub':'IDP-Konfiguration, Integrationen, RBAC und Benachrichtigungen.',
+    'cfg.btn.save':'Speichern','cfg.saved':'Einstellungen gespeichert.',
+    'cfg.sec.general':'Allgemein','cfg.sec.integ':'Integrationen',
+    'cfg.sec.rbac':'RBAC & Zugriff','cfg.sec.notif':'Benachrichtigungen','cfg.sec.ai':'AI Agents',
+    'cfg.portal.name':'Portal-Name','cfg.portal.name.d':'Anzeigename des internen Developer Portals',
+    'cfg.portal.url':'Portal-URL','cfg.portal.url.d':'Basis-URL des Portals',
+    'cfg.lang':'Standardsprache','cfg.lang.d':'Sprache der Benutzeroberfläche',
+    'cfg.tz':'Zeitzone','cfg.tz.d':'Zeitzone für Logs und Zeitstempel',
+    'cfg.github.d':'Source-Code-Repository und CI/CD Trigger',
+    'cfg.jira.d':'Ticket-Management und Sprint-Synchronisierung',
+    'cfg.pd.d':'Incident-Alerting und On-Call-Rotation',
+    'cfg.dd.d':'Monitoring, Logs und APM-Metriken','cfg.slack.d':'Benachrichtigungen und ChatOps',
+    'cfg.role':'Standard-Rolle','cfg.role.d':'Rolle für neue Benutzer',
+    'cfg.session':'Session-Timeout','cfg.session.d':'Automatischer Logout nach Inaktivität',
+    'cfg.t.30m':'30 Minuten','cfg.t.1h':'1 Stunde','cfg.t.4h':'4 Stunden','cfg.t.8h':'8 Stunden',
+    'cfg.sso':'SSO erzwingen','cfg.sso.d':'Nur Anmeldung via SAML / OIDC zulassen',
+    'cfg.mfa':'MFA erforderlich','cfg.mfa.d':'Zwei-Faktor-Authentifizierung für alle Benutzer',
+    'cfg.notif.slack':'Slack-Alerts','cfg.notif.slack.d':'Incidents und Deployment-Status nach Slack senden',
+    'cfg.notif.email':'E-Mail-Digest','cfg.notif.email.d':'Tägliche Zusammenfassung per E-Mail',
+    'cfg.notif.pd':'PagerDuty-Alerts','cfg.notif.pd.d':'P1-Incidents sofort an PagerDuty weiterleiten',
+    'cfg.ai.enable':'AI Agents aktivieren','cfg.ai.enable.d':'Autonome Agenten für Incident-Resolution und Deployments',
+    'cfg.ai.model':'Standard-Modell','cfg.ai.model.d':'LLM-Modell für AI-Agenten',
+    'cfg.ai.parallel':'Max. parallele Agenten','cfg.ai.parallel.d':'Gleichzeitig laufende Agenten-Instanzen',
+    'cfg.ai.auto':'Autonome Ticket-Resolution','cfg.ai.auto.d':'Agenten dürfen Jira-Tickets eigenständig schließen',
   },
   en: {
     'page.title': 'Self-Service',
@@ -805,6 +972,11 @@ var I18N = {
     'search.placeholder': 'Search action…',
     'modal.run': 'Running action…',
     'toast.success': 'Action successfully started',
+    'modal.offline': 'Server unreachable',
+    'modal.offline.hint': 'Start server.js to persist workflows.',
+    'modal.success.title': 'Workflow executed',
+    'modal.success.sub': 'Action logged and saved.',
+    'btn.runagain': 'Run again',
     'complexity.low': 'Simple', 'complexity.mid': 'Medium', 'complexity.high': 'Complex',
     'label.run': 'Run',
     'field.serviceName': 'Service Name', 'field.env': 'Environment', 'field.region': 'Region',
@@ -817,6 +989,57 @@ var I18N = {
     'hint.serviceName': 'e.g. payment-service, auth-api',
     'hint.namespace': 'Lowercase only, hyphens allowed',
     'hint.bucket': 'Globally unique, lowercase only',
+    'env.sub':'Manage Kubernetes namespaces, cloud environments and dev workspaces.',
+    'env.btn.create':'Create Environment','env.stat.archived':'↓ 1 archived',
+    'env.stat.active':'Active','env.stat.standby':'Standby',
+    'env.stat.estmonth':'Est. / Month','env.stat.vsprev':'↓ 4% vs. prev. month',
+    'env.tbl.title':'All Environments','env.filter.all':'All Types',
+    'env.col.type':'Type','env.col.cluster':'Cluster','env.col.branch':'Branch',
+    'env.col.owner':'Owner','env.col.ttl':'TTL','env.col.cost':'Cost',
+    'env.col.status':'Status','env.btn.open':'Open',
+    'sec.sub':'Vault secrets, rotation cycles and access permissions at a glance.',
+    'sec.btn.add':'Add Secret','sec.stat.current':'● Current',
+    'sec.stat.expiring':'Expiring soon','sec.stat.rotdue':'Rotation due',
+    'sec.stat.expired':'Expired','sec.stat.rotnow':'Rotate now',
+    'sec.tbl.title':'All Secrets','sec.filter.all':'All Status',
+    'sec.col.path':'Path','sec.col.rotated':'Rotated',
+    'sec.col.next':'Next Rotation','sec.col.access':'Access','sec.btn.rotate':'Rotate',
+    'aud.sub':'All IDP actions with timestamp, user and result — fully traceable.',
+    'aud.btn.export':'Export CSV','aud.stat.vsweek':'↑ 23% vs. prev. week',
+    'aud.stat.success':'Successful','aud.stat.warnings':'Warnings','aud.stat.errors':'Errors',
+    'aud.tbl.title':'Event Log','aud.filter.types':'All Types','aud.filter.users':'All Users',
+    'aud.col.timeuser':'Time / User','aud.col.action':'Action',
+    'aud.col.target':'Target','aud.col.result':'Result',
+    'aud.res.ok':'OK','aud.res.warn':'Warning','aud.res.err':'Error',
+    'tms.sub':'Manage teams, members and service ownership.',
+    'tms.btn.create':'Create Team','tms.stat.members':'Members',
+    'tms.stat.vsmonth':'↑ 2 this month','tms.stat.incidents':'Open Incidents',
+    'tms.card.active':'Active','tms.card.members':'Members','tms.card.oncall':'On-Call',
+    'tms.card.incidents':'Open Incidents','tms.card.slo':'SLO Compliance','tms.card.details':'Details',
+    'cfg.sub':'IDP configuration, integrations, RBAC and notifications.',
+    'cfg.btn.save':'Save','cfg.saved':'Settings saved.',
+    'cfg.sec.general':'General','cfg.sec.integ':'Integrations',
+    'cfg.sec.rbac':'RBAC & Access','cfg.sec.notif':'Notifications','cfg.sec.ai':'AI Agents',
+    'cfg.portal.name':'Portal Name','cfg.portal.name.d':'Display name of the internal developer portal',
+    'cfg.portal.url':'Portal URL','cfg.portal.url.d':'Base URL of the portal',
+    'cfg.lang':'Default Language','cfg.lang.d':'User interface language',
+    'cfg.tz':'Timezone','cfg.tz.d':'Timezone for logs and timestamps',
+    'cfg.github.d':'Source code repository and CI/CD trigger',
+    'cfg.jira.d':'Ticket management and sprint synchronization',
+    'cfg.pd.d':'Incident alerting and on-call rotation',
+    'cfg.dd.d':'Monitoring, logs and APM metrics','cfg.slack.d':'Notifications and ChatOps',
+    'cfg.role':'Default Role','cfg.role.d':'Role for new users',
+    'cfg.session':'Session Timeout','cfg.session.d':'Automatic logout after inactivity',
+    'cfg.t.30m':'30 minutes','cfg.t.1h':'1 hour','cfg.t.4h':'4 hours','cfg.t.8h':'8 hours',
+    'cfg.sso':'Enforce SSO','cfg.sso.d':'Only allow login via SAML / OIDC',
+    'cfg.mfa':'MFA Required','cfg.mfa.d':'Two-factor authentication for all users',
+    'cfg.notif.slack':'Slack Alerts','cfg.notif.slack.d':'Send incidents and deployment status to Slack',
+    'cfg.notif.email':'Email Digest','cfg.notif.email.d':'Daily summary by email',
+    'cfg.notif.pd':'PagerDuty Alerts','cfg.notif.pd.d':'Forward P1 incidents immediately to PagerDuty',
+    'cfg.ai.enable':'Enable AI Agents','cfg.ai.enable.d':'Autonomous agents for incident resolution and deployments',
+    'cfg.ai.model':'Default Model','cfg.ai.model.d':'LLM model for AI agents',
+    'cfg.ai.parallel':'Max. parallel agents','cfg.ai.parallel.d':'Simultaneously running agent instances',
+    'cfg.ai.auto':'Autonomous Ticket Resolution','cfg.ai.auto.d':'Agents can close Jira tickets autonomously',
   },
   fr: {
     'page.title': 'Self-Service',
@@ -835,6 +1058,11 @@ var I18N = {
     'search.placeholder': 'Rechercher une action…',
     'modal.run': 'Exécution en cours…',
     'toast.success': 'Action démarrée avec succès',
+    'modal.offline': 'Serveur inaccessible',
+    'modal.offline.hint': 'Démarrez server.js pour persister les workflows.',
+    'modal.success.title': 'Workflow exécuté',
+    'modal.success.sub': 'Action journalisée et sauvegardée.',
+    'btn.runagain': 'Réexécuter',
     'complexity.low': 'Simple', 'complexity.mid': 'Moyen', 'complexity.high': 'Complexe',
     'label.run': 'Exécuter',
     'field.serviceName': 'Nom du service', 'field.env': 'Environnement', 'field.region': 'Région',
@@ -847,6 +1075,57 @@ var I18N = {
     'hint.serviceName': 'ex. payment-service, auth-api',
     'hint.namespace': 'Minuscules uniquement, tirets autorisés',
     'hint.bucket': 'Globalement unique, minuscules uniquement',
+    'env.sub':'Gérer les namespaces Kubernetes, les environnements cloud et les espaces de développement.',
+    'env.btn.create':'Créer un environnement','env.stat.archived':'↓ 1 archivé',
+    'env.stat.active':'Actif','env.stat.standby':'Standby',
+    'env.stat.estmonth':'Est. / Mois','env.stat.vsprev':'↓ 4% vs. mois préc.',
+    'env.tbl.title':'Tous les environnements','env.filter.all':'Tous les types',
+    'env.col.type':'Type','env.col.cluster':'Cluster','env.col.branch':'Branche',
+    'env.col.owner':'Propriétaire','env.col.ttl':'TTL','env.col.cost':'Coût',
+    'env.col.status':'Statut','env.btn.open':'Ouvrir',
+    'sec.sub':'Secrets Vault, cycles de rotation et autorisations d\'accès en un coup d\'œil.',
+    'sec.btn.add':'Ajouter un secret','sec.stat.current':'● À jour',
+    'sec.stat.expiring':'Expire bientôt','sec.stat.rotdue':'Rotation requise',
+    'sec.stat.expired':'Expiré','sec.stat.rotnow':'Rotation immédiate',
+    'sec.tbl.title':'Tous les secrets','sec.filter.all':'Tous statuts',
+    'sec.col.path':'Chemin','sec.col.rotated':'Rotation effectuée',
+    'sec.col.next':'Prochaine rotation','sec.col.access':'Accès','sec.btn.rotate':'Rotation',
+    'aud.sub':'Toutes les actions IDP avec horodatage, utilisateur et résultat — traçabilité complète.',
+    'aud.btn.export':'Exporter CSV','aud.stat.vsweek':'↑ 23% vs. semaine préc.',
+    'aud.stat.success':'Réussis','aud.stat.warnings':'Avertissements','aud.stat.errors':'Erreurs',
+    'aud.tbl.title':'Journal d\'événements','aud.filter.types':'Tous types','aud.filter.users':'Tous utilisateurs',
+    'aud.col.timeuser':'Heure / Utilisateur','aud.col.action':'Action',
+    'aud.col.target':'Cible','aud.col.result':'Résultat',
+    'aud.res.ok':'OK','aud.res.warn':'Avertissement','aud.res.err':'Erreur',
+    'tms.sub':'Gérer les équipes, les membres et la propriété des services.',
+    'tms.btn.create':'Créer une équipe','tms.stat.members':'Membres',
+    'tms.stat.vsmonth':'↑ 2 ce mois','tms.stat.incidents':'Incidents ouverts',
+    'tms.card.active':'Actif','tms.card.members':'Membres','tms.card.oncall':'On-Call',
+    'tms.card.incidents':'Incidents ouverts','tms.card.slo':'Conformité SLO','tms.card.details':'Détails',
+    'cfg.sub':'Configuration IDP, intégrations, RBAC et notifications.',
+    'cfg.btn.save':'Enregistrer','cfg.saved':'Paramètres enregistrés.',
+    'cfg.sec.general':'Général','cfg.sec.integ':'Intégrations',
+    'cfg.sec.rbac':'RBAC et accès','cfg.sec.notif':'Notifications','cfg.sec.ai':'Agents IA',
+    'cfg.portal.name':'Nom du portail','cfg.portal.name.d':'Nom d\'affichage du portail développeur interne',
+    'cfg.portal.url':'URL du portail','cfg.portal.url.d':'URL de base du portail',
+    'cfg.lang':'Langue par défaut','cfg.lang.d':'Langue de l\'interface utilisateur',
+    'cfg.tz':'Fuseau horaire','cfg.tz.d':'Fuseau horaire pour les journaux et horodatages',
+    'cfg.github.d':'Dépôt de code source et déclencheur CI/CD',
+    'cfg.jira.d':'Gestion des tickets et synchronisation des sprints',
+    'cfg.pd.d':'Alertes d\'incidents et rotation on-call',
+    'cfg.dd.d':'Surveillance, journaux et métriques APM','cfg.slack.d':'Notifications et ChatOps',
+    'cfg.role':'Rôle par défaut','cfg.role.d':'Rôle pour les nouveaux utilisateurs',
+    'cfg.session':'Délai de session','cfg.session.d':'Déconnexion automatique après inactivité',
+    'cfg.t.30m':'30 minutes','cfg.t.1h':'1 heure','cfg.t.4h':'4 heures','cfg.t.8h':'8 heures',
+    'cfg.sso':'SSO obligatoire','cfg.sso.d':'Autoriser uniquement la connexion via SAML / OIDC',
+    'cfg.mfa':'MFA obligatoire','cfg.mfa.d':'Authentification à deux facteurs pour tous les utilisateurs',
+    'cfg.notif.slack':'Alertes Slack','cfg.notif.slack.d':'Envoyer les incidents et le statut des déploiements sur Slack',
+    'cfg.notif.email':'Récapitulatif e-mail','cfg.notif.email.d':'Récapitulatif quotidien par e-mail',
+    'cfg.notif.pd':'Alertes PagerDuty','cfg.notif.pd.d':'Transmettre immédiatement les incidents P1 à PagerDuty',
+    'cfg.ai.enable':'Activer les agents IA','cfg.ai.enable.d':'Agents autonomes pour la résolution d\'incidents et les déploiements',
+    'cfg.ai.model':'Modèle par défaut','cfg.ai.model.d':'Modèle LLM pour les agents IA',
+    'cfg.ai.parallel':'Agents parallèles max.','cfg.ai.parallel.d':'Instances d\'agents s\'exécutant simultanément',
+    'cfg.ai.auto':'Résolution autonome de tickets','cfg.ai.auto.d':'Les agents peuvent fermer les tickets Jira de façon autonome',
   }
 };
 
@@ -967,6 +1246,7 @@ var lang = localStorage.getItem('preferred-lang') || 'de';
 if (!I18N[lang]) lang = 'de';
 var activeFilter = 'all';
 var activeCard = null;
+var IDP_API_BASE = window.location.protocol === 'file:' ? 'http://127.0.0.1:4173' : '';
 
 /* ─── i18n ─────────────────────────────────────────────────────────────────── */
 function t(key) { return (I18N[lang] && I18N[lang][key]) || (I18N.de[key]) || key; }
@@ -989,6 +1269,19 @@ function applyLang(l) {
     el.placeholder = t('search.placeholder');
   });
   renderCards();
+  // Re-render active view in new language
+  if (activeView && activeView !== 'selfservice' && viewRendered[activeView]) {
+    viewRendered[activeView] = false;
+    var vEl = document.getElementById('view-' + activeView);
+    if (vEl && viewRegistry[activeView]) {
+      vEl.innerHTML = viewRegistry[activeView]();
+      viewRendered[activeView] = true;
+    }
+    var bcI = {environments:'fa-brands fa-docker',secrets:'fa-solid fa-shield-halved',auditlog:'fa-solid fa-clock-rotate-left',teams:'fa-solid fa-users',settings:'fa-solid fa-gear'};
+    var bcNavKey = {environments:'environments',secrets:'secrets',auditlog:'audit',teams:'teams',settings:'settings'};
+    var bc2 = document.querySelector('.topbar-breadcrumb');
+    if (bc2) bc2.innerHTML = '<i class="' + (bcI[activeView]||'fa-solid fa-circle') + '"></i><span>' + t('nav.' + (bcNavKey[activeView]||activeView)) + '</span>';
+  }
   syncLangUI();
 }
 
@@ -1139,18 +1432,21 @@ var FIELD_DEFS = {
 };
 
 function field(labelKey, type, placeholder, hintKey, required) {
+  var key = labelKey.replace('field.','');
   var req = required ? '<span>*</span>' : '';
   var hint = hintKey ? '<div class="form-hint">'+t(hintKey)+'</div>' : '';
   return '<div class="form-group"><label class="form-label">'+t(labelKey)+req+'</label>' +
-    '<input class="form-input" type="'+type+'" placeholder="'+placeholder+'">' + hint + '</div>';
+    '<input class="form-input" data-field="'+key+'" type="'+type+'" placeholder="'+placeholder+'">' + hint + '</div>';
 }
 function select(labelKey, opts) {
+  var key = labelKey.replace('field.','');
   return '<div class="form-group"><label class="form-label">'+t(labelKey)+'</label>' +
-    '<select class="form-select">'+opts.map(function(o){ return '<option>'+o+'</option>'; }).join('')+'</select></div>';
+    '<select class="form-select" data-field="'+key+'">'+opts.map(function(o){ return '<option>'+o+'</option>'; }).join('')+'</select></div>';
 }
 function textarea(labelKey, hint) {
+  var key = labelKey.replace('field.','');
   return '<div class="form-group"><label class="form-label">'+t(labelKey)+'</label>' +
-    '<textarea class="form-textarea" rows="3"></textarea></div>';
+    '<textarea class="form-textarea" data-field="'+key+'" rows="3"></textarea></div>';
 }
 function pairRow(a, b) {
   return '<div class="form-row">' + FIELD_DEFS[a]() + FIELD_DEFS[b]() + '</div>';
@@ -1159,6 +1455,7 @@ function pairRow(a, b) {
 function openModal(id) {
   if (id === 'create-pipeline') { window.location.href = 'cicd-pipeline-demo.html'; return; }
   activeCard = id === 'custom' ? null : ACTIONS.find(function(a){ return a.id===id; });
+  document.getElementById('actionModal').classList.toggle('modal-wide', activeCard && activeCard.id === 'scale-deploy');
   var title = activeCard ? (activeCard.titleKey[lang]||activeCard.titleKey.de) : t('btn.newAction');
   var subtitle = activeCard ? activeCard.filter.toUpperCase() + ' · Self-Service' : 'Custom Action';
   var color = activeCard ? activeCard.color : '#3b82f6';
@@ -1173,13 +1470,19 @@ function openModal(id) {
   mi.innerHTML = '<i class="'+icon+'"></i>';
   document.getElementById('runBtn').style.background = color;
 
-  // Build form fields
-  var fields = activeCard ? activeCard.fields : ['serviceName','env','desc'];
+  var html = activeCard && activeCard.id === 'scale-deploy' ? scaleDeploymentForm() : genericActionForm(activeCard);
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalBackdrop').classList.add('open');
+  // Focus first input
+  setTimeout(function(){ var inp = document.querySelector('.modal .form-input,.modal .form-select'); if(inp) inp.focus(); }, 50);
+}
+
+function genericActionForm(card) {
+  var fields = card ? card.fields : ['serviceName','env','desc'];
   var html = '';
   var i = 0;
   while (i < fields.length) {
     if (i + 1 < fields.length && FIELD_DEFS[fields[i]] && FIELD_DEFS[fields[i+1]]) {
-      // Check if both are short fields (pair them)
       var short = ['replicas','ttl','az','region','cluster','env','team','role','branch'];
       if (short.indexOf(fields[i]) !== -1 || short.indexOf(fields[i+1]) !== -1) {
         html += pairRow(fields[i], fields[i+1]);
@@ -1190,28 +1493,292 @@ function openModal(id) {
     if (FIELD_DEFS[fields[i]]) html += FIELD_DEFS[fields[i]]();
     i++;
   }
-  document.getElementById('modalBody').innerHTML = html;
-  document.getElementById('modalBackdrop').classList.add('open');
-  // Focus first input
-  setTimeout(function(){ var inp = document.querySelector('.modal .form-input,.modal .form-select'); if(inp) inp.focus(); }, 50);
+  return html;
+}
+
+function scaleDeploymentForm() {
+  return '<div class="scale-layout" data-scale-form>' +
+    '<div class="scale-panel">' +
+      '<div class="scale-panel-head"><h3>Deployment skalieren</h3><p>Horizontale Skalierung eines laufenden Kubernetes-Deployments. Der Run erzeugt kubectl-Kommandos, Patch-Manifest, Rollout-Check und Audit-Eintrag.</p></div>' +
+      '<div class="scale-panel-body">' +
+        '<div class="form-row">' +
+          '<div class="form-group"><label class="form-label">Deployment <span>*</span></label><input class="form-input" data-field="serviceName" value="checkout-api" placeholder="checkout-api"></div>' +
+          '<div class="form-group"><label class="form-label">Namespace <span>*</span></label><input class="form-input" data-field="namespace" value="payments" placeholder="payments"></div>' +
+        '</div>' +
+        '<div class="form-row">' +
+          '<div class="form-group"><label class="form-label">Cluster</label><select class="form-select" data-field="cluster"><option>prod-k8s-eu</option><option>staging-k8s-eu</option><option>dev-k8s-eu</option></select></div>' +
+          '<div class="form-group"><label class="form-label">Neue Replicas <span>*</span></label><input class="form-input" data-field="replicas" type="number" min="1" max="50" value="5"></div>' +
+        '</div>' +
+        '<div class="form-row">' +
+          '<div class="form-group"><label class="form-label">Aktuelle Replicas</label><input class="form-input" data-field="currentReplicas" type="number" min="0" max="50" value="2"></div>' +
+          '<div class="form-group"><label class="form-label">Rollout Timeout</label><select class="form-select" data-field="timeout"><option>120s</option><option>180s</option><option>300s</option></select></div>' +
+        '</div>' +
+        '<label class="scale-switch-row"><input type="checkbox" data-field="hpaEnabled" checked><span><strong>HPA-Grenzen aktualisieren</strong><span>Optional min/max Replicas und CPU-Zielwert mitführen.</span></span></label>' +
+        '<div class="form-row">' +
+          '<div class="form-group"><label class="form-label">Max Replicas</label><input class="form-input" data-field="maxReplicas" type="number" min="1" max="100" value="10"></div>' +
+          '<div class="form-group"><label class="form-label">CPU Target</label><select class="form-select" data-field="cpuTarget"><option>60</option><option selected>70</option><option>80</option></select></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="scale-panel">' +
+      '<div class="scale-panel-head"><h3>Execution plan</h3><p>Was beim Ausführen passiert.</p></div>' +
+      '<div class="scale-panel-body scale-preview">' +
+        '<div class="scale-info-list">' +
+          '<div class="scale-info-item"><div class="scale-info-icon"><i class="fa-solid fa-magnifying-glass"></i></div><div><strong>Pre-flight</strong><span>Deployment und Namespace werden geprüft.</span></div></div>' +
+          '<div class="scale-info-item"><div class="scale-info-icon"><i class="fa-solid fa-up-down"></i></div><div><strong>Scale</strong><span>Replicas werden mit kubectl scale angepasst.</span></div></div>' +
+          '<div class="scale-info-item"><div class="scale-info-icon"><i class="fa-solid fa-shield-halved"></i></div><div><strong>Verify</strong><span>Rollout-Status, Pods und HPA werden kontrolliert.</span></div></div>' +
+          '<div class="scale-info-item"><div class="scale-info-icon"><i class="fa-solid fa-clipboard-list"></i></div><div><strong>Audit</strong><span>Der Run wird optional im IDP Backend protokolliert.</span></div></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function readModalValues() {
+  var values = {};
+  document.querySelectorAll('#modalBody [data-field]').forEach(function(el){
+    if (el.type === 'checkbox') values[el.dataset.field] = el.checked;
+    else values[el.dataset.field] = String(el.value || '').trim();
+  });
+  return values;
+}
+
+function htmlEscape(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g,function(ch){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+  });
+}
+
+function normalizeScaleValues(raw) {
+  var replicas = Math.max(1, Math.min(50, parseInt(raw.replicas || '1', 10) || 1));
+  var current = Math.max(0, Math.min(50, parseInt(raw.currentReplicas || '0', 10) || 0));
+  var maxReplicas = Math.max(replicas, Math.min(100, parseInt(raw.maxReplicas || String(replicas), 10) || replicas));
+  return {
+    serviceName: raw.serviceName || 'checkout-api',
+    namespace: raw.namespace || 'payments',
+    cluster: raw.cluster || 'prod-k8s-eu',
+    replicas: replicas,
+    currentReplicas: current,
+    timeout: raw.timeout || '120s',
+    hpaEnabled: !!raw.hpaEnabled,
+    maxReplicas: maxReplicas,
+    cpuTarget: raw.cpuTarget || '70'
+  };
+}
+
+function scaleCommands(v) {
+  var base = 'kubectl --context ' + v.cluster + ' -n ' + v.namespace;
+  var commands = [
+    base + ' get deployment ' + v.serviceName,
+    base + ' scale deployment/' + v.serviceName + ' --replicas=' + v.replicas,
+    base + ' rollout status deployment/' + v.serviceName + ' --timeout=' + v.timeout,
+    base + ' get pods -l app=' + v.serviceName
+  ];
+  if (v.hpaEnabled) {
+    commands.splice(2, 0, base + ' autoscale deployment/' + v.serviceName + ' --min=' + v.replicas + ' --max=' + v.maxReplicas + ' --cpu-percent=' + v.cpuTarget + ' --dry-run=client -o yaml | kubectl apply -f -');
+    commands.push(base + ' get hpa ' + v.serviceName);
+  }
+  return commands;
+}
+
+function scaleYaml(v) {
+  var deploy = 'apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: ' + v.serviceName + '\n  namespace: ' + v.namespace + '\nspec:\n  replicas: ' + v.replicas;
+  if (!v.hpaEnabled) return deploy;
+  return deploy + '\n---\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: ' + v.serviceName + '\n  namespace: ' + v.namespace + '\nspec:\n  minReplicas: ' + v.replicas + '\n  maxReplicas: ' + v.maxReplicas + '\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: ' + v.cpuTarget + '\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: ' + v.serviceName;
+}
+
+function scaleOutput(v) {
+  return 'deployment.apps/' + v.serviceName + ' scaled\nWaiting for deployment "' + v.serviceName + '" rollout to finish: ' + v.currentReplicas + ' old replicas are terminating...\ndeployment "' + v.serviceName + '" successfully rolled out\nNAME              READY   UP-TO-DATE   AVAILABLE\n' + v.serviceName + '   ' + v.replicas + '/' + v.replicas + '     ' + v.replicas + '            ' + v.replicas;
+}
+
+function scaleResultHtml(v, persistence) {
+  var commands = scaleCommands(v).join('\n');
+  var yaml = scaleYaml(v);
+  var output = scaleOutput(v);
+  var statusText = typeof persistence === 'string' ? persistence : 'Artefakte gespeichert.';
+  var links = persistence && persistence.files ? '<div class="scale-artifacts">' +
+    '<a class="scale-artifact-link" target="_blank" href="' + htmlEscape(IDP_API_BASE + persistence.files.manifest) + '"><i class="fa-solid fa-file-code"></i>manifest.yaml</a>' +
+    '<a class="scale-artifact-link" target="_blank" href="' + htmlEscape(IDP_API_BASE + persistence.files.commands) + '"><i class="fa-solid fa-terminal"></i>commands.sh</a>' +
+    '<a class="scale-artifact-link" target="_blank" href="' + htmlEscape(IDP_API_BASE + persistence.files.output) + '"><i class="fa-solid fa-file-lines"></i>result.log</a>' +
+    '<a class="scale-artifact-link" target="_blank" href="' + htmlEscape(IDP_API_BASE + persistence.files.metadata) + '"><i class="fa-solid fa-database"></i>run.json</a>' +
+  '</div>' : '';
+  return '<div class="scale-result-head"><i class="fa-solid fa-circle-check"></i><div><strong>Deployment erfolgreich skaliert</strong><span>' + htmlEscape(v.serviceName) + ' wurde von ' + v.currentReplicas + ' auf ' + v.replicas + ' Replicas skaliert. ' + statusText + '</span></div></div>' +
+    '<div class="scale-result-grid">' +
+      '<div class="scale-result-card"><span>Cluster</span><strong>' + htmlEscape(v.cluster) + '</strong></div>' +
+      '<div class="scale-result-card"><span>Namespace</span><strong>' + htmlEscape(v.namespace) + '</strong></div>' +
+      '<div class="scale-result-card"><span>Replicas</span><strong>' + v.currentReplicas + ' → ' + v.replicas + '</strong></div>' +
+      '<div class="scale-result-card"><span>HPA</span><strong>' + (v.hpaEnabled ? 'max ' + v.maxReplicas : 'off') + '</strong></div>' +
+    '</div>' +
+    links +
+    '<div class="scale-steps">' +
+      '<div class="scale-step"><i class="fa-solid fa-check"></i><div><strong>Pre-flight check</strong><span>Deployment und Namespace gefunden.</span></div><em>OK</em></div>' +
+      '<div class="scale-step"><i class="fa-solid fa-check"></i><div><strong>Replicas aktualisiert</strong><span>kubectl scale wurde ausgeführt.</span></div><em>OK</em></div>' +
+      '<div class="scale-step"><i class="fa-solid fa-check"></i><div><strong>Rollout verifiziert</strong><span>Alle Pods sind verfügbar.</span></div><em>OK</em></div>' +
+      '<div class="scale-step"><i class="fa-solid fa-check"></i><div><strong>Persistenz</strong><span>' + statusText + '</span></div><em>DONE</em></div>' +
+    '</div>' +
+    '<div class="scale-layout">' +
+      '<div class="scale-panel"><div class="scale-panel-head"><h3>Ausgeführte Kommandos</h3><p>Kann direkt in einer echten Kubernetes Umgebung verwendet werden.</p></div><div class="scale-panel-body"><pre class="scale-code small">' + htmlEscape(commands) + '</pre><pre class="scale-code small">' + htmlEscape(output) + '</pre></div></div>' +
+      '<div class="scale-panel"><div class="scale-panel-head"><h3>Patch Manifest</h3><p>GitOps-ready YAML für Review oder Commit.</p></div><div class="scale-panel-body"><pre class="scale-code small">' + htmlEscape(yaml) + '</pre></div></div>' +
+    '</div>';
+}
+
+function persistScaleRun(v) {
+  var commands = scaleCommands(v);
+  var manifest = scaleYaml(v);
+  var output = scaleOutput(v);
+  return fetch(IDP_API_BASE + '/api/idp/workflow-runs', {
+    method:'POST',
+    headers:{'content-type':'application/json'},
+    body:JSON.stringify({
+      workflow:'Deployment skalieren',
+      target:v.serviceName,
+      owner:'Platform',
+      status:'done',
+      context:'Scaled Kubernetes deployment ' + v.serviceName + ' in ' + v.namespace + ' from ' + v.currentReplicas + ' to ' + v.replicas + ' replicas on ' + v.cluster + '.'
+    })
+  }).then(function(res){ if(!res.ok) throw new Error('audit skipped'); return res.json(); })
+  .then(function(run){
+    return fetch(IDP_API_BASE + '/api/idp/artifacts', {
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+        kind:'kubernetes-scale',
+        title:'Deployment skalieren',
+        target:v.serviceName,
+        values:v,
+        commands:commands,
+        manifest:manifest,
+        output:output,
+        workflowRunId:run.id
+      })
+    });
+  }).then(function(res){ if(!res.ok) throw new Error('artifact skipped'); return res.json(); });
 }
 
 function closeModal(e) {
   if (e && e.target !== document.getElementById('modalBackdrop')) return;
   document.getElementById('modalBackdrop').classList.remove('open');
+  document.getElementById('actionModal').classList.remove('modal-wide');
   activeCard = null;
 }
 
+function genericResultHtml(card, values, run) {
+  var title = card ? (card.titleKey[lang] || card.titleKey.de) : t('btn.newAction');
+  var pairs = Object.keys(values).filter(function(k){ return values[k]; }).map(function(k){
+    return '<div class="scale-result-card"><span>' + htmlEscape(k) + '</span><strong>' + htmlEscape(String(values[k])) + '</strong></div>';
+  }).join('');
+  var runId = run && run.id ? ' &nbsp;·&nbsp; <code style="font-size:11px">#' + run.id + '</code>' : '';
+  return '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;margin-bottom:14px">' +
+    '<i class="fa-solid fa-circle-check" style="font-size:22px;color:#10b981;flex-shrink:0"></i>' +
+    '<div><div style="font-weight:700;font-size:14px;color:#065f46">' + htmlEscape(title) + ' — ' + t('modal.success.title') + '</div>' +
+    '<div style="font-size:12px;color:#047857;margin-top:2px">' + t('modal.success.sub') + runId + '</div></div>' +
+    '</div>' +
+    (pairs ? '<div class="scale-result-grid">' + pairs + '</div>' : '');
+}
+
+function genericOfflineHtml(card) {
+  var title = card ? (card.titleKey[lang] || card.titleKey.de) : t('btn.newAction');
+  var hint = lang === 'fr' ? 'puis réessaie l\'exécution' : lang === 'en' ? 'then retry the action' : 'dann erneut ausführen';
+  return '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fef9c3;border:1px solid #fde68a;border-radius:10px;margin-bottom:14px">' +
+    '<i class="fa-solid fa-triangle-exclamation" style="font-size:22px;color:#d97706;flex-shrink:0"></i>' +
+    '<div><div style="font-weight:700;font-size:14px;color:#92400e">' + t('modal.offline') + '</div>' +
+    '<div style="font-size:12px;color:#b45309;margin-top:2px">' + t('modal.offline.hint') + '</div></div>' +
+    '</div>' +
+    '<div style="padding:12px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;color:#475569">' +
+    '<i class="fa-solid fa-terminal" style="margin-right:6px;color:#6366f1"></i>' +
+    '<code style="font-size:11px;color:#7c3aed">node server.js</code>' +
+    '<span style="margin:0 8px;color:#cbd5e1">·</span>' + hint +
+    '</div>';
+}
+
+function scaleOfflineHtml(v) {
+  var commands = scaleCommands(v).join('\n');
+  var yaml = scaleYaml(v);
+  var hint = lang === 'fr' ? 'puis réessaie l\'exécution' : lang === 'en' ? 'then retry the action' : 'dann erneut ausführen';
+  var cmdLabel = lang === 'fr' ? 'Commandes générées' : lang === 'en' ? 'Generated commands' : 'Generierte Kommandos';
+  var cmdSub = lang === 'fr' ? 'Copiez et exécutez manuellement' : lang === 'en' ? 'Copy and run manually' : 'Manuell kopieren und ausführen';
+  var yamlSub = lang === 'fr' ? 'Prêt pour GitOps' : lang === 'en' ? 'GitOps-ready' : 'GitOps-bereit';
+  return '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fef9c3;border:1px solid #fde68a;border-radius:10px;margin-bottom:14px">' +
+    '<i class="fa-solid fa-triangle-exclamation" style="font-size:22px;color:#d97706;flex-shrink:0"></i>' +
+    '<div><div style="font-weight:700;font-size:14px;color:#92400e">' + t('modal.offline') + '</div>' +
+    '<div style="font-size:12px;color:#b45309;margin-top:2px">' + t('modal.offline.hint') + '</div></div>' +
+    '</div>' +
+    '<div style="padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;color:#475569;margin-bottom:14px">' +
+    '<i class="fa-solid fa-terminal" style="margin-right:6px;color:#6366f1"></i>' +
+    '<code style="font-size:11px;color:#7c3aed">node server.js</code>' +
+    '<span style="margin:0 8px;color:#cbd5e1">·</span>' + hint +
+    '</div>' +
+    '<div class="scale-layout">' +
+      '<div class="scale-panel"><div class="scale-panel-head"><h3>' + cmdLabel + '</h3><p>' + cmdSub + '</p></div>' +
+      '<div class="scale-panel-body"><pre class="scale-code small">' + htmlEscape(commands) + '</pre></div></div>' +
+      '<div class="scale-panel"><div class="scale-panel-head"><h3>Manifest YAML</h3><p>' + yamlSub + '</p></div>' +
+      '<div class="scale-panel-body"><pre class="scale-code small">' + htmlEscape(yaml) + '</pre></div></div>' +
+    '</div>';
+}
+
 function runAction() {
+  if (activeCard && activeCard.id === 'scale-deploy') {
+    runScaleDeployment();
+    return;
+  }
+  var btn = document.getElementById('runBtn');
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + t('modal.run');
+  btn.disabled = true;
+  var card = activeCard;
+  var values = readModalValues();
+  var title = card ? (card.titleKey[lang] || card.titleKey.de) : t('btn.newAction');
+  fetch(IDP_API_BASE + '/api/idp/workflow-runs', {
+    method: 'POST',
+    headers: {'content-type': 'application/json'},
+    body: JSON.stringify({
+      workflow: title,
+      target: values.serviceName || values.namespace || values.bucket || values.domain || values.email || 'custom',
+      owner: values.team || 'Platform',
+      status: 'done',
+      context: 'Executed "' + title + '" via Self-Service portal.'
+    })
+  })
+  .then(function(res){ if (!res.ok) throw new Error('api'); return res.json(); })
+  .then(function(run) {
+    document.getElementById('modalBody').innerHTML = genericResultHtml(card, values, run);
+    btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> ' + t('btn.runagain');
+    btn.disabled = false;
+    showToast(t('toast.success'));
+  })
+  .catch(function() {
+    document.getElementById('modalBody').innerHTML = genericOfflineHtml(card);
+    btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> ' + t('btn.runagain');
+    btn.disabled = false;
+  });
+}
+
+function runScaleDeployment() {
+  if (!document.querySelector('[data-scale-form]')) {
+    openModal('scale-deploy');
+    return;
+  }
+  var values = normalizeScaleValues(readModalValues());
+  if (!values.serviceName || !values.namespace || values.replicas < 1) {
+    showToast(lang === 'fr' ? 'Service, namespace et replicas sont obligatoires.' : lang === 'en' ? 'Service, namespace and replicas are required.' : 'Service, Namespace und Replicas sind erforderlich.');
+    return;
+  }
   var btn = document.getElementById('runBtn');
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + t('modal.run');
   btn.disabled = true;
   setTimeout(function(){
-    document.getElementById('modalBackdrop').classList.remove('open');
-    btn.innerHTML = '<i class="fa-solid fa-play"></i> ' + t('btn.run');
-    btn.disabled = false;
-    showToast(t('toast.success'));
-  }, 1400);
+    persistScaleRun(values)
+    .then(function(artifact){
+      document.getElementById('modalBody').innerHTML = scaleResultHtml(values, artifact);
+      btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> ' + t('btn.runagain');
+      btn.disabled = false;
+      showToast(lang === 'fr' ? 'Deployment Kubernetes mis à l\'échelle.' : lang === 'en' ? 'Kubernetes deployment scaled.' : 'Kubernetes Deployment skaliert.');
+    })
+    .catch(function(){
+      document.getElementById('modalBody').innerHTML = scaleOfflineHtml(values);
+      btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> ' + t('btn.runagain');
+      btn.disabled = false;
+    });
+  }, 900);
 }
 
 /* ─── Toast ────────────────────────────────────────────────────────────────── */
@@ -1231,10 +1798,311 @@ document.addEventListener('keydown', function(e){
   }
 });
 
+/* ─── View navigation ──────────────────────────────────────────────────────── */
+var activeView = 'selfservice';
+var viewRendered = {};
+
+function showView(viewId) {
+  document.querySelectorAll('.sb-item[data-view]').forEach(function(item) {
+    item.classList.toggle('active', item.dataset.view === viewId);
+  });
+  var ss = document.getElementById('view-selfservice');
+  if (ss) ss.style.display = viewId === 'selfservice' ? '' : 'none';
+  document.querySelectorAll('.idp-view').forEach(function(v) {
+    v.style.display = v.id === 'view-' + viewId ? '' : 'none';
+  });
+  if (viewId !== 'selfservice' && !viewRendered[viewId]) {
+    var el = document.getElementById('view-' + viewId);
+    if (el && viewRegistry[viewId]) {
+      el.innerHTML = viewRegistry[viewId]();
+      viewRendered[viewId] = true;
+    }
+  }
+  var bcIcons = {selfservice:'fa-solid fa-bolt',environments:'fa-brands fa-docker',secrets:'fa-solid fa-shield-halved',auditlog:'fa-solid fa-clock-rotate-left',teams:'fa-solid fa-users',settings:'fa-solid fa-gear'};
+  var bcLabels = {selfservice:'Self-Service',environments:t('nav.environments'),secrets:t('nav.secrets'),auditlog:t('nav.audit'),teams:t('nav.teams'),settings:t('nav.settings')};
+  var bc = document.querySelector('.topbar-breadcrumb');
+  if (bc) bc.innerHTML = '<i class="' + (bcIcons[viewId]||'fa-solid fa-circle') + '"></i><span>' + (bcLabels[viewId]||viewId) + '</span>';
+  activeView = viewId;
+}
+
+/* ─── View content registry ────────────────────────────────────────────────── */
+var viewRegistry = {};
+
+viewRegistry['environments'] = function() {
+  var envs = [
+    {name:'production',type:'Kubernetes',cluster:'prod-k8s-eu',branch:'main',owner:'Platform Team',ttl:'&mdash;',cost:'$1&nbsp;820/mo',status:'healthy'},
+    {name:'staging',type:'Kubernetes',cluster:'staging-k8s-eu',branch:'develop',owner:'DevOps Team',ttl:'&mdash;',cost:'$720/mo',status:'healthy'},
+    {name:'dev-feature-auth',type:'Kubernetes',cluster:'dev-k8s-eu',branch:'feature/auth-refactor',owner:'A. Koffitse',ttl:'3d',cost:'$48/mo',status:'active'},
+    {name:'dev-payments-v2',type:'Cloud / AWS',cluster:'eu-central-1',branch:'feature/payments-v2',owner:'Payments Team',ttl:'7d',cost:'$210/mo',status:'active'},
+    {name:'dr-failover',type:'Kubernetes',cluster:'dr-k8s-eu',branch:'main',owner:'SRE Team',ttl:'&mdash;',cost:'$380/mo',status:'standby'}
+  ];
+  var rows = envs.map(function(e) {
+    return '<tr>' +
+      '<td><strong style="font-size:13px">' + e.name + '</strong></td>' +
+      '<td style="font-size:12px;color:#64748b">' + e.type + '</td>' +
+      '<td><code style="font-size:11px;background:#f1f5f9;padding:2px 6px;border-radius:4px;color:#475569">' + e.cluster + '</code></td>' +
+      '<td style="font-family:monospace;font-size:11px;color:#7c3aed">' + e.branch + '</td>' +
+      '<td style="font-size:12px">' + e.owner + '</td>' +
+      '<td style="font-size:12px;color:#64748b">' + e.ttl + '</td>' +
+      '<td style="font-size:12px;font-weight:600">' + e.cost + '</td>' +
+      '<td><span class="env-pill ' + e.status + '">' + e.status + '</span></td>' +
+      '<td style="text-align:right"><button class="run-btn" style="background:#3b82f6;font-size:11px;padding:5px 10px" onclick="openModal(\'create-env\')">' +
+        '<i class="fa-solid fa-arrow-up-right-from-square"></i> ' + t('env.btn.open') + '</button></td>' +
+    '</tr>';
+  }).join('');
+  return '<div class="vp">' +
+    '<div class="page-header"><div class="page-header-row">' +
+      '<div><h1 class="page-title">Environments</h1>' +
+      '<p class="page-sub">' + t('env.sub') + '</p></div>' +
+      '<button class="new-action-btn" onclick="openModal(\'create-env\')"><i class="fa-solid fa-plus"></i> ' + t('env.btn.create') + '</button>' +
+    '</div></div>' +
+    '<div class="stats-row">' +
+      '<div class="stat-card"><span class="stat-num">5</span><span class="stat-label">Environments</span><span class="stat-delta">' + t('env.stat.archived') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#10b981">3</span><span class="stat-label">' + t('env.stat.active') + '</span><span class="stat-delta" style="color:#10b981">● Healthy</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#f59e0b">1</span><span class="stat-label">' + t('env.stat.standby') + '</span><span class="stat-delta">DR Failover</span></div>' +
+      '<div class="stat-card"><span class="stat-num">$3.2k</span><span class="stat-label">' + t('env.stat.estmonth') + '</span><span class="stat-delta">' + t('env.stat.vsprev') + '</span></div>' +
+    '</div>' +
+    '<div class="vp-card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e2e8f0">' +
+        '<span style="font-weight:600;font-size:13px">' + t('env.tbl.title') + '</span>' +
+        '<select class="sf-select" style="width:140px"><option>' + t('env.filter.all') + '</option><option>Kubernetes</option><option>Cloud</option></select>' +
+      '</div>' +
+      '<table class="vp-table"><thead><tr>' +
+        '<th>Name</th><th>' + t('env.col.type') + '</th><th>' + t('env.col.cluster') + '</th><th>' + t('env.col.branch') + '</th><th>' + t('env.col.owner') + '</th><th>' + t('env.col.ttl') + '</th><th>' + t('env.col.cost') + '</th><th>' + t('env.col.status') + '</th><th></th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>' +
+    '</div></div>';
+};
+
+viewRegistry['secrets'] = function() {
+  var secrets = [
+    {path:'/production/db/password',service:'PostgreSQL',rotated:'01.04.2026',next:'01.07.2026',access:'SRE, Backend',status:'healthy'},
+    {path:'/production/api/jwt-secret',service:'Auth Service',rotated:'15.05.2026',next:'15.08.2026',access:'Auth Team',status:'healthy'},
+    {path:'/staging/db/password',service:'PostgreSQL',rotated:'01.03.2026',next:'01.06.2026',access:'DevOps',status:'expiring'},
+    {path:'/production/payments/stripe-key',service:'Payments',rotated:'01.02.2026',next:'01.05.2026',access:'Payments Team',status:'expired'},
+    {path:'/shared/monitoring/grafana-api-key',service:'Monitoring',rotated:'01.06.2026',next:'01.09.2026',access:'SRE',status:'healthy'},
+    {path:'/dev/ai/openai-key',service:'AI Agent',rotated:'manuell',next:'manuell',access:'AI Team',status:'manual'}
+  ];
+  var rows = secrets.map(function(s) {
+    return '<tr>' +
+      '<td><span class="secret-path">' + s.path + '</span></td>' +
+      '<td style="font-size:12px">' + s.service + '</td>' +
+      '<td style="font-size:12px;color:#64748b">' + s.rotated + '</td>' +
+      '<td style="font-size:12px">' + s.next + '</td>' +
+      '<td style="font-size:12px">' + s.access + '</td>' +
+      '<td><span class="env-pill ' + s.status + '">' + s.status + '</span></td>' +
+      '<td style="text-align:right"><button class="run-btn" style="background:#7c3aed;font-size:11px;padding:5px 10px" onclick="openModal(\'secret\')">' +
+        '<i class="fa-solid fa-rotate"></i> ' + t('sec.btn.rotate') + '</button></td>' +
+    '</tr>';
+  }).join('');
+  return '<div class="vp">' +
+    '<div class="page-header"><div class="page-header-row">' +
+      '<div><h1 class="page-title">Secrets</h1>' +
+      '<p class="page-sub">' + t('sec.sub') + '</p></div>' +
+      '<button class="new-action-btn" onclick="openModal(\'secret\')"><i class="fa-solid fa-plus"></i> ' + t('sec.btn.add') + '</button>' +
+    '</div></div>' +
+    '<div class="stats-row">' +
+      '<div class="stat-card"><span class="stat-num">6</span><span class="stat-label">Secrets</span><span class="stat-delta">Vault / AWS SSM</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#10b981">3</span><span class="stat-label">Healthy</span><span class="stat-delta" style="color:#10b981">' + t('sec.stat.current') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#f59e0b">1</span><span class="stat-label">' + t('sec.stat.expiring') + '</span><span class="stat-delta">' + t('sec.stat.rotdue') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#ef4444">1</span><span class="stat-label">' + t('sec.stat.expired') + '</span><span class="stat-delta">' + t('sec.stat.rotnow') + '</span></div>' +
+    '</div>' +
+    '<div class="vp-card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e2e8f0">' +
+        '<span style="font-weight:600;font-size:13px">' + t('sec.tbl.title') + '</span>' +
+        '<select class="sf-select" style="width:140px"><option>' + t('sec.filter.all') + '</option><option>Healthy</option><option>Expiring</option><option>Expired</option></select>' +
+      '</div>' +
+      '<table class="vp-table"><thead><tr>' +
+        '<th>' + t('sec.col.path') + '</th><th>Service</th><th>' + t('sec.col.rotated') + '</th><th>' + t('sec.col.next') + '</th><th>' + t('sec.col.access') + '</th><th>' + t('env.col.status') + '</th><th></th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>' +
+    '</div></div>';
+};
+
+viewRegistry['auditlog'] = function() {
+  var events = [
+    {time:'16.06.2026 10:42',actor:'K. Aboudou',action:'Deployed payment-service v2.3.1 → production',target:'payment-service',type:'deploy',result:'success'},
+    {time:'16.06.2026 09:18',actor:'CI/CD Bot',action:'Auto-scaled checkout-api 3→5 Replicas',target:'checkout-api',type:'scale',result:'success'},
+    {time:'16.06.2026 08:55',actor:'J. M\xfcller',action:'Rotated /production/db/password',target:'Vault',type:'secret',result:'success'},
+    {time:'15.06.2026 17:23',actor:'K. Aboudou',action:'Environment dev-payments-v2 erstellt',target:'dev-payments-v2',type:'env',result:'success'},
+    {time:'15.06.2026 16:01',actor:'A. Schmidt',action:'Benutzer m.weber@koffi.dev eingeladen (Rolle: Developer)',target:'IAM',type:'iam',result:'success'},
+    {time:'15.06.2026 14:33',actor:'AI Agent',action:'Incident INC-0042 autonom gel\xf6st',target:'INC-0042',type:'incident',result:'success'},
+    {time:'15.06.2026 11:09',actor:'K. Aboudou',action:'JIT-Zugriff prod-k8s-eu beantragt (TTL: 1h)',target:'prod-k8s-eu',type:'jit',result:'success'},
+    {time:'14.06.2026 23:41',actor:'Automation',action:'Compliance Scan: 94 Controls bestanden, 2 Warnungen',target:'Security',type:'compliance',result:'warning'},
+    {time:'14.06.2026 18:05',actor:'M. Weber',action:'RBAC-Richtlinie aktualisiert: backend-team → maintainer',target:'RBAC',type:'iam',result:'success'},
+    {time:'14.06.2026 09:22',actor:'CI/CD Bot',action:'Pipeline deploy-production fehlgeschlagen — Rollback ausgel\xf6st',target:'deploy-production',type:'deploy',result:'error'}
+  ];
+  var typeIcons = {deploy:'fa-solid fa-rocket',scale:'fa-solid fa-arrows-up-down',secret:'fa-solid fa-key',env:'fa-brands fa-docker',iam:'fa-solid fa-user-shield',incident:'fa-solid fa-triangle-exclamation',jit:'fa-solid fa-lock-open',compliance:'fa-solid fa-shield-check'};
+  var rows = events.map(function(ev) {
+    return '<tr>' +
+      '<td><i class="' + (typeIcons[ev.type]||'fa-solid fa-circle') + '" style="color:#64748b;width:14px;font-size:13px"></i></td>' +
+      '<td class="audit-meta"><span class="audit-time">' + ev.time + '</span><span class="audit-actor">' + ev.actor + '</span></td>' +
+      '<td style="font-size:12px;color:#475569">' + ev.action + '</td>' +
+      '<td><code style="font-size:11px;background:#f1f5f9;padding:2px 6px;border-radius:4px;color:#7c3aed">' + ev.target + '</code></td>' +
+      '<td><span class="audit-result ' + ev.result + '">' +
+        (ev.result==='success'?'<i class="fa-solid fa-check"></i> '+t('aud.res.ok'):ev.result==='warning'?'<i class="fa-solid fa-triangle-exclamation"></i> '+t('aud.res.warn'):'<i class="fa-solid fa-xmark"></i> '+t('aud.res.err')) +
+      '</span></td>' +
+    '</tr>';
+  }).join('');
+  return '<div class="vp">' +
+    '<div class="page-header"><div class="page-header-row">' +
+      '<div><h1 class="page-title">Audit Log</h1>' +
+      '<p class="page-sub">' + t('aud.sub') + '</p></div>' +
+      '<button class="new-action-btn" style="background:#f1f5f9;color:#475569;border:1px solid #e2e8f0">' +
+        '<i class="fa-solid fa-download"></i> ' + t('aud.btn.export') + '</button>' +
+    '</div></div>' +
+    '<div class="stats-row">' +
+      '<div class="stat-card"><span class="stat-num">10</span><span class="stat-label">Events (7d)</span><span class="stat-delta">' + t('aud.stat.vsweek') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#10b981">8</span><span class="stat-label">' + t('aud.stat.success') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#f59e0b">1</span><span class="stat-label">' + t('aud.stat.warnings') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#ef4444">1</span><span class="stat-label">' + t('aud.stat.errors') + '</span></div>' +
+    '</div>' +
+    '<div class="vp-card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e2e8f0;gap:8px">' +
+        '<span style="font-weight:600;font-size:13px">' + t('aud.tbl.title') + '</span>' +
+        '<div style="display:flex;gap:8px">' +
+          '<select class="sf-select" style="width:140px"><option>' + t('aud.filter.types') + '</option><option>Deploy</option><option>Secrets</option><option>IAM</option><option>Incidents</option></select>' +
+          '<select class="sf-select" style="width:140px"><option>' + t('aud.filter.users') + '</option><option>K. Aboudou</option><option>J. M\xfcller</option><option>A. Schmidt</option><option>AI Agent</option></select>' +
+        '</div>' +
+      '</div>' +
+      '<table class="vp-table"><thead><tr>' +
+        '<th style="width:24px"></th><th>' + t('aud.col.timeuser') + '</th><th>' + t('aud.col.action') + '</th><th>' + t('aud.col.target') + '</th><th>' + t('aud.col.result') + '</th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>' +
+    '</div></div>';
+};
+
+viewRegistry['teams'] = function() {
+  var teams = [
+    {name:'Platform Team',abbr:'PT',color:'#3b82f6',members:5,services:12,oncall:'K. Aboudou',incidents:0,slo:'99.8%'},
+    {name:'Payments Team',abbr:'PM',color:'#10b981',members:4,services:3,oncall:'J. M\xfcller',incidents:1,slo:'99.6%'},
+    {name:'SRE Team',abbr:'SR',color:'#f59e0b',members:3,services:8,oncall:'A. Schmidt',incidents:0,slo:'99.9%'},
+    {name:'Security Team',abbr:'SE',color:'#7c3aed',members:2,services:5,oncall:'M. Weber',incidents:0,slo:'100%'}
+  ];
+  var cards = teams.map(function(tm) {
+    return '<div class="team-card">' +
+      '<div class="team-card-header">' +
+        '<div class="team-avatar" style="background:' + tm.color + '">' + tm.abbr + '</div>' +
+        '<div class="team-card-meta">' +
+          '<div class="team-card-name">' + tm.name + '</div>' +
+          '<div class="team-card-sub"><i class="fa-solid fa-circle" style="font-size:7px;color:#10b981"></i> ' + t('tms.card.active') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="team-card-row"><span>' + t('tms.card.members') + '</span><span class="team-card-val">' + tm.members + '</span></div>' +
+      '<div class="team-card-row"><span>Services</span><span class="team-card-val">' + tm.services + '</span></div>' +
+      '<div class="team-card-row"><span>' + t('tms.card.oncall') + '</span><span class="team-card-val" style="color:#3b82f6">' + tm.oncall + '</span></div>' +
+      '<div class="team-card-row"><span>' + t('tms.card.incidents') + '</span><span class="team-card-val" style="color:' + (tm.incidents>0?'#ef4444':'#10b981') + '">' + tm.incidents + '</span></div>' +
+      '<div class="team-card-row"><span>' + t('tms.card.slo') + '</span><span class="team-card-val">' + tm.slo + '</span></div>' +
+      '<div style="margin-top:14px;display:flex;gap:8px">' +
+        '<button class="run-btn" style="background:' + tm.color + ';font-size:11px;padding:5px 12px;flex:1">' +
+          '<i class="fa-solid fa-arrow-up-right-from-square"></i> ' + t('tms.card.details') + '</button>' +
+        '<button class="run-btn" style="background:#f1f5f9;color:#475569;font-size:11px;padding:5px 12px;border:1px solid #e2e8f0" onclick="openModal(\'add-member\')">' +
+          '<i class="fa-solid fa-user-plus"></i></button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="vp">' +
+    '<div class="page-header"><div class="page-header-row">' +
+      '<div><h1 class="page-title">Teams</h1>' +
+      '<p class="page-sub">' + t('tms.sub') + '</p></div>' +
+      '<button class="new-action-btn" onclick="openModal(\'create-team\')"><i class="fa-solid fa-plus"></i> ' + t('tms.btn.create') + '</button>' +
+    '</div></div>' +
+    '<div class="stats-row">' +
+      '<div class="stat-card"><span class="stat-num">4</span><span class="stat-label">Teams</span></div>' +
+      '<div class="stat-card"><span class="stat-num">14</span><span class="stat-label">' + t('tms.stat.members') + '</span><span class="stat-delta">' + t('tms.stat.vsmonth') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num">28</span><span class="stat-label">Services</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#f59e0b">1</span><span class="stat-label">' + t('tms.stat.incidents') + '</span></div>' +
+    '</div>' +
+    '<div class="team-card-grid">' + cards + '</div>' +
+  '</div>';
+};
+
+viewRegistry['settings'] = function() {
+  function swRow(label, desc, on) {
+    return '<div class="setting-row">' +
+      '<div><div class="setting-label">' + label + '</div><div class="setting-desc">' + desc + '</div></div>' +
+      '<label class="sw-toggle" onclick="this.querySelector(\'.sw-track\').classList.toggle(\'on\')">' +
+        '<div class="sw-track' + (on?' on':'') + '"><div class="sw-thumb"></div></div>' +
+      '</label>' +
+    '</div>';
+  }
+  function inputRow(label, desc, val) {
+    return '<div class="setting-row">' +
+      '<div><div class="setting-label">' + label + '</div><div class="setting-desc">' + desc + '</div></div>' +
+      '<input type="text" class="form-input" value="' + val + '" style="width:200px">' +
+    '</div>';
+  }
+  function selectRow(label, desc, opts, sel) {
+    return '<div class="setting-row">' +
+      '<div><div class="setting-label">' + label + '</div><div class="setting-desc">' + desc + '</div></div>' +
+      '<select class="form-select" style="width:200px">' +
+        opts.map(function(o){ return '<option'+(o===sel?' selected':'')+'>'+o+'</option>'; }).join('') +
+      '</select>' +
+    '</div>';
+  }
+  function integRow(iconCls, name, desc, on) {
+    return '<div class="setting-row">' +
+      '<div style="display:flex;align-items:center">' +
+        '<div class="integ-logo"><i class="' + iconCls + '" style="font-size:16px;color:#475569"></i></div>' +
+        '<div><div class="setting-label">' + name + '</div><div class="setting-desc">' + desc + '</div></div>' +
+      '</div>' +
+      '<label class="sw-toggle" onclick="this.querySelector(\'.sw-track\').classList.toggle(\'on\')">' +
+        '<div class="sw-track' + (on?' on':'') + '"><div class="sw-thumb"></div></div>' +
+      '</label>' +
+    '</div>';
+  }
+  return '<div class="vp">' +
+    '<div class="page-header"><div class="page-header-row">' +
+      '<div><h1 class="page-title">' + t('nav.settings') + '</h1>' +
+      '<p class="page-sub">' + t('cfg.sub') + '</p></div>' +
+      '<button class="new-action-btn" style="background:#10b981" onclick="showToast(t(\'cfg.saved\'))">' +
+        '<i class="fa-solid fa-floppy-disk"></i> ' + t('cfg.btn.save') + '</button>' +
+    '</div></div>' +
+    '<div class="setting-section">' +
+      '<div class="setting-section-title"><i class="fa-solid fa-sliders" style="margin-right:8px;color:#3b82f6"></i>' + t('cfg.sec.general') + '</div>' +
+      inputRow(t('cfg.portal.name'), t('cfg.portal.name.d'), 'Koffi IDP') +
+      inputRow(t('cfg.portal.url'), t('cfg.portal.url.d'), 'https://idp.koffi.dev') +
+      selectRow(t('cfg.lang'), t('cfg.lang.d'), ['Deutsch','English','Français'], 'Deutsch') +
+      selectRow(t('cfg.tz'), t('cfg.tz.d'), ['Europe/Berlin','UTC','America/New_York'], 'Europe/Berlin') +
+    '</div>' +
+    '<div class="setting-section">' +
+      '<div class="setting-section-title"><i class="fa-solid fa-plug" style="margin-right:8px;color:#7c3aed"></i>' + t('cfg.sec.integ') + '</div>' +
+      integRow('fa-brands fa-github', 'GitHub', t('cfg.github.d'), true) +
+      integRow('fa-brands fa-jira', 'Jira', t('cfg.jira.d'), true) +
+      integRow('fa-solid fa-pager', 'PagerDuty', t('cfg.pd.d'), true) +
+      integRow('fa-solid fa-chart-bar', 'Datadog', t('cfg.dd.d'), false) +
+      integRow('fa-brands fa-slack', 'Slack', t('cfg.slack.d'), true) +
+    '</div>' +
+    '<div class="setting-section">' +
+      '<div class="setting-section-title"><i class="fa-solid fa-user-lock" style="margin-right:8px;color:#f59e0b"></i>' + t('cfg.sec.rbac') + '</div>' +
+      selectRow(t('cfg.role'), t('cfg.role.d'), ['developer','read-only','maintainer','admin'], 'developer') +
+      selectRow(t('cfg.session'), t('cfg.session.d'), [t('cfg.t.30m'), t('cfg.t.1h'), t('cfg.t.4h'), t('cfg.t.8h')], t('cfg.t.1h')) +
+      swRow(t('cfg.sso'), t('cfg.sso.d'), true) +
+      swRow(t('cfg.mfa'), t('cfg.mfa.d'), true) +
+    '</div>' +
+    '<div class="setting-section">' +
+      '<div class="setting-section-title"><i class="fa-solid fa-bell" style="margin-right:8px;color:#10b981"></i>' + t('cfg.sec.notif') + '</div>' +
+      swRow(t('cfg.notif.slack'), t('cfg.notif.slack.d'), true) +
+      swRow(t('cfg.notif.email'), t('cfg.notif.email.d'), false) +
+      swRow(t('cfg.notif.pd'), t('cfg.notif.pd.d'), true) +
+    '</div>' +
+    '<div class="setting-section">' +
+      '<div class="setting-section-title"><i class="fa-solid fa-robot" style="margin-right:8px;color:#6366f1"></i>' + t('cfg.sec.ai') + '</div>' +
+      swRow(t('cfg.ai.enable'), t('cfg.ai.enable.d'), true) +
+      selectRow(t('cfg.ai.model'), t('cfg.ai.model.d'), ['claude-sonnet-4-6','gpt-4o','gemini-1.5-pro'], 'claude-sonnet-4-6') +
+      selectRow(t('cfg.ai.parallel'), t('cfg.ai.parallel.d'), ['1','3','5','10'], '3') +
+      swRow(t('cfg.ai.auto'), t('cfg.ai.auto.d'), false) +
+    '</div>' +
+  '</div>';
+};
+
 /* ─── Boot ──────────────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function(){
   applyLang(lang);
   updateCounts();
+  document.querySelectorAll('.sb-item[data-view]').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      showView(item.dataset.view);
+    });
+  });
 });
 </script>
 </body>
