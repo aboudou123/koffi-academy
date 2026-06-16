@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+  <link rel="shortcut icon" href="assets/images/logo.png">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Vault Token Operations and Management | Laboratoire — Koffi Academy</title>
+   <meta name="description" content="Laboratoire pratique Koffi Academy : maîtrisez le cycle de vie des tokens HashiCorp Vault — création, accessors, renouvellement, révocation, token roles et audit.">
+   <meta name="theme-color" content="#07294d">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <style>
+:root{--navy:#07294d;--navy-d:#05203f;--ink:#0f1c2e;--accent:#f89035;--vault:#D4A017;--slate-600:#475569;--slate-500:#64748b;--slate-400:#94a3b8;--slate-300:#cbd5e1;--slate-200:#e2e8f0;--slate-100:#f1f5f9;--slate-50:#f8fafc}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--slate-50);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+
+/* Header */
+.kh{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(18,48,79,.98),rgba(9,33,61,.98));backdrop-filter:blur(14px);border-bottom:1px solid rgba(214,160,45,.42);box-shadow:0 14px 36px rgba(2,12,26,.24)}
+.kh__in{max-width:1140px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.kh__brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+.kh__mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f9d77e 0%,#d6a02d 55%,#b97911 100%);display:flex;align-items:center;justify-content:center;color:#07294d;font-size:15px;box-shadow:0 8px 22px rgba(214,160,45,.34)}
+.kh__name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.01em;color:#fff}
+.kh__nav{display:flex;align-items:center;gap:4px}
+.kh__nav a{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);text-decoration:none;padding:8px 14px;border-radius:8px;transition:all .18s}
+.kh__nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.kh__nav a.active{color:#f9d77e;background:rgba(214,160,45,.15)}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#041a32 0%,#07294d 50%,#0e3d72 85%,#1a5fa0 100%);color:#fff;padding:30px 0 40px}
+.hero__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:48px 48px;opacity:.5;-webkit-mask-image:radial-gradient(ellipse 70% 90% at 30% 0%,#000 40%,transparent 80%);mask-image:radial-gradient(ellipse 70% 90% at 30% 0%,#000 40%,transparent 80%)}
+.hero__glow{position:absolute;top:-30%;right:4%;width:340px;height:340px;background:radial-gradient(circle,rgba(212,160,23,.30),transparent 62%)}
+.hero .wrap{position:relative}
+.crumb{display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.6);margin-bottom:22px}
+.crumb a{text-decoration:none;color:rgba(255,255,255,.72)}
+.crumb a:hover{color:#fff}
+.crumb i{font-size:9px;color:rgba(255,255,255,.4)}
+.hero__head{display:flex;gap:20px;align-items:flex-start}
+.hero__head>div{min-width:0;flex:1}
+.hero__badge{width:66px;height:66px;border-radius:16px;background:#fff;display:flex;align-items:center;justify-content:center;padding:13px;box-shadow:0 8px 26px rgba(0,0,0,.3);flex-shrink:0}
+.hero__badge img{width:100%;height:100%;object-fit:contain}
+.hero__cat{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--vault);margin:0 0 9px}
+.hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:clamp(23px,3vw,32px);line-height:1.14;margin:0 0 15px}
+.hero__meta{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.mchip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:rgba(255,255,255,.92);background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);padding:7px 13px;border-radius:999px}
+.mchip i{font-size:12px;color:var(--accent)}
+.mchip.lvl{color:#7fd0a8}.mchip.lvl i{color:#7fd0a8}
+
+/* Layout */
+.detail{padding:36px 0 80px}
+.detail .wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:30px;align-items:start}
+.card{background:#fff;border:1px solid var(--slate-200);border-radius:14px;box-shadow:0 6px 22px rgba(7,41,77,.05)}
+.card + .card{margin-top:24px}
+.card__head{display:flex;align-items:center;gap:11px;padding:18px 22px;border-bottom:1px solid var(--slate-100)}
+.card__head i{width:30px;height:30px;border-radius:8px;background:color-mix(in srgb,var(--accent) 14%,#fff);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px}
+.card__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16.5px;font-weight:700;letter-spacing:-.01em;color:var(--navy);margin:0}
+.card__head .tagx{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,#fff);padding:4px 10px;border-radius:999px}
+.card__body{padding:22px}
+
+/* Video */
+.player{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#0b1f3a,#0f2c52 60%,#123a6c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:not-allowed}
+.player__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:34px 34px}
+.player__play{position:relative;width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.34);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;backdrop-filter:blur(3px)}
+.player__note{position:relative;font-size:13px;color:rgba(255,255,255,.78);font-weight:500}
+.player__soon{position:absolute;top:14px;right:14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(248,144,53,.9);padding:5px 11px;border-radius:999px}
+.chapters{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column}
+.chapters li{display:flex;align-items:center;gap:13px;padding:11px 4px;border-top:1px solid var(--slate-100);font-size:14px;color:var(--slate-600)}
+.chapters li:first-child{border-top:0}
+.chapters .num{width:26px;height:26px;border-radius:7px;background:var(--slate-100);color:var(--navy);font-family:'JetBrains Mono',monospace;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chapters .ttl{flex:1;color:var(--ink);font-weight:500}
+.chapters .dur{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--slate-400)}
+
+/* Objectifs */
+.obj{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:11px 22px}
+.obj li{display:flex;align-items:flex-start;gap:10px;font-size:13.7px;line-height:1.45;color:var(--slate-600)}
+.obj li i{color:#0f8a4f;font-size:12px;margin-top:3px;flex-shrink:0}
+
+/* Steps */
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{position:relative;padding:0 0 22px 44px;counter-increment:s}
+.steps li:before{content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:9px;background:var(--navy);color:#fff;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center}
+.steps li:after{content:"";position:absolute;left:14px;top:34px;bottom:2px;width:2px;background:var(--slate-200)}
+.steps li:last-child{padding-bottom:0}
+.steps li:last-child:after{display:none}
+.steps h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:var(--navy);margin:4px 0 5px}
+.steps p{margin:0;font-size:13.6px;line-height:1.5;color:var(--slate-600)}
+
+/* Terminal */
+.term{background:#0c1a2e;border:1px solid #1b3a5c;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(7,41,77,.18)}
+.term__bar{display:flex;align-items:center;gap:7px;padding:11px 14px;background:#0a1626;border-bottom:1px solid #18324f}
+.term__bar span{width:11px;height:11px;border-radius:50%}
+.term__bar .r{background:#ff5f57}.term__bar .y{background:#febc2e}.term__bar .g{background:#28c840}
+.term__bar em{margin-left:8px;font-family:'JetBrains Mono',monospace;font-style:normal;font-size:12px;color:#6b8cae}
+.term__body{padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.8px;line-height:1.75;color:#cde0f5;overflow-x:auto}
+.term__body .c{color:#5f7fa5}
+.term__body .p{color:#3ee08f}
+.term__body .o{color:#8fb4dd}
+.term__body .k{color:#f8b85f}
+.term__body pre{margin:0;white-space:pre-wrap;word-break:break-word}
+
+/* Spec grid */
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.spec__item{display:flex;gap:11px;align-items:flex-start;padding:13px 15px;background:var(--slate-50);border:1px solid var(--slate-100);border-radius:10px}
+.spec__item i{color:var(--accent);font-size:14px;margin-top:2px}
+.spec__item .k{display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--slate-400);margin-bottom:3px}
+.spec__item .v{font-size:13.4px;font-weight:500;color:var(--ink)}
+
+/* Aside / fiche */
+.aside{position:sticky;top:88px;display:flex;flex-direction:column;gap:20px}
+.fiche{background:#fff;border:1px solid var(--slate-200);border-radius:14px;overflow:hidden;box-shadow:0 6px 22px rgba(7,41,77,.06)}
+.fiche__top{background:linear-gradient(135deg,#07294d,#0e3d72);color:#fff;padding:20px 22px}
+.fiche__top h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin:0 0 3px}
+.fiche__top p{margin:0;font-size:12.5px;color:rgba(255,255,255,.66)}
+.fiche__rows{padding:8px 22px 6px}
+.frow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--slate-100);font-size:13.6px}
+.frow:last-child{border-bottom:0}
+.frow i{width:18px;text-align:center;color:var(--accent);font-size:13px}
+.frow .fk{color:var(--slate-500);min-width:88px}
+.frow .fv{margin-left:auto;font-weight:600;color:var(--ink);text-align:right}
+.fiche__pre{padding:0 22px 18px}
+.fiche__pre h4,.fiche__tags h4{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--slate-400);margin:14px 0 9px}
+.fiche__pre ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.fiche__pre li{display:flex;align-items:flex-start;gap:9px;font-size:13.2px;color:var(--slate-600)}
+.fiche__pre li i{color:#0f8a4f;font-size:10px;margin-top:4px}
+.fiche__tags{padding:0 22px 20px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#5a6a82;background:var(--slate-100);border-radius:6px;padding:4px 9px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;border-radius:11px;padding:13px 18px;cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);border:0}
+.btn--primary{background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(248,144,53,.32)}
+.btn--primary:hover{background:#ed7f1f}
+.btn--ghost{background:#fff;color:var(--navy);border:1.5px solid var(--slate-200)}
+.btn--ghost:hover{border-color:var(--navy)}
+.btn.is-pending{background:var(--slate-400)!important;box-shadow:none;pointer-events:none;color:#fff}
+.fiche__cta{padding:0 22px 22px;display:flex;flex-direction:column;gap:10px}
+.soon-hint{font-size:12px;color:var(--slate-400);text-align:center;margin:2px 0 0}
+
+/* Footer */
+.kf{background:var(--navy-d);color:rgba(255,255,255,.5);padding:26px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.07)}
+.kf p{margin:0;font-size:13px;letter-spacing:.2px}
+.kf strong{color:rgba(7,41,77,.76);font-weight:600}
+
+@media (max-width:980px){
+  .detail .wrap{grid-template-columns:1fr}
+  .aside{position:static;order:-1}
+  .obj{grid-template-columns:1fr}
+  .spec{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  .hero__head{flex-direction:column;gap:14px}
+  .kh__name{font-size:15.5px}
+  .kh__nav a{padding:7px 9px;font-size:13px}
+}
+   .lang-sw button:hover{color:#fff}.lang-sw button.is-active{background:linear-gradient(135deg,#f9d77e,#d6a02d);color:#07294d}
+.kh__drop{position:relative;display:inline-flex;align-items:center}.kh__drop>a{padding-right:4px}.kh__droplabel{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);padding:8px 4px 8px 14px;cursor:default}.kh__drop:hover .kh__droplabel{color:#fff}.kh__droplabel.active{color:#f9d77e}.kh__drop>i{color:rgba(255,255,255,.58);font-size:11px;cursor:pointer;padding:8px 10px 8px 2px}.kh__drop:hover>i{color:#f9d77e}.kh__menu{position:absolute;top:calc(100% + 2px);left:0;min-width:168px;background:#fff;border:1px solid rgba(214,160,45,.28);border-top:3px solid #d6a02d;border-radius:0 0 10px 10px;box-shadow:0 18px 38px rgba(7,41,77,.14);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .2s cubic-bezier(.4,0,.2,1);z-index:70}.kh__drop:hover .kh__menu{opacity:1;visibility:visible;transform:none}.kh__menu a{display:block;padding:9px 12px;border-radius:7px;font-size:14px;font-weight:600;color:rgba(7,41,77,.76)}.kh__menu a:hover{background:rgba(214,160,45,.12);color:#9a6510}.kh__menu a.active{color:#9a6510}
+
+/*txt-safe*/h1,h2,h3,h4,h5,h6,p,li,figcaption,dt,dd,blockquote{overflow-wrap:break-word;word-wrap:break-word}
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body>
+   <header class="kh">
+      <div class="kh__in">
+         <a class="kh__brand" href="index.html">
+            <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+            <span class="kh__name">Koffi Academy</span>
+         </a>
+         <nav class="kh__nav">
+            <a href="index.html" data-i18n="navHome">Accueil</a>
+            <span class="kh__drop"><span class="kh__droplabel" data-i18n="navCourses">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="laboratoire.html" class="active" data-i18n="navLab">Laboratoires</a><a href="courses/courses.html" data-i18n="navCatalog">Catalogue de cours</a></span></span>
+            <a href="blog.html">Blog</a>
+            <a href="culture.html">Culture</a>
+<a href="koffi-profile.html" data-i18n="navProfile">Profil</a>
+         </nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+      </div>
+   </header>
+
+   <section class="hero">
+      <span class="hero__grid" aria-hidden="true"></span>
+      <span class="hero__glow" aria-hidden="true"></span>
+      <div class="wrap">
+         <nav class="crumb">
+            <span class="kh__drop"><span class="kh__droplabel" data-i18n="navCourses">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="laboratoire.html" data-i18n="navLab">Laboratoires</a><a href="courses/courses.html" data-i18n="navCatalog">Catalogue de cours</a></span></span>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="laboratoire.html">HashiCorp</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Vault Token Operations and Management</span>
+         </nav>
+         <div class="hero__head">
+            <span class="hero__badge">
+               <img src="https://cdn.simpleicons.org/vault" alt="HashiCorp Vault"
+                    onerror="this.outerHTML='<span style=&quot;font-family:JetBrains Mono;font-weight:700;font-size:22px;color:#D4A017&quot;>Vlt</span>'">
+            </span>
+            <div>
+               <p class="hero__cat">HashiCorp · Vault</p>
+               <h1>Vault Token Operations and Management</h1>
+               <div class="hero__meta">
+                  <span class="mchip"><i class="fa-solid fa-cube"></i>Vault</span>
+                  <span class="mchip lvl"><i class="fa-solid fa-signal"></i><span data-i18n="lvl">Intermédiaire</span></span>
+                  <span class="mchip"><i class="fa-regular fa-clock"></i>75 min</span>
+                  <span class="mchip"><i class="fa-solid fa-certificate"></i>Vault Associate (003)</span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <main class="detail">
+      <div class="wrap">
+         <!-- Colonne principale -->
+         <div class="main">
+            <!-- Vidéo -->
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-play"></i>
+                  <h2 data-i18n="vTitle">Vidéo du laboratoire</h2>
+                  <span class="tagx" data-i18n="vTag">8 chapitres · 55 min</span>
+               </div>
+               <div class="card__body">
+                  <div class="player" id="player">
+                     <span class="player__grid" aria-hidden="true"></span>
+                     <span class="player__soon" data-i18n="soon">Bientôt disponible</span>
+                     <span class="player__play"><i class="fa-solid fa-play"></i></span>
+                     <span class="player__note" data-i18n="vNote">La vidéo méthodique sera publiée prochainement.</span>
+                  </div>
+                  <ol class="chapters">
+                     <li><span class="num">01</span><span class="ttl" data-i18n="ch1">Cycle de vie d'un token Vault</span><span class="dur">04:30</span></li>
+                     <li><span class="num">02</span><span class="ttl" data-i18n="ch2">Root, service et batch tokens</span><span class="dur">06:10</span></li>
+                     <li><span class="num">03</span><span class="ttl" data-i18n="ch3">Créer un token avec policy et TTL</span><span class="dur">08:05</span></li>
+                     <li><span class="num">04</span><span class="ttl" data-i18n="ch4">Accessors et inspection sans exposer le token</span><span class="dur">06:20</span></li>
+                     <li><span class="num">05</span><span class="ttl" data-i18n="ch5">Renouvellement et expiration</span><span class="dur">07:15</span></li>
+                     <li><span class="num">06</span><span class="ttl" data-i18n="ch6">Révocation et tokens orphelins</span><span class="dur">07:50</span></li>
+                     <li><span class="num">07</span><span class="ttl" data-i18n="ch7">Token roles et periodic tokens</span><span class="dur">08:40</span></li>
+                     <li><span class="num">08</span><span class="ttl" data-i18n="ch8">Moindre privilège et audit</span><span class="dur">06:30</span></li>
+                  </ol>
+               </div>
+            </section>
+
+            <!-- Objectifs -->
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-bullseye"></i>
+                  <h2 data-i18n="objTitle">Objectifs d'apprentissage</h2>
+               </div>
+               <div class="card__body">
+                  <ul class="obj">
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o1">Distinguer root, service et batch tokens et leurs cas d'usage.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o2">Créer des tokens avec policies, TTL et max TTL explicite.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o3">Inspecter un token via son accessor sans jamais l'exposer.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o4">Renouveler et prolonger la durée de vie d'un token.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o5">Révoquer un token et la cascade de ses enfants.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o6">Configurer des token roles et des periodic tokens.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o7">Appliquer le moindre privilège aux identités machine.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o8">Tracer les opérations de tokens via les audit devices.</span></li>
+                  </ul>
+               </div>
+            </section>
+
+            <!-- Environnement / Sandbox -->
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-terminal"></i>
+                  <h2 data-i18n="envTitle">Environnement virtuel</h2>
+                  <span class="tagx">Sandbox</span>
+               </div>
+               <div class="card__body">
+                  <div class="term">
+                     <div class="term__bar"><span class="r"></span><span class="y"></span><span class="g"></span><em>vault@koffi-lab: ~</em></div>
+                     <div class="term__body"><pre><span class="c" data-i18n="t1"># 1 · Créer un token de service avec policy et TTL</span>
+<span class="p">$</span> vault token create <span class="k">-policy</span>=apps <span class="k">-ttl</span>=1h <span class="k">-explicit-max-ttl</span>=4h
+<span class="o">token                hvs.CAESIJ...redacted</span>
+<span class="o">token_accessor       8sh2mK0pQ...</span>
+<span class="o">token_duration       1h    token_policies  [default apps]</span>
+
+<span class="c" data-i18n="t2"># 2 · Inspecter via l'accessor (le token n'est jamais affiché)</span>
+<span class="p">$</span> vault token lookup <span class="k">-accessor</span> 8sh2mK0pQ...
+<span class="o">ttl   59m48s    num_uses   0    orphan   false</span>
+
+<span class="c" data-i18n="t3"># 3 · Renouveler le token (+30 min)</span>
+<span class="p">$</span> vault token renew <span class="k">-increment</span>=30m hvs.CAESIJ...
+<span class="o">token_duration       30m</span>
+
+<span class="c" data-i18n="t4"># 4 · Révoquer le token et toute sa descendance</span>
+<span class="p">$</span> vault token revoke hvs.CAESIJ...
+<span class="o">Success! Revoked token (if it existed)</span></pre></div>
+                  </div>
+                  <div class="spec">
+                     <div class="spec__item"><i class="fa-brands fa-ubuntu"></i><div><span class="k">OS</span><span class="v">Ubuntu 22.04 LTS</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-vault"></i><div><span class="k">Vault</span><span class="v" data-i18n="spVaultV">v1.15 · mode dev (démarré)</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-terminal"></i><div><span class="k" data-i18n="spOutils">Outils</span><span class="v">CLI vault, jq, curl</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-network-wired"></i><div><span class="k" data-i18n="spAddr">Adresse</span><span class="v">VAULT_ADDR=127.0.0.1:8200</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-window-maximize"></i><div><span class="k" data-i18n="spIface">Interface</span><span class="v" data-i18n="spIfaceV">UI Vault dans le navigateur</span></div></div>
+                     <div class="spec__item"><i class="fa-regular fa-hourglass-half"></i><div><span class="k" data-i18n="spSession">Session</span><span class="v" data-i18n="spSessionV">60 min, réinitialisable</span></div></div>
+                  </div>
+               </div>
+            </section>
+
+            <!-- Étapes -->
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-list-check"></i>
+                  <h2 data-i18n="stepsTitle">Déroulé du laboratoire</h2>
+               </div>
+               <div class="card__body">
+                  <ol class="steps">
+                     <li><h3 data-i18n="s1t">Démarrer Vault et s'authentifier</h3><p data-i18n-html="s1d">Lancez Vault en mode dev, exportez <code>VAULT_ADDR</code> et connectez-vous avec le root token fourni.</p></li>
+                     <li><h3 data-i18n="s2t">Écrire une policy applicative</h3><p data-i18n-html="s2d">Définissez une policy <code>apps</code> au moindre privilège, limitée aux chemins de secrets nécessaires.</p></li>
+                     <li><h3 data-i18n="s3t">Créer un token de service</h3><p data-i18n-html="s3d">Générez un token rattaché à la policy avec un TTL d'1 h et un max TTL explicite de 4 h.</p></li>
+                     <li><h3 data-i18n="s4t">Inspecter via l'accessor</h3><p data-i18n-html="s4d">Utilisez l'accessor pour auditer le token (TTL restant, policies, orphan) sans jamais l'exposer.</p></li>
+                     <li><h3 data-i18n="s5t">Renouveler et observer l'expiration</h3><p data-i18n-html="s5d">Prolongez la durée de vie, puis laissez un token court expirer pour comprendre le lease.</p></li>
+                     <li><h3 data-i18n="s6t">Révoquer en cascade</h3><p data-i18n-html="s6d">Révoquez un token parent et vérifiez la révocation automatique de ses enfants ; testez <code>-mode=orphan</code>.</p></li>
+                     <li><h3 data-i18n="s7t">Token roles et periodic tokens</h3><p data-i18n-html="s7d">Créez un token role réutilisable et un periodic token pour les charges de longue durée.</p></li>
+                     <li><h3 data-i18n="s8t">Activer l'audit</h3><p data-i18n-html="s8d">Branchez un audit device fichier et retrouvez chaque opération de token dans le journal.</p></li>
+                  </ol>
+               </div>
+            </section>
+         </div>
+
+         <!-- Fiche technique -->
+         <aside class="aside">
+            <div class="fiche">
+               <div class="fiche__top">
+                  <h3 data-i18n="fTitle">Fiche technique</h3>
+                  <p data-i18n="fSub">Koffi Academy · Laboratoire pratique</p>
+               </div>
+               <div class="fiche__rows">
+                  <div class="frow"><i class="fa-solid fa-signal"></i><span class="fk" data-i18n="fNiveau">Niveau</span><span class="fv" data-i18n="lvl">Intermédiaire</span></div>
+                  <div class="frow"><i class="fa-regular fa-clock"></i><span class="fk" data-i18n="fDuree">Durée</span><span class="fv">75 min</span></div>
+                  <div class="frow"><i class="fa-solid fa-layer-group"></i><span class="fk" data-i18n="fCat">Catégorie</span><span class="fv">HashiCorp · Vault</span></div>
+                  <div class="frow"><i class="fa-solid fa-certificate"></i><span class="fk" data-i18n="fParcours">Parcours</span><span class="fv">Vault Associate (003)</span></div>
+                  <div class="frow"><i class="fa-solid fa-cube"></i><span class="fk" data-i18n="fFormat">Format</span><span class="fv" data-i18n="fFormatV">Vidéo + Sandbox</span></div>
+               </div>
+               <div class="fiche__pre">
+                  <h4 data-i18n="fPre">Prérequis</h4>
+                  <ul>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="p1">CLI Vault installée et fonctionnelle</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="p2">Bases de l'authentification Vault</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="p3">Aisance avec la ligne de commande Linux</span></li>
+                  </ul>
+               </div>
+               <div class="fiche__tags">
+                  <h4 data-i18n="fTags">Tags</h4>
+                  <div class="tags"><span class="tag">vault</span><span class="tag">tokens</span><span class="tag">secrets</span></div>
+               </div>
+               <div class="fiche__cta">
+                  <a class="btn btn--primary" href="payment/checkout.html?course=vault-tokens&price=55&min=75&title=Vault%20Token%20Operations%20and%20Management"><i class="fa-solid fa-lock-open"></i> <span data-i18n="ctaLaunch">Accéder au contenu</span></a>
+                  <a class="btn btn--ghost" href="laboratoire.html"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="ctaAll">Tous les laboratoires</span></a>
+                  <p class="soon-hint" data-i18n="hint">Vidéo et sandbox interactifs bientôt disponibles.</p>
+               </div>
+            </div>
+         </aside>
+      </div>
+   </main>
+
+   <footer class="kf">
+      <p>&copy; 2026 <strong>Koffi Academy</strong>. <span data-i18n="fRights">Tous droits réservés.</span></p>
+   </footer>
+
+   <script>
+   (function(){
+     function pending(el,label){
+       var old=el.getAttribute('data-label')||el.innerHTML;
+       el.setAttribute('data-label',old);el.classList.add('is-pending');
+       el.innerHTML=label;
+       setTimeout(function(){el.classList.remove('is-pending');el.innerHTML=old;},1500);
+     }
+     document.querySelectorAll('[data-soon]').forEach(function(b){
+       b.addEventListener('click',function(){pending(b,'Bientôt disponible');});
+     });
+     var p=document.getElementById('player');
+     if(p)p.addEventListener('click',function(){
+       var n=p.querySelector('.player__note');if(n)n.textContent='Disponible très prochainement — revenez bientôt.';
+     });
+   })();
+   </script>
+<script>
+window.I18N_LAB={"fr":{"navHome":"Accueil","navCourses":"Cours","navCatalog":"Catalogue de cours","navLab":"Laboratoires","navLabs":"Laboratoires","navProfile":"Profil","lvl":"Intermédiaire","vTitle":"Vidéo du laboratoire","vTag":"8 chapitres · 55 min","soon":"Bientôt disponible","vNote":"La vidéo méthodique sera publiée prochainement.","ch1":"Cycle de vie d'un token Vault","ch2":"Root, service et batch tokens","ch3":"Créer un token avec policy et TTL","ch4":"Accessors et inspection sans exposer le token","ch5":"Renouvellement et expiration","ch6":"Révocation et tokens orphelins","ch7":"Token roles et periodic tokens","ch8":"Moindre privilège et audit","objTitle":"Objectifs d'apprentissage","o1":"Distinguer root, service et batch tokens et leurs cas d'usage.","o2":"Créer des tokens avec policies, TTL et max TTL explicite.","o3":"Inspecter un token via son accessor sans jamais l'exposer.","o4":"Renouveler et prolonger la durée de vie d'un token.","o5":"Révoquer un token et la cascade de ses enfants.","o6":"Configurer des token roles et des periodic tokens.","o7":"Appliquer le moindre privilège aux identités machine.","o8":"Tracer les opérations de tokens via les audit devices.","envTitle":"Environnement virtuel","t1":"# 1 · Créer un token de service avec policy et TTL","t2":"# 2 · Inspecter via l'accessor (le token n'est jamais affiché)","t3":"# 3 · Renouveler le token (+30 min)","t4":"# 4 · Révoquer le token et toute sa descendance","spOutils":"Outils","spVaultV":"v1.15 · mode dev (démarré)","spAddr":"Adresse","spIface":"Interface","spIfaceV":"UI Vault dans le navigateur","spSession":"Session","spSessionV":"60 min, réinitialisable","stepsTitle":"Déroulé du laboratoire","s1t":"Démarrer Vault et s'authentifier","s1d":"Lancez Vault en mode dev, exportez <code>VAULT_ADDR</code> et connectez-vous avec le root token fourni.","s2t":"Écrire une policy applicative","s2d":"Définissez une policy <code>apps</code> au moindre privilège, limitée aux chemins de secrets nécessaires.","s3t":"Créer un token de service","s3d":"Générez un token rattaché à la policy avec un TTL d'1 h et un max TTL explicite de 4 h.","s4t":"Inspecter via l'accessor","s4d":"Utilisez l'accessor pour auditer le token (TTL restant, policies, orphan) sans jamais l'exposer.","s5t":"Renouveler et observer l'expiration","s5d":"Prolongez la durée de vie, puis laissez un token court expirer pour comprendre le lease.","s6t":"Révoquer en cascade","s6d":"Révoquez un token parent et vérifiez la révocation automatique de ses enfants ; testez <code>-mode=orphan</code>.","s7t":"Token roles et periodic tokens","s7d":"Créez un token role réutilisable et un periodic token pour les charges de longue durée.","s8t":"Activer l'audit","s8d":"Branchez un audit device fichier et retrouvez chaque opération de token dans le journal.","fTitle":"Fiche technique","fSub":"Koffi Academy · Laboratoire pratique","fNiveau":"Niveau","fDuree":"Durée","fCat":"Catégorie","fParcours":"Parcours","fFormat":"Format","fFormatV":"Vidéo + Sandbox","fPre":"Prérequis","p1":"CLI Vault installée et fonctionnelle","p2":"Bases de l'authentification Vault","p3":"Aisance avec la ligne de commande Linux","fTags":"Tags","ctaLaunch":"Accéder au contenu","ctaAll":"Tous les laboratoires","hint":"Vidéo et sandbox interactifs bientôt disponibles.","fRights":"Tous droits réservés."},"de":{"navHome":"Startseite","navCourses":"Kurse","navCatalog":"Kurskatalog","navLab":"Labore","navLabs":"Labore","navProfile":"Profil","lvl":"Fortgeschritten","vTitle":"Lab-Video","vTag":"8 Kapitel · 55 Min","soon":"Bald verfügbar","vNote":"Das methodische Video wird in Kürze veröffentlicht.","ch1":"Lebenszyklus eines Vault-Tokens","ch2":"Root-, Service- und Batch-Tokens","ch3":"Token mit Policy und TTL erstellen","ch4":"Accessors und Inspektion ohne Token-Offenlegung","ch5":"Erneuerung und Ablauf","ch6":"Widerruf und Orphan-Tokens","ch7":"Token Roles und Periodic Tokens","ch8":"Least Privilege und Audit","objTitle":"Lernziele","o1":"Root-, Service- und Batch-Tokens und ihre Anwendungsfälle unterscheiden.","o2":"Tokens mit Policies, TTL und explizitem Max-TTL erstellen.","o3":"Ein Token über seinen Accessor inspizieren, ohne es je offenzulegen.","o4":"Die Lebensdauer eines Tokens erneuern und verlängern.","o5":"Ein Token und die Kaskade seiner Kind-Tokens widerrufen.","o6":"Token Roles und Periodic Tokens konfigurieren.","o7":"Least Privilege auf Maschinenidentitäten anwenden.","o8":"Token-Operationen über Audit Devices nachverfolgen.","envTitle":"Virtuelle Umgebung","t1":"# 1 · Service-Token mit Policy und TTL erstellen","t2":"# 2 · Über den Accessor inspizieren (Token wird nie angezeigt)","t3":"# 3 · Token erneuern (+30 Min)","t4":"# 4 · Token und seine gesamte Nachkommenschaft widerrufen","spOutils":"Tools","spVaultV":"v1.15 · Dev-Modus (gestartet)","spAddr":"Adresse","spIface":"Oberfläche","spIfaceV":"Vault-UI im Browser","spSession":"Sitzung","spSessionV":"60 Min, zurücksetzbar","stepsTitle":"Ablauf des Labors","s1t":"Vault starten und authentifizieren","s1d":"Starten Sie Vault im Dev-Modus, exportieren Sie <code>VAULT_ADDR</code> und melden Sie sich mit dem bereitgestellten Root-Token an.","s2t":"Eine Anwendungs-Policy schreiben","s2d":"Definieren Sie eine <code>apps</code>-Policy nach dem Least-Privilege-Prinzip, beschränkt auf die nötigen Secret-Pfade.","s3t":"Ein Service-Token erstellen","s3d":"Erzeugen Sie ein an die Policy gebundenes Token mit 1 h TTL und explizitem Max-TTL von 4 h.","s4t":"Über den Accessor inspizieren","s4d":"Nutzen Sie den Accessor, um das Token zu prüfen (Rest-TTL, Policies, Orphan), ohne es offenzulegen.","s5t":"Erneuern und den Ablauf beobachten","s5d":"Verlängern Sie die Lebensdauer und lassen Sie dann ein kurzes Token ablaufen, um das Lease zu verstehen.","s6t":"Kaskadiert widerrufen","s6d":"Widerrufen Sie ein Eltern-Token und prüfen Sie den automatischen Widerruf seiner Kinder; testen Sie <code>-mode=orphan</code>.","s7t":"Token Roles und Periodic Tokens","s7d":"Erstellen Sie eine wiederverwendbare Token Role und ein Periodic Token für langlaufende Workloads.","s8t":"Audit aktivieren","s8d":"Hängen Sie ein Datei-Audit-Device an und finden Sie jede Token-Operation im Protokoll.","fTitle":"Technisches Datenblatt","fSub":"Koffi Academy · Praxislabor","fNiveau":"Niveau","fDuree":"Dauer","fCat":"Kategorie","fParcours":"Lernpfad","fFormat":"Format","fFormatV":"Video + Sandbox","fPre":"Voraussetzungen","p1":"Vault CLI installiert und funktionsfähig","p2":"Grundlagen der Vault-Authentifizierung","p3":"Sicherer Umgang mit der Linux-Kommandozeile","fTags":"Tags","ctaLaunch":"Inhalt freischalten","ctaAll":"Alle Labore","hint":"Interaktives Video und Sandbox bald verfügbar.","fRights":"Alle Rechte vorbehalten."},"en":{"navHome":"Home","navCourses":"Courses","navCatalog":"Course catalog","navLab":"Labs","navLabs":"Labs","navProfile":"Profile","lvl":"Intermediate","vTitle":"Lab video","vTag":"8 chapters · 55 min","soon":"Coming soon","vNote":"The methodical video will be published soon.","ch1":"Lifecycle of a Vault token","ch2":"Root, service and batch tokens","ch3":"Create a token with policy and TTL","ch4":"Accessors and inspection without exposing the token","ch5":"Renewal and expiration","ch6":"Revocation and orphan tokens","ch7":"Token roles and periodic tokens","ch8":"Least privilege and audit","objTitle":"Learning objectives","o1":"Distinguish root, service and batch tokens and their use cases.","o2":"Create tokens with policies, TTL and explicit max TTL.","o3":"Inspect a token via its accessor without ever exposing it.","o4":"Renew and extend a token's lifetime.","o5":"Revoke a token and the cascade of its children.","o6":"Configure token roles and periodic tokens.","o7":"Apply least privilege to machine identities.","o8":"Trace token operations via audit devices.","envTitle":"Virtual environment","t1":"# 1 · Create a service token with policy and TTL","t2":"# 2 · Inspect via the accessor (the token is never shown)","t3":"# 3 · Renew the token (+30 min)","t4":"# 4 · Revoke the token and all its descendants","spOutils":"Tools","spVaultV":"v1.15 · dev mode (running)","spAddr":"Address","spIface":"Interface","spIfaceV":"Vault UI in the browser","spSession":"Session","spSessionV":"60 min, resettable","stepsTitle":"Lab walkthrough","s1t":"Start Vault and authenticate","s1d":"Start Vault in dev mode, export <code>VAULT_ADDR</code> and log in with the provided root token.","s2t":"Write an application policy","s2d":"Define a least-privilege <code>apps</code> policy, limited to the necessary secret paths.","s3t":"Create a service token","s3d":"Generate a token bound to the policy with a 1 h TTL and an explicit 4 h max TTL.","s4t":"Inspect via the accessor","s4d":"Use the accessor to audit the token (remaining TTL, policies, orphan) without exposing it.","s5t":"Renew and observe expiration","s5d":"Extend the lifetime, then let a short-lived token expire to understand the lease.","s6t":"Revoke in cascade","s6d":"Revoke a parent token and verify the automatic revocation of its children; test <code>-mode=orphan</code>.","s7t":"Token roles and periodic tokens","s7d":"Create a reusable token role and a periodic token for long-running workloads.","s8t":"Enable auditing","s8d":"Attach a file audit device and find every token operation in the log.","fTitle":"Technical sheet","fSub":"Koffi Academy · Hands-on lab","fNiveau":"Level","fDuree":"Duration","fCat":"Category","fParcours":"Track","fFormat":"Format","fFormatV":"Video + Sandbox","fPre":"Prerequisites","p1":"Vault CLI installed and working","p2":"Vault authentication basics","p3":"Comfort with the Linux command line","fTags":"Tags","ctaLaunch":"Unlock content","ctaAll":"All labs","hint":"Interactive video and sandbox coming soon.","fRights":"All rights reserved."}};
+(function(){var I=window.I18N_LAB;var lang=localStorage.getItem("preferred-lang");if(!I[lang])lang="de";function apply(l){if(!I[l])return;lang=l;localStorage.setItem("preferred-lang",l);document.documentElement.lang=l;var d=I[l];document.querySelectorAll("[data-i18n]").forEach(function(el){var k=el.getAttribute("data-i18n");if(d[k]!==undefined)el.textContent=d[k];});document.querySelectorAll("[data-i18n-html]").forEach(function(el){var k=el.getAttribute("data-i18n-html");if(d[k]!==undefined)el.innerHTML=d[k];});document.querySelectorAll("[data-lang-btn]").forEach(function(b){b.classList.toggle("is-active",b.getAttribute("data-lang-btn")===l);});}window.setLabDetailLang=apply;document.addEventListener("click",function(e){var b=e.target.closest("[data-lang-btn]");if(b)apply(b.getAttribute("data-lang-btn"));});document.addEventListener("DOMContentLoaded",function(){apply(lang);});})();
+</script>
+<script src="assets/js/kontakt-popup.js"></script>
+<script src="assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

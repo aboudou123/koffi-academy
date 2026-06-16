@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Infrastructure Consulting | Koffi Academy</title>
+    
+    <!-- Google Translate API für automatische Übersetzung -->
+    <meta name="google" content="notranslate">
+    
+    <!-- CSS (angepasst an Ihr bestehendes Design) -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="stylesheet" href="assets/css/modern.css">
+    <link rel="shortcut icon" href="assets/images/logo.png">
+    
+    <style>
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #07294d 0%, #0a3a6b 100%);
+            padding: 80px 0;
+            color: white;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-family: 'Rubik', sans-serif;
+        }
+        .hero-section p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        .hero-btn {
+            background: #ffc600;
+            color: #07294d !important;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .hero-btn:hover {
+            background: #e6b200;
+            transform: translateY(-2px);
+            color: #07294d;
+        }
+        
+        /* Service Cards */
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: #07294d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .service-icon i {
+            font-size: 36px;
+            color: #ffc600;
+        }
+        .service-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #07294d;
+            font-family: 'Rubik', sans-serif;
+        }
+        .service-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Process Steps */
+        .process-step {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: #ffc600;
+            color: #07294d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .process-step h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #07294d;
+            font-family: 'Rubik', sans-serif;
+        }
+        
+        /* Team Section */
+        .team-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .team-icon {
+            width: 100px;
+            height: 100px;
+            background: #f0f4f8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .team-icon i {
+            font-size: 48px;
+            color: #07294d;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #07294d 0%, #0a3a6b 100%);
+            padding: 60px 0;
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+        }
+        .cta-section h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-family: 'Rubik', sans-serif;
+        }
+        .cta-section p {
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+        
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .section-title h2 {
+            font-size: 36px;
+            color: #07294d;
+            margin-bottom: 10px;
+            font-family: 'Rubik', sans-serif;
+        }
+        .section-title p {
+            font-size: 16px;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Content Section */
+        .content-section {
+            padding: 60px 0;
+        }
+        .content-section h2 {
+            font-size: 28px;
+            color: #07294d;
+            margin-bottom: 20px;
+            font-family: 'Rubik', sans-serif;
+        }
+        .content-section p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        /* Footer Anpassungen */
+        .footer-main {
+            margin-top: 0;
+        }
+    .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+<style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style><link rel="stylesheet" href="assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body>
+
+<div class="page-main">
+    
+    <!-- Header (wie in Ihrer bestehenden Seite) -->
+    <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="laboratoire.html">Laboratoire</a><a href="courses/courses.html">Kurskatalog</a></span></span>
+<a href="blog.html">Blog</a>
+<a href="culture.html">Culture</a>
+<a href="koffi-profile.html">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="login.html">Anmelden</a><a class="kh__btn" href="register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+    <!-- Header Ende -->
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1>AI Infrastructure Consulting</h1>
+                    <p>Build production-ready AI platforms on the infrastructure your teams already know.</p>
+                    <a href="contact.html" class="hero-btn">Contact Us Today →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Get your team to work Better -->
+    <section class="content-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2>Bringen Sie Ihr Team zu besserer Arbeit</h2>
+                    <p>Bei Koffi Academy Lösungen verfolgen wir einen umfassenden Ansatz zur Verbesserung der Platform Engineering-Praxis in Kundenorganisationen. Wir verstehen, dass Platform Engineering nicht nur eine Reihe von Tools und Prozessen ist, sondern eine Kultur, die die gesamte Organisation durchdringt.</p>
+                    <p>Wir arbeiten eng mit unseren Kunden zusammen, um ihre individuellen Bedürfnisse und Herausforderungen zu verstehen, und entwickeln maßgeschneiderte Lösungen, die auf ihre spezifischen Anforderungen zugeschnitten sind. Unser Ziel ist es, Organisationen dabei zu unterstützen, wettbewerbsfähig zu sein, während sie Anwendungsfunktionen schneller und sicherer veröffentlichen.</p>
+                    <p>Wir verfolgen einen ganzheitlichen Ansatz für Platform Engineering, der sich auf die Menschen, Prozesse und Werkzeuge konzentriert, die für den Erfolg entscheidend sind. Unser Team arbeitet mit Ihrem Team zusammen, um sicherzustellen, dass alle auf die gleichen Ziele ausgerichtet sind und hinarbeiten. Wir helfen Organisationen, Silos aufzubrechen und funktionsübergreifende Teams zu schaffen, die effektiv und effizient zusammenarbeiten können.</p>
+                    <p>Wir legen auch großen Wert auf Automatisierung und kontinuierliche Verbesserung. Unsere Berater können Ihnen helfen, Ihren Entwicklungsprozess zu optimieren und automatisierte Tests und Bereitstellungen zu implementieren, wodurch das Risiko von Fehlern verringert und die Markteinführungszeit beschleunigt wird. Wir helfen Organisationen bei der Implementierung von Best Practices für Sicherheit, Compliance und Risikomanagement, um sicherzustellen, dass Ihre Anwendungen sicher sind und den gesetzlichen Anforderungen entsprechen.</p>
+                    <p>Bei Koffi Academy Lösungen engagieren wir uns, um Organisationen dabei zu helfen, ihre Platform Engineering-Ziele zu erreichen. Kontaktieren Sie uns noch heute, um mehr über unseren umfassenden Ansatz zu erfahren und wie wir Ihrer Organisation zum Erfolg verhelfen können.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- What is Platform Engineering -->
+    <section class="content-section" style="background: #f8f9fa;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2>Was ist Platform Engineering?</h2>
+                    <p>Platform Engineering ist die Praxis der Gestaltung und des Aufbaus von Toolchains und Arbeitsabläufen, die Self-Service-Fähigkeiten für Softwareentwicklungsteams ermöglichen. Der Schwerpunkt liegt auf der Schaffung interner Plattformen, die die Produktivität der Entwickler steigern, indem die Infrastruktur automatisiert und skalierbare, zuverlässige Umgebungen gewährleistet werden.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Our Platform Engineering Services -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Unsere Platform Engineering Dienstleistungen</h2>
+                <p>Bei Koffi Academy Lösungen bieten wir eine breite Palette von Platform Engineering-Dienstleistungen an, einschließlich CI/CD-Pipeline-Erstellung, Infrastrukturautomatisierung, Containerisierung und mehr.</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <h3>CI/CD Pipelines</h3>
+                        <p>Wir können Ihnen helfen, Ihre CI/CD-Pipelines für kontinuierliche Integration und Bereitstellung einzurichten und zu optimieren, um sicherzustellen, dass Ihr Code immer auf dem neuesten Stand und bereit für die Bereitstellung ist.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Infrastrukturautomatisierung</h3>
+                        <p>Wir sind Experten für Automatisierungstools wie Packer, Terraform, Ansible und HashiCorp Vault. Wir können Ihnen helfen, diese leistungsstarken Tools zu implementieren und zu verwalten.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-dharmachakra"></i>
+                        </div>
+                        <h3>Containerisierung</h3>
+                        <p>Wir verfügen über umfangreiche Erfahrung mit Microservices-Bereitstellungen mit Docker und Kubernetes. Wir können Ihnen helfen, diese modernen Technologien zu implementieren.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Monitoring & Observability</h3>
+                        <p>Wir bieten fachkundige Überwachungsdienste mit Prometheus, Grafana und dem ELK-Stack. Wir können Ihnen helfen, diese leistungsstarken Tools einzurichten und zu konfigurieren, um Einblicke in Ihre Anwendungsleistung zu gewinnen und Probleme schnell und effektiv zu beheben.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <p>Bei Koffi Academy Lösungen engagieren wir uns, unseren Kunden das höchste Maß an Service und Unterstützung zu bieten. Kontaktieren Sie uns noch heute, um zu erfahren, wie wir Ihnen helfen können, Ihre Internal Developer Platform-Initiativen auf die nächste Stufe zu heben.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Our Process -->
+    <section class="content-section" style="background: #f8f9fa;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Unser Prozess</h2>
+                <p>Unsere Platform Engineering-Dienstleistungen sind flexibel und anpassbar gestaltet, um den individuellen Bedürfnissen jedes Kunden gerecht zu werden.</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <h4>Analyse</h4>
+                        <p>Wir beginnen mit einer gründlichen Bewertung Ihrer aktuellen Prozesse und Infrastruktur, identifizieren Verbesserungsmöglichkeiten und Automatisierungspotenziale.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <h4>Maßgeschneiderter Plan</h4>
+                        <p>Daraufhin entwickeln wir mit Ihnen gemeinsam einen maßgeschneiderten Plan, der Ihre Prozesse optimiert, die Effizienz steigert und Kosten senkt.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <h4>Bildung & Übergabe</h4>
+                        <p>Schließlich stellen wir sicher, dass Ihr Team über das Gelernte aufgeklärt wird. Wir führen die Arbeit nicht einfach aus und lassen Sie zurück, ohne Ihr Team zu befähigen, die Aufgaben zu übernehmen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Our Team -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Unser Team</h2>
+                <p>Unser Team besteht aus erfahrenen Fachleuten mit einem tiefen Verständnis der Platform Engineering-Landschaft.</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="team-card">
+                        <div class="team-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h3>Plattformarchitekten</h3>
+                        <p>Erfahrene Fachleute, die skalierbare Infrastrukturlösungen entwerfen.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="team-card">
+                        <div class="team-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>DevOps Ingenieure</h3>
+                        <p>Experten für Automatisierung, CI/CD und Infrastructure as Code.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="team-card">
+                        <div class="team-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Sicherheitsspezialisten</h3>
+                        <p>Gewährleistung von Compliance und Sicherheits-Best Practices.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <p>Wir sind leidenschaftlich daran interessiert, unseren Kunden zu helfen, die neuesten Tools und Technologien zu nutzen, um ihre Ziele zu erreichen, und wir sind bestrebt, Ergebnisse zu liefern, die die Erwartungen übertreffen. Mit Koffi Academy Lösungen können Sie sicher sein, dass Sie mit einem Team von Experten zusammenarbeiten, das sich Ihrem Erfolg widmet.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2>Starten Sie noch heute</h2>
+                    <p>Wenn Sie bereit sind, Ihre Prozesse auf die nächste Stufe zu heben, kontaktieren Sie noch heute Koffi Academy Lösungen. Unser Expertenteam ist bereit, Ihnen zu helfen, Ihre Prozesse zu optimieren, die Effizienz zu steigern und Ihre Geschäftsziele zu erreichen.</p>
+                    <a href="contact.html" class="hero-btn" style="background: #ffc600; color: #07294d;">Kontaktieren Sie uns →</a>
+                    <p style="margin-top: 20px; font-size: 14px;">Kontaktieren Sie Koffi Academy Lösungen noch heute, um zu erfahren, wie unsere Platform Engineering-Dienstleistungen Ihrem Unternehmen helfen können, in der heutigen wettbewerbsintensiven Landschaft zu florieren.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer (wie in Ihrer bestehenden Seite) -->
+    <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="index.html">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="laboratoire.html">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="courses/courses.html">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="blog.html">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="event.html">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="about.html">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="faq.html">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="contact.html">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p>Copyright &copy; 2026 <a href="index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+    <!-- Footer Ende -->
+    
+</div>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/wow.min.js"></script>
+<script>
+    new WOW().init();
+</script>
+
+<!-- i18n Language Switcher -->
+<script>
+var i18n = {
+  de: {
+    'header-msg': 'Willkommen bei der Koffi Academy — Ihre Cloud- & DevOps-Reise beginnt hier.',
+    'nav-home': 'Startseite', 'nav-courses': 'Kurse',
+    'nav-events': 'Veranstaltungen', 'nav-about-me': 'Über mich',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Kontakt',
+    'nav-about': 'Über uns', 'nav-support': 'Support',
+    'nav-login': 'Anmelden / Registrieren'
+  },
+  fr: {
+    'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
+    'nav-home': 'Accueil', 'nav-courses': 'Cours',
+    'nav-events': 'Événements', 'nav-about-me': 'À propos de moi',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+    'nav-about': 'À propos', 'nav-support': 'Support',
+    'nav-login': "Se connecter / S'inscrire"
+  },
+  en: {
+    'header-msg': 'Online Courses — Millions of people are learning!',
+    'nav-home': 'Home', 'nav-courses': 'Courses',
+    'nav-events': 'Events', 'nav-about-me': 'About Me',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+    'nav-about': 'About Us', 'nav-support': 'Support',
+    'nav-login': 'Login / Register'
+  }
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) { el.textContent = i18n[lang][key]; }
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+});
+</script>
+<!-- end i18n -->
+<script src="assets/js/kontakt-popup.js"></script>
+<script src="assets/js/announce.js"></script>
+<script src="assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

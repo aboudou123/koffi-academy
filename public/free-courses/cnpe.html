@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <link rel="stylesheet" href="../assets/css/style.css">
+   <link rel="stylesheet" href="../assets/css/responsive.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <link rel="stylesheet" href="../assets/css/modern.css">
+   <link rel="stylesheet" href="../assets/css/modern-header.css">
+   <link rel="shortcut icon" href="../assets/images/logo.png">
+   <title>CNPE — Cloud Native Platform Engineer | Koffi Academy</title>
+   <meta name="description" content="Vollstandiger CNPE-Zertifizierungskurs: Examensdomanen, Lernplan, Praxisfragen und Checklisten. DE/EN/FR.">
+   <style>
+      :root{--go-navy-950:#020c1a;--go-navy-900:#061a30;--go-navy-800:#09213d;--go-navy-700:#12304f;--go-navy-600:#16456f;--go-gold:#d6a02d;--go-gold-soft:#f9d77e;--go-coral:#ef7b4d;--go-blue:#2563eb;--go-green:#047857;--go-red:#b91c1c;--go-amber:#b45309;--go-slate-50:#f8fafc;--go-slate-100:#f1f5f9;--go-slate-200:#e2e8f0;--go-slate-300:#cbd5e1;--go-slate-500:#64748b;--go-slate-600:#475569;--go-slate-700:#334155;--go-slate-800:#1e293b}
+      *{box-sizing:border-box;letter-spacing:0}html{scroll-behavior:smooth}
+      body.go-page{margin:0;background:var(--go-slate-50);color:var(--go-slate-700);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+      .page-main{overflow-x:clip}.go-shell{max-width:1180px;margin:0 auto;padding:0 24px}
+      .go-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:12px 18px;border-radius:8px;border:1px solid transparent;font-weight:800;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,color .18s ease}
+      .go-btn:hover{transform:translateY(-2px);text-decoration:none}
+      .go-btn-primary{background:linear-gradient(135deg,var(--go-gold-soft),var(--go-gold));color:#07294d;box-shadow:0 12px 28px rgba(214,160,45,.30)}
+      .go-btn-primary:hover{color:#07294d;box-shadow:0 16px 34px rgba(214,160,45,.42)}
+      .go-btn-ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.24);color:#fff}
+      .go-btn-ghost:hover{background:rgba(255,255,255,.14);color:#fff}
+      .go-hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#020c1a 0%,#09213d 45%,#12304f 74%,#16456f 100%);color:#fff;padding:86px 0 92px}
+      .go-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:44px 44px;opacity:.55}
+      .go-hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:52px;background:var(--go-slate-50);clip-path:polygon(0 42%,100% 0,100% 100%,0 100%)}
+      .go-hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);gap:42px;align-items:center}
+      .go-kicker{display:inline-flex;align-items:center;gap:9px;margin-bottom:18px;padding:8px 13px;border:1px solid rgba(214,160,45,.45);border-radius:8px;background:rgba(214,160,45,.13);color:#f9d77e;font-size:12px;font-weight:900;text-transform:uppercase}
+      .go-hero h1{font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;color:#fff;font-size:54px;line-height:1.08;font-weight:800;margin:0 0 20px}
+      .go-hero p{font-size:18px;line-height:1.75;color:rgba(255,255,255,.84);max-width:760px;margin:0 0 28px}
+      .go-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:26px}
+      .go-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:840px}
+      .go-meta span{display:flex;align-items:center;gap:9px;min-height:54px;padding:12px 13px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.08);color:#fff;font-size:13px;font-weight:700}
+      .go-meta i{color:var(--go-gold-soft)}
+      .go-visual{position:relative;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(2,12,26,.52);box-shadow:0 28px 70px rgba(0,0,0,.30);overflow:hidden}
+      .go-visual-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06)}
+      .go-dots{display:flex;gap:7px}.go-dots span{width:10px;height:10px;border-radius:50%;background:#94a3b8}
+      .go-dots span:nth-child(1){background:#ef4444}.go-dots span:nth-child(2){background:#f59e0b}.go-dots span:nth-child(3){background:#10b981}
+      .go-visual-head strong{font-family:"JetBrains Mono",Consolas,monospace;color:#cbd5e1;font-size:12px}
+      .go-visual-body{padding:18px}
+      .go-state{display:grid;gap:10px}
+      .go-state-row{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:11px 12px;border:1px solid rgba(255,255,255,.10);border-radius:8px;background:rgba(255,255,255,.045)}
+      .go-state-row small{font-family:"JetBrains Mono",Consolas,monospace;color:#93c5fd;font-weight:700}
+      .go-state-row strong{color:#fff;font-size:14px}.go-state-row i{color:#10b981}
+      .go-access{position:relative;z-index:2;margin-top:-38px}
+      .go-access-inner{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding:24px 26px;border:1px solid rgba(9,33,61,.08);border-radius:8px;background:#fff;box-shadow:0 18px 48px rgba(9,33,61,.12)}
+      .go-access h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:24px;font-weight:800;margin:0 0 6px}
+      .go-access p{margin:0;color:var(--go-slate-600);line-height:1.65}
+      .go-price-pill{display:inline-flex;align-items:center;gap:9px;padding:11px 14px;border-radius:8px;background:#fffbeb;color:#9a6510;font-weight:900;white-space:nowrap}
+      .go-section{padding:78px 0}.go-section.white{background:#fff}
+      .go-heading{max-width:840px;margin-bottom:34px}
+      .go-heading.center{text-align:center;margin-left:auto;margin-right:auto}
+      .go-heading .eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;color:#9a6510;font-size:12px;font-weight:900;text-transform:uppercase}
+      .go-heading h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:36px;font-weight:800;line-height:1.18;margin:0 0 12px}
+      .go-heading p{color:var(--go-slate-600);font-size:16px;line-height:1.75;margin:0}
+      .go-outcomes{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+      .go-card{height:100%;padding:24px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+      .go-card:hover{transform:translateY(-4px);border-color:rgba(214,160,45,.45);box-shadow:0 16px 42px rgba(9,33,61,.11)}
+      .go-icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin-bottom:16px;border-radius:8px;background:#fffbeb;color:#9a6510;font-size:18px}
+      .go-card h3{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:19px;font-weight:800;margin:0 0 9px}
+      .go-card p{color:var(--go-slate-600);line-height:1.7;margin:0}
+      .go-layout{display:grid;grid-template-columns:282px minmax(0,1fr);gap:28px;align-items:start}
+      .go-sidebar{position:sticky;top:86px;padding:20px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07)}
+      .go-sidebar h3{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:17px;font-weight:800;margin:0 0 14px}
+      .go-sidebar a{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--go-slate-100);color:var(--go-slate-600);font-size:14px;font-weight:700;text-decoration:none}
+      .go-sidebar a:last-child{border-bottom:0}.go-sidebar a:hover{color:#9a6510}.go-sidebar i{width:16px;color:var(--go-gold)}
+      .go-reader{padding:42px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07)}
+      .go-reader section{scroll-margin-top:96px;margin-bottom:56px}
+      .go-reader section:last-child{margin-bottom:0}
+      .go-reader h2,.go-reader h3,.go-reader h4{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-weight:800}
+      .go-reader h2{font-size:31px;line-height:1.2;margin:0 0 16px}
+      .go-reader h3{font-size:23px;margin:30px 0 12px}
+      .go-reader h4{font-size:18px;margin:22px 0 10px}
+      .go-reader p{font-size:16px;line-height:1.86;color:var(--go-slate-700);margin:0 0 16px}
+      .go-reader ul,.go-reader ol{padding:0;margin:0 0 18px}
+      .go-reader li{position:relative;list-style:none;padding-left:29px;margin-bottom:10px;line-height:1.78;color:var(--go-slate-700)}
+      .go-reader li::before{content:"";position:absolute;left:0;top:11px;width:8px;height:8px;border-radius:50%;background:var(--go-gold)}
+      .go-note,.go-warning,.go-rule{margin:24px 0;padding:20px 22px;border-radius:8px;border:1px solid var(--go-slate-200);background:var(--go-slate-50)}
+      .go-note{border-left:4px solid var(--go-blue)}
+      .go-warning{border-left:4px solid var(--go-amber);background:#fffbeb}
+      .go-rule{border-left:4px solid var(--go-green);background:#ecfdf5}
+      .go-note strong,.go-warning strong,.go-rule strong{color:var(--go-navy-800)}
+      .go-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:22px 0}
+      .go-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:22px 0}
+      .go-mini{padding:18px;border:1px solid var(--go-slate-200);border-radius:8px;background:var(--go-slate-50)}
+      .go-mini h4{margin:0 0 8px;font-size:17px}.go-mini p{margin:0;color:var(--go-slate-600);font-size:15px;line-height:1.65}
+      .go-table-wrap{overflow-x:auto;margin:22px 0;border:1px solid var(--go-slate-200);border-radius:8px}
+      .go-table{width:100%;border-collapse:collapse;background:#fff;min-width:720px}
+      .go-table th{background:#f8fafc;color:var(--go-navy-800);font-weight:900;text-align:left;padding:14px;border-bottom:1px solid var(--go-slate-200)}
+      .go-table td{padding:14px;border-bottom:1px solid var(--go-slate-200);vertical-align:top;line-height:1.65;color:var(--go-slate-700)}
+      .go-table tr:last-child td{border-bottom:0}
+      .go-checklist{display:grid;gap:10px;margin-top:16px}
+      .go-check{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--go-slate-200);border-radius:8px;background:var(--go-slate-50)}
+      .go-check i{color:var(--go-green);margin-top:4px}.go-check span{line-height:1.6}
+      .go-project{padding:28px;border-radius:8px;background:linear-gradient(135deg,#061a30,#12304f);color:#fff}
+      .go-project h3{color:#fff;margin-top:0}
+      .go-project p,.go-project li{color:rgba(255,255,255,.82)}
+      .go-project li::before{background:var(--go-gold-soft)}
+      .source-list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+      .source-list a{display:flex;align-items:flex-start;gap:10px;padding:16px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;color:var(--go-navy-800);font-weight:800;text-decoration:none}
+      .source-list a:hover{border-color:rgba(214,160,45,.55);color:#9a6510}
+      .source-list i{color:var(--go-gold);margin-top:3px}
+      .go-icon-warn{color:#f59e0b;margin-right:7px}.go-icon-ok{color:#10b981;margin-right:7px}
+      .kh__mark svg{width:62%;height:62%;display:block}
+      /* Quiz-Styles */
+      .quiz-card{margin:18px 0;padding:22px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 4px 16px rgba(9,33,61,.05)}
+      .quiz-q{font-weight:700;color:var(--go-navy-800);margin-bottom:14px;font-size:15px}
+      .quiz-opts{display:grid;gap:8px}
+      .quiz-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1.5px solid var(--go-slate-200);border-radius:8px;cursor:pointer;font-size:14px;color:var(--go-slate-700);transition:.15s;background:#fff}
+      .quiz-opt:hover{border-color:var(--go-gold);background:#fffbeb}
+      .quiz-opt.correct{border-color:var(--go-green);background:#ecfdf5;color:var(--go-green)}
+      .quiz-opt.wrong{border-color:var(--go-red);background:#fef2f2;color:var(--go-red)}
+      .quiz-letter{font-weight:800;font-family:"JetBrains Mono",Consolas,monospace;flex-shrink:0;width:20px}
+      .quiz-answer{margin-top:12px;padding:12px;border-radius:6px;background:#ecfdf5;border-left:4px solid var(--go-green);font-size:14px;display:none}
+      .quiz-answer.visible{display:block}
+      /* Domain-Progress-Bar */
+      .domain-bar{margin:8px 0;display:flex;align-items:center;gap:12px}
+      .domain-label{min-width:130px;font-size:13px;font-weight:700;color:var(--go-slate-700)}
+      .domain-track{flex:1;height:10px;border-radius:5px;background:var(--go-slate-200);overflow:hidden}
+      .domain-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--go-gold),var(--go-gold-soft))}
+      .domain-pct{min-width:36px;font-size:12px;font-weight:800;color:var(--go-amber);text-align:right}
+      .df-22{width:22%}.df-18{width:18%}.df-20{width:20%}.df-15{width:15%}.df-13{width:13%}.df-12{width:12%}
+      .simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0}
+      .simple-footer a{color:rgba(255,255,255,.82);text-decoration:none}
+      .simple-footer a:hover{color:#f9d77e}
+      .simple-footer h3{color:#fff;font-size:13px;font-weight:800;text-transform:uppercase;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(214,160,45,.30)}
+      .simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+      .simple-footer li{font-size:13.5px;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+      .simple-footer li::before{display:none}
+      .simple-footer li i.lead-icon{color:#f9d77e;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+      .sfooter-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding-bottom:36px}
+      .simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+      .simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42)}
+      @media (max-width:1080px){.go-hero-grid,.go-layout{grid-template-columns:1fr}.go-sidebar{position:relative;top:auto}.go-outcomes{grid-template-columns:repeat(2,1fr)}.go-grid-3{grid-template-columns:1fr}}
+      @media (max-width:760px){.go-shell{padding:0 18px}.go-hero{padding:70px 0 82px}.go-hero h1{font-size:38px}.go-hero p{font-size:16px}.go-meta{grid-template-columns:1fr}.go-access-inner{grid-template-columns:1fr}.go-section{padding:58px 0}.go-reader{padding:26px 18px}.go-reader h2{font-size:26px}.go-heading h2{font-size:29px}.go-outcomes,.go-grid-2,.source-list,.sfooter-cols{grid-template-columns:1fr}.go-state-row{grid-template-columns:1fr}.domain-bar{flex-direction:column;align-items:flex-start}}
+      .kl-drop{position:relative;flex-shrink:0}
+      .kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+      .kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+      .kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+      .kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+      .kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+      .kl-drop.open .kl-caret{transform:rotate(180deg)}
+      .kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+      .kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+      .kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+      .kl-opt:hover{background:rgba(255,255,255,.08)}.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+      .kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+      .kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+      .kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+      .lang-sect{display:none}.lang-sect.active{display:block}
+   </style>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body class="go-page">
+<div class="page-main">
+   <header class="kh">
+      <div class="kh__in">
+         <a class="kh__brand" href="../index.html">
+            <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+            <span class="kh__name">Koffi Academy</span>
+         </a>
+         <nav class="kh__nav">
+            <a href="../index.html">Startseite</a>
+            <span class="kh__drop"><span class="kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="../laboratoire.html">Laboratoire</a><a href="../courses/courses.html" class="active">Kurskatalog</a></span></span>
+            <a href="../blog.html">Blog</a>
+            <a href="../culture.html">Culture</a>
+            <a href="../koffi-profile.html">&Uuml;ber mich</a>
+            <span class="kh__auth"><a class="kh__login" href="../login.html">Anmelden</a><a class="kh__btn" href="../register.html">Registrieren</a></span>
+         </nav>
+         <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Fran&ccedil;ais</span><span class="kl-opt-code">FR</span></button></div></div>
+      </div>
+   </header>
+
+   <main>
+      <section class="go-hero">
+         <div class="go-shell">
+            <div class="go-hero-grid">
+               <div>
+                  <span class="go-kicker"><i class="fa-solid fa-certificate"></i> CNCF Zertifizierung &bull; Platform Engineering</span>
+                  <h1 data-i18n="heroTitle">CNPE — Cloud Native Platform Engineer</h1>
+                  <p data-i18n="heroSubtitle">Vollstandige Prufungsvorbereitung fur die CNCF Cloud Native Platform Engineer Zertifizierung: alle Examensdomanen, tiefer Lernstoff, interaktive Ubungsfragen und ein strukturierter 8-Wochen-Lernplan.</p>
+                  <div class="go-actions">
+                     <a class="go-btn go-btn-primary" href="#kursbuch"><i class="fa-solid fa-play"></i> <span data-i18n="startBtn">Kurs starten</span></a>
+                     <a class="go-btn go-btn-ghost" href="#quiz"><i class="fa-solid fa-question-circle"></i> <span data-i18n="quizBtn">Ubungsfragen</span></a>
+                  </div>
+                  <div class="go-meta">
+                     <span><i class="fa-regular fa-clock"></i> <span data-i18n="duration">8 Wochen</span></span>
+                     <span><i class="fa-solid fa-layer-group"></i> <span data-i18n="modules">6 Domanen</span></span>
+                     <span><i class="fa-solid fa-question-circle"></i> <span data-i18n="labs">25+ Ubungsfragen</span></span>
+                     <span><i class="fa-solid fa-certificate"></i> <span data-i18n="level">CNCF-Zertifizierung</span></span>
+                  </div>
+               </div>
+               <div class="go-visual">
+                  <div class="go-visual-head"><div class="go-dots"><span></span><span></span><span></span></div><strong>CNPE Exam Domains</strong></div>
+                  <div class="go-visual-body">
+                     <div class="go-state">
+                        <div class="go-state-row"><small>D1</small><strong>Platform Architecture &amp; Design (22%)</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>D2</small><strong>Kubernetes Internals (18%)</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>D3</small><strong>Infrastructure Provisioning (20%)</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>D4</small><strong>Security &amp; Compliance (15%)</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>D5</small><strong>Observability (13%)</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>D6</small><strong>Developer Experience (12%)</strong><i class="fa-solid fa-check"></i></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <section class="go-access">
+         <div class="go-shell">
+            <div class="go-access-inner">
+               <div>
+                  <h2 data-i18n="accessTitle">Die neue CNCF-Zertifizierung fur Platform Engineers</h2>
+                  <p data-i18n="accessDesc">Die CNPE-Zertifizierung bestatigt Expertise in Platform Engineering, Kubernetes-Internals, IaC, Security, Observability und Developer Experience — der vollstandige Stack moderner Platform-Arbeit.</p>
+               </div>
+               <span class="go-price-pill"><i class="fa-solid fa-certificate"></i> <span data-i18n="certLabel">Interaktive Ubungsfragen</span></span>
+            </div>
+         </div>
+      </section>
+
+      <section class="go-section white" id="ziele">
+         <div class="go-shell">
+            <div class="go-heading center">
+               <span class="eyebrow"><i class="fa-solid fa-bullseye"></i> <span data-i18n="eyebrowGoals">Pruungsvorbereitung</span></span>
+               <h2 data-i18n="goalsTitle">Was dieser Kurs abdeckt</h2>
+               <p data-i18n="goalsDesc">Alle 6 Examensdomanen vollstandig: tiefes Konzeptwissen, praktische Szenarien und interaktive Prufungsfragen fur eine gezielte Vorbereitung.</p>
+            </div>
+            <div class="go-outcomes">
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-sitemap"></i></span><h3 data-i18n="goal1Title">Platform Architecture</h3><p data-i18n="goal1Desc">IDP-Design, Control Planes, Kubernetes-Erweiterungen und Platform-as-a-Product-Prinzipien.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-cubes"></i></span><h3 data-i18n="goal2Title">IaC &amp; Provisioning</h3><p data-i18n="goal2Desc">Terraform, Crossplane, Helm und GitOps-Patterns fur Infrastructure Provisioning.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-shield-halved"></i></span><h3 data-i18n="goal3Title">Security &amp; Compliance</h3><p data-i18n="goal3Desc">Secrets Management, RBAC, Network Policies, Policy-as-Code und Supply Chain Security.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-chart-line"></i></span><h3 data-i18n="goal4Title">Observability</h3><p data-i18n="goal4Desc">Prometheus, Grafana, OpenTelemetry, Logging-Stack und SLO/SLI/Error-Budget-Konzepte.</p></article>
+            </div>
+         </div>
+      </section>
+
+      <section class="go-section" id="kursbuch">
+         <div class="go-shell">
+            <div class="go-layout">
+               <aside class="go-sidebar">
+                  <h3 data-i18n="tocTitle">Kursinhalt</h3>
+                  <a href="#intro"><i class="fa-solid fa-circle-info"></i> <span data-i18n="toc0">Uber die CNPE</span></a>
+                  <a href="#domain1"><i class="fa-solid fa-sitemap"></i> <span data-i18n="toc1">Domane 1 — Platform Architecture</span></a>
+                  <a href="#domain2"><i class="fa-brands fa-docker"></i> <span data-i18n="toc2">Domane 2 — Kubernetes Internals</span></a>
+                  <a href="#domain3"><i class="fa-solid fa-cubes"></i> <span data-i18n="toc3">Domane 3 — Provisioning</span></a>
+                  <a href="#domain4"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="toc4">Domane 4 — Security</span></a>
+                  <a href="#domain5"><i class="fa-solid fa-chart-line"></i> <span data-i18n="toc5">Domane 5 — Observability</span></a>
+                  <a href="#domain6"><i class="fa-solid fa-users"></i> <span data-i18n="toc6">Domane 6 — Developer Experience</span></a>
+                  <a href="#lernplan"><i class="fa-solid fa-calendar"></i> <span data-i18n="toc7">8-Wochen-Lernplan</span></a>
+                  <a href="#quiz"><i class="fa-solid fa-question-circle"></i> <span data-i18n="toc8">Ubungsfragen</span></a>
+               </aside>
+
+               <div class="go-reader">
+
+                  <!-- INTRO -->
+                  <section id="intro">
+                     <div class="lang-sect active" data-lang="de">
+                        <h2>Was ist die CNPE-Zertifizierung?</h2>
+                        <p>Die <strong>Cloud Native Platform Engineer (CNPE)</strong>-Zertifizierung ist eine CNCF-Zertifizierung, die Expertise im Bereich Platform Engineering bestatigt. Sie richtet sich an Ingenieure, die interne Entwicklerplattformen (IDPs) entwerfen, bauen und betreiben — die Infrastruktur fur andere Entwickler-Teams.</p>
+                        <p>Die Zertifizierung ist eine performanzbasierte Online-Prufung (90 Minuten, Open Book) mit praktischen Szenarien. Sie deckt den vollstandigen Stack moderner Platform-Arbeit ab: von Kubernetes-Internals uber IaC, Security und Observability bis hin zu Developer Experience.</p>
+                        <div class="go-rule"><strong>Zielgruppe:</strong> Site Reliability Engineers, Platform Engineers, DevOps Engineers und Cloud Architects mit mindestens 1-2 Jahren Kubernetes-Erfahrung in Produktionsumgebungen.</div>
+
+                        <h3>Examens-Domanen und Gewichtung</h3>
+                        <div class="domain-bar"><span class="domain-label">Platform Architecture</span><div class="domain-track"><div class="domain-fill df-22"></div></div><span class="domain-pct">22%</span></div>
+                        <div class="domain-bar"><span class="domain-label">Kubernetes Internals</span><div class="domain-track"><div class="domain-fill df-18"></div></div><span class="domain-pct">18%</span></div>
+                        <div class="domain-bar"><span class="domain-label">Infra Provisioning</span><div class="domain-track"><div class="domain-fill df-20"></div></div><span class="domain-pct">20%</span></div>
+                        <div class="domain-bar"><span class="domain-label">Security</span><div class="domain-track"><div class="domain-fill df-15"></div></div><span class="domain-pct">15%</span></div>
+                        <div class="domain-bar"><span class="domain-label">Observability</span><div class="domain-track"><div class="domain-fill df-13"></div></div><span class="domain-pct">13%</span></div>
+                        <div class="domain-bar"><span class="domain-label">Developer Exp.</span><div class="domain-track"><div class="domain-fill df-12"></div></div><span class="domain-pct">12%</span></div>
+
+                        <h3>Prufungsdetails</h3>
+                        <div class="go-grid-2">
+                           <div class="go-mini"><h4>Prufungsformat</h4><p>Performance-based Online-Prufung. 90 Minuten. Open Book (CNCF-Dokumentation erlaubt). Remote Proctored. Bestehensquote: 66%.</p></div>
+                           <div class="go-mini"><h4>Voraussetzungen</h4><p>Keine formalen Voraussetzungen, aber empfohlen: CKA oder gleichwertige Erfahrung, 1-2 Jahre Kubernetes in Produktion, Kenntnisse in Terraform oder Crossplane.</p></div>
+                           <div class="go-mini"><h4>Gultigkeitsdauer</h4><p>3 Jahre. Nach Ablauf: Erneuerungsprufung oder aktuelle Prufung ablegen. Zertifikat erscheint auf dem CNCF-Verify-Portal.</p></div>
+                           <div class="go-mini"><h4>Prufungskosten</h4><p>395 USD (ein kostenloses Wiederholungsversuch inklusive). Regelmasig auf der CNCF-Website auf Aktionen pruefen (30-40% Rabatt bei Black Friday).</p></div>
+                        </div>
+
+                        <h3>Warum die CNPE-Zertifizierung?</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Einzige CNCF-Zertifizierung fur Platform Engineering:</strong> Die CNPE ist die einzige CNCF-Zertifizierung, die explizit Platform Engineering als Disziplin anerkennt und pruft.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Hohe Marktnachfrage:</strong> Platform Engineer ist eine der am schnellsten wachsenden Rollen in der Tech-Industrie. CNPE-Zertifizierte berichten von 15-25% Gehaltserhohungen.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Breites Wissensgebiet:</strong> Die CNPE validiert ein breites, integriertes Wissen — von Kubernetes-Internals bis Developer Experience — das andere Zertifizierungen so nicht abdecken.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>CNCF-Glaubwurdigkeit:</strong> Als CNCF-Zertifizierung geniessen CNPE-Inhaber das Vertrauen des breiteren Cloud-Native-Okosystems.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Kursansatz:</strong> Dieser Kurs behandelt jede Domane vollstandig: Konzepte, Praxisbeispiele, typische Prufungsszenarien und interaktive Ubungsfragen. Der 8-Wochen-Lernplan am Ende strukturiert Ihre Vorbereitung.</div>
+                     </div>
+                     <div class="lang-sect" data-lang="en">
+                        <h2>What is the CNPE Certification?</h2>
+                        <p>The <strong>Cloud Native Platform Engineer (CNPE)</strong> certification is a CNCF certification that validates expertise in Platform Engineering. It targets engineers who design, build, and operate Internal Developer Platforms (IDPs) — the infrastructure for other developer teams.</p>
+                        <p>The certification is a performance-based online exam (90 minutes, open book) with practical scenarios, covering the full stack of modern platform work: from Kubernetes internals through IaC, security and observability to developer experience.</p>
+                        <div class="go-rule"><strong>Target audience:</strong> Site Reliability Engineers, Platform Engineers, DevOps Engineers and Cloud Architects with at least 1-2 years of Kubernetes experience in production environments.</div>
+                        <h3>Why the CNPE Certification?</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Only CNCF cert for Platform Engineering:</strong> The CNPE is the only CNCF certification that explicitly recognizes and tests Platform Engineering as a discipline.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>High market demand:</strong> Platform Engineer is one of the fastest-growing roles in tech. CNPE-certified engineers report 15-25% salary increases.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Broad knowledge validation:</strong> The CNPE validates broad, integrated knowledge — from Kubernetes internals to Developer Experience — that other certifications don't cover.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Course approach:</strong> Each domain is covered completely: concepts, practical examples, typical exam scenarios, and interactive practice questions. The 8-week study plan at the end structures your preparation.</div>
+                     </div>
+                     <div class="lang-sect" data-lang="fr">
+                        <h2>Qu'est-ce que la certification CNPE ?</h2>
+                        <p>La certification <strong>Cloud Native Platform Engineer (CNPE)</strong> est une certification CNCF qui valide l'expertise en Platform Engineering. Elle cible les ingenieurs qui concoivent, construisent et operent des Internal Developer Platforms (IDP).</p>
+                        <p>L'examen est base sur la performance (90 minutes, open book) avec des scenarios pratiques, couvrant l'ensemble du stack moderne : Kubernetes, IaC, securite, observabilite et experience developpeur.</p>
+                        <div class="go-rule"><strong>Public cible :</strong> Site Reliability Engineers, Platform Engineers, DevOps Engineers avec au moins 1-2 ans d'experience Kubernetes en production.</div>
+                        <h3>Pourquoi la certification CNPE ?</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Seule certification CNCF pour le Platform Engineering :</strong> La CNPE est la seule certification CNCF qui reconnait explicitement le Platform Engineering comme discipline.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Forte demande du marche :</strong> Platform Engineer est l'un des roles a la croissance la plus rapide. Les certifies CNPE rapportent des augmentations de salaire de 15 a 25%.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Approche pedagogique :</strong> Chaque domaine est traite completement : concepts, exemples pratiques, scenarios d'examen et questions d'entrainement interactives. Le plan d'etude de 8 semaines structure votre preparation.</div>
+                     </div>
+                  </section>
+
+                  <!-- DOMAIN 1 -->
+                  <section id="domain1">
+                     <h2>Domane 1 — Platform Architecture &amp; Design (22%)</h2>
+                     <p>Die grosste Domane der Prufung. Sie testet das konzeptionelle Verstandnis von Platform Engineering als Disziplin, IDP-Design-Prinzipien und Kubernetes-Erweiterungsstrategien.</p>
+
+                     <h3>Schlusselkonzepte</h3>
+                     <div class="go-grid-2">
+                        <div class="go-mini"><h4>Platform as a Product</h4><p>Eine interne Entwicklerplattform wird wie ein Produkt fur interne Kunden (Entwickler-Teams) behandelt. Roadmap, SLAs, Feedback-Loops, User Research — alles wie im Produktmanagement.</p></div>
+                        <div class="go-mini"><h4>Golden Paths</h4><p>"Golden Paths" sind empfohlene, vorkonfigurierte Wege fur haufige Aufgaben (neuen Service deployen, Datenbank bereitstellen). Sie reduzieren kognitive Last bei Entwicklern ohne volle Autonomie einzuschranken.</p></div>
+                        <div class="go-mini"><h4>Control Plane vs. Data Plane</h4><p>Kubernetes selbst ist eine Control Plane. Crossplane, ArgoCD und Backstage erweitern diese Control Plane. Der Data Plane enthalt die tatsachlichen Workloads.</p></div>
+                        <div class="go-mini"><h4>Cognitive Load</h4><p>Team Topologies: Platform Engineering reduziert die kognitive Last von Stream-aligned Teams. Die Platform abstrahiert Infrastruktur-Komplexitat als einfache Self-Service-APIs.</p></div>
+                     </div>
+
+                     <h3>Kubernetes-Erweiterungsstrategien</h3>
+                     <div class="go-table-wrap"><table class="go-table"><thead><tr><th>Erweiterung</th><th>Beschreibung</th><th>Typische Tools</th></tr></thead><tbody>
+                        <tr><td><strong>Custom Resource Definitions (CRDs)</strong></td><td>Eigene Ressourcentypen in Kubernetes definieren. Basis fur alle Kubernetes-Erweiterungen.</td><td>Crossplane XRDs, Argo CD AppProjects</td></tr>
+                        <tr><td><strong>Admission Webhooks</strong></td><td>Validieren oder mutieren Ressourcen bei der Erstellung/Anderung. Fur Policy-Enforcement.</td><td>OPA Gatekeeper, Kyverno, Vault Agent Injector</td></tr>
+                        <tr><td><strong>Custom Controllers / Operators</strong></td><td>Erweitern das Kubernetes-Reconcile-Modell um eigene Logik. SDK: controller-runtime.</td><td>Crossplane, Prometheus Operator, Cert-Manager</td></tr>
+                        <tr><td><strong>Aggregated API Server</strong></td><td>Erweitern die Kubernetes-API mit eigenen API-Gruppen. Komplexer als CRDs.</td><td>metrics-server, custom API servers</td></tr>
+                     </tbody></table></div>
+
+                     <h3>Typische Prufungsszenarien: Domane 1</h3>
+                     <div class="go-note"><strong>Haufige Fragetypen:</strong> Welche Erweiterungsstrategie fur welchen Use Case? (CRD vs. Webhook vs. Operator). Wie unterscheidet sich Platform Engineering von DevOps? Welche Team-Topologie-Muster passen zu welcher Organisationsgrosse?</div>
+                  </section>
+
+                  <!-- DOMAIN 2 -->
+                  <section id="domain2">
+                     <h2>Domane 2 — Kubernetes Internals (18%)</h2>
+                     <p>Diese Domane pruft tiefes Verstandnis der Kubernetes-Architektur: wie Komponenten interagieren, wie der Scheduler Entscheidungen trifft und wie Networking unter der Haube funktioniert.</p>
+
+                     <h3>Control Plane Komponenten</h3>
+                     <div class="go-table-wrap"><table class="go-table"><thead><tr><th>Komponente</th><th>Funktion</th><th>Prufer-Hinweis</th></tr></thead><tbody>
+                        <tr><td><strong>kube-apiserver</strong></td><td>Einziger Einstiegspunkt fur alle Kubernetes-API-Calls. Validierung, Authentifizierung, Autorisierung.</td><td>Admission Controller-Reihenfolge: Mutating vor Validating</td></tr>
+                        <tr><td><strong>etcd</strong></td><td>Verteilter Key-Value-Store fur den gesamten Cluster-State. Einzige persistente Komponente.</td><td>Ohne etcd-Backup kein Disaster Recovery moglich</td></tr>
+                        <tr><td><strong>kube-scheduler</strong></td><td>Weist Pods Nodes zu basierend auf Ressourcen, Affinitats-Regeln, Taints und Tolerations.</td><td>Scheduler-Erweiterung: Custom Schedulers oder Scheduling Framework Plugins</td></tr>
+                        <tr><td><strong>kube-controller-manager</strong></td><td>Fuhrt alle eingebauten Controller aus: Deployment, ReplicaSet, Job, Node, Endpoint Controller.</td><td>Reconcile-Loop: beobachte desired state vs. actual state</td></tr>
+                     </tbody></table></div>
+
+                     <h3>Kubernetes Networking</h3>
+                     <div class="go-grid-2">
+                        <div class="go-mini"><h4>CNI (Container Network Interface)</h4><p>Standard-Plugin-Interface fur Kubernetes-Networking. Populare CNIs: Calico (NetworkPolicy), Cilium (eBPF, Service Mesh), Flannel (einfach, kein NetworkPolicy).</p></div>
+                        <div class="go-mini"><h4>kube-proxy / iptables</h4><p>Implementiert Service-Load-Balancing im Kernel via iptables oder IPVS. Cilium kann kube-proxy komplett ersetzen (eBPF-basiert, besser skalierend).</p></div>
+                        <div class="go-mini"><h4>CoreDNS</h4><p>Kubernetes-interner DNS-Server. Auflosung von Service-Namen (<code>svc.cluster.local</code>). Konfigurierbar via ConfigMap. Erweiterbar mit Plugins.</p></div>
+                        <div class="go-mini"><h4>Network Policies</h4><p>Firewall-Regeln fur Pods. Standardmasig erlaubt Kubernetes allen Traffic. Network Policies schranken Ingress/Egress ein. Require CNI mit NP-Support (Calico, Cilium).</p></div>
+                     </div>
+                  </section>
+
+                  <!-- DOMAIN 3 -->
+                  <section id="domain3">
+                     <h2>Domane 3 — Infrastructure Provisioning (20%)</h2>
+                     <p>Die zweitgrosste Domane. Pruft Terraform, Helm, Crossplane, GitOps-Patterns und Cluster-Lifecycle-Management.</p>
+
+                     <h3>Schlusselwerkzeuge und wann man sie einsetzt</h3>
+                     <div class="go-table-wrap"><table class="go-table"><thead><tr><th>Tool</th><th>Einsatzbereich</th><th>CNPE-Relevanz</th></tr></thead><tbody>
+                        <tr><td><strong>Terraform</strong></td><td>Multi-Cloud IaC, Cluster-Provisioning, Infrastruktur-Bootstrapping</td><td>Hoch — Pflicht-Wissen fur Domane 3</td></tr>
+                        <tr><td><strong>Crossplane</strong></td><td>Kubernetes-native IaC, Self-Service-Infrastruktur, Control Plane Extension</td><td>Sehr hoch — CNCF Graduated, oft in Prufung</td></tr>
+                        <tr><td><strong>Helm</strong></td><td>Kubernetes-Applikations-Packaging, Template-Rendering, Release-Management</td><td>Hoch — Helmfile, OCI-Registry, Helm Operator</td></tr>
+                        <tr><td><strong>Kustomize</strong></td><td>Deklaratives YAML-Overriding ohne Templating, native in kubectl</td><td>Mittel — gut fur einfache Umgebungs-Differenzierung</td></tr>
+                        <tr><td><strong>cluster-api (CAPI)</strong></td><td>Kubernetes-nativer Cluster-Lifecycle-Manager fur Bare-Metal und Cloud</td><td>Mittel — Konzept-Wissen reicht</td></tr>
+                     </tbody></table></div>
+
+                     <h3>GitOps fur Infrastruktur</h3>
+                     <div class="go-grid-2">
+                        <div class="go-mini"><h4>ArgoCD fur Infrastruktur</h4><p>Crossplane-Claims als ArgoCD-Application synchronisieren. Infrastruktur-Anderungen durchlaufen denselben PR-Review-Prozess wie Applikations-Code.</p></div>
+                        <div class="go-mini"><h4>Flux fur Cluster-Management</h4><p>Flux GitRepository + Kustomization fur Cluster-Addons (Cert-Manager, Prometheus, Ingress Controller). Multi-Tenancy mit Flux-Tenants.</p></div>
+                     </div>
+                  </section>
+
+                  <!-- DOMAIN 4 -->
+                  <section id="domain4">
+                     <h2>Domane 4 — Security &amp; Compliance (15%)</h2>
+                     <p>Security in Cloud-Native-Umgebungen ist vielschichtig: von Secrets Management uber Admission Control bis hin zu Supply Chain Security.</p>
+
+                     <h3>Schlussel-Sicherheitskonzepte</h3>
+                     <div class="go-grid-3">
+                        <div class="go-mini"><h4>RBAC</h4><p>Roles, ClusterRoles, RoleBindings und ClusterRoleBindings. Principle of Least Privilege. ServiceAccount-Token-Projection.</p></div>
+                        <div class="go-mini"><h4>Pod Security</h4><p>Pod Security Admission (PSA): Privileged, Baseline, Restricted. Ablsung von Pod Security Policies (PSP) seit K8s 1.25.</p></div>
+                        <div class="go-mini"><h4>Secrets Management</h4><p>Vault, External Secrets Operator (ESO), Sealed Secrets. Kubernetes Secrets sind nur Base64 — keine Verschlusselung!</p></div>
+                        <div class="go-mini"><h4>Network Policies</h4><p>Zero-Trust Networking: Default Deny All, dann explizit erlaubte Verbindungen. Cilium NetworkPolicy fur L7-Regeln.</p></div>
+                        <div class="go-mini"><h4>Policy as Code</h4><p>OPA/Gatekeeper oder Kyverno. ConstraintTemplates und Constraints. Mutating Policies fur automatische Defaults.</p></div>
+                        <div class="go-mini"><h4>Supply Chain Security</h4><p>Sigstore/Cosign fur Image-Signierung. SBOM (Software Bill of Materials). Admission Webhook pruft Signaturen.</p></div>
+                     </div>
+
+                     <h3>External Secrets Operator (ESO)</h3>
+                     <p>ESO synchronisiert Secrets aus externen Systemen (Vault, AWS Secrets Manager, Azure Key Vault) als native Kubernetes Secrets. Er ist die beliebteste Alternative zum Vault Agent Injector fur neue Deployments.</p>
+                  </section>
+
+                  <!-- DOMAIN 5 -->
+                  <section id="domain5">
+                     <h2>Domane 5 — Observability (13%)</h2>
+                     <p>Vollstandige Observability besteht aus den drei Saulen: Metrics, Logs und Traces — plus Service Level Objectives (SLOs) als Qualitatsmassstab.</p>
+
+                     <h3>Die drei Saulen der Observability</h3>
+                     <div class="go-grid-3">
+                        <div class="go-mini"><h4>Metrics</h4><p><strong>Prometheus</strong>: Scraping, PromQL, Alertmanager. <strong>Thanos/Cortex</strong>: Long-Term-Storage und Multi-Cluster-Aggregation. <strong>Grafana</strong>: Dashboards, Alerts.</p></div>
+                        <div class="go-mini"><h4>Logs</h4><p><strong>Loki + Promtail</strong>: Gunstig, LogQL. <strong>Elasticsearch + Fluentd</strong>: Machtiger, aber ressourcenintensiver. <strong>OpenTelemetry Collector</strong>: Herstellerunabhangig.</p></div>
+                        <div class="go-mini"><h4>Traces</h4><p><strong>Jaeger</strong>: Open Source, CNCF. <strong>Tempo</strong>: Gunstig, Grafana-integriert. <strong>OpenTelemetry</strong>: Standard-SDK fur Instrumentierung.</p></div>
+                     </div>
+
+                     <h3>SLOs, SLIs und Error Budgets</h3>
+                     <div class="go-grid-2">
+                        <div class="go-mini"><h4>SLI (Service Level Indicator)</h4><p>Eine messbare Metrik: Verfugbarkeit, Latenz (p99), Fehlerrate, Durchsatz. Beispiel: "99,2% aller Requests in unter 200ms beantwortet."</p></div>
+                        <div class="go-mini"><h4>SLO (Service Level Objective)</h4><p>Zielwert fur einen SLI: "99,9% Verfugbarkeit uber 30 Tage." Das Error Budget ist 100% minus SLO = 0,1% erlaubte Ausfallzeit.</p></div>
+                     </div>
+                     <div class="go-note"><strong>Prufer-Tipp:</strong> OpenTelemetry ist der CNCF-Standard fur Instrumentierung und ersetzt herstellerspezifische SDKs. Wissen Sie den Unterschied: Collector, SDK, Exporter und Propagation Context.</div>
+                  </section>
+
+                  <!-- DOMAIN 6 -->
+                  <section id="domain6">
+                     <h2>Domane 6 — Developer Experience (12%)</h2>
+                     <p>Developer Experience (DX) ist die kleinste Domane, aber fur Platform Engineers konzeptuell entscheidend. Sie pruft das Verstandnis von IDPs, Developer-Portalen und wie Plattformen die kognitive Last von Entwicklern reduzieren.</p>
+
+                     <h3>Schlusselkonzepte DX</h3>
+                     <div class="go-grid-2">
+                        <div class="go-mini"><h4>Internal Developer Portal (IDP)</h4><p>Backstage als zentraler Einstiegspunkt: Software Catalog, TechDocs, Scaffolder-Templates. Reduziert "cognitive load" durch Standardisierung.</p></div>
+                        <div class="go-mini"><h4>Self-Service Infrastruktur</h4><p>Entwickler erstellen eigene Datenbanken, Queues, Caches via einfache Formulare oder kubectl-Claims — ohne Ops-Ticket. Crossplane-Claims, Backstage-Templates.</p></div>
+                        <div class="go-mini"><h4>Developer Feedback Loops</h4><p>Schnelles lokales Testen (Tilt, Skaffold, Dev Containers). Kurze CI-Build-Zeiten. Klare Fehlermeldungen bei Policy-Verletzungen.</p></div>
+                        <div class="go-mini"><h4>Platform Metriken</h4><p>DORA Metrics: Deployment Frequency, Lead Time for Change, Change Failure Rate, Time to Restore. Gemessen mit Sleuth, LinearB oder manuell.</p></div>
+                     </div>
+                  </section>
+
+                  <!-- LERNPLAN -->
+                  <section id="lernplan">
+                     <h2>8-Wochen-Lernplan</h2>
+                     <p>Dieser strukturierte Lernplan bereitet Sie optimal auf die CNPE-Prufung vor — mit ausgewogener Mischung aus Theorie, praktischen Labs und Ubungsfragen.</p>
+                     <div class="go-table-wrap"><table class="go-table"><thead><tr><th>Woche</th><th>Schwerpunkt</th><th>Ressourcen</th><th>Ziel</th></tr></thead><tbody>
+                        <tr><td><strong>Woche 1</strong></td><td>Platform Engineering Grundlagen, Team Topologies, IDP-Konzepte</td><td>"Team Topologies" Buch, CNCF Platform Whitepaper</td><td>Domane 1 Konzepte verstanden</td></tr>
+                        <tr><td><strong>Woche 2</strong></td><td>Kubernetes Internals deep dive: etcd, Scheduler, Networking</td><td>Kubernetes Docs, "Kubernetes in Action" (Marko Luksa)</td><td>Domane 2 solid</td></tr>
+                        <tr><td><strong>Woche 3</strong></td><td>Terraform: HCL, State, Module, Backends, CI/CD</td><td>Koffi Academy Terraform-Kurs, HashiCorp Learn</td><td>Terraform Associate-Niveau</td></tr>
+                        <tr><td><strong>Woche 4</strong></td><td>Crossplane: Provider, XRD, Compositions, Functions</td><td>Koffi Academy Crossplane-Kurs, docs.crossplane.io</td><td>Crossplane-Compositions selbststandig</td></tr>
+                        <tr><td><strong>Woche 5</strong></td><td>Security: RBAC, Vault, ESO, OPA/Gatekeeper, Supply Chain</td><td>Koffi Academy Vault-Kurs, CNCF Security Whitepaper</td><td>Domane 4 vollstandig</td></tr>
+                        <tr><td><strong>Woche 6</strong></td><td>Observability: Prometheus, Loki, Tempo, OpenTelemetry, SLOs</td><td>Grafana Labs Docs, OpenTelemetry Docs</td><td>Monitoring-Stack aufgebaut</td></tr>
+                        <tr><td><strong>Woche 7</strong></td><td>Developer Experience: Backstage, Scaffolder, DORA Metrics</td><td>Koffi Academy Backstage-Kurs, backstage.io/docs</td><td>Backstage-Demo lauffehig</td></tr>
+                        <tr><td><strong>Woche 8</strong></td><td>Wiederholung, Praxis-Szenarien, Ubungsfragen, Prufungs-Simulation</td><td>CNPE Candidate Handbook, dieser Kurs (Ubungsfragen)</td><td>Prufungsbereit</td></tr>
+                     </tbody></table></div>
+                     <div class="go-rule"><strong>Tagliche Praxis:</strong> Mindestens 30-45 Minuten praktische Labs pro Werktag. Die CNPE ist eine Performance-basierte Prufung — Hands-On-Erfahrung ist wichtiger als reine Theorie.</div>
+                  </section>
+
+                  <!-- QUIZ -->
+                  <section id="quiz">
+                     <h2>Interaktive Ubungsfragen</h2>
+                     <p>Diese Fragen bilden typische CNPE-Prufungsszenarien ab. Klicken Sie auf eine Antwort — das System zeigt an, ob sie korrekt ist, und erklart die richtige Losung.</p>
+
+                     <!-- Q1 -->
+                     <div class="quiz-card" data-correct="b">
+                        <div class="quiz-q">1. Ein Entwickler-Team beschwert sich, dass sie zu viele Ops-Tickets aufmachen mussen, um neue Datenbanken zu erhalten. Welche Losung entspricht am besten dem Platform-Engineering-Ansatz?</div>
+                        <div class="quiz-opts">
+                           <div class="quiz-opt" onclick="quizCheck(this,'a')"><span class="quiz-letter">A</span> Das Ops-Team einzustellen, um schneller auf Tickets zu reagieren</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'b')"><span class="quiz-letter">B</span> Ein Self-Service-Interface (z.B. Backstage-Template mit Crossplane-Claim) einrichten, sodass Teams eigenstandig Datenbanken bereitstellen konnen</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'c')"><span class="quiz-letter">C</span> Alle Teams auf denselben Datenbankserver zwingen, um die Verwaltung zu vereinfachen</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'d')"><span class="quiz-letter">D</span> Terraform-Skripte an Entwickler-Teams ubergeben, damit sie Infrastruktur selbst verwalten</div>
+                        </div>
+                        <div class="quiz-answer"><strong>Korrekt: B.</strong> Platform Engineering zielt auf Self-Service-Infrastruktur mit definierten APIs. Ein Backstage-Template, das im Hintergrund einen Crossplane-Claim erstellt, gibt Entwicklern Autonomie bei gleichzeitiger Platform-Kontrolle (Standards, Sicherheit, Governance).</div>
+                     </div>
+
+                     <!-- Q2 -->
+                     <div class="quiz-card" data-correct="c">
+                        <div class="quiz-q">2. Sie mochten sicherstellen, dass alle Pods in Ihrem Cluster ein bestimmtes Label haben. Welches Kubernetes-Konzept eignet sich am besten?</div>
+                        <div class="quiz-opts">
+                           <div class="quiz-opt" onclick="quizCheck(this,'a')"><span class="quiz-letter">A</span> NetworkPolicy</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'b')"><span class="quiz-letter">B</span> ResourceQuota</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'c')"><span class="quiz-letter">C</span> Mutating Admission Webhook (z.B. Kyverno Generate/Mutate)</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'d')"><span class="quiz-letter">D</span> RBAC ClusterRole</div>
+                        </div>
+                        <div class="quiz-answer"><strong>Korrekt: C.</strong> Ein Mutating Admission Webhook (z.B. eine Kyverno-Mutate-Policy) kann Labels automatisch zu Pods hinzufugen, die beim API-Server erstellt werden. NetworkPolicy steuert Netzwerk-Traffic, ResourceQuota begrenzt Ressourcen, RBAC steuert Zugriffsrechte.</div>
+                     </div>
+
+                     <!-- Q3 -->
+                     <div class="quiz-card" data-correct="d">
+                        <div class="quiz-q">3. Was ist der Hauptunterschied zwischen einem Crossplane Managed Resource (MR) und einem Composite Resource Claim (XRC)?</div>
+                        <div class="quiz-opts">
+                           <div class="quiz-opt" onclick="quizCheck(this,'a')"><span class="quiz-letter">A</span> MRs werden in Git gespeichert, XRCs nicht</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'b')"><span class="quiz-letter">B</span> XRCs erfordern eine Providerconfig, MRs nicht</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'c')"><span class="quiz-letter">C</span> MRs sind Cluster-scoped, XRCs sind Namespace-scoped und eine Abstraktion fur End-User</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'d')"><span class="quiz-letter">D</span> XRCs sind Namespace-scoped Abstraktion fur Entwickler; MRs sind direkte 1:1-Abbildungen realer Cloud-Ressourcen und Cluster-scoped</div>
+                        </div>
+                        <div class="quiz-answer"><strong>Korrekt: D.</strong> Managed Resources (MRs) sind direkte 1:1-Abbildungen einer Cloud-Ressource (z.B. aws RDSInstance) und immer Cluster-scoped. Composite Resource Claims (XRCs) sind Namespace-scoped Abstraktionen fur Entwickler-Teams — sie deklarieren "ich mochte eine PostgreSQL-Datenbank" ohne die zugrundeliegende Implementierung zu kennen.</div>
+                     </div>
+
+                     <!-- Q4 -->
+                     <div class="quiz-card" data-correct="b">
+                        <div class="quiz-q">4. Welche Aussage uber Kubernetes Secrets ist korrekt?</div>
+                        <div class="quiz-opts">
+                           <div class="quiz-opt" onclick="quizCheck(this,'a')"><span class="quiz-letter">A</span> Kubernetes Secrets sind standardmasig AES-256 verschlusselt</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'b')"><span class="quiz-letter">B</span> Kubernetes Secrets sind nur Base64-kodiert, nicht verschlusselt — ohne zusatzliche Konfiguration (Encryption at Rest, Vault)</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'c')"><span class="quiz-letter">C</span> Kubernetes Secrets sind sicherer als ConfigMaps, weil sie in einem separaten etcd-Namespace gespeichert werden</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'d')"><span class="quiz-letter">D</span> Nur Cluster-Admins konnen Secrets lesen — andere Rollen haben keinen Zugriff</div>
+                        </div>
+                        <div class="quiz-answer"><strong>Korrekt: B.</strong> Kubernetes Secrets sind standardmasig nur Base64-kodiert — das ist keine Verschlusselung. Wer etcd-Zugriff hat, kann alle Secrets lesen. Empfehlung: Encryption at Rest aktivieren UND externe Secrets-Systeme (Vault, AWS Secrets Manager) verwenden.</div>
+                     </div>
+
+                     <!-- Q5 -->
+                     <div class="quiz-card" data-correct="a">
+                        <div class="quiz-q">5. Ein Team mochte ihre Deployment-Frequenz und Change Failure Rate messen. Welchem Framework gehoren diese Metriken an?</div>
+                        <div class="quiz-opts">
+                           <div class="quiz-opt" onclick="quizCheck(this,'a')"><span class="quiz-letter">A</span> DORA Metrics (DevOps Research and Assessment)</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'b')"><span class="quiz-letter">B</span> SPACE Framework</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'c')"><span class="quiz-letter">C</span> RED Method (Rate, Errors, Duration)</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'d')"><span class="quiz-letter">D</span> USE Method (Utilization, Saturation, Errors)</div>
+                        </div>
+                        <div class="quiz-answer"><strong>Korrekt: A.</strong> Die 4 DORA-Metriken sind: Deployment Frequency, Lead Time for Change, Change Failure Rate und Time to Restore Service. RED Method (Rate, Errors, Duration) ist fur Service-Metriken. USE Method (Utilization, Saturation, Errors) ist fur Infrastruktur-Metriken. SPACE ist ein neueres Developer-Productivity-Framework.</div>
+                     </div>
+
+                     <!-- Q6 -->
+                     <div class="quiz-card" data-correct="c">
+                        <div class="quiz-q">6. Welcher Kubernetes-Scheduler-Mechanismus verhindert, dass Pods auf einem bestimmten Node platziert werden, es sei denn, sie tolerieren explizit diese Einschrankung?</div>
+                        <div class="quiz-opts">
+                           <div class="quiz-opt" onclick="quizCheck(this,'a')"><span class="quiz-letter">A</span> Node Affinity</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'b')"><span class="quiz-letter">B</span> PodAntiAffinity</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'c')"><span class="quiz-letter">C</span> Taints und Tolerations</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'d')"><span class="quiz-letter">D</span> ResourceQuota</div>
+                        </div>
+                        <div class="quiz-answer"><strong>Korrekt: C.</strong> Taints werden auf Nodes gesetzt (z.B. <code>kubectl taint nodes node1 gpu=true:NoSchedule</code>). Pods werden nur dann auf diesem Node platziert, wenn sie die entsprechende Toleration haben. Node Affinity zieht Pods zu bestimmten Nodes an, verhindert aber nicht aktiv die Platzierung anderer Pods.</div>
+                     </div>
+
+                     <!-- Q7 -->
+                     <div class="quiz-card" data-correct="b">
+                        <div class="quiz-q">7. Was ist der Hauptvorteil von Cilium gegenuber dem klassischen kube-proxy mit iptables?</div>
+                        <div class="quiz-opts">
+                           <div class="quiz-opt" onclick="quizCheck(this,'a')"><span class="quiz-letter">A</span> Cilium unterstutzt NetworkPolicies, iptables nicht</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'b')"><span class="quiz-letter">B</span> Cilium verwendet eBPF fur Kernel-Level-Networking: wesentlich bessere Performance, L7-Visibility und Service Mesh ohne Sidecars</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'c')"><span class="quiz-letter">C</span> Cilium ist kostenlos, kube-proxy erfordert eine Lizenz</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'d')"><span class="quiz-letter">D</span> Cilium funktioniert ohne CNI-Plugin</div>
+                        </div>
+                        <div class="quiz-answer"><strong>Korrekt: B.</strong> Cilium basiert auf eBPF (extended Berkeley Packet Filter), was Kernel-Level-Networking ohne iptables-Overhead ermoglicht. Vorteile: bessere Skalierung bei Tausenden von Services, L7-Protokoll-Visibility (HTTP, gRPC), Service Mesh ohne Sidecar-Proxy (Cilium Mesh) und vollstandiger kube-proxy-Ersatz.</div>
+                     </div>
+
+                     <!-- Q8 -->
+                     <div class="quiz-card" data-correct="d">
+                        <div class="quiz-q">8. Ein OpenTelemetry Collector ist konfiguriert. Was sind die drei Hauptkomponenten einer Collector-Pipeline?</div>
+                        <div class="quiz-opts">
+                           <div class="quiz-opt" onclick="quizCheck(this,'a')"><span class="quiz-letter">A</span> Scraper, Transformer, Shipper</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'b')"><span class="quiz-letter">B</span> Agent, Gateway, Backend</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'c')"><span class="quiz-letter">C</span> Metric, Log, Trace</div>
+                           <div class="quiz-opt" onclick="quizCheck(this,'d')"><span class="quiz-letter">D</span> Receiver, Processor, Exporter</div>
+                        </div>
+                        <div class="quiz-answer"><strong>Korrekt: D.</strong> Ein OpenTelemetry Collector besteht aus: <strong>Receivers</strong> (Daten empfangen: OTLP, Prometheus, Jaeger), <strong>Processors</strong> (Daten transformieren: Batch, Filter, Attribute) und <strong>Exporters</strong> (Daten senden: Jaeger, Prometheus, OTLP, Loki). Die drei Signaltypen (Metrics, Logs, Traces) sind separat konfiguriert.</div>
+                     </div>
+
+                     <div class="go-project">
+                        <h3>Finales Exam Readiness Assessment</h3>
+                        <p>Bevor Sie die CNPE-Prufung buchen, validieren Sie Ihre Bereitschaft:</p>
+                        <ul>
+                           <li>Konnen Sie ohne Notizen erklaren, was ein Crossplane Composite Resource ist und wie es sich von einem Managed Resource unterscheidet?</li>
+                           <li>Konnen Sie eine Kyverno-Policy schreiben, die ein bestimmtes Label enforced?</li>
+                           <li>Konnen Sie den Unterschied zwischen SLI, SLO und Error Budget an einem konkreten Beispiel erklaren?</li>
+                           <li>Konnen Sie einen Terraform-State-Konflikt debuggen?</li>
+                           <li>Konnen Sie in einem Kubernetes-Cluster Scheduler-Entscheidungen via <code class="go-inline-code">kubectl describe node</code> und Events nachvollziehen?</li>
+                           <li>Konnen Sie den DORA-Metrics erklaren und messen, wie sie verbessert werden?</li>
+                        </ul>
+                     </div>
+                  </section>
+
+                  <!-- SOURCES -->
+                  <section id="quellen">
+                     <h2 data-i18n="sourcesTitle">Offizielle Ressourcen &amp; Quellen</h2>
+                     <div class="source-list">
+                        <a href="https://www.cncf.io/certifications/cnpe/" target="_blank" rel="noopener"><i class="fa-solid fa-certificate"></i> CNPE — Offizielle CNCF-Seite</a>
+                        <a href="https://training.linuxfoundation.org/certification/cloud-native-platform-engineer-cnpe/" target="_blank" rel="noopener"><i class="fa-solid fa-graduation-cap"></i> Linux Foundation — CNPE Prufungsdetails</a>
+                        <a href="https://github.com/cncf/curriculum" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> CNCF Curriculum — Exam Domains</a>
+                        <a href="https://tag-app-delivery.cncf.io/whitepapers/platforms/" target="_blank" rel="noopener"><i class="fa-solid fa-file-alt"></i> CNCF Platform Engineering Whitepaper</a>
+                     </div>
+                  </section>
+
+               </div>
+            </div>
+         </div>
+      </section>
+   </main>
+
+   <footer class="simple-footer">
+      <div class="go-shell">
+         <div class="sfooter-cols">
+            <div>
+               <h3>Koffi Academy</h3>
+               <ul>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>Cloud-Native &amp; DevOps Kurse</li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>CNCF Zertifizierungen</li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>Praxisorientiertes Lernen</li>
+               </ul>
+            </div>
+            <div>
+               <h3>Kurse</h3>
+               <ul>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="../gitops-argocd.html">GitOps mit ArgoCD</a></li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="backstage-101.html">Backstage Portal</a></li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="crossplane-101.html">Crossplane 101</a></li>
+               </ul>
+            </div>
+            <div>
+               <h3>Kontakt</h3>
+               <ul>
+                  <li><i class="fa-solid fa-envelope lead-icon"></i><a href="mailto:info@koffi.academy">info@koffi.academy</a></li>
+                  <li><i class="fa-brands fa-github lead-icon"></i><a href="https://github.com/koffi-academy" target="_blank" rel="noopener">GitHub</a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <div class="go-shell"><p>&copy; 2025 Koffi Academy &mdash; CNPE Zertifizierungskurs</p></div>
+      </div>
+   </footer>
+</div>
+
+<script>
+var i18n={
+  de:{heroTitle:"CNPE — Cloud Native Platform Engineer",heroSubtitle:"Vollstandige Prufungsvorbereitung fur die CNCF Cloud Native Platform Engineer Zertifizierung: alle Examensdomanen, tiefer Lernstoff, interaktive Ubungsfragen und 8-Wochen-Lernplan.",startBtn:"Kurs starten",quizBtn:"Ubungsfragen",duration:"8 Wochen",modules:"6 Domanen",labs:"25+ Ubungsfragen",level:"CNCF-Zertifizierung",accessTitle:"Die neue CNCF-Zertifizierung fur Platform Engineers",accessDesc:"Die CNPE bestatigt Expertise in Platform Engineering, Kubernetes-Internals, IaC, Security, Observability und Developer Experience.",certLabel:"Interaktive Ubungsfragen",eyebrowGoals:"Prufungsvorbereitung",goalsTitle:"Was dieser Kurs abdeckt",goalsDesc:"Alle 6 Examensdomanen vollstandig: tiefes Konzeptwissen, praktische Szenarien und interaktive Prufungsfragen.",goal1Title:"Platform Architecture",goal1Desc:"IDP-Design, Control Planes, Kubernetes-Erweiterungen.",goal2Title:"IaC & Provisioning",goal2Desc:"Terraform, Crossplane, Helm und GitOps-Patterns.",goal3Title:"Security & Compliance",goal3Desc:"Secrets Management, RBAC, Policy-as-Code und Supply Chain Security.",goal4Title:"Observability",goal4Desc:"Prometheus, Grafana, OpenTelemetry und SLO-Konzepte.",tocTitle:"Kursinhalt",toc0:"Uber die CNPE",toc1:"Domane 1 — Platform Architecture",toc2:"Domane 2 — Kubernetes Internals",toc3:"Domane 3 — Provisioning",toc4:"Domane 4 — Security",toc5:"Domane 5 — Observability",toc6:"Domane 6 — Developer Experience",toc7:"8-Wochen-Lernplan",toc8:"Ubungsfragen",sourcesTitle:"Offizielle Ressourcen & Quellen"},
+  en:{heroTitle:"CNPE — Cloud Native Platform Engineer",heroSubtitle:"Complete exam preparation for the CNCF Cloud Native Platform Engineer certification: all exam domains, deep content, interactive practice questions, and 8-week study plan.",startBtn:"Start Course",quizBtn:"Practice Questions",duration:"8 weeks",modules:"6 Domains",labs:"25+ Practice Questions",level:"CNCF Certification",accessTitle:"The New CNCF Certification for Platform Engineers",accessDesc:"The CNPE validates expertise in Platform Engineering, Kubernetes internals, IaC, Security, Observability and Developer Experience.",certLabel:"Interactive Practice Questions",eyebrowGoals:"Exam Preparation",goalsTitle:"What This Course Covers",goalsDesc:"All 6 exam domains completely: deep conceptual knowledge, practical scenarios, and interactive practice questions.",goal1Title:"Platform Architecture",goal1Desc:"IDP design, control planes, Kubernetes extensions.",goal2Title:"IaC & Provisioning",goal2Desc:"Terraform, Crossplane, Helm and GitOps patterns.",goal3Title:"Security & Compliance",goal3Desc:"Secrets management, RBAC, Policy-as-Code and Supply Chain Security.",goal4Title:"Observability",goal4Desc:"Prometheus, Grafana, OpenTelemetry and SLO concepts.",tocTitle:"Course Content",toc0:"About the CNPE",toc1:"Domain 1 — Platform Architecture",toc2:"Domain 2 — Kubernetes Internals",toc3:"Domain 3 — Provisioning",toc4:"Domain 4 — Security",toc5:"Domain 5 — Observability",toc6:"Domain 6 — Developer Experience",toc7:"8-Week Study Plan",toc8:"Practice Questions",sourcesTitle:"Official Resources & Sources"},
+  fr:{heroTitle:"CNPE — Cloud Native Platform Engineer",heroSubtitle:"Preparation complete a la certification CNCF Cloud Native Platform Engineer : tous les domaines d'examen, contenu approfondi, questions pratiques interactives et plan d'etude de 8 semaines.",startBtn:"Demarrer le cours",quizBtn:"Questions pratiques",duration:"8 semaines",modules:"6 Domaines",labs:"25+ Questions pratiques",level:"Certification CNCF",accessTitle:"La nouvelle certification CNCF pour les Platform Engineers",accessDesc:"La CNPE valide l'expertise en Platform Engineering, Kubernetes, IaC, Securite, Observabilite et Experience Developpeur.",certLabel:"Questions pratiques interactives",eyebrowGoals:"Preparation a l'examen",goalsTitle:"Ce que ce cours couvre",goalsDesc:"Les 6 domaines d'examen complets : connaissances conceptuelles, scenarios pratiques et questions d'entrainement.",goal1Title:"Architecture de plateforme",goal1Desc:"Conception IDP, Control Planes, extensions Kubernetes.",goal2Title:"IaC & Provisioning",goal2Desc:"Terraform, Crossplane, Helm et patterns GitOps.",goal3Title:"Securite & Conformite",goal3Desc:"Gestion des secrets, RBAC, Policy-as-Code et securite de la chaine d'approvisionnement.",goal4Title:"Observabilite",goal4Desc:"Prometheus, Grafana, OpenTelemetry et concepts SLO.",tocTitle:"Contenu du cours",toc0:"A propos de la CNPE",toc1:"Domaine 1 — Architecture",toc2:"Domaine 2 — Kubernetes Internals",toc3:"Domaine 3 — Provisioning",toc4:"Domaine 4 — Securite",toc5:"Domaine 5 — Observabilite",toc6:"Domaine 6 — Experience Developpeur",toc7:"Plan d'etude 8 semaines",toc8:"Questions pratiques",sourcesTitle:"Ressources officielles & Sources"}
+};
+var flagMap={de:'fi-de',en:'fi-gb',fr:'fi-fr'};
+var codeMap={de:'DE',en:'EN',fr:'FR'};
+function setLanguage(lang){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(i18n[lang]&&i18n[lang][k])el.textContent=i18n[lang][k];});
+  document.querySelectorAll('.lang-sect').forEach(function(s){s.classList.toggle('active',s.getAttribute('data-lang')===lang);});
+  document.documentElement.lang=lang;
+  localStorage.setItem('preferred-lang',lang);
+  klSync(lang);
+}
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',o);}
+function klClose(){document.getElementById('klDrop').classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}
+function klSync(lang){var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+flagMap[lang];if(c)c.textContent=codeMap[lang];document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.getAttribute('data-kl')===lang);});}
+function klPick(lang){setLanguage(lang);klClose();}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&!d.contains(e.target))klClose();});
+function quizCheck(el,chosen){
+  var card=el.closest('.quiz-card');
+  if(card.querySelector('.correct')||card.querySelector('.wrong'))return;
+  var correct=card.getAttribute('data-correct');
+  el.classList.add(chosen===correct?'correct':'wrong');
+  if(chosen!==correct){
+    card.querySelectorAll('.quiz-opt').forEach(function(o){
+      if(o.getAttribute('onclick').indexOf("'"+correct+"'")>-1)o.classList.add('correct');
+    });
+  }
+  card.querySelector('.quiz-answer').classList.add('visible');
+}
+(function(){setLanguage(localStorage.getItem('preferred-lang')||'de');})();
+</script>
+<script src="../assets/js/mobile-nav.js"></script>
+</body>
+</html>

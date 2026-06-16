@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="de">
+   <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="assets/css/style.css">
+      <link rel="stylesheet" href="assets/css/responsive.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="shortcut icon" href="assets/images/logo.png">
+      <title>E-Learning-Programm | Kontakt</title>
+      <meta name="Keywords" content="E-Learning, Online courses, online learning, best online learning platform">
+      <meta name="Description" content="E-Learning ist eine Online-Lern- und Lehrplattform. Kontaktieren Sie uns für Fragen zu Kursen und Über mich.">
+      <meta name="theme-color" content="#07294d">
+      
+      <style>
+         /* Erfolgs- und Fehlermeldung - direkt auf der Webseite sichtbar */
+         .form-status-message {
+            padding: 15px 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+            animation: fadeInMessage 0.5s ease;
+         }
+         @keyframes fadeInMessage {
+            from {
+               opacity: 0;
+               transform: translateY(-10px);
+            }
+            to {
+               opacity: 1;
+               transform: translateY(0);
+            }
+         }
+         .form-status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+         }
+         .form-status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+         }
+         .form-status-message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+         }
+         .form-status-message i {
+            margin-right: 10px;
+            font-size: 18px;
+         }
+         .loading-state {
+            opacity: 0.7;
+            cursor: wait !important;
+         }
+         .loading-state i {
+            margin-right: 8px;
+         }
+         /* Feld-Validierung */
+         .theme-input.error-input {
+            border-color: #dc3545 !important;
+            background-color: #fff8f8 !important;
+         }
+         .error-hint {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+         }
+      .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+   <style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style><link rel="stylesheet" href="assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+   <body>
+      <div class="page-main">
+         <!-- header -->
+         <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="laboratoire.html">Laboratoire</a><a href="courses/courses.html">Kurskatalog</a></span></span>
+<a href="blog.html">Blog</a>
+<a href="culture.html">Culture</a>
+<a href="koffi-profile.html">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="login.html">Anmelden</a><a class="kh__btn" href="register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+         <!-- header -->
+         
+         <!-- breadcrumb -->
+         <section class="breadcrumb-area">
+            <div class="breadcrumb-shape">
+               <img src="assets/images/slider-bottom-pattern.png" alt="Brotkrumen-Muster">
+            </div>
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                     <div class="breadcrumb-box">
+                        <h2>Kontaktieren Sie uns</h2>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <!-- breadcrumb -->
+         
+         <!-- contact -->
+         <section class="contact-area page-paddings">
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                     <div class="section-title text-center">
+                        <h2>Hinterlassen Sie eine Nachricht</h2>
+                        <p>Wenn Sie Fragen zu Kursen, unseren Über mich oder unseren Plänen haben, hinterlassen Sie uns hier eine Nachricht. Wir werden uns so schnell wie möglich mit Ihnen in Verbindung setzen.</p>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-xl-7 col-lg-6 col-md-6 col-sm-6 col-12">
+                     <div class="contact-box wow fadeInUp center" data-wow-delay="0.1s">
+                        <div class="contact-box-form">
+                           <form id="contactForm">
+                              <div class="row">
+                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-6 col-12">
+                                    <div class="theme-input-box">
+                                       <label>Vorname <span style="color: red;">*</span></label>
+                                       <input type="text" name="fname" id="fname" class="theme-input" required>
+                                       <div class="error-hint" id="error-fname">Bitte Vorname eingeben</div>
+                                    </div>
+                                 </div>
+                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-6 col-12">
+                                    <div class="theme-input-box">
+                                       <label>Nachname <span style="color: red;">*</span></label>
+                                       <input type="text" name="lname" id="lname" class="theme-input" required>
+                                       <div class="error-hint" id="error-lname">Bitte Nachname eingeben</div>
+                                    </div>
+                                 </div>
+                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-6 col-12">
+                                    <div class="theme-input-box">
+                                       <label>E-Mail <span style="color: red;">*</span></label>
+                                       <input type="email" name="email" id="email" class="theme-input" required>
+                                       <div class="error-hint" id="error-email">Bitte gültige E-Mail eingeben</div>
+                                    </div>
+                                 </div>
+                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-6 col-12">
+                                    <div class="theme-input-box">
+                                       <label>Telefon (optional)</label>
+                                       <input type="tel" name="mobile" id="mobile" class="theme-input">
+                                       <div class="error-hint" id="error-mobile">Bitte gültige Telefonnummer eingeben</div>
+                                    </div>
+                                 </div>
+                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="theme-input-box">
+                                       <label>Ihre Nachricht <span style="color: red;">*</span></label>
+                                       <textarea rows="6" class="theme-input" name="msg" id="msg" required></textarea>
+                                       <div class="error-hint" id="error-msg">Bitte Nachricht eingeben</div>
+                                    </div>
+                                 </div>
+                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="theme-input-box">
+                                       <button type="submit" class="theme-btn" id="submitBtn">Nachricht absenden</button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </form>
+                           
+                           <!-- STATUS-MELDUNG (ERFOLG ODER FEHLER) - DIREKT AUF DER WEBSEITE -->
+                           <div id="formStatusMessage" class="form-status-message">
+                              <!-- Hier erscheint die Meldung -->
+                           </div>
+                           
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xl-5 col-lg-6 col-md-6 col-sm-6 col-12">
+                     <div class="contact-detail">
+                        <div class="contact-detail-box wow fadeInUp center" data-wow-delay="0.1s">
+                           <div class="contact-detail-icon">
+                              <i class="fas fa-map-marker-alt"></i>
+                           </div>
+                           <div class="contact-detail-contemt">
+                              <p>Deutschland</p>
+                           </div>
+                        </div>
+                        <div class="contact-detail-box wow fadeInUp center" data-wow-delay="0.2s">
+                           <div class="contact-detail-icon">
+                              <i class="fas fa-phone-alt"></i>
+                           </div>
+                           <div class="contact-detail-contemt">
+                              <p>+491775061655</p>
+                           </div>
+                        </div>
+                        <div class="contact-detail-box wow fadeInUp center" data-wow-delay="0.3s">
+                           <div class="contact-detail-icon">
+                              <i class="fas fa-envelope"></i>
+                           </div>
+                           <div class="contact-detail-contemt">
+                              <p>info@lingenieur.de</p>
+                           </div>
+                        </div>
+                        <div class="contact-detail-box wow fadeInUp center" data-wow-delay="0.4s">
+                           <div class="contact-detail-icon">
+                              <i class="fas fa-fax"></i>
+                           </div>
+                           <div class="contact-detail-contemt">
+                              <p>+491775061655</p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <!-- contact -->
+         
+         <!-- footer -->
+         <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="index.html">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="laboratoire.html">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="courses/courses.html">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="blog.html">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="event.html">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="about.html">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="faq.html">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="contact.html">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p>Copyright &copy; 2026 <a href="index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+         <!-- footer -->
+      </div>
+      
+      <!-- Firebase SDKs -->
+      <script type="module">
+        // Firebase Konfiguration (IHRE KONFIGURATION)
+        const firebaseConfig = {
+            apiKey: "AIzaSyC3fYlrW38VMCyUOmTgucVu_2xKb4u85GY",
+            authDomain: "platform-engineering-b91c6.firebaseapp.com",
+            projectId: "platform-engineering-b91c6",
+            storageBucket: "platform-engineering-b91c6.firebasestorage.app",
+            messagingSenderId: "823441785848",
+            appId: "1:823441785848:web:bcc28b946d4b58e4240c0d",
+            measurementId: "G-Q93PWNCBSV"
+        };
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        // Firebase initialisieren
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // DOM Elemente
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMessageDiv = document.getElementById('formStatusMessage');
+        
+        // ========== FUNKTION: NACHRICHT ANZEIGEN ==========
+        function showStatusMessage(message, type) {
+            // Meldung sichtbar machen
+            statusMessageDiv.style.display = 'block';
+            statusMessageDiv.className = `form-status-message ${type}`;
+            
+            // Icon je nach Typ
+            let icon = '';
+            if (type === 'success') icon = '<i class="fas fa-check-circle"></i>';
+            if (type === 'error') icon = '<i class="fas fa-exclamation-circle"></i>';
+            if (type === 'info') icon = '<i class="fas fa-info-circle"></i>';
+            
+            statusMessageDiv.innerHTML = icon + ' ' + message;
+            
+            // Automatisch nach 6 Sekunden ausblenden (außer bei Fehler bleibt länger)
+            if (type !== 'error') {
+                setTimeout(() => {
+                    statusMessageDiv.style.display = 'none';
+                }, 6000);
+            }
+            
+            // Zur Meldung scrollen
+            statusMessageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        // ========== FUNKTION: FELD-VALIDIERUNG ==========
+        function validateField(fieldId, errorId, condition, errorMessage) {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(errorId);
+            
+            if (!field) return true;
+            
+            if (condition) {
+                field.classList.remove('error-input');
+                error.style.display = 'none';
+                return true;
+            } else {
+                field.classList.add('error-input');
+                error.style.display = 'block';
+                return false;
+            }
+        }
+        
+        // ========== FUNKTION: ALLE FELDER VALIDIEREN ==========
+        function validateForm() {
+            const fname = document.getElementById('fname')?.value.trim() || '';
+            const lname = document.getElementById('lname')?.value.trim() || '';
+            const email = document.getElementById('email')?.value.trim() || '';
+            const message = document.getElementById('msg')?.value.trim() || '';
+            
+            const isFnameValid = validateField('fname', 'error-fname', fname !== '', '');
+            const isLnameValid = validateField('lname', 'error-lname', lname !== '', '');
+            const isEmailValid = validateField('email', 'error-email', email.includes('@') && email.includes('.'), '');
+            const isMsgValid = validateField('msg', 'error-msg', message !== '', '');
+            
+            return isFnameValid && isLnameValid && isEmailValid && isMsgValid;
+        }
+        
+        // ========== FUNKTION: LOADING STATE ==========
+        function setLoading(isLoading) {
+            if (isLoading) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('loading-state');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Wird gesendet...';
+                showStatusMessage('Ihre Nachricht wird gesendet. Bitte warten...', 'info');
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading-state');
+                submitBtn.innerHTML = 'Nachricht absenden';
+            }
+        }
+        
+        // ========== FORMULAR ABSENDEN ==========
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Alle Felder validieren
+            if (!validateForm()) {
+                showStatusMessage('❌ Bitte füllen Sie alle Pflichtfelder korrekt aus.', 'error');
+                return;
+            }
+            
+            // Formularfelder auslesen
+            const fname = document.getElementById('fname').value.trim();
+            const lname = document.getElementById('lname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+            const message = document.getElementById('msg').value.trim();
+            
+            setLoading(true);
+            
+            try {
+                // Nachricht in Firestore speichern
+                const docRef = await addDoc(collection(db, "contacts"), {
+                    firstName: fname,
+                    lastName: lname,
+                    email: email,
+                    phone: mobile || 'Nicht angegeben',
+                    message: message,
+                    createdAt: serverTimestamp(),
+                    status: 'unread'
+                });
+                
+                // Erfolg!
+                console.log("Nachricht gespeichert mit ID:", docRef.id);
+                
+                // Grüne Erfolgsmeldung anzeigen
+                showStatusMessage(
+                    '✓ Ihre Nachricht wurde erfolgreich gesendet! Wir werden uns schnellstmöglich bei Ihnen melden. Vielen Dank für Ihre Kontaktaufnahme!', 
+                    'success'
+                );
+                
+                // Formular zurücksetzen
+                contactForm.reset();
+                
+                // Rote Umrandungen entfernen
+                document.querySelectorAll('.error-input').forEach(el => el.classList.remove('error-input'));
+                
+            } catch (error) {
+                console.error('Firebase Fehler:', error);
+                
+                // Rote Fehlermeldung anzeigen
+                let errorMessage = '❌ Es ist ein technischer Fehler aufgetreten. Bitte versuchen Sie es später erneut.';
+                
+                if (error.message.includes('permission')) {
+                    errorMessage = '❌ Keine Berechtigung zum Speichern. Bitte prüfen Sie die Firestore-Regeln (Testmodus).';
+                } else if (error.message.includes('network')) {
+                    errorMessage = '❌ Keine Internetverbindung. Bitte prüfen Sie Ihre Verbindung.';
+                }
+                
+                showStatusMessage(errorMessage, 'error');
+                
+            } finally {
+                setLoading(false);
+            }
+        });
+        
+        // ========== ECHTZEIT-VALIDIERUNG BEIM TIPPEN ==========
+        document.getElementById('fname')?.addEventListener('input', () => {
+            const val = document.getElementById('fname').value.trim();
+            validateField('fname', 'error-fname', val !== '', '');
+        });
+        document.getElementById('lname')?.addEventListener('input', () => {
+            const val = document.getElementById('lname').value.trim();
+            validateField('lname', 'error-lname', val !== '', '');
+        });
+        document.getElementById('email')?.addEventListener('input', () => {
+            const val = document.getElementById('email').value.trim();
+            validateField('email', 'error-email', val.includes('@') && val.includes('.'), '');
+        });
+        document.getElementById('msg')?.addEventListener('input', () => {
+            const val = document.getElementById('msg').value.trim();
+            validateField('msg', 'error-msg', val !== '', '');
+        });
+      </script>
+      
+      <script src="assets/js/jquery.min.js"></script>
+      <script src="assets/js/bootstrap.min.js"></script>
+      <script src="assets/js/jquery.fancybox.min.js"></script>
+      <script src="assets/js/owl.carousel.min.js"></script>
+      <script src="assets/js/isotope.pkgd.min.js"></script>
+      <script src="assets/js/wow.min.js"></script>
+      <script src="assets/js/custom.js"></script>
+      <script>
+          new WOW().init();
+      </script>
+   <script src="assets/js/kontakt-popup.js"></script>
+<script src="assets/js/announce.js"></script>
+<script src="assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

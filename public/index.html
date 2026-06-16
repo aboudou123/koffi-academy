@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+  <link rel="shortcut icon" href="assets/images/logo.png">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Koffi Academy — Formation technique pour ingénieurs Cloud, DevOps & Platform Engineering</title>
+   <meta name="description" content="Koffi Academy : formation technique premium et laboratoires pratiques pour Platform Engineers, Cloud Architects et DevOps. Cloud, Kubernetes, Terraform, Vault, observabilité et IA.">
+   <meta name="theme-color" content="#07294d">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+   <style>
+:root{--navy:#07294d;--navy-d:#05203f;--ink:#0f1c2e;--accent:#f89035;--blue:#2563eb;--slate-600:#475569;--slate-500:#64748b;--slate-400:#94a3b8;--slate-200:#e2e8f0;--slate-100:#f1f5f9;--slate-50:#f8fafc}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+h2.sec{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:clamp(24px,2.8vw,33px);line-height:1.18;color:var(--navy);margin:0 0 14px}
+.sec-sub{font-size:16px;line-height:1.6;color:var(--slate-500);max-width:600px;margin:0 auto}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;border-radius:11px;padding:13px 22px;cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);border:1.5px solid transparent}
+.btn--primary{background:var(--accent);color:#fff;box-shadow:0 10px 26px rgba(248,144,53,.34)}
+.btn--primary:hover{background:#ed7f1f;transform:translateY(-2px)}
+.btn--ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.28)}
+.btn--ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.5)}
+.btn--navy{background:var(--navy);color:#fff}
+.btn--navy:hover{background:#0a3a6b;transform:translateY(-2px)}
+
+/* Header */
+.kh{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(18,48,79,.98),rgba(9,33,61,.98));backdrop-filter:blur(14px);border-bottom:1px solid rgba(214,160,45,.42);box-shadow:0 14px 36px rgba(2,12,26,.24)}
+.kh__in{max-width:1180px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.kh__brand{display:flex;align-items:center;gap:11px}
+.kh__mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f9d77e 0%,#d6a02d 55%,#b97911 100%);display:flex;align-items:center;justify-content:center;color:#07294d;font-size:15px;box-shadow:0 8px 22px rgba(214,160,45,.34)}
+.kh__name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.01em;color:#fff}
+.kh__nav{display:flex;align-items:center;gap:4px}
+.kh__nav a{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);padding:8px 14px;border-radius:8px;transition:all .18s}
+.kh__nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.kh__nav a.active{color:#f9d77e;background:rgba(214,160,45,.15)}
+.kh .btn--primary.kh__cta{background:linear-gradient(135deg,#f9d77e 0%,#d6a02d 58%,#b97911 100%);color:#07294d;box-shadow:0 8px 22px rgba(214,160,45,.30)}
+.kh .btn--primary.kh__cta:hover{background:linear-gradient(135deg,#ffe29a 0%,#d6a02d 62%,#a96a0c 100%);color:#07294d;box-shadow:0 12px 26px rgba(214,160,45,.42)}
+.kh__cta{margin-left:6px}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#041a32 0%,#07294d 50%,#0e3d72 84%,#1a5fa0 100%);color:#fff;padding:74px 0 84px}
+.hero__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:48px 48px;opacity:.55;-webkit-mask-image:radial-gradient(ellipse 90% 70% at 70% 10%,#000 35%,transparent 78%);mask-image:radial-gradient(ellipse 90% 70% at 70% 10%,#000 35%,transparent 78%)}
+.hero__glow-a{position:absolute;top:-8%;right:-4%;width:460px;height:460px;background:radial-gradient(circle,rgba(248,144,53,.30),transparent 62%)}
+.hero__glow-b{position:absolute;bottom:-34%;left:-6%;width:480px;height:480px;background:radial-gradient(circle,rgba(37,99,235,.26),transparent 64%)}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:46px;align-items:center}
+.hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:-.025em;font-size:clamp(29px,3.6vw,44px);line-height:1.12;margin:0 0 20px}
+.hero h1 .g{background:linear-gradient(100deg,#f89035,#ffc36b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero__sub{font-size:clamp(15.5px,1.7vw,18px);line-height:1.6;color:rgba(255,255,255,.82);max-width:560px;margin:0 0 28px}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:30px}
+.hero__micro{font-size:13px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:8px}
+.hero__micro i{color:#7fd0a8}
+.hero__stats{display:flex;gap:26px;margin-top:30px;flex-wrap:wrap}
+.hstat .n{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:26px;color:#fff;line-height:1}
+.hstat .l{font-size:12.5px;color:rgba(255,255,255,.62);margin-top:5px}
+/* Hero tech panel */
+.panel{position:relative;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:20px;backdrop-filter:blur(6px);box-shadow:0 24px 60px rgba(0,0,0,.28)}
+.panel__bar{display:flex;align-items:center;gap:7px;margin-bottom:16px}
+.panel__bar span{width:10px;height:10px;border-radius:50%}
+.panel__bar .r{background:#ff5f57}.panel__bar .y{background:#febc2e}.panel__bar .g{background:#28c840}
+.panel__bar em{margin-left:8px;font-family:'JetBrains Mono',monospace;font-style:normal;font-size:11.5px;color:rgba(255,255,255,.5)}
+.logo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.logo-cell{aspect-ratio:1;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;padding:12px;transition:transform .2s}
+.logo-cell:hover{transform:translateY(-3px)}
+.logo-cell img{width:100%;height:100%;object-fit:contain}
+
+/* Trust */
+.trust{background:var(--navy-d);padding:22px 0}
+.trust .wrap{display:flex;align-items:center;justify-content:center;gap:14px 34px;flex-wrap:wrap}
+.trust span{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;letter-spacing:.08em;color:rgba(255,255,255,.5)}
+.trust .lbl{color:rgba(255,255,255,.34);text-transform:uppercase;font-size:11px;letter-spacing:.16em}
+
+/* Sections */
+.section{padding:72px 0}
+.section--alt{background:var(--slate-50)}
+.sec-head{text-align:center;margin-bottom:44px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.feat{background:#fff;border:1px solid var(--slate-200);border-radius:14px;padding:26px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.feat:hover{transform:translateY(-4px);box-shadow:0 16px 38px rgba(7,41,77,.1);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.feat__ic{width:48px;height:48px;border-radius:12px;background:color-mix(in srgb,var(--accent) 13%,#fff);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:16px}
+.feat h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:17.5px;font-weight:700;color:var(--navy);margin:0 0 8px}
+.feat p{font-size:14px;line-height:1.6;color:var(--slate-500);margin:0}
+
+/* Domaines */
+.domains{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.domain{background:#fff;border:1px solid var(--slate-200);border-radius:13px;padding:18px 12px;text-align:center;transition:transform .2s,box-shadow .2s}
+.domain:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(7,41,77,.1)}
+.domain__logo{width:42px;height:42px;margin:0 auto 11px;display:flex;align-items:center;justify-content:center}
+.domain__logo img{width:100%;height:100%;object-fit:contain}
+.domain span{font-size:12.5px;font-weight:600;color:var(--navy)}
+
+/* Featured labs */
+.labs3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.lab{display:flex;flex-direction:column;background:#fff;border:1px solid var(--slate-200);border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s}
+.lab:hover{transform:translateY(-4px);box-shadow:0 16px 38px rgba(7,41,77,.13);border-color:color-mix(in srgb,var(--accent) 42%,transparent)}
+.lab__cover{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#0b1f3a,#0f2c52 58%,#123a6c);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.lab__cover .gr{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:26px 26px}
+.lab__badge{position:relative;width:60px;height:60px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;padding:12px;box-shadow:0 6px 20px rgba(0,0,0,.26)}
+.lab__badge img{width:100%;height:100%;object-fit:contain}
+.lab__badge i{font-size:28px;color:var(--navy)}
+.lab__b{padding:20px}
+.lab__meta{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--slate-500);margin-bottom:9px}
+.lab__meta .lv{font-weight:600;color:var(--blue)}
+.lab h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:700;color:var(--navy);margin:0 0 8px;line-height:1.25}
+.lab p{font-size:13.5px;line-height:1.5;color:var(--slate-500);margin:0 0 15px}
+.lab__link{font-size:13.5px;font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:7px}
+.lab__link i{font-size:11px;transition:transform .18s}
+.lab:hover .lab__link i{transform:translateX(3px)}
+.center{text-align:center;margin-top:40px}
+
+/* Culture section */
+.culture-home{background:#fff;padding:68px 0;border-top:1px solid var(--slate-200)}
+.culture-home__grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:34px;align-items:center}
+.culture-home__media{min-height:330px;border-radius:8px;overflow:hidden;background:#0f2438}
+.culture-home__media img{width:100%;height:100%;display:block;object-fit:cover}
+.culture-home__copy{max-width:590px}
+.culture-home__copy h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:34px;line-height:1.16;font-weight:800;color:var(--navy);letter-spacing:0;margin:0 0 14px}
+.culture-home__copy p{font-size:15.5px;line-height:1.68;color:var(--slate-500);margin:0 0 22px}
+.culture-home__list{display:grid;gap:10px;margin:0 0 24px;padding:0;list-style:none}
+.culture-home__list li{display:flex;align-items:flex-start;gap:10px;color:#24364d;font-size:14.5px;line-height:1.45}
+.culture-home__list i{color:#1f9d68;margin-top:3px}
+
+/* CTA band */
+.cta{position:relative;overflow:hidden;background:linear-gradient(120deg,#07294d,#0e3d72);color:#fff;border-radius:22px;padding:54px 40px;text-align:center}
+.cta__glow{position:absolute;top:-40%;right:6%;width:340px;height:340px;background:radial-gradient(circle,rgba(248,144,53,.32),transparent 62%)}
+.cta h2{position:relative;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(24px,3vw,34px);letter-spacing:-.02em;margin:0 0 12px}
+.cta p{position:relative;font-size:16px;color:rgba(255,255,255,.82);max-width:520px;margin:0 auto 26px}
+.cta__btns{position:relative;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* Footer */
+.kf{background:var(--navy-d);color:rgba(255,255,255,.6);padding:52px 0 0}
+.kf__cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px;padding-bottom:40px}
+.kf__brand .kh__name{display:block;margin-bottom:12px;color:#fff}
+.kf__brand p{font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.55);margin:0;max-width:280px}
+.kf h4{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin:0 0 16px}
+.kf ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.kf ul a{font-size:13.6px;color:rgba(255,255,255,.7);transition:color .16s}
+.kf ul a:hover{color:var(--accent)}
+.kf__bar{border-top:1px solid rgba(255,255,255,.08);padding:16px 0;text-align:center}
+.kf__bar p{margin:0;font-size:12.5px;color:rgba(255,255,255,.4)}
+.kf__bar strong{color:rgba(255,255,255,.7);font-weight:600}
+
+@media (max-width:980px){
+  .hero .wrap{grid-template-columns:1fr;gap:34px}
+  .panel{max-width:420px}
+  .features{grid-template-columns:1fr 1fr}
+  .domains{grid-template-columns:repeat(4,1fr)}
+  .labs3{grid-template-columns:1fr 1fr}
+  .culture-home__grid{grid-template-columns:1fr}
+  .kf__cols{grid-template-columns:1fr 1fr}
+}
+/*kf-sm*/@media (max-width:560px){.kf__cols{grid-template-columns:1fr;gap:24px;text-align:center}}
+@media (max-width:640px){
+  .features,.labs3{grid-template-columns:1fr}
+  .domains{grid-template-columns:repeat(3,1fr)}
+  .culture-home{padding:50px 0}
+  .culture-home__media{min-height:260px}
+  .culture-home__copy h2{font-size:27px}
+  .kh__cta{display:none}
+  .kh__nav a{padding:7px 10px;font-size:13px}
+}
+   .lang-sw{display:inline-flex;gap:2px;margin-left:8px;background:rgba(255,255,255,.08);border:1px solid rgba(214,160,45,.26);border-radius:8px;padding:3px}.lang-sw button{border:0;background:transparent;color:rgba(255,255,255,.68);font-family:'Inter',sans-serif;font-size:12px;font-weight:700;padding:5px 9px;border-radius:6px;cursor:pointer;transition:all .16s}.lang-sw button:hover{color:#fff}.lang-sw button.is-active{background:linear-gradient(135deg,#f9d77e,#d6a02d);color:#07294d}
+.kh__drop{position:relative;display:inline-flex;align-items:center}.kh__drop>a{padding-right:4px}.kh__droplabel{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);padding:8px 4px 8px 14px;cursor:default}.kh__drop:hover .kh__droplabel{color:#fff}.kh__droplabel.active{color:#f9d77e}.kh__drop>i{color:rgba(255,255,255,.58);font-size:11px;cursor:pointer;padding:8px 10px 8px 2px}.kh__drop:hover>i{color:#f9d77e}.kh__menu{position:absolute;top:calc(100% + 2px);left:0;min-width:168px;background:#fff;border:1px solid rgba(214,160,45,.28);border-top:3px solid #d6a02d;border-radius:0 0 10px 10px;box-shadow:0 18px 38px rgba(7,41,77,.14);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .2s cubic-bezier(.4,0,.2,1);z-index:70}.kh__drop:hover .kh__menu{opacity:1;visibility:visible;transform:none}.kh__menu a{display:block;padding:9px 12px;border-radius:7px;font-size:14px;font-weight:600;color:rgba(7,41,77,.76)}.kh__menu a:hover{background:rgba(214,160,45,.12);color:#9a6510}.kh__menu a.active{color:#9a6510}
+
+/* ── Language Picker ──────────────────────────── */
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+/*txt-safe*/h1,h2,h3,h4,h5,h6,p,li,figcaption,dt,dd,blockquote{overflow-wrap:break-word;word-wrap:break-word}
+</style>
+</head>
+<body>
+   <header class="kh">
+      <div class="kh__in">
+         <a class="kh__brand" href="index.html">
+            <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+            <span class="kh__name">Koffi Academy</span>
+         </a>
+         <nav class="kh__nav">
+            <a href="index.html" class="active" data-i18n="navHome">Accueil</a>
+            <span class="kh__drop"><span class="kh__droplabel" data-i18n="navCourses">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="laboratoire.html" data-i18n="navLab">Laboratoires</a><a href="courses/courses.html" data-i18n="navCatalog">Catalogue de cours</a></span></span>
+            <a href="blog.html">Blog</a>
+            <a href="culture.html" data-i18n="navCulture">Culture</a>
+<a href="koffi-profile.html" data-i18n="navProfile">Profil</a>
+            <a href="laboratoire.html" class="btn btn--primary kh__cta" style="padding:8px 16px;font-size:13.5px" data-i18n="navStart">Commencer</a>
+         </nav>
+         <div class="kl-drop" id="klDrop">
+           <button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Langue / Language / Sprache">
+             <span class="fi fi-fr" id="klFlag"></span>
+             <span class="kl-code" id="klCode">FR</span>
+             <i class="fas fa-chevron-down kl-caret"></i>
+           </button>
+           <div class="kl-panel" role="menu">
+             <button type="button" class="kl-opt" data-kl="de" onclick="klPick('de')">
+               <span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span>
+             </button>
+             <button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')">
+               <span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span>
+             </button>
+             <button type="button" class="kl-opt kl-on" data-kl="fr" onclick="klPick('fr')">
+               <span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span>
+             </button>
+           </div>
+         </div>
+      </div>
+   </header>
+
+   <section class="hero">
+      <span class="hero__grid" aria-hidden="true"></span>
+      <span class="hero__glow-a" aria-hidden="true"></span>
+      <span class="hero__glow-b" aria-hidden="true"></span>
+      <div class="wrap">
+         <div>
+            <p class="eyebrow">Koffi Academy · Platform Engineering</p>
+            <h1 data-i18n-html="heroH1">Devenez l'ingénieur de la <span class="g">prochaine génération</span></h1>
+            <p class="hero__sub" data-i18n="heroSub">Formation technique premium et laboratoires pratiques pour Platform Engineers, Cloud Architects et profils DevOps — du Cloud au Kubernetes, de l'observabilité à l'IA. Apprenez en provisionnant de vraies stacks.</p>
+            <div class="hero__cta">
+               <a class="btn btn--primary" href="laboratoire.html"><i class="fa-solid fa-flask"></i> <span data-i18n="ctaLabs">Explorer les laboratoires</span></a>
+               <a class="btn btn--ghost" href="koffi-profile.html"><i class="fa-solid fa-user"></i> <span data-i18n="ctaTrainer">Découvrir le formateur</span></a>
+            </div>
+            <p class="hero__micro"><i class="fa-solid fa-circle-check"></i> <span data-i18n="heroMicro">Apprentissage par la pratique · Scénarios réels · Sans carte bancaire pour démarrer</span></p>
+            <div class="hero__stats">
+               <div class="hstat"><div class="n">58</div><div class="l" data-i18n="stLabs">Laboratoires</div></div>
+               <div class="hstat"><div class="n">11</div><div class="l" data-i18n="stCats">Catégories</div></div>
+               <div class="hstat"><div class="n">20+</div><div class="l" data-i18n="stTech">Technologies</div></div>
+               <div class="hstat"><div class="n">100%</div><div class="l" data-i18n="stPra">Pratique</div></div>
+            </div>
+         </div>
+         <div class="panel">
+            <div class="panel__bar"><span class="r"></span><span class="y"></span><span class="g"></span><em>koffi-academy · stack</em></div>
+            <div class="logo-grid">
+               <div class="logo-cell"><img src="https://cdn.simpleicons.org/kubernetes" alt="Kubernetes" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://cdn.simpleicons.org/terraform" alt="Terraform" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://www.vectorlogo.zone/logos/amazon_aws/amazon_aws-icon.svg" alt="AWS" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://cdn.simpleicons.org/googlecloud" alt="Google Cloud" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://cdn.simpleicons.org/istio" alt="Istio" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://cdn.jsdelivr.net/gh/cncf/artwork/projects/crossplane/icon/color/crossplane-icon-color.svg" alt="Crossplane" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://cdn.simpleicons.org/prometheus" alt="Prometheus" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://cdn.simpleicons.org/vault" alt="Vault" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://cdn.simpleicons.org/cilium" alt="Cilium" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://cdn.simpleicons.org/ansible" alt="Ansible" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://cdn.simpleicons.org/backstage" alt="Backstage" loading="lazy"></div>
+               <div class="logo-cell"><img src="https://cdn.simpleicons.org/python" alt="Python" loading="lazy"></div>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <div class="trust">
+      <div class="wrap">
+         <span class="lbl" data-i18n="trustLbl">Expertise forgée en production chez</span>
+         <span>BMW</span><span>·</span><span>Exotec</span><span>·</span><span>KUKA</span>
+      </div>
+   </div>
+
+   <section class="section">
+      <div class="wrap">
+         <div class="sec-head">
+            <p class="eyebrow" data-i18n="whyEy">Pourquoi Koffi Academy</p>
+            <h2 class="sec" data-i18n="whyH">Une formation pensée par des ingénieurs, pour des ingénieurs</h2>
+            <p class="sec-sub" data-i18n="whySub">Pas de théorie creuse ni de pipelines « Hello World ». Des compétences qui fonctionnent vraiment en production.</p>
+         </div>
+         <div class="features">
+            <div class="feat"><div class="feat__ic"><i class="fa-solid fa-terminal"></i></div><h3 data-i18n="f1t">Apprendre en faisant</h3><p data-i18n="f1d">Chaque laboratoire fournit un environnement réel où vous exécutez les commandes et construisez vous-même la stack.</p></div>
+            <div class="feat"><div class="feat__ic"><i class="fa-solid fa-certificate"></i></div><h3 data-i18n="f2t">Aligné certifications</h3><p data-i18n="f2d">Parcours rattachés aux certifications de référence : CKA, CKS, Terraform Associate, Vault, Istio, Prometheus, et plus.</p></div>
+            <div class="feat"><div class="feat__ic"><i class="fa-solid fa-industry"></i></div><h3 data-i18n="f3t">Expertise industrielle</h3><p data-i18n="f3d">Conçu par un Platform Engineer ayant opéré des plateformes critiques chez BMW, Exotec et KUKA.</p></div>
+            <div class="feat"><div class="feat__ic"><i class="fa-solid fa-layer-group"></i></div><h3 data-i18n="f4t">Couverture complète</h3><p data-i18n="f4d">Cloud, Kubernetes, IaC, sécurité, observabilité, GitOps et IA — l'ensemble du spectre Platform Engineering.</p></div>
+            <div class="feat"><div class="feat__ic"><i class="fa-solid fa-gauge-high"></i></div><h3 data-i18n="f5t">Court et méthodique</h3><p data-i18n="f5d">Des modules concis et structurés : l'essentiel, sans bavardage, pour progresser à votre rythme.</p></div>
+            <div class="feat"><div class="feat__ic"><i class="fa-solid fa-arrows-rotate"></i></div><h3 data-i18n="f6t">Toujours à jour</h3><p data-i18n="f6d">Des contenus suivant l'évolution réelle de l'écosystème cloud-native et des outils HashiCorp & CNCF.</p></div>
+         </div>
+      </div>
+   </section>
+
+   <section class="section section--alt">
+      <div class="wrap">
+         <div class="sec-head">
+            <p class="eyebrow" data-i18n="domEy">Domaines couverts</p>
+            <h2 class="sec" data-i18n="domH">Les technologies qui comptent</h2>
+            <p class="sec-sub" data-i18n="domSub">Maîtrisez les outils standards de l'industrie à travers des laboratoires dédiés.</p>
+         </div>
+         <div class="domains">
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.simpleicons.org/kubernetes" alt="Kubernetes" loading="lazy"></div><span>Kubernetes</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.simpleicons.org/terraform" alt="Terraform" loading="lazy"></div><span>Terraform</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://www.vectorlogo.zone/logos/amazon_aws/amazon_aws-icon.svg" alt="AWS" loading="lazy"></div><span>AWS</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.simpleicons.org/googlecloud" alt="GCP" loading="lazy"></div><span>Google Cloud</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.jsdelivr.net/gh/cncf/artwork/projects/crossplane/icon/color/crossplane-icon-color.svg" alt="Crossplane" loading="lazy"></div><span>Crossplane</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.simpleicons.org/istio" alt="Istio" loading="lazy"></div><span>Istio</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.simpleicons.org/prometheus" alt="Prometheus" loading="lazy"></div><span>Prometheus</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.simpleicons.org/vault" alt="Vault" loading="lazy"></div><span>Vault</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.simpleicons.org/cilium" alt="Cilium" loading="lazy"></div><span>Cilium</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.simpleicons.org/backstage" alt="Backstage" loading="lazy"></div><span>Backstage</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.simpleicons.org/ansible" alt="Ansible" loading="lazy"></div><span>Ansible</span></a>
+            <a class="domain" href="laboratoire.html"><div class="domain__logo"><img src="https://cdn.simpleicons.org/redhatopenshift" alt="OpenShift" loading="lazy"></div><span>OpenShift</span></a>
+         </div>
+      </div>
+   </section>
+
+   <section class="section">
+      <div class="wrap">
+         <div class="sec-head">
+            <p class="eyebrow" data-i18n="featEy">Laboratoires en vedette</p>
+            <h2 class="sec" data-i18n="featH">Commencez par un scénario réel</h2>
+            <p class="sec-sub" data-i18n="featSub">Un aperçu de ce qui vous attend dans le catalogue de 58 laboratoires.</p>
+         </div>
+         <div class="labs3">
+            <a class="lab" href="laboratoire.html">
+               <div class="lab__cover"><span class="gr"></span><span class="lab__badge"><img src="https://cdn.jsdelivr.net/gh/cncf/artwork/projects/crossplane/icon/color/crossplane-icon-color.svg" alt="Crossplane" loading="lazy"></span></div>
+               <div class="lab__b">
+                  <div class="lab__meta"><span>Crossplane</span>·<span class="lv" data-i18n="lvBeg">Débutant</span>·<span>120 min</span></div>
+                  <h3>Setting Up Your Crossplane Platform</h3>
+                  <p data-i18n="c1d">Mettez en place un environnement Crossplane avec minikube pour un développement rapide.</p>
+                  <span class="lab__link"><span data-i18n="explore">Explorer</span> <i class="fa-solid fa-arrow-right"></i></span>
+               </div>
+            </a>
+            <a class="lab" href="laboratoire.html">
+               <div class="lab__cover"><span class="gr"></span><span class="lab__badge"><img src="https://cdn.simpleicons.org/terraform" alt="Terraform" loading="lazy"></span></div>
+               <div class="lab__b">
+                  <div class="lab__meta"><span>Terraform</span>·<span class="lv" data-i18n="lvBeg">Débutant</span>·<span>60 min</span></div>
+                  <h3>Your First Terraform Workflow</h3>
+                  <p data-i18n="c2d">Maîtrisez le workflow Terraform de base — init, plan, apply — sur une vraie cible AWS.</p>
+                  <span class="lab__link"><span data-i18n="explore">Explorer</span> <i class="fa-solid fa-arrow-right"></i></span>
+               </div>
+            </a>
+            <a class="lab" href="laboratoire-vault-token-operations.html">
+               <div class="lab__cover"><span class="gr"></span><span class="lab__badge"><img src="https://cdn.simpleicons.org/vault" alt="Vault" loading="lazy"></span></div>
+               <div class="lab__b">
+                  <div class="lab__meta"><span>Vault</span>·<span class="lv" data-i18n="lvInt">Intermédiaire</span>·<span>75 min</span></div>
+                  <h3>Vault Token Operations and Management</h3>
+                  <p data-i18n="c3d">Maîtrisez le cycle de vie des tokens Vault : création, renouvellement et révocation.</p>
+                  <span class="lab__link"><span data-i18n="explore">Explorer</span> <i class="fa-solid fa-arrow-right"></i></span>
+               </div>
+            </a>
+         </div>
+         <div class="center"><a class="btn btn--navy" href="laboratoire.html"><span data-i18n="seeAll">Voir les 58 laboratoires</span> <i class="fa-solid fa-arrow-right"></i></a></div>
+      </div>
+   </section>
+
+   <section class="culture-home">
+      <div class="wrap culture-home__grid">
+         <figure class="culture-home__media">
+            <img src="assets/images/einbuergerung-passport-training.png" alt="Einbürgerungstest Training">
+         </figure>
+         <div class="culture-home__copy">
+            <p class="eyebrow" data-i18n="cultureEy">Culture & Integration</p>
+            <h2 data-i18n="cultureH">Un espace séparé pour l'Einbürgerungstest</h2>
+            <p data-i18n="cultureP">Le trainer pour l'examen de naturalisation sort du catalogue technique et devient une vraie rubrique Culture. Il reste facile à trouver, mais ne se mélange plus avec les cours Cloud, DevOps et Platform Engineering.</p>
+            <ul class="culture-home__list">
+               <li><i class="fa-solid fa-check"></i><span data-i18n="cultureL1">296 questions avec mode apprentissage, examen et répétition ciblée.</span></li>
+               <li><i class="fa-solid fa-check"></i><span data-i18n="cultureL2">Progression locale dans le navigateur, sans backend.</span></li>
+               <li><i class="fa-solid fa-check"></i><span data-i18n="cultureL3">Rubrique dédiée dans la navigation principale.</span></li>
+            </ul>
+            <a class="btn btn--navy" href="culture.html"><i class="fa-solid fa-landmark"></i> <span data-i18n="cultureBtn">Ouvrir Culture</span></a>
+         </div>
+      </div>
+   </section>
+
+   <section class="section section--alt">
+      <div class="wrap">
+         <div class="cta">
+            <span class="cta__glow" aria-hidden="true"></span>
+            <h2 data-i18n="ctaH">Prêt à construire pour de vrai ?</h2>
+            <p data-i18n="ctaP">Lancez votre premier laboratoire dès aujourd'hui et progressez sur des scénarios issus de la production.</p>
+            <div class="cta__btns">
+               <a class="btn btn--primary" href="laboratoire.html"><i class="fa-solid fa-flask"></i> <span data-i18n="ctaLabs">Explorer les laboratoires</span></a>
+               <a class="btn btn--ghost" href="koffi-profile.html" data-i18n="ctaAbout">À propos du formateur</a>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <footer class="kf">
+      <div class="wrap">
+         <div class="kf__cols">
+            <div class="kf__brand">
+               <span class="kh__name">Koffi Academy</span>
+               <p data-i18n="fBrand">Formation technique premium et laboratoires pratiques pour les ingénieurs du cloud-native, du DevOps et du Platform Engineering.</p>
+            </div>
+            <div>
+               <h4 data-i18n="fNav">Navigation</h4>
+               <ul>
+                  <li><a href="index.html" data-i18n="navHome">Accueil</a></li>
+                  <li><a href="laboratoire.html" data-i18n="navLab">Laboratoires</a></li>
+                  <li><a href="courses/courses.html" data-i18n="navCatalog">Catalogue de cours</a></li>
+                  <li><a href="koffi-profile.html" data-i18n="navProfile">Profil</a></li>
+               </ul>
+            </div>
+            <div>
+               <h4 data-i18n="fDom">Domaines</h4>
+               <ul>
+                  <li><a href="laboratoire.html" data-i18n="fd1">Cloud &amp; Kubernetes</a></li>
+                  <li><a href="laboratoire.html" data-i18n="fd2">Infrastructure as Code</a></li>
+                  <li><a href="laboratoire.html" data-i18n="fd3">Observabilité</a></li>
+                  <li><a href="laboratoire.html" data-i18n="fd4">Sécurité &amp; IA</a></li>
+               </ul>
+            </div>
+            <div>
+               <h4 data-i18n="fCon">Contact</h4>
+               <ul>
+                  <li><a href="contact.html" data-i18n="fcSupport">Support</a></li>
+                  <li><a href="faq.html" data-i18n="fcFaq">Questions fréquentes</a></li>
+                  <li><a href="blog.html" data-i18n="fcBlog">Blog</a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kf__bar">
+         <p>&copy; 2026 <strong>Koffi Academy</strong>. <span data-i18n="fRights">Tous droits réservés.</span></p>
+      </div>
+   </footer>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setHomeLang)window.setHomeLang(lang);klClose();}
+function klSync(lang){var m=klMeta[lang];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===lang);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+window.I18N_HOME={"fr":{"navHome":"Accueil","navCourses":"Cours","navCatalog":"Catalogue de cours","navCulture":"Culture","navLab":"Laboratoires","navLabs":"Laboratoires","navProfile":"Profil","navStart":"Commencer","navCourses":"Cours","navCatalog":"Catalogue de cours","heroH1":"Devenez l'ingénieur de la <span class=\"g\">prochaine génération</span>","heroSub":"Formation technique premium et laboratoires pratiques pour Platform Engineers, Cloud Architects et profils DevOps — du Cloud au Kubernetes, de l'observabilité à l'IA. Apprenez en provisionnant de vraies stacks.","ctaLabs":"Explorer les laboratoires","ctaTrainer":"Découvrir le formateur","heroMicro":"Apprentissage par la pratique · Scénarios réels · Sans carte bancaire pour démarrer","stLabs":"Laboratoires","stCats":"Catégories","stTech":"Technologies","stPra":"Pratique","trustLbl":"Expertise forgée en production chez","whyEy":"Pourquoi Koffi Academy","whyH":"Une formation pensée par des ingénieurs, pour des ingénieurs","whySub":"Pas de théorie creuse ni de pipelines « Hello World ». Des compétences qui fonctionnent vraiment en production.","f1t":"Apprendre en faisant","f1d":"Chaque laboratoire fournit un environnement réel où vous exécutez les commandes et construisez vous-même la stack.","f2t":"Aligné certifications","f2d":"Parcours rattachés aux certifications de référence : CKA, CKS, Terraform Associate, Vault, Istio, Prometheus, et plus.","f3t":"Expertise industrielle","f3d":"Conçu par un Platform Engineer ayant opéré des plateformes critiques chez BMW, Exotec et KUKA.","f4t":"Couverture complète","f4d":"Cloud, Kubernetes, IaC, sécurité, observabilité, GitOps et IA — l'ensemble du spectre Platform Engineering.","f5t":"Court et méthodique","f5d":"Des modules concis et structurés : l'essentiel, sans bavardage, pour progresser à votre rythme.","f6t":"Toujours à jour","f6d":"Des contenus suivant l'évolution réelle de l'écosystème cloud-native et des outils HashiCorp & CNCF.","domEy":"Domaines couverts","domH":"Les technologies qui comptent","domSub":"Maîtrisez les outils standards de l'industrie à travers des laboratoires dédiés.","featEy":"Laboratoires en vedette","featH":"Commencez par un scénario réel","featSub":"Un aperçu de ce qui vous attend dans le catalogue de 58 laboratoires.","lvBeg":"Débutant","lvInt":"Intermédiaire","c1d":"Mettez en place un environnement Crossplane avec minikube pour un développement rapide.","c2d":"Maîtrisez le workflow Terraform de base — init, plan, apply — sur une vraie cible AWS.","c3d":"Maîtrisez le cycle de vie des tokens Vault : création, renouvellement et révocation.","explore":"Explorer","seeAll":"Voir les 58 laboratoires","cultureEy":"Culture & intégration","cultureH":"Un espace séparé pour l'Einbürgerungstest","cultureP":"Le trainer pour l'examen de naturalisation sort du catalogue technique et devient une vraie rubrique Culture. Il reste facile à trouver, mais ne se mélange plus avec les cours Cloud, DevOps et Platform Engineering.","cultureL1":"296 questions avec mode apprentissage, examen et répétition ciblée.","cultureL2":"Progression locale dans le navigateur, sans backend.","cultureL3":"Rubrique dédiée dans la navigation principale.","cultureBtn":"Ouvrir Culture","ctaH":"Prêt à construire pour de vrai ?","ctaP":"Lancez votre premier laboratoire dès aujourd'hui et progressez sur des scénarios issus de la production.","ctaAbout":"À propos du formateur","fBrand":"Formation technique premium et laboratoires pratiques pour les ingénieurs du cloud-native, du DevOps et du Platform Engineering.","fNav":"Navigation","fDom":"Domaines","fCon":"Contact","fd1":"Cloud & Kubernetes","fd2":"Infrastructure as Code","fd3":"Observabilité","fd4":"Sécurité & IA","fcSupport":"Support","fcFaq":"Questions fréquentes","fcBlog":"Blog","fRights":"Tous droits réservés."},"de":{"navHome":"Startseite","navCourses":"Kurse","navCatalog":"Kurskatalog","navCulture":"Kultur","navLab":"Labore","navLabs":"Labore","navProfile":"Profil","navStart":"Loslegen","navCourses":"Kurse","navCatalog":"Kurskatalog","heroH1":"Werden Sie der Engineer der <span class=\"g\">nächsten Generation</span>","heroSub":"Premium-Technikausbildung und praxisnahe Labore für Platform Engineers, Cloud Architects und DevOps-Profile — von Cloud über Kubernetes bis zu Observability und KI. Lernen Sie, indem Sie echte Stacks provisionieren.","ctaLabs":"Labore entdecken","ctaTrainer":"Den Trainer entdecken","heroMicro":"Praxisnahes Lernen · Reale Szenarien · Keine Kreditkarte zum Start","stLabs":"Labore","stCats":"Kategorien","stTech":"Technologien","stPra":"Praxis","trustLbl":"In Produktion erprobte Expertise bei","whyEy":"Warum Koffi Academy","whyH":"Eine Ausbildung von Ingenieuren für Ingenieure","whySub":"Keine leere Theorie, keine „Hello World“-Pipelines. Fähigkeiten, die in der Produktion wirklich funktionieren.","f1t":"Lernen durch Tun","f1d":"Jedes Labor bietet eine echte Umgebung, in der Sie die Befehle ausführen und den Stack selbst aufbauen.","f2t":"An Zertifizierungen ausgerichtet","f2d":"Lernpfade orientiert an den führenden Zertifizierungen: CKA, CKS, Terraform Associate, Vault, Istio, Prometheus und mehr.","f3t":"Industrielle Expertise","f3d":"Entwickelt von einem Platform Engineer, der kritische Plattformen bei BMW, Exotec und KUKA betrieben hat.","f4t":"Vollständige Abdeckung","f4d":"Cloud, Kubernetes, IaC, Sicherheit, Observability, GitOps und KI — das gesamte Platform-Engineering-Spektrum.","f5t":"Kurz und methodisch","f5d":"Prägnante, strukturierte Module: das Wesentliche, ohne Geschwätz, in Ihrem eigenen Tempo.","f6t":"Immer aktuell","f6d":"Inhalte, die der realen Entwicklung des Cloud-native-Ökosystems und der HashiCorp- & CNCF-Tools folgen.","domEy":"Abgedeckte Bereiche","domH":"Die Technologien, die zählen","domSub":"Beherrschen Sie die Industriestandard-Tools mit dedizierten Laboren.","featEy":"Ausgewählte Labore","featH":"Beginnen Sie mit einem realen Szenario","featSub":"Ein Vorgeschmack auf das, was Sie im Katalog mit 58 Laboren erwartet.","lvBeg":"Anfänger","lvInt":"Fortgeschritten","c1d":"Richten Sie eine Crossplane-Umgebung mit minikube für schnelle Entwicklung ein.","c2d":"Beherrschen Sie den grundlegenden Terraform-Workflow – init, plan, apply – auf einem echten AWS-Ziel.","c3d":"Beherrschen Sie den Lebenszyklus von Vault-Tokens: Erstellung, Erneuerung und Widerruf.","explore":"Entdecken","seeAll":"Alle 58 Labore ansehen","cultureEy":"Kultur & Integration","cultureH":"Ein eigener Bereich für den Einbürgerungstest","cultureP":"Der Trainer für den Einbürgerungstest ist aus dem technischen Kurskatalog herausgelöst und hat jetzt einen eigenen Kulturbereich. Er bleibt leicht auffindbar, ohne sich mit Cloud-, DevOps- und Platform-Engineering-Kursen zu vermischen.","cultureL1":"296 Fragen mit Lernmodus, Prüfungssimulation und gezielter Wiederholung.","cultureL2":"Lokaler Fortschritt im Browser, ohne Backend.","cultureL3":"Eigener Bereich in der Hauptnavigation.","cultureBtn":"Kultur öffnen","ctaH":"Bereit, wirklich zu bauen?","ctaP":"Starten Sie noch heute Ihr erstes Labor und arbeiten Sie an Szenarien aus der Produktion.","ctaAbout":"Über den Trainer","fBrand":"Premium-Technikausbildung und praxisnahe Labore für Ingenieure aus Cloud-native, DevOps und Platform Engineering.","fNav":"Navigation","fDom":"Bereiche","fCon":"Kontakt","fd1":"Cloud & Kubernetes","fd2":"Infrastructure as Code","fd3":"Observability","fd4":"Sicherheit & KI","fcSupport":"Support","fcFaq":"Häufige Fragen","fcBlog":"Blog","fRights":"Alle Rechte vorbehalten."},"en":{"navHome":"Home","navCourses":"Courses","navCatalog":"Course catalog","navCulture":"Culture","navLab":"Labs","navLabs":"Labs","navProfile":"Profile","navStart":"Get started","navCourses":"Courses","navCatalog":"Course catalog","heroH1":"Become the engineer of the <span class=\"g\">next generation</span>","heroSub":"Premium technical training and hands-on labs for Platform Engineers, Cloud Architects and DevOps profiles — from Cloud to Kubernetes, observability to AI. Learn by provisioning real stacks.","ctaLabs":"Explore the labs","ctaTrainer":"Meet the instructor","heroMicro":"Hands-on learning · Real scenarios · No credit card to start","stLabs":"Labs","stCats":"Categories","stTech":"Technologies","stPra":"Hands-on","trustLbl":"Expertise forged in production at","whyEy":"Why Koffi Academy","whyH":"Training built by engineers, for engineers","whySub":"No hollow theory or 'Hello World' pipelines. Skills that actually work in production.","f1t":"Learn by doing","f1d":"Every lab provides a real environment where you run the commands and build the stack yourself.","f2t":"Certification-aligned","f2d":"Tracks mapped to the leading certifications: CKA, CKS, Terraform Associate, Vault, Istio, Prometheus, and more.","f3t":"Industry expertise","f3d":"Built by a Platform Engineer who has operated critical platforms at BMW, Exotec and KUKA.","f4t":"Complete coverage","f4d":"Cloud, Kubernetes, IaC, security, observability, GitOps and AI — the full Platform Engineering spectrum.","f5t":"Short and methodical","f5d":"Concise, structured modules: the essentials, no fluff, at your own pace.","f6t":"Always up to date","f6d":"Content that tracks the real evolution of the cloud-native ecosystem and HashiCorp & CNCF tooling.","domEy":"Domains covered","domH":"The technologies that matter","domSub":"Master industry-standard tools through dedicated labs.","featEy":"Featured labs","featH":"Start with a real scenario","featSub":"A preview of what awaits you in the catalog of 58 labs.","lvBeg":"Beginner","lvInt":"Intermediate","c1d":"Set up a Crossplane environment with minikube for rapid development.","c2d":"Master the core Terraform workflow — init, plan, apply — against a real AWS target.","c3d":"Master the Vault token lifecycle: creation, renewal and revocation.","explore":"Explore","seeAll":"View all 58 labs","cultureEy":"Culture & integration","cultureH":"A dedicated space for the Einbürgerungstest","cultureP":"The naturalization-test trainer has moved out of the technical course catalog into its own Culture section. It stays easy to find without mixing with Cloud, DevOps and Platform Engineering courses.","cultureL1":"296 questions with learning mode, exam simulation and targeted review.","cultureL2":"Progress saved locally in the browser, without a backend.","cultureL3":"Dedicated section in the main navigation.","cultureBtn":"Open Culture","ctaH":"Ready to build for real?","ctaP":"Launch your first lab today and progress on scenarios drawn from production.","ctaAbout":"About the instructor","fBrand":"Premium technical training and hands-on labs for cloud-native, DevOps and Platform Engineering engineers.","fNav":"Navigation","fDom":"Domains","fCon":"Contact","fd1":"Cloud & Kubernetes","fd2":"Infrastructure as Code","fd3":"Observability","fd4":"Security & AI","fcSupport":"Support","fcFaq":"FAQ","fcBlog":"Blog","fRights":"All rights reserved."}};
+(function(){var I=window.I18N_HOME;var lang=localStorage.getItem("preferred-lang");if(!I[lang])lang="de";function apply(l){if(!I[l])return;lang=l;localStorage.setItem("preferred-lang",l);document.documentElement.lang=l;var d=I[l];document.querySelectorAll("[data-i18n]").forEach(function(el){var k=el.getAttribute("data-i18n");if(d[k]!==undefined)el.textContent=d[k];});document.querySelectorAll("[data-i18n-html]").forEach(function(el){var k=el.getAttribute("data-i18n-html");if(d[k]!==undefined)el.innerHTML=d[k];});document.querySelectorAll("[data-lang-btn]").forEach(function(b){b.classList.toggle("is-active",b.getAttribute("data-lang-btn")===l);});if(window.klSync)window.klSync(l);}window.setHomeLang=apply;document.addEventListener("click",function(e){var b=e.target.closest("[data-lang-btn]");if(b)apply(b.getAttribute("data-lang-btn"));});document.addEventListener("DOMContentLoaded",function(){apply(lang);});})();
+</script>
+<script src="assets/js/kontakt-popup.js"></script>
+<script src="assets/js/mobile-nav.js"></script>
+</body>
+</html>

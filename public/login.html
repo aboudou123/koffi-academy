@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+  <link rel="shortcut icon" href="assets/images/logo.png">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Anmelden | Koffi Academy</title>
+   <meta name="theme-color" content="#07294d">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <style>
+:root{--navy:#07294d;--navy-d:#05203f;--ink:#0f1c2e;--accent:#f89035;--slate-600:#475569;--slate-500:#64748b;--slate-400:#94a3b8;--slate-300:#cbd5e1;--slate-200:#e2e8f0;--slate-100:#f1f5f9;--slate-50:#f8fafc}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--slate-50);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.auth{display:grid;grid-template-columns:1.05fr 1fr;min-height:100vh}
+
+/* ── Left brand panel ── */
+.auth__aside{position:relative;overflow:hidden;background:linear-gradient(150deg,#041a32 0%,#07294d 50%,#0e3d72 86%,#1a5fa0 100%);color:#fff;padding:46px 52px;display:flex;flex-direction:column;justify-content:space-between}
+.auth__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(ellipse 80% 70% at 70% 20%,#000 35%,transparent 80%);mask-image:radial-gradient(ellipse 80% 70% at 70% 20%,#000 35%,transparent 80%)}
+.auth__glow{position:absolute;top:-12%;right:-8%;width:380px;height:380px;background:radial-gradient(circle,rgba(248,144,53,.32),transparent 62%)}
+.auth__glow2{position:absolute;bottom:-18%;left:-12%;width:360px;height:360px;background:radial-gradient(circle,rgba(37,99,235,.28),transparent 64%)}
+.brand{position:relative;display:inline-flex;align-items:center;gap:11px;align-self:flex-start}
+.brand__m{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#f89035,#f7b733);display:flex;align-items:center;justify-content:center;color:#07294d;font-size:18px;box-shadow:0 6px 18px rgba(248,144,53,.4)}
+.brand__t{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.02em}
+.aside__body{position:relative}
+.aside__eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 16px}
+.aside__body h2{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:30px;line-height:1.16;margin:0 0 16px;max-width:380px}
+.aside__body p{font-size:15px;line-height:1.6;color:rgba(255,255,255,.8);max-width:380px;margin:0 0 28px}
+.aside__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px}
+.aside__list li{display:flex;align-items:center;gap:12px;font-size:14.5px;color:rgba(255,255,255,.9)}
+.aside__list i{flex:0 0 30px;width:30px;height:30px;border-radius:8px;background:rgba(248,144,53,.16);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px}
+.aside__foot{position:relative;font-size:13px;color:rgba(255,255,255,.55)}
+
+/* ── Right form panel ── */
+.auth__main{display:flex;align-items:center;justify-content:center;padding:40px 28px;position:relative}
+.auth__back{position:absolute;top:26px;right:30px;font-size:13.5px;font-weight:600;color:var(--slate-500);display:inline-flex;align-items:center;gap:7px;transition:color .18s}
+.auth__back:hover{color:var(--navy)}
+.card{width:100%;max-width:392px}
+.card__head{margin-bottom:26px}
+.card__head h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:27px;color:var(--navy);margin:0 0 7px}
+.card__head p{font-size:14.5px;color:var(--slate-500);margin:0}
+.card__head p a{color:var(--accent);font-weight:600}
+.card__head p a:hover{text-decoration:underline}
+
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:7px}
+.input{position:relative}
+.input>i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--slate-400);font-size:14px;pointer-events:none}
+.input input{width:100%;height:50px;border:1.5px solid var(--slate-200);border-radius:11px;background:#fff;padding:0 46px 0 42px;font-family:inherit;font-size:14.5px;color:var(--ink);transition:border-color .18s,box-shadow .18s}
+.input input::placeholder{color:var(--slate-400)}
+.input input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px rgba(248,144,53,.14)}
+.input .toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;background:transparent;color:var(--slate-400);cursor:pointer;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:color .16s}
+.input .toggle:hover{color:var(--navy)}
+.row-between{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:12px;flex-wrap:wrap}
+.check{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--slate-600);cursor:pointer;user-select:none}
+.check input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.link-accent{font-size:13.5px;font-weight:600;color:var(--accent)}
+.link-accent:hover{text-decoration:underline}
+.btn-primary{width:100%;height:50px;border:0;border-radius:11px;background:var(--accent);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15.5px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 10px 24px rgba(248,144,53,.34);transition:all .18s cubic-bezier(.4,0,.2,1)}
+.btn-primary:hover{background:#ed7f1f;transform:translateY(-1px)}
+.btn-primary i{font-size:13px}
+.card__foot{text-align:center;font-size:14px;color:var(--slate-500);margin-top:22px}
+.card__foot a{color:var(--navy);font-weight:700}
+.card__foot a:hover{color:var(--accent)}
+.legal{text-align:center;font-size:12px;color:var(--slate-400);margin-top:26px;line-height:1.5}
+.legal a{color:var(--slate-500);text-decoration:underline}
+
+/* lang */
+.langbar{position:absolute;top:24px;left:30px;display:inline-flex;gap:2px;background:var(--slate-100);border-radius:9px;padding:3px}
+.langbar button{border:0;background:transparent;color:var(--slate-500);font-family:inherit;font-size:12px;font-weight:700;padding:5px 9px;border-radius:6px;cursor:pointer;transition:all .16s}
+.langbar button:hover{color:var(--navy)}
+.langbar button.on{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(7,41,77,.14)}
+
+/* toast */
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-16px);z-index:9999;padding:13px 22px;border-radius:11px;color:#fff;font-weight:600;font-size:14px;box-shadow:0 14px 34px rgba(0,0,0,.26);opacity:0;transition:all .3s cubic-bezier(.34,1.3,.5,1);pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:880px){
+  .auth{grid-template-columns:1fr}
+  .auth__aside{display:none}
+  .auth__main{min-height:100vh}
+}
+@media(max-width:560px){
+  .auth__main{padding:84px 20px 40px}
+  .card__head h1{font-size:24px}
+  .langbar{top:18px;left:20px}
+  .auth__back{top:20px;right:20px}
+}
+   
+/*txt-safe*/h1,h2,h3,h4,h5,h6,p,li,figcaption,dt,dd,blockquote{overflow-wrap:break-word;word-wrap:break-word}
+</style>
+</head>
+<body>
+   <div id="toast"></div>
+   <div class="auth">
+      <!-- Brand panel -->
+      <aside class="auth__aside">
+         <span class="auth__grid" aria-hidden="true"></span>
+         <span class="auth__glow" aria-hidden="true"></span>
+         <span class="auth__glow2" aria-hidden="true"></span>
+         <a class="brand" href="index.html">
+            <span class="brand__m"><i class="fa-solid fa-flask"></i></span>
+            <span class="brand__t">Koffi Academy</span>
+         </a>
+         <div class="aside__body">
+            <p class="aside__eyebrow" data-i18n="asideEy">Platform Engineering</p>
+            <h2 data-i18n="asideH">Willkommen zurück bei Ihrer Lernplattform</h2>
+            <p data-i18n="asideP">Praxisnahe Labore und Kurse für Cloud, Kubernetes, Terraform und mehr — entwickelt von Industrieexperten.</p>
+            <ul class="aside__list">
+               <li><i class="fa-solid fa-flask"></i><span data-i18n="asideL1">58 praxisnahe Labore</span></li>
+               <li><i class="fa-solid fa-certificate"></i><span data-i18n="asideL2">An Zertifizierungen ausgerichtet</span></li>
+               <li><i class="fa-solid fa-terminal"></i><span data-i18n="asideL3">Echte Umgebungen, keine Theorie</span></li>
+            </ul>
+         </div>
+         <p class="aside__foot">&copy; 2026 Koffi Academy</p>
+      </aside>
+
+      <!-- Form panel -->
+      <main class="auth__main">
+         <div class="langbar" role="group" aria-label="Sprache">
+            <button type="button" data-lang="fr">FR</button>
+            <button type="button" data-lang="de">DE</button>
+            <button type="button" data-lang="en">EN</button>
+         </div>
+         <a class="auth__back" href="index.html"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="back">Zur Startseite</span></a>
+
+         <div class="card">
+            <div class="card__head">
+               <h1 data-i18n="title">Anmelden</h1>
+               <p><span data-i18n="subPre">Noch kein Konto?</span> <a href="register.html" data-i18n="subLink">Jetzt registrieren</a></p>
+            </div>
+            <form id="loginForm" novalidate>
+               <div class="field">
+                  <label for="email" data-i18n="lblEmail">E-Mail-Adresse</label>
+                  <div class="input">
+                     <i class="fa-solid fa-envelope"></i>
+                     <input id="email" type="email" required autocomplete="email" placeholder="name@beispiel.de">
+                  </div>
+               </div>
+               <div class="field">
+                  <label for="password" data-i18n="lblPass">Passwort</label>
+                  <div class="input">
+                     <i class="fa-solid fa-lock"></i>
+                     <input id="password" type="password" required autocomplete="current-password" placeholder="••••••••">
+                     <button type="button" class="toggle" data-target="#password" aria-label="Passwort anzeigen"><i class="fa-solid fa-eye"></i></button>
+                  </div>
+               </div>
+               <div class="row-between">
+                  <label class="check"><input type="checkbox" id="remember"><span data-i18n="remember">Angemeldet bleiben</span></label>
+                  <a class="link-accent" href="#" id="forgotLink" data-i18n="forgot">Passwort vergessen?</a>
+               </div>
+               <button type="submit" class="btn-primary"><span data-i18n="btn">Anmelden</span> <i class="fa-solid fa-arrow-right"></i></button>
+            </form>
+            <p class="card__foot"><span data-i18n="footPre">Neu hier?</span> <a href="register.html" data-i18n="footLink">Konto erstellen</a></p>
+            <p class="legal" data-i18n-html="legal">Mit der Anmeldung akzeptieren Sie unsere <a href="#">Nutzungsbedingungen</a> und <a href="#">Datenschutzrichtlinie</a>.</p>
+         </div>
+      </main>
+   </div>
+
+   <script>
+   var I18N={
+     fr:{asideEy:'Platform Engineering',asideH:'Bon retour sur votre plateforme d\'apprentissage',asideP:'Des labos et cours pratiques pour le Cloud, Kubernetes, Terraform et plus — conçus par des experts de l\'industrie.',asideL1:'58 laboratoires pratiques',asideL2:'Alignés sur les certifications',asideL3:'De vrais environnements, pas de théorie',back:'Retour à l\'accueil',title:'Connexion',subPre:'Pas encore de compte ?',subLink:'Créer un compte',lblEmail:'Adresse e-mail',lblPass:'Mot de passe',remember:'Rester connecté',forgot:'Mot de passe oublié ?',btn:'Se connecter',footPre:'Nouveau ici ?',footLink:'Créer un compte',legal:'En vous connectant, vous acceptez nos <a href="#">conditions d\'utilisation</a> et notre <a href="#">politique de confidentialité</a>.',okLogin:'Connexion réussie ! Redirection…',forgotMsg:'Si un compte existe, un e-mail de réinitialisation a été envoyé.'},
+     de:{asideEy:'Platform Engineering',asideH:'Willkommen zurück bei Ihrer Lernplattform',asideP:'Praxisnahe Labore und Kurse für Cloud, Kubernetes, Terraform und mehr — entwickelt von Industrieexperten.',asideL1:'58 praxisnahe Labore',asideL2:'An Zertifizierungen ausgerichtet',asideL3:'Echte Umgebungen, keine Theorie',back:'Zur Startseite',title:'Anmelden',subPre:'Noch kein Konto?',subLink:'Jetzt registrieren',lblEmail:'E-Mail-Adresse',lblPass:'Passwort',remember:'Angemeldet bleiben',forgot:'Passwort vergessen?',btn:'Anmelden',footPre:'Neu hier?',footLink:'Konto erstellen',legal:'Mit der Anmeldung akzeptieren Sie unsere <a href="#">Nutzungsbedingungen</a> und <a href="#">Datenschutzrichtlinie</a>.',okLogin:'Anmeldung erfolgreich! Weiterleitung…',forgotMsg:'Falls ein Konto existiert, wurde eine E-Mail zum Zurücksetzen gesendet.'},
+     en:{asideEy:'Platform Engineering',asideH:'Welcome back to your learning platform',asideP:'Hands-on labs and courses for Cloud, Kubernetes, Terraform and more — built by industry experts.',asideL1:'58 hands-on labs',asideL2:'Certification-aligned',asideL3:'Real environments, no theory',back:'Back to home',title:'Sign in',subPre:'No account yet?',subLink:'Create one',lblEmail:'Email address',lblPass:'Password',remember:'Keep me signed in',forgot:'Forgot password?',btn:'Sign in',footPre:'New here?',footLink:'Create an account',legal:'By signing in, you accept our <a href="#">terms of use</a> and <a href="#">privacy policy</a>.',okLogin:'Signed in! Redirecting…',forgotMsg:'If an account exists, a reset email has been sent.'}
+   };
+   var lang=localStorage.getItem('preferred-lang'); if(!I18N[lang])lang='de';
+   function applyLang(l){if(!I18N[l])return;lang=l;localStorage.setItem('preferred-lang',l);document.documentElement.lang=l;var d=I18N[l];
+     document.querySelectorAll('[data-i18n]').forEach(function(e){var k=e.getAttribute('data-i18n');if(d[k]!==undefined)e.textContent=d[k];});
+     document.querySelectorAll('[data-i18n-html]').forEach(function(e){var k=e.getAttribute('data-i18n-html');if(d[k]!==undefined)e.innerHTML=d[k];});
+     document.querySelectorAll('.langbar button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-lang')===l);});}
+   function toast(msg,color){var t=document.getElementById('toast');t.textContent=msg;t.style.background=color||'#0f8a4f';t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('show');},2600);}
+   document.addEventListener('click',function(e){
+     var lb=e.target.closest('.langbar button'); if(lb){applyLang(lb.getAttribute('data-lang'));return;}
+     var tg=e.target.closest('.toggle'); if(tg){var inp=document.querySelector(tg.getAttribute('data-target'));if(inp){var sh=inp.type==='password';inp.type=sh?'text':'password';var ic=tg.querySelector('i');ic.className=sh?'fa-solid fa-eye-slash':'fa-solid fa-eye';}return;}
+     var fg=e.target.closest('#forgotLink'); if(fg){e.preventDefault();toast(I18N[lang].forgotMsg,'#2563eb');return;}
+   });
+   document.getElementById('loginForm').addEventListener('submit',function(e){
+     e.preventDefault(); if(!this.checkValidity()){this.reportValidity();return;}
+     var b=this.querySelector('.btn-primary'); b.disabled=true;
+     toast(I18N[lang].okLogin,'#0f8a4f');
+     setTimeout(function(){location.href='index.html';},1500);
+   });
+   applyLang(lang);
+   </script>
+</body>
+</html>

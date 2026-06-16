@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zahlung abgebrochen – Koffi Academy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;background:linear-gradient(135deg,#07294d,#0d3d73);font-family:Inter,system-ui,sans-serif;display:grid;place-items:center;padding:24px}
+    .card{background:#fff;border-radius:20px;padding:48px 40px;max-width:460px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+    .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+    .logo{font-size:20px;font-weight:900;color:#07294d}.logo span{color:#f89035}
+    .lang-switcher{display:inline-flex;gap:4px;background:#f0f4f8;border-radius:8px;padding:3px}
+    .lang-btn{border:none;background:transparent;border-radius:5px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;color:#5a6a8a;transition:.15s}
+    .lang-btn.active,.lang-btn:hover{background:#07294d;color:#fff}
+    .icon-circle{width:80px;height:80px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:36px;color:#d97706}
+    h1{font-size:26px;font-weight:800;color:#07294d;margin-bottom:10px}
+    .sub{color:#6b7280;font-size:15px;line-height:1.6;margin-bottom:32px}
+    .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 28px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:.18s;text-decoration:none;margin-bottom:10px}
+    .btn-primary{background:#07294d;color:#fff}.btn-primary:hover{background:#0d3a6e}
+    .btn-bank{background:#f0f4f8;color:#07294d}.btn-bank:hover{background:#e5e7eb}
+    .btn-courses{background:transparent;color:#6b7280;border:1px solid #d1d5db}.btn-courses:hover{background:#f0f4f8}
+    .divider{height:1px;background:#e5e7eb;margin:20px 0}
+    .note{font-size:13px;color:#9ca3af;margin-top:16px;line-height:1.5}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="card-top">
+    <div class="logo">Koffi <span>Academy</span></div>
+    <div class="lang-switcher" role="group">
+      <button type="button" class="lang-btn active" data-lang="de" onclick="setLanguage('de')">DE</button>
+      <button type="button" class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+      <button type="button" class="lang-btn" data-lang="fr" onclick="setLanguage('fr')">FR</button>
+    </div>
+  </div>
+
+  <div class="icon-circle"><i class="fas fa-times"></i></div>
+  <h1 data-i18n="heading">Zahlung abgebrochen</h1>
+  <p class="sub" data-i18n="sub">Keine Sorge – Ihr Konto wurde nicht belastet. Sie können jederzeit erneut versuchen zu bezahlen.</p>
+
+  <a href="#" id="btn-retry" class="btn btn-primary">
+    <i class="fas fa-redo"></i> <span data-i18n="btn-retry">Erneut versuchen</span>
+  </a>
+
+  <div class="divider"></div>
+  <a href="#" id="btn-bank" class="btn btn-bank">
+    <i class="fas fa-university"></i> <span data-i18n="btn-bank">Stattdessen per Überweisung zahlen</span>
+  </a>
+  <a href="../courses/courses.html" class="btn btn-courses">
+    <i class="fas fa-th-large"></i> <span data-i18n="btn-courses">Alle Kurse ansehen</span>
+  </a>
+
+  <p class="note" data-i18n="note">Haben Sie Fragen? Schreiben Sie uns unter <a href="/contact.html">Kontakt</a>.</p>
+</div>
+
+<script>
+var i18n = {
+  de: {
+    'page-title': 'Zahlung abgebrochen – Koffi Academy',
+    'heading':    'Zahlung abgebrochen',
+    'sub':        'Keine Sorge – Ihr Konto wurde nicht belastet. Sie können jederzeit erneut versuchen zu bezahlen.',
+    'btn-retry':  'Erneut versuchen',
+    'btn-bank':   'Stattdessen per Überweisung zahlen',
+    'btn-courses':'Alle Kurse ansehen',
+    'note':       'Haben Sie Fragen? Schreiben Sie uns unter Kontakt.'
+  },
+  en: {
+    'page-title': 'Payment cancelled – Koffi Academy',
+    'heading':    'Payment cancelled',
+    'sub':        'Don\'t worry – your account has not been charged. You can try again at any time.',
+    'btn-retry':  'Try again',
+    'btn-bank':   'Pay by bank transfer instead',
+    'btn-courses':'Browse all courses',
+    'note':       'Any questions? Contact us via the contact page.'
+  },
+  fr: {
+    'page-title': 'Paiement annulé – Koffi Academy',
+    'heading':    'Paiement annulé',
+    'sub':        'Pas d\'inquiétude – votre compte n\'a pas été débité. Vous pouvez réessayer à tout moment.',
+    'btn-retry':  'Réessayer',
+    'btn-bank':   'Payer par virement bancaire',
+    'btn-courses':'Voir tous les cours',
+    'note':       'Des questions ? Contactez-nous via la page contact.'
+  }
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+  if (i18n[lang]['page-title']) document.title = i18n[lang]['page-title'];
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var params    = new URLSearchParams(location.search);
+  var course    = params.get('course');
+  var langParam = params.get('lang');
+  var saved     = langParam || localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+
+  var retryUrl = course
+    ? 'checkout.html?course=' + encodeURIComponent(course)
+    : '../laboratoire.html';
+  var bankUrl = course
+    ? 'bank-transfer-request.html?course=' + encodeURIComponent(course)
+    : '/payment/bank-transfer-request.html';
+
+  document.getElementById('btn-retry').href = retryUrl;
+  document.getElementById('btn-bank').href  = bankUrl;
+});
+</script>
+</body>
+</html>

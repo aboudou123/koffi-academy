@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <link rel="stylesheet" href="../assets/css/style.css">
+   <link rel="stylesheet" href="../assets/css/responsive.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <link rel="stylesheet" href="../assets/css/modern.css">
+   <link rel="stylesheet" href="../assets/css/modern-header.css">
+   <link rel="shortcut icon" href="../assets/images/logo.png">
+   <title>Terraform Grundlagen | Koffi Academy</title>
+   <meta name="description" content="Vollstandiger Terraform-Kurs: HCL, Provider, State, Module, Backends, Workspaces und CI/CD-Integration. DE/EN/FR.">
+   <meta name="theme-color" content="#09213d">
+   <style>
+      :root{--go-navy-950:#020c1a;--go-navy-900:#061a30;--go-navy-800:#09213d;--go-navy-700:#12304f;--go-navy-600:#16456f;--go-gold:#d6a02d;--go-gold-soft:#f9d77e;--go-coral:#ef7b4d;--go-blue:#2563eb;--go-green:#047857;--go-red:#b91c1c;--go-amber:#b45309;--go-slate-50:#f8fafc;--go-slate-100:#f1f5f9;--go-slate-200:#e2e8f0;--go-slate-300:#cbd5e1;--go-slate-500:#64748b;--go-slate-600:#475569;--go-slate-700:#334155;--go-slate-800:#1e293b}
+      *{box-sizing:border-box;letter-spacing:0}html{scroll-behavior:smooth}
+      body.go-page{margin:0;background:var(--go-slate-50);color:var(--go-slate-700);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+      .page-main{overflow-x:clip}.go-shell{max-width:1180px;margin:0 auto;padding:0 24px}
+      .go-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:12px 18px;border-radius:8px;border:1px solid transparent;font-weight:800;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,color .18s ease}
+      .go-btn:hover{transform:translateY(-2px);text-decoration:none}
+      .go-btn-primary{background:linear-gradient(135deg,var(--go-gold-soft),var(--go-gold));color:#07294d;box-shadow:0 12px 28px rgba(214,160,45,.30)}
+      .go-btn-primary:hover{color:#07294d;box-shadow:0 16px 34px rgba(214,160,45,.42)}
+      .go-btn-ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.24);color:#fff}
+      .go-btn-ghost:hover{background:rgba(255,255,255,.14);color:#fff}
+      .go-hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#020c1a 0%,#09213d 45%,#12304f 74%,#16456f 100%);color:#fff;padding:86px 0 92px}
+      .go-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:44px 44px;opacity:.55}
+      .go-hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:52px;background:var(--go-slate-50);clip-path:polygon(0 42%,100% 0,100% 100%,0 100%)}
+      .go-hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);gap:42px;align-items:center}
+      .go-kicker{display:inline-flex;align-items:center;gap:9px;margin-bottom:18px;padding:8px 13px;border:1px solid rgba(214,160,45,.45);border-radius:8px;background:rgba(214,160,45,.13);color:#f9d77e;font-size:12px;font-weight:900;text-transform:uppercase}
+      .go-hero h1{font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;color:#fff;font-size:54px;line-height:1.08;font-weight:800;margin:0 0 20px}
+      .go-hero p{font-size:18px;line-height:1.75;color:rgba(255,255,255,.84);max-width:760px;margin:0 0 28px}
+      .go-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:26px}
+      .go-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:840px}
+      .go-meta span{display:flex;align-items:center;gap:9px;min-height:54px;padding:12px 13px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.08);color:#fff;font-size:13px;font-weight:700}
+      .go-meta i{color:var(--go-gold-soft)}
+      .go-visual{position:relative;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(2,12,26,.52);box-shadow:0 28px 70px rgba(0,0,0,.30);overflow:hidden}
+      .go-visual-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06)}
+      .go-dots{display:flex;gap:7px}.go-dots span{width:10px;height:10px;border-radius:50%;background:#94a3b8}
+      .go-dots span:nth-child(1){background:#ef4444}.go-dots span:nth-child(2){background:#f59e0b}.go-dots span:nth-child(3){background:#10b981}
+      .go-visual-head strong{font-family:"JetBrains Mono",Consolas,monospace;color:#cbd5e1;font-size:12px}
+      .go-visual-body{padding:18px}
+      .go-flow{display:grid;grid-template-columns:1fr 28px 1fr;gap:10px;align-items:center;margin-bottom:16px}
+      .go-flow-card{min-height:118px;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:8px;background:rgba(255,255,255,.06)}
+      .go-flow-card i{display:block;color:var(--go-gold-soft);font-size:28px;margin-bottom:12px}
+      .go-flow-card strong{display:block;color:#fff;font-size:15px;margin-bottom:5px}
+      .go-flow-card small{display:block;color:#cbd5e1;line-height:1.45}
+      .go-arrow{display:flex;align-items:center;justify-content:center;color:var(--go-gold-soft);font-size:18px}
+      .go-state{display:grid;gap:10px}
+      .go-state-row{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:11px 12px;border:1px solid rgba(255,255,255,.10);border-radius:8px;background:rgba(255,255,255,.045)}
+      .go-state-row small{font-family:"JetBrains Mono",Consolas,monospace;color:#93c5fd;font-weight:700}
+      .go-state-row strong{color:#fff;font-size:14px}.go-state-row i{color:#10b981}
+      .go-access{position:relative;z-index:2;margin-top:-38px}
+      .go-access-inner{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding:24px 26px;border:1px solid rgba(9,33,61,.08);border-radius:8px;background:#fff;box-shadow:0 18px 48px rgba(9,33,61,.12)}
+      .go-access h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:24px;font-weight:800;margin:0 0 6px}
+      .go-access p{margin:0;color:var(--go-slate-600);line-height:1.65}
+      .go-price-pill{display:inline-flex;align-items:center;gap:9px;padding:11px 14px;border-radius:8px;background:#fffbeb;color:#9a6510;font-weight:900;white-space:nowrap}
+      .go-section{padding:78px 0}.go-section.white{background:#fff}
+      .go-heading{max-width:840px;margin-bottom:34px}
+      .go-heading.center{text-align:center;margin-left:auto;margin-right:auto}
+      .go-heading .eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;color:#9a6510;font-size:12px;font-weight:900;text-transform:uppercase}
+      .go-heading h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:36px;font-weight:800;line-height:1.18;margin:0 0 12px}
+      .go-heading p{color:var(--go-slate-600);font-size:16px;line-height:1.75;margin:0}
+      .go-outcomes{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+      .go-card{height:100%;padding:24px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+      .go-card:hover{transform:translateY(-4px);border-color:rgba(214,160,45,.45);box-shadow:0 16px 42px rgba(9,33,61,.11)}
+      .go-icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin-bottom:16px;border-radius:8px;background:#fffbeb;color:#9a6510;font-size:18px}
+      .go-card h3{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:19px;font-weight:800;margin:0 0 9px}
+      .go-card p{color:var(--go-slate-600);line-height:1.7;margin:0}
+      .go-layout{display:grid;grid-template-columns:282px minmax(0,1fr);gap:28px;align-items:start}
+      .go-sidebar{position:sticky;top:86px;padding:20px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07)}
+      .go-sidebar h3{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:17px;font-weight:800;margin:0 0 14px}
+      .go-sidebar a{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--go-slate-100);color:var(--go-slate-600);font-size:14px;font-weight:700;text-decoration:none}
+      .go-sidebar a:last-child{border-bottom:0}.go-sidebar a:hover{color:#9a6510}.go-sidebar i{width:16px;color:var(--go-gold)}
+      .go-reader{padding:42px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07)}
+      .go-reader section{scroll-margin-top:96px;margin-bottom:56px}
+      .go-reader section:last-child{margin-bottom:0}
+      .go-reader h2,.go-reader h3,.go-reader h4{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-weight:800}
+      .go-reader h2{font-size:31px;line-height:1.2;margin:0 0 16px}
+      .go-reader h3{font-size:23px;margin:30px 0 12px}
+      .go-reader h4{font-size:18px;margin:22px 0 10px}
+      .go-reader p{font-size:16px;line-height:1.86;color:var(--go-slate-700);margin:0 0 16px}
+      .go-reader ul,.go-reader ol{padding:0;margin:0 0 18px}
+      .go-reader li{position:relative;list-style:none;padding-left:29px;margin-bottom:10px;line-height:1.78;color:var(--go-slate-700)}
+      .go-reader li::before{content:"";position:absolute;left:0;top:11px;width:8px;height:8px;border-radius:50%;background:var(--go-gold)}
+      .go-note,.go-warning,.go-rule{margin:24px 0;padding:20px 22px;border-radius:8px;border:1px solid var(--go-slate-200);background:var(--go-slate-50)}
+      .go-note{border-left:4px solid var(--go-blue)}
+      .go-warning{border-left:4px solid var(--go-amber);background:#fffbeb}
+      .go-rule{border-left:4px solid var(--go-green);background:#ecfdf5}
+      .go-note strong,.go-warning strong,.go-rule strong{color:var(--go-navy-800)}
+      .go-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:22px 0}
+      .go-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:22px 0}
+      .go-mini{padding:18px;border:1px solid var(--go-slate-200);border-radius:8px;background:var(--go-slate-50)}
+      .go-mini h4{margin:0 0 8px;font-size:17px}.go-mini p{margin:0;color:var(--go-slate-600);font-size:15px;line-height:1.65}
+      .code-card{margin:20px 0;border-radius:8px;overflow:hidden;border:1px solid #1e293b;background:#0f172a}
+      .code-title{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:#111827;border-bottom:1px solid #1f2937;color:#cbd5e1;font-family:"JetBrains Mono",Consolas,monospace;font-size:12px;font-weight:700}
+      .copy-code{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.18);border-radius:6px;background:rgba(255,255,255,.08);color:#e5e7eb;padding:6px 10px;font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:800;cursor:pointer}
+      .copy-code:hover{background:rgba(255,255,255,.14)}
+      .code-card pre{margin:0;padding:18px;overflow:auto;color:#d1d5db;font-family:"JetBrains Mono",Consolas,monospace;font-size:13px;line-height:1.72}
+      .code-card code{font-family:inherit;color:inherit}
+      .go-inline-code{font-family:"JetBrains Mono",Consolas,monospace;background:var(--go-slate-100);border:1px solid var(--go-slate-200);border-radius:6px;padding:1px 6px;color:var(--go-navy-800)}
+      .go-table-wrap{overflow-x:auto;margin:22px 0;border:1px solid var(--go-slate-200);border-radius:8px}
+      .go-table{width:100%;border-collapse:collapse;background:#fff;min-width:720px}
+      .go-table th{background:#f8fafc;color:var(--go-navy-800);font-weight:900;text-align:left;padding:14px;border-bottom:1px solid var(--go-slate-200)}
+      .go-table td{padding:14px;border-bottom:1px solid var(--go-slate-200);vertical-align:top;line-height:1.65;color:var(--go-slate-700)}
+      .go-table tr:last-child td{border-bottom:0}
+      .go-lab{padding:22px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;margin:18px 0;box-shadow:0 8px 24px rgba(9,33,61,.06)}
+      .go-lab-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+      .go-lab h3{margin:0;font-size:21px}
+      .go-badge{display:inline-flex;align-items:center;gap:7px;border-radius:8px;background:#fffbeb;color:#9a6510;font-size:12px;font-weight:900;padding:7px 10px;white-space:nowrap}
+      .go-checklist{display:grid;gap:10px;margin-top:16px}
+      .go-check{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--go-slate-200);border-radius:8px;background:var(--go-slate-50)}
+      .go-check i{color:var(--go-green);margin-top:4px}.go-check span{line-height:1.6}
+      .go-project{padding:28px;border-radius:8px;background:linear-gradient(135deg,#061a30,#12304f);color:#fff}
+      .go-project h3{color:#fff;margin-top:0}
+      .go-project p,.go-project li{color:rgba(255,255,255,.82)}
+      .go-project li::before{background:var(--go-gold-soft)}
+      .source-list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+      .source-list a{display:flex;align-items:flex-start;gap:10px;padding:16px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;color:var(--go-navy-800);font-weight:800;text-decoration:none}
+      .source-list a:hover{border-color:rgba(214,160,45,.55);color:#9a6510}
+      .source-list i{color:var(--go-gold);margin-top:3px}
+      .go-icon-warn{color:#f59e0b;margin-right:7px}.go-icon-ok{color:#10b981;margin-right:7px}
+      .kh__mark svg{width:62%;height:62%;display:block}
+      .simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0}
+      .simple-footer a{color:rgba(255,255,255,.82);text-decoration:none}
+      .simple-footer a:hover{color:#f9d77e}
+      .simple-footer h3{color:#fff;font-size:13px;font-weight:800;text-transform:uppercase;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(214,160,45,.30)}
+      .simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+      .simple-footer li{font-size:13.5px;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+      .simple-footer li::before{display:none}
+      .simple-footer li i.lead-icon{color:#f9d77e;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+      .sfooter-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding-bottom:36px}
+      .simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+      .simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42)}
+      @media (max-width:1080px){.go-hero-grid,.go-layout{grid-template-columns:1fr}.go-sidebar{position:relative;top:auto}.go-outcomes{grid-template-columns:repeat(2,1fr)}.go-grid-3{grid-template-columns:1fr}}
+      @media (max-width:760px){.go-shell{padding:0 18px}.go-hero{padding:70px 0 82px}.go-hero h1{font-size:38px}.go-hero p{font-size:16px}.go-meta{grid-template-columns:1fr}.go-access-inner{grid-template-columns:1fr}.go-section{padding:58px 0}.go-reader{padding:26px 18px}.go-reader h2{font-size:26px}.go-heading h2{font-size:29px}.go-outcomes,.go-grid-2,.source-list,.sfooter-cols{grid-template-columns:1fr}.go-flow{grid-template-columns:1fr}.go-arrow{transform:rotate(90deg)}.go-state-row{grid-template-columns:1fr}.go-lab-head{flex-direction:column}}
+      .kl-drop{position:relative;flex-shrink:0}
+      .kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+      .kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+      .kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+      .kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+      .kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+      .kl-drop.open .kl-caret{transform:rotate(180deg)}
+      .kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+      .kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+      .kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+      .kl-opt:hover{background:rgba(255,255,255,.08)}.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+      .kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+      .kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+      .kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+      .lang-sect{display:none}.lang-sect.active{display:block}
+   </style>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body class="go-page">
+<div class="page-main">
+   <header class="kh">
+      <div class="kh__in">
+         <a class="kh__brand" href="../index.html">
+            <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+            <span class="kh__name">Koffi Academy</span>
+         </a>
+         <nav class="kh__nav">
+            <a href="../index.html">Startseite</a>
+            <span class="kh__drop"><span class="kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="../laboratoire.html">Laboratoire</a><a href="../courses/courses.html" class="active">Kurskatalog</a></span></span>
+            <a href="../blog.html">Blog</a>
+            <a href="../culture.html">Culture</a>
+            <a href="../koffi-profile.html">&Uuml;ber mich</a>
+            <span class="kh__auth"><a class="kh__login" href="../login.html">Anmelden</a><a class="kh__btn" href="../register.html">Registrieren</a></span>
+         </nav>
+         <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Fran&ccedil;ais</span><span class="kl-opt-code">FR</span></button></div></div>
+      </div>
+   </header>
+
+   <main>
+      <section class="go-hero">
+         <div class="go-shell">
+            <div class="go-hero-grid">
+               <div>
+                  <span class="go-kicker"><i class="fa-solid fa-cube"></i> Infrastructure as Code</span>
+                  <h1 data-i18n="heroTitle">Terraform Grundlagen</h1>
+                  <p data-i18n="heroSubtitle">Lernen Sie Terraform von Grund auf: HCL-Syntax, Provider, State-Management, Module, Backends und CI/CD-Integration. Das meistgenutzte IaC-Tool der Welt vollstandig beherrschen.</p>
+                  <div class="go-actions">
+                     <a class="go-btn go-btn-primary" href="#kursbuch"><i class="fa-solid fa-play"></i> <span data-i18n="startBtn">Kurs starten</span></a>
+                     <a class="go-btn go-btn-ghost" href="#labs"><i class="fa-solid fa-flask"></i> <span data-i18n="labsBtn">Praktische Labs</span></a>
+                  </div>
+                  <div class="go-meta">
+                     <span><i class="fa-regular fa-clock"></i> <span data-i18n="duration">3 Wochen</span></span>
+                     <span><i class="fa-solid fa-layer-group"></i> <span data-i18n="modules">8 Module</span></span>
+                     <span><i class="fa-solid fa-terminal"></i> <span data-i18n="labs">6 Labs</span></span>
+                     <span><i class="fa-solid fa-signal"></i> <span data-i18n="level">Einsteiger</span></span>
+                  </div>
+               </div>
+               <div class="go-visual">
+                  <div class="go-visual-head"><div class="go-dots"><span></span><span></span><span></span></div><strong>terraform apply</strong></div>
+                  <div class="go-visual-body">
+                     <div class="go-flow">
+                        <div class="go-flow-card"><i class="fa-solid fa-code"></i><strong>HCL Konfiguration</strong><small>Infrastruktur deklarativ beschreiben: Provider, Ressourcen, Variablen.</small></div>
+                        <div class="go-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="go-flow-card"><i class="fa-solid fa-cloud"></i><strong>Cloud-Ressourcen</strong><small>AWS, Azure, GCP, Kubernetes — provider-unabhangig und versioniert.</small></div>
+                     </div>
+                     <div class="go-state">
+                        <div class="go-state-row"><small>plan</small><strong>+3 to add, 1 to change, 0 to destroy</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>apply</small><strong>aws_instance.web: Creating...</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>state</small><strong>Apply complete! 3 added, 1 changed</strong><i class="fa-solid fa-check"></i></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <section class="go-access">
+         <div class="go-shell">
+            <div class="go-access-inner">
+               <div>
+                  <h2 data-i18n="accessTitle">Das Standard-IaC-Tool fur moderne Cloud-Infrastruktur</h2>
+                  <p data-i18n="accessDesc">Terraform wird von uber 80% der Fortune-500-Unternehmen eingesetzt und ist Pflicht fur jeden DevOps- und Cloud-Engineer.</p>
+               </div>
+               <span class="go-price-pill"><i class="fa-solid fa-certificate"></i> <span data-i18n="certLabel">Abschlussprojekt inklusive</span></span>
+            </div>
+         </div>
+      </section>
+
+      <section class="go-section white" id="ziele">
+         <div class="go-shell">
+            <div class="go-heading center">
+               <span class="eyebrow"><i class="fa-solid fa-bullseye"></i> <span data-i18n="eyebrowGoals">Lernziele</span></span>
+               <h2 data-i18n="goalsTitle">Was Sie nach diesem Kurs beherrschen</h2>
+               <p data-i18n="goalsDesc">Von HCL-Grundlagen uber State-Management bis hin zu Modulen und CI/CD-Integration — praxisorientiert und produktionsreif.</p>
+            </div>
+            <div class="go-outcomes">
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-code"></i></span><h3 data-i18n="goal1Title">HCL &amp; Provider</h3><p data-i18n="goal1Desc">Infrastruktur deklarativ in HCL beschreiben, Provider konfigurieren und Ressourcen verwalten.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-database"></i></span><h3 data-i18n="goal2Title">State Management</h3><p data-i18n="goal2Desc">Terraform State verstehen, Remote Backends einrichten und State-Konflikte vermeiden.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-cubes"></i></span><h3 data-i18n="goal3Title">Module</h3><p data-i18n="goal3Desc">Wiederverwendbare Infrastruktur-Module erstellen, versionieren und aus der Terraform Registry nutzen.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-code-branch"></i></span><h3 data-i18n="goal4Title">CI/CD Integration</h3><p data-i18n="goal4Desc">Terraform in GitHub Actions und GitLab CI integrieren mit automatischem Plan und Apply.</p></article>
+            </div>
+         </div>
+      </section>
+
+      <section class="go-section" id="kursbuch">
+         <div class="go-shell">
+            <div class="go-layout">
+               <aside class="go-sidebar">
+                  <h3 data-i18n="tocTitle">Kursinhalt</h3>
+                  <a href="#intro"><i class="fa-solid fa-circle-info"></i> <span data-i18n="toc0">Was ist Terraform?</span></a>
+                  <a href="#modul1"><i class="fa-solid fa-rocket"></i> <span data-i18n="toc1">Modul 1 — Installation</span></a>
+                  <a href="#modul2"><i class="fa-solid fa-code"></i> <span data-i18n="toc2">Modul 2 — HCL &amp; Ressourcen</span></a>
+                  <a href="#modul3"><i class="fa-solid fa-database"></i> <span data-i18n="toc3">Modul 3 — State</span></a>
+                  <a href="#modul4"><i class="fa-solid fa-sliders"></i> <span data-i18n="toc4">Modul 4 — Variablen</span></a>
+                  <a href="#modul5"><i class="fa-solid fa-cubes"></i> <span data-i18n="toc5">Modul 5 — Module</span></a>
+                  <a href="#modul6"><i class="fa-solid fa-server"></i> <span data-i18n="toc6">Modul 6 — Backends</span></a>
+                  <a href="#modul7"><i class="fa-solid fa-code-branch"></i> <span data-i18n="toc7">Modul 7 — CI/CD</span></a>
+                  <a href="#modul8"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="toc8">Modul 8 — Best Practices</span></a>
+                  <a href="#labs"><i class="fa-solid fa-flask"></i> <span data-i18n="tocLabs">Praktische Labs</span></a>
+               </aside>
+
+               <div class="go-reader">
+
+                  <!-- INTRO -->
+                  <section id="intro">
+                     <div class="lang-sect active" data-lang="de">
+                        <h2>Was ist Terraform?</h2>
+                        <p>Terraform ist ein <strong>Open-Source-Infrastructure-as-Code-Tool</strong>, entwickelt von HashiCorp und 2014 veroffentlicht. Es ermoglicht die Definition, Verwaltung und Versionierung von Cloud-Infrastruktur in einer deklarativen Konfigurationssprache namens <strong>HCL (HashiCorp Configuration Language)</strong>.</p>
+                        <p>Anstatt manuell Server, Netzwerke und Datenbanken in einer Cloud-Konsole anzulegen, beschreiben Sie mit Terraform den gewunschten Endzustand Ihrer Infrastruktur in Textdateien. Terraform berechnet dann die notwendigen Anderungen und setzt diese automatisch um.</p>
+                        <div class="go-rule"><strong>Marktfuhrend:</strong> Terraform ist das meistverbreitete IaC-Tool weltweit. Es unterstutzt uber 3.000 Provider — von AWS, Azure und GCP bis hin zu Kubernetes, GitHub, Datadog und PagerDuty. 2023 wurde Terraform unter der Business Source License (BSL) relizenziert; OpenTofu ist der offizielle CNCF-Fork unter Apache 2.0.</div>
+                        <h3>Das Problem: manuelle Infrastrukturverwaltung</h3>
+                        <div class="go-grid-2">
+                           <div class="go-mini"><h4><i class="go-icon-warn"></i>Ohne Terraform</h4><p>Infrastruktur manuell in Cloud-Konsolen erstellt. Keine Versionierung, kein Audit-Trail. "Works on my account"-Probleme. Unterschiedliche Umgebungen (Dev/Staging/Prod) laufen auseinander. Katastrophale Fehler ohne Rollback-Moglichkeit.</p></div>
+                           <div class="go-mini"><h4><i class="go-icon-ok"></i>Mit Terraform</h4><p>Infrastruktur als versionierter Code in Git. Reproducible Builds: gleiche Konfiguration ergibt identische Umgebungen. Plan zeigt Anderungen vor der Ausfuhrung. State verfolgt den aktuellen Zustand. Automatisierbar in CI/CD-Pipelines.</p></div>
+                        </div>
+                        <h3>Terraform-Workflow: Die drei Kernbefehle</h3>
+                        <div class="go-grid-3">
+                           <div class="go-mini"><h4><code>terraform init</code></h4><p>Initialisiert das Arbeitsverzeichnis: ladt Provider-Plugins herunter, konfiguriert das Backend, installiert Module.</p></div>
+                           <div class="go-mini"><h4><code>terraform plan</code></h4><p>Berechnet die Anderungen: was wird erstellt, geanderr oder geloscht. Zeigt den Ausfuhrungsplan — ohne etwas zu verandern.</p></div>
+                           <div class="go-mini"><h4><code>terraform apply</code></h4><p>Setzt den Plan um: erstellt, andert oder loscht Ressourcen gemas dem Plan. Aktualisiert den State.</p></div>
+                        </div>
+                        <h3>Terraform vs. Alternativen</h3>
+                        <div class="go-table-wrap"><table class="go-table"><thead><tr><th>Merkmal</th><th>Terraform</th><th>Pulumi</th><th>AWS CDK</th><th>Ansible</th></tr></thead><tbody>
+                           <tr><td>Sprache</td><td>HCL (deklarativ)</td><td>Python, TypeScript, Go, C#</td><td>TypeScript, Python, Java</td><td>YAML / Python</td></tr>
+                           <tr><td>Multi-Cloud</td><td>Ja (3000+ Provider)</td><td>Ja</td><td>Nur AWS</td><td>Ja</td></tr>
+                           <tr><td>State Management</td><td>Integriert</td><td>Integriert (Pulumi Cloud)</td><td>CloudFormation Stack</td><td>Kein State</td></tr>
+                           <tr><td>Lernkurve</td><td>Gering (HCL einfach)</td><td>Mittel (allg. PL)</td><td>Mittel</td><td>Mittel</td></tr>
+                           <tr><td>Reife</td><td>Sehr hoch (seit 2014)</td><td>Hoch</td><td>Hoch (AWS-spezifisch)</td><td>Sehr hoch</td></tr>
+                           <tr><td>CNCF</td><td>OpenTofu (Fork)</td><td>—</td><td>—</td><td>—</td></tr>
+                        </tbody></table></div>
+                        <h3>Warum Sie Terraform beherrschen sollten</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Pflichtskill fur DevOps/Cloud-Engineers:</strong> Terraform erscheint in uber 70% der Cloud-Engineer-Stellenausschreibungen weltweit.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Cloud-agnostisch:</strong> Einmal gelernt, funktioniert auf AWS, Azure, GCP und hunderten anderen Providern — keine Vendor-Lock-in.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Zertifizierungen:</strong> HashiCorp Certified: Terraform Associate ist eine der gefragtesten Cloud-Zertifizierungen. Hoheres Gehalt nachgewiesen.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>GitOps-kompatibel:</strong> Terraform-Code in Git + CI/CD-Pipeline = vollstandiger Audit-Trail und automatisierte Infrastruktur.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Riesiges Okosystem:</strong> Terraform Registry enthalt tausende vorgefertigter Module fur alle grossen Cloud-Dienste.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Kursansatz:</strong> Praxisorientiert von Anfang an. Jedes Modul enthalt lauffehige Beispiele, die echte AWS/Azure-Ressourcen erstellen. Sie lernen nicht nur die Syntax, sondern auch Produktionsmuster: Workspace-Strategie, State-Locking, Module-Versionierung.</div>
+                     </div>
+                     <div class="lang-sect" data-lang="en">
+                        <h2>What is Terraform?</h2>
+                        <p>Terraform is an <strong>open-source Infrastructure as Code tool</strong> developed by HashiCorp and released in 2014. It enables defining, managing, and versioning cloud infrastructure in a declarative configuration language called <strong>HCL (HashiCorp Configuration Language)</strong>.</p>
+                        <p>Instead of manually creating servers, networks, and databases in a cloud console, you describe your desired infrastructure state in text files. Terraform then calculates the necessary changes and applies them automatically.</p>
+                        <div class="go-rule"><strong>Market leader:</strong> Terraform is the world's most widely used IaC tool, supporting 3,000+ providers — from AWS, Azure and GCP to Kubernetes, GitHub, and Datadog. In 2023 HashiCorp relicensed under BSL; OpenTofu is the official CNCF fork under Apache 2.0.</div>
+                        <h3>Why You Should Master Terraform</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Essential DevOps skill:</strong> Terraform appears in over 70% of Cloud Engineer job postings worldwide.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Cloud-agnostic:</strong> Learn once, works on AWS, Azure, GCP and hundreds of other providers — no vendor lock-in.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Certifications:</strong> HashiCorp Certified: Terraform Associate is one of the most sought-after cloud certifications.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>GitOps-compatible:</strong> Terraform code in Git plus CI/CD pipeline equals complete audit trail and automated infrastructure.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Course approach:</strong> Hands-on from the start. Every module includes working examples that create real cloud resources. You learn not just syntax but production patterns: workspace strategy, state locking, module versioning.</div>
+                     </div>
+                     <div class="lang-sect" data-lang="fr">
+                        <h2>Qu'est-ce que Terraform ?</h2>
+                        <p>Terraform est un <strong>outil d'Infrastructure as Code open source</strong> developpe par HashiCorp et publie en 2014. Il permet de definir, gerer et versionner l'infrastructure cloud dans un langage de configuration declaratif appele <strong>HCL (HashiCorp Configuration Language)</strong>.</p>
+                        <div class="go-rule"><strong>Leader du marche :</strong> Terraform est l'outil IaC le plus utilise au monde, avec 3 000+ providers. En 2023, HashiCorp l'a relicencie sous BSL ; OpenTofu est le fork officiel CNCF sous Apache 2.0.</div>
+                        <h3>Pourquoi maitriser Terraform ?</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Competence DevOps indispensable :</strong> Terraform figure dans plus de 70% des offres Cloud Engineer dans le monde.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Multi-cloud :</strong> Apprenez une fois, fonctionne sur AWS, Azure, GCP et des centaines d'autres providers.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Certifications :</strong> HashiCorp Certified: Terraform Associate est l'une des certifications cloud les plus recherchees.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Approche pedagogique :</strong> Oriente pratique des le debut. Chaque module contient des exemples fonctionnels qui creent de vraies ressources cloud.</div>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 1 -->
+                  <section id="modul1">
+                     <h2>Modul 1 — Installation &amp; Erster Start</h2>
+                     <p>Terraform wird als einzelne Go-Binary ausgeliefert. Keine komplexe Installation, keine Dependencies.</p>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Terraform Installation</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Linux / macOS via tfenv (empfohlen)
+curl -sSL https://raw.githubusercontent.com/tfutils/tfenv/master/install.sh | bash
+tfenv install 1.9.0
+tfenv use 1.9.0
+
+# macOS via Homebrew
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
+
+# Windows via Chocolatey
+choco install terraform
+
+# Version pruefen
+terraform version</code></pre>
+                     </div>
+                     <h3>Erste Konfiguration: Hello World</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>main.tf — erstes Terraform-Projekt</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>terraform {
+  required_version = "&gt;= 1.9"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~&gt; 5.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "eu-central-1"
+}
+
+resource "aws_s3_bucket" "mein_bucket" {
+  bucket = "mein-erster-terraform-bucket-2025"
+
+  tags = {
+    Environment = "dev"
+    ManagedBy   = "terraform"
+  }
+}</code></pre>
+                     </div>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Workflow</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>terraform init     # Provider herunterladen
+terraform fmt      # Code formatieren
+terraform validate # Syntax pruefen
+terraform plan     # Aenderungen anzeigen
+terraform apply    # Aenderungen umsetzen (bestaetigung erforderlich)
+terraform destroy  # Alle Ressourcen loeschen</code></pre>
+                     </div>
+                     <div class="go-lab" id="labs">
+                        <div class="go-lab-head"><h3>Lab 1.1 — Erste AWS-Ressource mit Terraform</h3><span class="go-badge"><i class="fa-solid fa-flask"></i> Hands-On</span></div>
+                        <p>Erstellen Sie einen S3-Bucket und eine EC2-Instanz mit Terraform auf AWS.</p>
+                        <ul>
+                           <li>Terraform installieren und konfigurieren</li>
+                           <li>AWS-Credentials mit AWS CLI einrichten</li>
+                           <li>S3-Bucket erstellen und <code class="go-inline-code">terraform apply</code> ausfuhren</li>
+                           <li>Ressource mit <code class="go-inline-code">terraform destroy</code> wieder loschen</li>
+                        </ul>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 2 -->
+                  <section id="modul2">
+                     <h2>Modul 2 — HCL-Sprache &amp; Ressourcen</h2>
+                     <p>HCL (HashiCorp Configuration Language) ist eine deklarative Sprache, die fur Menschen lesbar und fur Maschinen interpretierbar ist. Sie ist JSON-kompatibel, aber viel ausdrucksstarter.</p>
+                     <h3>Grundlegende HCL-Konstrukte</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>main.tf — HCL-Grundstruktur</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Ressource-Block: typ + name
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c02fb55956c7d316"  # Amazon Linux 2023
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
+
+  user_data = &lt;&lt;-EOF
+    #!/bin/bash
+    yum update -y
+    yum install -y httpd
+    systemctl start httpd
+    echo "Hello from Terraform" &gt; /var/www/html/index.html
+  EOF
+
+  tags = {
+    Name        = "web-server"
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  }
+}
+
+# Data Source: bestehende Ressourcen abfragen
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-*-x86_64"]
+  }
+}
+
+# Locals: berechnete Werte
+locals {
+  common_tags = {
+    Project   = "mein-projekt"
+    ManagedBy = "terraform"
+    Region    = var.aws_region
+  }
+  bucket_name = "${var.project_name}-${var.environment}-${random_id.suffix.hex}"
+}</code></pre>
+                     </div>
+                     <h3>Referenzen zwischen Ressourcen</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>main.tf — Ressourcen-Referenzen</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>resource "aws_security_group" "web_sg" {
+  name_prefix = "web-sg-"
+  vpc_id      = aws_vpc.main.id  # Referenz auf andere Ressource
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Output: Werte ausgeben
+output "web_server_public_ip" {
+  description = "Oeffentliche IP-Adresse des Web-Servers"
+  value       = aws_instance.web_server.public_ip
+}
+
+output "web_server_url" {
+  value = "http://${aws_instance.web_server.public_ip}"
+}</code></pre>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 3 -->
+                  <section id="modul3">
+                     <h2>Modul 3 — State Management</h2>
+                     <p>Der Terraform State (<code class="go-inline-code">terraform.tfstate</code>) ist die Wahrheitsquelle uber den aktuellen Zustand Ihrer Infrastruktur. Terraform vergleicht den State mit der realen Infrastruktur, um Anderungen zu berechnen.</p>
+                     <div class="go-warning"><strong>Wichtig:</strong> Der State enthalt sensitive Daten (Passworter, Schlussel). Committen Sie <code>terraform.tfstate</code> NIEMALS in ein Git-Repository. Nutzen Sie immer Remote Backends in Produktionsumgebungen.</div>
+                     <h3>State-Befehle</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — State-Verwaltung</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># State-Inhalt anzeigen
+terraform state list
+terraform state show aws_instance.web_server
+
+# Ressource aus State entfernen (ohne zu loeschen)
+terraform state rm aws_instance.web_server
+
+# Bestehende Ressource in State importieren
+terraform import aws_instance.web_server i-1234567890abcdef0
+
+# State-Datei manuell bearbeiten (gefaehrlich)
+terraform state pull > state-backup.json
+# ... Datei bearbeiten ...
+terraform state push state-backup.json</code></pre>
+                     </div>
+                     <h3>Remote Backend mit S3 + DynamoDB</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>backend.tf — S3 Remote Backend</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>terraform {
+  backend "s3" {
+    bucket         = "mein-terraform-state-bucket"
+    key            = "prod/infrastructure/terraform.tfstate"
+    region         = "eu-central-1"
+    encrypt        = true
+
+    # State Locking via DynamoDB (verhindert gleichzeitige Aenderungen)
+    dynamodb_table = "terraform-state-lock"
+  }
+}</code></pre>
+                     </div>
+                     <div class="go-rule"><strong>Produktion:</strong> Immer Remote Backend + State Locking. S3 + DynamoDB fur AWS, Azure Blob Storage fur Azure, GCS fur Google Cloud. Terraform Cloud bietet beides out-of-the-box.</div>
+                  </section>
+
+                  <!-- MODULE 4 -->
+                  <section id="modul4">
+                     <h2>Modul 4 — Variablen, Outputs &amp; Expressions</h2>
+                     <h3>Input-Variablen</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>variables.tf</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>variable "aws_region" {
+  description = "AWS Region fuer die Deployment"
+  type        = string
+  default     = "eu-central-1"
+}
+
+variable "environment" {
+  description = "Deployment-Umgebung: dev, staging, prod"
+  type        = string
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Environment muss dev, staging oder prod sein."
+  }
+}
+
+variable "instance_count" {
+  description = "Anzahl der Web-Server-Instanzen"
+  type        = number
+  default     = 2
+}
+
+variable "allowed_cidrs" {
+  description = "Liste erlaubter CIDR-Blocks"
+  type        = list(string)
+  default     = ["10.0.0.0/8"]
+}
+
+variable "tags" {
+  description = "Zusaetzliche Tags fuer alle Ressourcen"
+  type        = map(string)
+  default     = {}
+}</code></pre>
+                     </div>
+                     <div class="code-card">
+                        <div class="code-title"><span>terraform.tfvars — Werte setzen</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># terraform.tfvars (gitignored fuer sensitive Daten)
+aws_region     = "eu-central-1"
+environment    = "prod"
+instance_count = 3
+allowed_cidrs  = ["10.0.0.0/8", "172.16.0.0/12"]
+tags = {
+  CostCenter = "engineering"
+  Owner      = "platform-team"
+}</code></pre>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 5 -->
+                  <section id="modul5">
+                     <h2>Modul 5 — Terraform Module</h2>
+                     <p>Module sind wiederverwendbare Infrastruktur-Pakete. Sie ermoglichen die Kapselung von Ressourcen-Gruppen, die standardisiert in verschiedenen Projekten verwendet werden konnen.</p>
+                     <h3>Eigenes Modul erstellen</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>modules/web-server/main.tf</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Modul-Verzeichnisstruktur:
+# modules/
+#   web-server/
+#     main.tf       Ressourcen
+#     variables.tf  Input-Variablen
+#     outputs.tf    Outputs
+
+resource "aws_launch_template" "web" {
+  name_prefix   = "${var.name}-"
+  image_id      = var.ami_id
+  instance_type = var.instance_type
+
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [aws_security_group.web.id]
+  }
+
+  user_data = base64encode(var.user_data)
+}
+
+resource "aws_autoscaling_group" "web" {
+  min_size         = var.min_size
+  max_size         = var.max_size
+  desired_capacity = var.desired_capacity
+  vpc_zone_identifier = var.subnet_ids
+
+  launch_template {
+    id      = aws_launch_template.web.id
+    version = "$Latest"
+  }
+}</code></pre>
+                     </div>
+                     <h3>Modul aus der Terraform Registry nutzen</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>main.tf — Registry-Modul</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Offizielles VPC-Modul von Terraform Registry
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.0.0"
+
+  name = "mein-vpc"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+  enable_nat_gateway = true
+  enable_vpn_gateway = true
+
+  tags = local.common_tags
+}
+
+# EKS-Cluster mit offiziellem Modul
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "20.0.0"
+
+  cluster_name    = "mein-cluster"
+  cluster_version = "1.30"
+  vpc_id          = module.vpc.vpc_id
+  subnet_ids      = module.vpc.private_subnets
+}</code></pre>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 6 -->
+                  <section id="modul6">
+                     <h2>Modul 6 — Remote Backends &amp; Workspaces</h2>
+                     <h3>Workspaces fur Umgebungstrennung</h3>
+                     <p>Terraform Workspaces ermoglichen mehrere State-Dateien in einem einzigen Konfigurationsverzeichnis — ideal fur Dev/Staging/Prod-Trennung.</p>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Workspace-Verwaltung</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Workspaces verwalten
+terraform workspace list
+terraform workspace new staging
+terraform workspace select prod
+terraform workspace show
+
+# In Konfiguration nutzen
+resource "aws_instance" "web" {
+  instance_type = terraform.workspace == "prod" ? "t3.large" : "t3.micro"
+  tags = {
+    Environment = terraform.workspace
+  }
+}</code></pre>
+                     </div>
+                     <div class="go-warning"><strong>Best Practice:</strong> Fur separate Teams und strikte Zugriffstrennung sind separate Verzeichnisse (und eigene State-Buckets) pro Umgebung oft besser als Workspaces.</div>
+                  </section>
+
+                  <!-- MODULE 7 -->
+                  <section id="modul7">
+                     <h2>Modul 7 — CI/CD Integration</h2>
+                     <p>Terraform in CI/CD-Pipelines integrieren bedeutet: automatischer <code class="go-inline-code">terraform plan</code> bei Pull Requests und <code class="go-inline-code">terraform apply</code> nach Merge in den Hauptbranch.</p>
+                     <div class="code-card">
+                        <div class="code-title"><span>.github/workflows/terraform.yml</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>name: Terraform CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  terraform:
+    name: Terraform Plan &amp; Apply
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infrastructure/
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/github-actions-terraform
+          aws-region: eu-central-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.0"
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -out=tfplan
+        continue-on-error: true
+
+      - name: Comment Plan on PR
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## Terraform Plan\n```\n${{ steps.plan.outputs.stdout }}\n```'
+            })
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' &amp;&amp; github.event_name == 'push'
+        run: terraform apply -auto-approve tfplan</code></pre>
+                     </div>
+                     <div class="go-note"><strong>OIDC statt Langzeit-Credentials:</strong> Die obige Konfiguration nutzt AWS OIDC-Integration. Der GitHub Actions-Runner erhalt kurzlebige AWS-Credentials ohne dass statische Access Keys in den Secrets gespeichert werden mussen.</div>
+                  </section>
+
+                  <!-- MODULE 8 -->
+                  <section id="modul8">
+                     <h2>Modul 8 — Best Practices &amp; Sicherheit</h2>
+                     <h3>Code-Qualitat sicherstellen</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Linting &amp; Security Scanning</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># tflint - Terraform Linter
+brew install tflint
+tflint --init
+tflint --recursive
+
+# tfsec - Security Scanner
+brew install tfsec
+tfsec .
+
+# checkov - Policy as Code
+pip install checkov
+checkov -d . --framework terraform
+
+# terrascan - Multi-Cloud Security
+brew install terrascan
+terrascan scan -i terraform</code></pre>
+                     </div>
+                     <h3>Verzeichnisstruktur fur grosse Projekte</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>Empfohlene Projektstruktur</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>infrastructure/
+  modules/               # Wiederverwendbare Module
+    vpc/
+    eks/
+    rds/
+  environments/
+    dev/
+      main.tf
+      variables.tf
+      terraform.tfvars
+      backend.tf
+    staging/
+      main.tf
+      ...
+    prod/
+      main.tf
+      ...
+  .terraform-version    # tfenv-Versionsdatei
+  .tflint.hcl           # tflint-Konfiguration</code></pre>
+                     </div>
+                     <div class="go-rule"><strong>Goldene Regeln:</strong> (1) State niemals in Git committen. (2) Immer Remote Backend mit Locking. (3) Sensible Werte als Environment-Variablen oder aus Vault/AWS Secrets Manager. (4) Alle Aenderungen durch Plan-Review im Pull Request. (5) Module versionieren mit Tags.</div>
+                     <div class="go-project">
+                        <h3>Abschlussprojekt — Vollstandige AWS-Infrastruktur</h3>
+                        <p>Erstellen Sie mit Terraform eine produktionsreife AWS-Infrastruktur fur eine Web-Applikation.</p>
+                        <ul>
+                           <li>VPC mit public/private Subnets in 3 Availability Zones (Registry-Modul)</li>
+                           <li>Application Load Balancer mit HTTPS-Listener</li>
+                           <li>Auto Scaling Group mit Launch Template</li>
+                           <li>RDS PostgreSQL mit Multi-AZ (Produktion)</li>
+                           <li>Remote S3 Backend + DynamoDB State Locking</li>
+                           <li>GitHub Actions CI/CD-Pipeline mit Plan bei PR und Apply bei Merge</li>
+                        </ul>
+                     </div>
+                  </section>
+
+                  <!-- SOURCES -->
+                  <section id="quellen">
+                     <h2 data-i18n="sourcesTitle">Quellen &amp; Weiterfuhrende Ressourcen</h2>
+                     <div class="source-list">
+                        <a href="https://developer.hashicorp.com/terraform/docs" target="_blank" rel="noopener"><i class="fa-solid fa-book"></i> Offizielle Terraform-Dokumentation</a>
+                        <a href="https://registry.terraform.io" target="_blank" rel="noopener"><i class="fa-solid fa-cubes"></i> Terraform Registry (Module &amp; Provider)</a>
+                        <a href="https://opentofu.org/docs" target="_blank" rel="noopener"><i class="fa-solid fa-code-fork"></i> OpenTofu Dokumentation (CNCF Fork)</a>
+                        <a href="https://developer.hashicorp.com/certifications/infrastructure-automation" target="_blank" rel="noopener"><i class="fa-solid fa-certificate"></i> Terraform Associate Zertifizierung</a>
+                     </div>
+                  </section>
+
+               </div>
+            </div>
+         </div>
+      </section>
+   </main>
+
+   <footer class="simple-footer">
+      <div class="go-shell">
+         <div class="sfooter-cols">
+            <div>
+               <h3>Koffi Academy</h3>
+               <ul>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>Cloud-Native &amp; DevOps Kurse</li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>Praxisorientiertes Lernen</li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>CNCF Zertifizierungen</li>
+               </ul>
+            </div>
+            <div>
+               <h3>Kurse</h3>
+               <ul>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="../gitops-argocd.html">GitOps mit ArgoCD</a></li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="backstage-101.html">Backstage Portal</a></li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="vault-101-legacy.html">HashiCorp Vault 101</a></li>
+               </ul>
+            </div>
+            <div>
+               <h3>Kontakt</h3>
+               <ul>
+                  <li><i class="fa-solid fa-envelope lead-icon"></i><a href="mailto:info@koffi.academy">info@koffi.academy</a></li>
+                  <li><i class="fa-brands fa-github lead-icon"></i><a href="https://github.com/koffi-academy" target="_blank" rel="noopener">GitHub</a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <div class="go-shell"><p>&copy; 2025 Koffi Academy &mdash; Terraform Grundlagen Kurs</p></div>
+      </div>
+   </footer>
+</div>
+
+<script>
+var i18n={
+  de:{heroTitle:"Terraform Grundlagen",heroSubtitle:"Lernen Sie Terraform von Grund auf: HCL-Syntax, Provider, State-Management, Module, Backends und CI/CD-Integration.",startBtn:"Kurs starten",labsBtn:"Praktische Labs",duration:"3 Wochen",modules:"8 Module",labs:"6 Labs",level:"Einsteiger",accessTitle:"Das Standard-IaC-Tool fur moderne Cloud-Infrastruktur",accessDesc:"Terraform wird von uber 80% der Fortune-500-Unternehmen eingesetzt und ist Pflicht fur jeden DevOps- und Cloud-Engineer.",certLabel:"Abschlussprojekt inklusive",eyebrowGoals:"Lernziele",goalsTitle:"Was Sie nach diesem Kurs beherrschen",goalsDesc:"Von HCL-Grundlagen uber State-Management bis hin zu Modulen und CI/CD-Integration.",goal1Title:"HCL & Provider",goal1Desc:"Infrastruktur deklarativ in HCL beschreiben, Provider konfigurieren und Ressourcen verwalten.",goal2Title:"State Management",goal2Desc:"Terraform State verstehen, Remote Backends einrichten und State-Konflikte vermeiden.",goal3Title:"Module",goal3Desc:"Wiederverwendbare Module erstellen, versionieren und aus der Registry nutzen.",goal4Title:"CI/CD Integration",goal4Desc:"Terraform in GitHub Actions und GitLab CI mit Plan und Apply integrieren.",tocTitle:"Kursinhalt",toc0:"Was ist Terraform?",toc1:"Modul 1 — Installation",toc2:"Modul 2 — HCL & Ressourcen",toc3:"Modul 3 — State",toc4:"Modul 4 — Variablen",toc5:"Modul 5 — Module",toc6:"Modul 6 — Backends",toc7:"Modul 7 — CI/CD",toc8:"Modul 8 — Best Practices",tocLabs:"Praktische Labs",sourcesTitle:"Quellen & Weiterfuhrende Ressourcen"},
+  en:{heroTitle:"Terraform Fundamentals",heroSubtitle:"Learn Terraform from scratch: HCL syntax, providers, state management, modules, backends, and CI/CD integration.",startBtn:"Start Course",labsBtn:"Hands-On Labs",duration:"3 weeks",modules:"8 Modules",labs:"6 Labs",level:"Beginner",accessTitle:"The Standard IaC Tool for Modern Cloud Infrastructure",accessDesc:"Terraform is used by over 80% of Fortune 500 companies and is essential for every DevOps and Cloud Engineer.",certLabel:"Final project included",eyebrowGoals:"Learning Objectives",goalsTitle:"What You'll Master After This Course",goalsDesc:"From HCL basics through state management to modules and CI/CD integration.",goal1Title:"HCL & Providers",goal1Desc:"Declaratively describe infrastructure in HCL, configure providers, and manage resources.",goal2Title:"State Management",goal2Desc:"Understand Terraform state, set up remote backends, and avoid state conflicts.",goal3Title:"Modules",goal3Desc:"Create reusable modules, version them, and use modules from the Registry.",goal4Title:"CI/CD Integration",goal4Desc:"Integrate Terraform in GitHub Actions and GitLab CI with plan and apply.",tocTitle:"Course Content",toc0:"What is Terraform?",toc1:"Module 1 — Installation",toc2:"Module 2 — HCL & Resources",toc3:"Module 3 — State",toc4:"Module 4 — Variables",toc5:"Module 5 — Modules",toc6:"Module 6 — Backends",toc7:"Module 7 — CI/CD",toc8:"Module 8 — Best Practices",tocLabs:"Hands-On Labs",sourcesTitle:"Sources & Further Resources"},
+  fr:{heroTitle:"Terraform: Les Fondamentaux",heroSubtitle:"Apprenez Terraform de zero : syntaxe HCL, providers, gestion du state, modules, backends et integration CI/CD.",startBtn:"Demarrer le cours",labsBtn:"Labs pratiques",duration:"3 semaines",modules:"8 Modules",labs:"6 Labs",level:"Debutant",accessTitle:"L'outil IaC standard pour l'infrastructure cloud moderne",accessDesc:"Terraform est utilise par plus de 80% des entreprises Fortune 500 et est indispensable pour tout ingenieur DevOps/Cloud.",certLabel:"Projet final inclus",eyebrowGoals:"Objectifs",goalsTitle:"Ce que vous maittriserez apres ce cours",goalsDesc:"Des bases HCL jusqu'a la gestion du state, les modules et l'integration CI/CD.",goal1Title:"HCL & Providers",goal1Desc:"Decrire l'infrastructure de facon declarative en HCL.",goal2Title:"Gestion du State",goal2Desc:"Comprendre le state Terraform et configurer les backends distants.",goal3Title:"Modules",goal3Desc:"Creer des modules reutilisables et utiliser la Registry.",goal4Title:"Integration CI/CD",goal4Desc:"Integrer Terraform dans GitHub Actions avec plan et apply.",tocTitle:"Contenu du cours",toc0:"Qu'est-ce que Terraform ?",toc1:"Module 1 — Installation",toc2:"Module 2 — HCL & Ressources",toc3:"Module 3 — State",toc4:"Module 4 — Variables",toc5:"Module 5 — Modules",toc6:"Module 6 — Backends",toc7:"Module 7 — CI/CD",toc8:"Module 8 — Bonnes pratiques",tocLabs:"Labs pratiques",sourcesTitle:"Sources & Ressources"}
+};
+var flagMap={de:'fi-de',en:'fi-gb',fr:'fi-fr'};
+var codeMap={de:'DE',en:'EN',fr:'FR'};
+function setLanguage(lang){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(i18n[lang]&&i18n[lang][k])el.textContent=i18n[lang][k];});
+  document.querySelectorAll('.lang-sect').forEach(function(s){s.classList.toggle('active',s.getAttribute('data-lang')===lang);});
+  document.documentElement.lang=lang;
+  localStorage.setItem('preferred-lang',lang);
+  klSync(lang);
+}
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',o);}
+function klClose(){document.getElementById('klDrop').classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}
+function klSync(lang){var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+flagMap[lang];if(c)c.textContent=codeMap[lang];document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.getAttribute('data-kl')===lang);});}
+function klPick(lang){setLanguage(lang);klClose();}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&!d.contains(e.target))klClose();});
+(function(){setLanguage(localStorage.getItem('preferred-lang')||'de');})();
+</script>
+<script src="../assets/js/mobile-nav.js"></script>
+</body>
+</html>

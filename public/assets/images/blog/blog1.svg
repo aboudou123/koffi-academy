@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#041424"/>
+      <stop offset="55%" stop-color="#07294d"/>
+      <stop offset="100%" stop-color="#0e3a62"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffc600"/>
+      <stop offset="100%" stop-color="#ffdf5c"/>
+    </linearGradient>
+    <pattern id="grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.045)" stroke-width="1"/>
+    </pattern>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="600" fill="url(#bg)"/>
+  <rect width="1200" height="600" fill="url(#grid)"/>
+
+  <!-- Ambient glow top right -->
+  <circle cx="1050" cy="120" r="280" fill="rgba(255,198,0,0.045)"/>
+  <circle cx="160" cy="500" r="200" fill="rgba(14,58,98,0.6)"/>
+
+  <!-- Gold left bar -->
+  <rect x="0" y="0" width="5" height="600" fill="url(#gold)"/>
+
+  <!-- Terminal window -->
+  <rect x="72" y="130" width="580" height="310" rx="12" fill="rgba(4,20,36,0.75)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <!-- Terminal title bar -->
+  <rect x="72" y="130" width="580" height="38" rx="12" fill="rgba(0,0,0,0.35)"/>
+  <rect x="72" y="154" width="580" height="14" fill="rgba(0,0,0,0.35)"/>
+  <circle cx="100" cy="149" r="7" fill="#ff5f57"/>
+  <circle cx="124" cy="149" r="7" fill="#febc2e"/>
+  <circle cx="148" cy="149" r="7" fill="#28c840"/>
+  <text x="310" y="153" text-anchor="middle" font-family="monospace" font-size="12" fill="rgba(255,255,255,0.3)">bash — koffi-academy</text>
+
+  <!-- Code lines -->
+  <text x="96" y="193" font-family="'SFMono-Regular',Consolas,monospace" font-size="13" fill="#ffc600">$ kubectl get nodes</text>
+  <text x="96" y="215" font-family="'SFMono-Regular',Consolas,monospace" font-size="12" fill="rgba(255,255,255,0.55)">NAME             STATUS   ROLES    AGE</text>
+  <text x="96" y="235" font-family="'SFMono-Regular',Consolas,monospace" font-size="12" fill="rgba(100,210,180,0.85)">koffi-node-01    Ready    master   42d</text>
+  <text x="96" y="255" font-family="'SFMono-Regular',Consolas,monospace" font-size="12" fill="rgba(100,210,180,0.85)">koffi-node-02    Ready    worker   42d</text>
+  <text x="96" y="285" font-family="'SFMono-Regular',Consolas,monospace" font-size="13" fill="#ffc600">$ terraform apply --auto-approve</text>
+  <text x="96" y="307" font-family="'SFMono-Regular',Consolas,monospace" font-size="12" fill="rgba(255,255,255,0.45)">Plan: 6 to add, 0 to change, 0 to destroy.</text>
+  <text x="96" y="327" font-family="'SFMono-Regular',Consolas,monospace" font-size="12" fill="rgba(100,210,180,0.85)">Apply complete! Resources: 6 added.</text>
+  <text x="96" y="360" font-family="'SFMono-Regular',Consolas,monospace" font-size="13" fill="#ffc600">$ helm upgrade --install koffi .</text>
+  <text x="96" y="382" font-family="'SFMono-Regular',Consolas,monospace" font-size="12" fill="rgba(100,210,180,0.85)">Release "koffi" has been upgraded. ✓</text>
+  <text x="96" y="410" font-family="'SFMono-Regular',Consolas,monospace" font-size="13" fill="#ffc600">▌</text>
+
+  <!-- Right side: node diagram -->
+  <g opacity="0.9">
+    <!-- Center node -->
+    <circle cx="880" cy="260" r="48" fill="none" stroke="#ffc600" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="880" cy="260" r="38" fill="rgba(255,198,0,0.12)"/>
+    <text x="880" y="255" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ffc600">Koffi</text>
+    <text x="880" y="270" text-anchor="middle" font-family="sans-serif" font-size="10" fill="rgba(255,198,0,0.7)">Academy</text>
+
+    <!-- Satellite nodes -->
+    <circle cx="760" cy="160" r="28" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="760" y="164" text-anchor="middle" font-family="monospace" font-size="10" fill="rgba(255,255,255,0.6)">K8s</text>
+    <line x1="845" y1="228" x2="783" y2="183" stroke="rgba(255,198,0,0.25)" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <circle cx="1010" cy="165" r="28" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="1010" y="169" text-anchor="middle" font-family="monospace" font-size="10" fill="rgba(255,255,255,0.6)">TF</text>
+    <line x1="915" y1="228" x2="987" y2="183" stroke="rgba(255,198,0,0.25)" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <circle cx="1050" cy="320" r="28" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="1050" y="324" text-anchor="middle" font-family="monospace" font-size="9" fill="rgba(255,255,255,0.6)">GitOps</text>
+    <line x1="917" y1="280" x2="1023" y2="311" stroke="rgba(255,198,0,0.25)" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <circle cx="750" cy="360" r="28" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="750" y="364" text-anchor="middle" font-family="monospace" font-size="9" fill="rgba(255,255,255,0.6)">Vault</text>
+    <line x1="843" y1="289" x2="775" y2="340" stroke="rgba(255,198,0,0.25)" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <circle cx="880" cy="420" r="28" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="880" y="424" text-anchor="middle" font-family="monospace" font-size="9" fill="rgba(255,255,255,0.6)">CI/CD</text>
+    <line x1="880" y1="298" x2="880" y2="392" stroke="rgba(255,198,0,0.25)" stroke-width="1" stroke-dasharray="4,3"/>
+  </g>
+
+  <!-- Bottom branding -->
+  <text x="1180" y="585" text-anchor="end" font-family="'Inter',Arial,sans-serif" font-size="13" fill="rgba(255,255,255,0.18)" font-weight="600" letter-spacing="1">KOFFI ACADEMY</text>
+  <rect x="0" y="595" width="1200" height="5" fill="url(#gold)" opacity="0.4"/>
+</svg>

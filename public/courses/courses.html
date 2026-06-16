@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="de">
+   <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="../assets/css/style.css">
+      <link rel="stylesheet" href="../assets/css/responsive.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="stylesheet" href="../assets/css/modern.css">
+      <link rel="shortcut icon" href="../assets/images/logo.png">
+      <title>Plattform-Engineering & AI-Kurse | E-Learning</title>
+      <meta name="description" content="Meistern Sie Plattform-Engineering, KI-Systeme, LLMs und MLOps mit Bootcamps, Kursen und praktischen Labs.">
+      <meta name="theme-color" content="#07294d">
+      
+      <style>
+         /* Hero Section */
+         .hero-section {
+            background: linear-gradient(135deg, #07294d 0%, #0a3a6b 100%);
+            padding: 80px 0 100px;
+            position: relative;
+            overflow: hidden;
+         }
+         .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" opacity="0.05"><path fill="white" d="M100 0L120 30L150 40L130 70L140 100L110 90L80 100L90 70L70 40L100 0Z"/></svg>');
+            background-repeat: repeat;
+            background-size: 60px;
+         }
+         .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+         }
+         .hero-title {
+            font-size: 52px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+            font-family: 'Rubik', sans-serif;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+         }
+         .hero-subtitle {
+            font-size: 18px;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 35px;
+            line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+         }
+         /* Search Bar */
+         .search-container {
+            max-width: 550px;
+            margin: 0 auto 30px;
+            position: relative;
+         }
+         .search-input {
+            width: 100%;
+            padding: 16px 55px 16px 25px;
+            border: none;
+            border-radius: 60px;
+            font-size: 16px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            outline: none;
+         }
+         .search-input:focus {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+         }
+         .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 18px;
+         }
+         /* CTA Button */
+         .cta-btn {
+            background: #ffc600;
+            color: #07294d;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(255,198,0,0.3);
+         }
+         .cta-btn:hover {
+            background: #e6b200;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,198,0,0.4);
+         }
+         .help-text {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+         }
+         /* Filter Section */
+         .filter-section {
+            background: white;
+            padding: 25px 0;
+            border-bottom: 1px solid #eef2f6;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+         }
+         .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 15px;
+         }
+         .filter-btn {
+            background: #f0f4f8;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #444;
+         }
+         .filter-btn.active {
+            background: #ffc600;
+            color: #07294d;
+         }
+         .filter-btn:hover {
+            transform: translateY(-2px);
+            background: #e6b200;
+            color: #07294d;
+         }
+         .sort-select {
+            padding: 8px 16px;
+            border-radius: 40px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+         }
+         /* Course Cards */
+         .course-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-top: 30px;
+         }
+         .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.1);
+         }
+         .course-image {
+            position: relative;
+            height: 160px;
+            background: linear-gradient(135deg, #07294d 0%, #0a3a6b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+         }
+         .course-logo {
+            font-size: 56px;
+            color: #ffc600;
+         }
+         .course-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ffc600;
+            color: #07294d;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+         }
+         .course-badge.new { background: #28a745; color: white; }
+         .course-badge.popular { background: #f94fa4; color: white; }
+         .course-content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+         .course-title { font-size: 18px; font-weight: 700; color: #07294d; margin-bottom: 10px; font-family: 'Rubik', sans-serif; }
+         .course-title a { color: #07294d; text-decoration: none; transition: color 0.3s; }
+         .course-title a:hover { color: #ffc600; }
+         .course-description { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 15px; flex: 1; }
+         .course-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+         .course-duration { font-size: 13px; color: #888; }
+         .course-duration i { margin-right: 5px; color: #ffc600; }
+         .course-level { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: #f0f4f8; color: #07294d; }
+         .course-level.beginner { background: #28a74520; color: #28a745; }
+         .course-level.intermediate { background: #ffc60020; color: #cc9900; }
+         .course-level.advanced { background: #f94fa420; color: #e63946; }
+         .course-btn { background: #07294d; color: white; padding: 8px 20px; border-radius: 30px; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.3s; display: inline-block; }
+         .course-btn:hover { background: #ffc600; color: #07294d; }
+         @media (max-width: 768px) {
+            .hero-title { font-size: 32px; }
+            .hero-subtitle { font-size: 16px; }
+            .hero-section { padding: 100px 0 60px; }
+         }
+      .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+   <style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style><link rel="stylesheet" href="../assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+   <body>
+      <div class="page-main">
+         <!-- HEADER -->
+         <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="../index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="../index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="../laboratoire.html">Laboratoire</a><a href="../courses/courses.html" class="active">Kurskatalog</a></span></span>
+<a href="../blog.html">Blog</a>
+<a href="../culture.html">Culture</a>
+<a href="../koffi-profile.html">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="../login.html">Anmelden</a><a class="kh__btn" href="../register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+         
+         <!-- HERO SECTION -->
+         <section class="hero-section">
+            <div class="container">
+               <div class="hero-content">
+                  <h1 class="hero-title" id="heroTitle" data-i18n="hero.title">Plattform-Engineering & AI-Architektur</h1>
+                  <p class="hero-subtitle" id="heroSubtitle" data-i18n="hero.subtitle">Meistern Sie Plattform-Engineering, KI-Systeme, LLMs und MLOps mit umfassenden Bootcamps, Kursen und praktischen Labs</p>
+
+                  <div class="search-container">
+                     <input type="text" class="search-input" id="searchInput" data-i18n-placeholder="hero.search" placeholder="Bootcamps, Kurse, Labs durchsuchen...">
+                     <i class="fas fa-search search-icon"></i>
+                  </div>
+
+                  <button class="cta-btn" id="assessmentBtn" type="button">
+                     <i class="fas fa-compass"></i> <span id="ctaText" data-i18n="hero.cta">Nicht sicher, wo Sie beginnen sollen?</span>
+                  </button>
+                  <p class="help-text" id="helpText" data-i18n="hero.help">Machen Sie eine 2-minütige Einschätzung und erhalten Sie einen personalisierten Lernpfad – vom Linux-Einsteiger zum KI-Plattform-Ingenieur.</p>
+               </div>
+            </div>
+         </section>
+         
+         <!-- FILTER SECTION -->
+         <section class="filter-section">
+            <div class="container">
+               <div class="filter-buttons">
+                  <button class="filter-btn active" data-filter="all" id="filterAll" type="button" data-i18n="filter.all">Alle Kurse</button>
+                  <button class="filter-btn" data-filter="bootcamp" id="filterBootcamp" type="button" data-i18n="filter.bootcamp">Bootcamps</button>
+                  <button class="filter-btn" data-filter="course" id="filterCourse" type="button" data-i18n="filter.course">Einzelkurse</button>
+               </div>
+               <div class="text-center">
+                  <select class="sort-select" id="sortSelect">
+                     <option value="popular" data-i18n="sort.popular">Sortieren nach: Beliebteste</option>
+                     <option value="name" data-i18n="sort.name">Sortieren nach: Name A-Z</option>
+                     <option value="duration" data-i18n="sort.duration">Sortieren nach: Dauer</option>
+                  </select>
+               </div>
+            </div>
+         </section>
+         
+         <!-- COURSES SECTION -->
+         <section class="our-blog-area page-paddings">
+            <div class="container">
+               <div class="row" id="coursesContainer">
+                  
+                  <!-- KURS 1: Infrastructure as Code -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12" data-type="bootcamp" data-name="Infrastructure as Code" data-duration="21">
+                     <div class="course-card wow fadeInUp center">
+                        <div class="course-image">
+                           <div class="course-badge popular" data-i18n="badge.popular">★ Bestseller</div>
+                           <div class="course-logo"><i class="fas fa-code-branch"></i></div>
+                        </div>
+                        <div class="course-content">
+                           <h3 class="course-title"><a href="../free-courses/infrastructure-as-code.html">Infrastructure as Code (IaC) mit Terraform</a></h3>
+                           <p class="course-description" data-i18n="course1.desc">Lernen Sie Infrastructure as Code mit Terraform. Automatisieren Sie AWS-Deployments, verwalten Sie Cloud-Infrastruktur und meistern Sie den kompletten IaC-Workflow.</p>
+                           <div class="course-meta">
+                              <span class="course-duration"><i class="far fa-clock"></i> 21 <span data-i18n="duration.weeks">Wochen</span></span>
+                              <span class="course-level beginner" data-i18n="level.beginner">📖 Anfänger</span>
+                              <a href="../free-courses/infrastructure-as-code.html" class="course-btn" data-i18n="btn.course">Zum Kurs →</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <!-- KURS 2: Platform Engineering & DevOps -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12" data-type="bootcamp" data-name="Platform Engineering & DevOps" data-duration="12">
+                     <div class="course-card wow fadeInUp center">
+                        <div class="course-image">
+                           <div class="course-logo"><i class="fas fa-cogs"></i></div>
+                        </div>
+                        <div class="course-content">
+                           <h3 class="course-title"><a href="../free-courses/platform-engineering-devops.html">Platform Engineering & DevOps</a></h3>
+                           <p class="course-description" data-i18n="course2.desc">Meistern Sie Platform Engineering, DevOps-Kultur und moderne Infrastrukturautomatisierung. Lernen Sie CI/CD, GitOps und Internal Developer Platforms.</p>
+                           <div class="course-meta">
+                              <span class="course-duration"><i class="far fa-clock"></i> 12 <span data-i18n="duration.weeks">Wochen</span></span>
+                              <span class="course-level intermediate" data-i18n="level.intermediate">🚀 Fortgeschritten</span>
+                              <a href="../free-courses/platform-engineering-devops.html" class="course-btn" data-i18n="btn.course">Zum Kurs →</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <!-- KURS 3: Kubernetes für Einsteiger -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12" data-type="course" data-name="Kubernetes für Einsteiger" data-duration="6">
+                     <div class="course-card wow fadeInUp center">
+                        <div class="course-image">
+                           <div class="course-logo"><i class="fas fa-dharmachakra"></i></div>
+                        </div>
+                        <div class="course-content">
+                           <h3 class="course-title"><a href="../free-courses/kubernetes.html">Kubernetes für Einsteiger</a></h3>
+                           <p class="course-description" data-i18n="course3.desc">Verstehen Sie Kubernetes-Architektur, Pods, Deployments, Services und Ingress. Lernen Sie Container-Orchestrierung mit praktischen Beispielen.</p>
+                           <div class="course-meta">
+                              <span class="course-duration"><i class="far fa-clock"></i> 6 <span data-i18n="duration.weeks">Wochen</span></span>
+                              <span class="course-level beginner" data-i18n="level.beginner">📖 Anfänger</span>
+                              <a href="../free-courses/kubernetes.html" class="course-btn" data-i18n="btn.course">Zum Kurs →</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <!-- KURS 4: CI/CD mit GitHub Actions -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12" data-type="course" data-name="CI/CD mit GitHub Actions" data-duration="4">
+                     <div class="course-card wow fadeInUp center">
+                        <div class="course-image">
+                           <div class="course-badge new" data-i18n="badge.new">🆕 Neu</div>
+                           <div class="course-logo"><i class="fab fa-github"></i></div>
+                        </div>
+                        <div class="course-content">
+                           <h3 class="course-title"><a href="../free-courses/github-actions.html">CI/CD mit GitHub Actions</a></h3>
+                           <p class="course-description" data-i18n="course4.desc">Automatisieren Sie Ihre Deployments mit GitHub Actions. Lernen Sie CI/CD-Pipelines, automatisierte Tests und Cloud-Deployments.</p>
+                           <div class="course-meta">
+                              <span class="course-duration"><i class="far fa-clock"></i> 4 <span data-i18n="duration.weeks">Wochen</span></span>
+                              <span class="course-level intermediate" data-i18n="level.intermediate">🚀 Fortgeschritten</span>
+                              <a href="../free-courses/github-actions.html" class="course-btn" data-i18n="btn.course">Zum Kurs →</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <!-- KURS 5: HashiCorp Vault Security -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12" data-type="course" data-name="HashiCorp Vault Security" data-duration="5">
+                     <div class="course-card wow fadeInUp center">
+                        <div class="course-image">
+                           <div class="course-logo"><i class="fas fa-shield-alt"></i></div>
+                        </div>
+                        <div class="course-content">
+                           <h3 class="course-title"><a href="../free-courses/vault-101-legacy.html">HashiCorp Vault – Security</a></h3>
+                           <p class="course-description" data-i18n="course5.desc">Meistern Sie Secret Management mit HashiCorp Vault. Lernen Sie dynamische Secrets, Verschlüsselung und Enterprise Security Patterns.</p>
+                           <div class="course-meta">
+                              <span class="course-duration"><i class="far fa-clock"></i> 5 <span data-i18n="duration.weeks">Wochen</span></span>
+                              <span class="course-level advanced" data-i18n="level.expert">🎯 Experte</span>
+                              <a href="../free-courses/vault-101-legacy.html" class="course-btn" data-i18n="btn.course">Zum Kurs →</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <!-- KURS 6: IDP Masterclass -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12" data-type="course" data-name="IDP Masterclass" data-duration="6">
+                     <div class="course-card wow fadeInUp center">
+                        <div class="course-image">
+                           <div class="course-badge new" data-i18n="badge.new">🆕 Neu</div>
+                           <div class="course-logo"><i class="fas fa-layer-group"></i></div>
+                        </div>
+                        <div class="course-content">
+                           <h3 class="course-title"><a href="../courses/course-preview.html">IDP Masterclass – Developer Platforms</a></h3>
+                           <p class="course-description" data-i18n="course6.desc">Bauen Sie Internal Developer Platforms mit Backstage, Golden Paths, Kubernetes und automatisierter Governance.</p>
+                           <div class="course-meta">
+                              <span class="course-duration"><i class="far fa-clock"></i> 6 <span data-i18n="duration.weeks">Wochen</span></span>
+                              <span class="course-level intermediate" data-i18n="level.intermediate">🚀 Fortgeschritten</span>
+                              <a href="../courses/course-preview.html" class="course-btn" data-i18n="btn.course">Zum Kurs →</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <!-- KURS 7: Terraform on AWS Advanced -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12" data-type="bootcamp" data-name="Terraform on AWS Advanced" data-duration="8">
+                     <div class="course-card wow fadeInUp center">
+                        <div class="course-image">
+                           <div class="course-logo"><i class="fab fa-aws"></i></div>
+                        </div>
+                        <div class="course-content">
+                           <h3 class="course-title"><a href="../paid-courses/terraform-aws-advanced.html" title="Bald verfügbar">Terraform on AWS – Advanced</a></h3>
+                           <p class="course-description" data-i18n="course7.desc">Fortgeschrittene Terraform-Techniken für AWS. Multi-Cloud, Module, Remote State und Produktionsmuster.</p>
+                           <div class="course-meta">
+                              <span class="course-duration"><i class="far fa-clock"></i> 8 <span data-i18n="duration.weeks">Wochen</span></span>
+                              <span class="course-level advanced" data-i18n="level.expert">🎯 Experte</span>
+                              <a href="../paid-courses/terraform-aws-advanced.html" title="Bald verfügbar" class="course-btn" data-i18n="btn.course">Zum Kurs →</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <!-- KURS 8: GitOps mit ArgoCD -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12" data-type="course" data-name="GitOps mit ArgoCD" data-duration="3">
+                     <div class="course-card wow fadeInUp center">
+                        <div class="course-image">
+                           <div class="course-badge popular" data-i18n="badge.popular">★ Bestseller</div>
+                           <div class="course-logo"><i class="fas fa-git-alt"></i></div>
+                        </div>
+                        <div class="course-content">
+                           <h3 class="course-title"><a href="../gitops-argocd.html">GitOps mit ArgoCD</a></h3>
+                           <p class="course-description" data-i18n="course8.desc">Implementieren Sie GitOps auf Kubernetes mit ArgoCD. Lernen Sie deklarative Deployments, Sync-Strategien und Multi-Cluster-Management.</p>
+                           <div class="course-meta">
+                              <span class="course-duration"><i class="far fa-clock"></i> 3 <span data-i18n="duration.weeks">Wochen</span></span>
+                              <span class="course-level intermediate" data-i18n="level.intermediate">🚀 Fortgeschritten</span>
+                              <a href="../gitops-argocd.html" class="course-btn" data-i18n="btn.course">Zum Kurs →</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+               </div>
+            </div>
+         </section>
+         
+         <!-- FOOTER -->
+         <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footer.contact">Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footer.navigation">Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../index.html" data-i18n="footer.nav.home">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../courses/courses.html" data-i18n="footer.nav.courses">Kurse</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../blog.html" data-i18n="footer.nav.blog">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../event.html" data-i18n="footer.nav.events">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../sponsor.html" data-i18n="footer.nav.pricing">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footer.support">Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../about.html" data-i18n="footer.sup.about">Über uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../faq.html" data-i18n="footer.sup.faq">Häufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../contact.html" data-i18n="footer.sup.contact">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p>Copyright &copy; 2026 <a href="../index.html">Koffi Academy</a> &mdash; <span data-i18n="footer.copy">Alle Rechte vorbehalten.</span></p>
+      </div>
+   </div>
+</footer>
+      </div>
+      
+      <script src="../assets/js/jquery.min.js"></script>
+      <script src="../assets/js/bootstrap.min.js"></script>
+      <script src="../assets/js/wow.min.js"></script>
+      <script>
+         new WOW().init();
+
+         // ── Traductions complètes ─────────────────────────────
+         var i18n = {
+            de: {
+               'header.tagline':'Willkommen bei der Koffi Academy — Ihre Cloud- & DevOps-Reise beginnt hier.',
+               'header.call':'Anrufen','header.email':'E-Mail','header.address':'Adresse',
+               'nav.home':'Startseite','nav.aboutus':'Über uns',
+               'nav.faq':'Häufige Fragen','nav.support':'Support',
+               'nav.courses':'Kurse', 'nav.lab': 'Laboratoire','nav.events':'Veranstaltungen','nav.aboutme':'Über mich',
+               'nav.pricing':'Sponsor','nav.blog':'Blog','nav.contact':'Kontakt',
+               'nav.login':'Anmelden / Registrieren',
+               'hero.title':'Plattform-Engineering & AI-Architektur',
+               'hero.subtitle':'Meistern Sie Plattform-Engineering, KI-Systeme, LLMs und MLOps mit umfassenden Bootcamps, Kursen und praktischen Labs',
+               'hero.search':'Bootcamps, Kurse, Labs durchsuchen...',
+               'hero.cta':'Nicht sicher, wo Sie beginnen sollen?',
+               'hero.help':'Machen Sie eine 2-minütige Einschätzung und erhalten Sie einen personalisierten Lernpfad – vom Linux-Einsteiger zum KI-Plattform-Ingenieur.',
+               'filter.all':'Alle Kurse','filter.bootcamp':'Bootcamps','filter.course':'Einzelkurse',
+               'sort.popular':'Sortieren nach: Beliebteste','sort.name':'Sortieren nach: Name A-Z','sort.duration':'Sortieren nach: Dauer',
+               'badge.popular':'★ Bestseller','badge.new':'🆕 Neu',
+               'level.beginner':'📖 Anfänger','level.intermediate':'🚀 Fortgeschritten','level.expert':'🎯 Experte',
+               'btn.course':'Zum Kurs →','duration.weeks':'Wochen',
+               'course1.desc':'Lernen Sie Infrastructure as Code mit Terraform. Automatisieren Sie AWS-Deployments, verwalten Sie Cloud-Infrastruktur und meistern Sie den kompletten IaC-Workflow.',
+               'course2.desc':'Meistern Sie Platform Engineering, DevOps-Kultur und moderne Infrastrukturautomatisierung. Lernen Sie CI/CD, GitOps und Internal Developer Platforms.',
+               'course3.desc':'Verstehen Sie Kubernetes-Architektur, Pods, Deployments, Services und Ingress. Lernen Sie Container-Orchestrierung mit praktischen Beispielen.',
+               'course4.desc':'Automatisieren Sie Ihre Deployments mit GitHub Actions. Lernen Sie CI/CD-Pipelines, automatisierte Tests und Cloud-Deployments.',
+               'course5.desc':'Meistern Sie Secret Management mit HashiCorp Vault. Lernen Sie dynamische Secrets, Verschlüsselung und Enterprise Security Patterns.',
+               'course6.desc':'Bauen Sie Internal Developer Platforms mit Backstage, Golden Paths, Kubernetes und automatisierter Governance.',
+               'course7.desc':'Fortgeschrittene Terraform-Techniken für AWS. Multi-Cloud, Module, Remote State und Produktionsmuster.',
+               'course8.desc':'Implementieren Sie GitOps auf Kubernetes mit ArgoCD. Lernen Sie deklarative Deployments, Sync-Strategien und Multi-Cluster-Management.',
+               'footer.contact':'Kontakt','footer.navigation':'Navigation','footer.support':'Support',
+               'footer.nav.home':'Startseite','footer.nav.courses':'Kurse','footer.nav.blog':'Blog',
+               'footer.nav.events':'Veranstaltungen','footer.nav.pricing':'Sponsor',
+               'footer.sup.about':'Über uns','footer.sup.faq':'Häufige Fragen',
+               'footer.sup.contact':'Kontakt & Support',
+               'footer.copy':'Alle Rechte vorbehalten.'
+            },
+            en: {
+               'header.tagline':'Online Education Courses – Millions of people are learning!',
+               'header.call':'Call Us','header.email':'Email','header.address':'Address',
+               'nav.home':'Home','nav.aboutus':'About Us',
+               'nav.faq':'FAQ','nav.support':'Support',
+               'nav.courses':'Courses', 'nav.lab': 'Laboratoire','nav.events':'Events','nav.aboutme':'About Me',
+               'nav.pricing':'Sponsor','nav.blog':'Blog','nav.contact':'Contact',
+               'nav.login':'Login / Register',
+               'hero.title':'Platform Engineering & AI Architecture',
+               'hero.subtitle':'Master Platform Engineering, AI Systems, LLMs, and MLOps with comprehensive bootcamps, courses, and hands-on labs',
+               'hero.search':'Search bootcamps, courses, labs...',
+               'hero.cta':'Not sure where to begin?',
+               'hero.help':'Take a 2-minute assessment and get a personalized learning path — from Linux beginner to AI Platform Engineer.',
+               'filter.all':'All Courses','filter.bootcamp':'Bootcamps','filter.course':'Individual Courses',
+               'sort.popular':'Sort by: Most Popular','sort.name':'Sort by: Name A-Z','sort.duration':'Sort by: Duration',
+               'badge.popular':'★ Bestseller','badge.new':'🆕 New',
+               'level.beginner':'📖 Beginner','level.intermediate':'🚀 Intermediate','level.expert':'🎯 Expert',
+               'btn.course':'Go to Course →','duration.weeks':'weeks',
+               'course1.desc':'Learn Infrastructure as Code with Terraform. Automate AWS deployments, manage cloud infrastructure and master the complete IaC workflow.',
+               'course2.desc':'Master Platform Engineering, DevOps culture and modern infrastructure automation. Learn CI/CD, GitOps and Internal Developer Platforms.',
+               'course3.desc':'Understand Kubernetes architecture, Pods, Deployments, Services and Ingress. Learn container orchestration with hands-on examples.',
+               'course4.desc':'Automate your deployments with GitHub Actions. Learn CI/CD pipelines, automated tests and cloud deployments.',
+               'course5.desc':'Master Secret Management with HashiCorp Vault. Learn dynamic secrets, encryption and enterprise security patterns.',
+               'course6.desc':'Build Internal Developer Platforms with Backstage, Golden Paths, Kubernetes and automated governance.',
+               'course7.desc':'Advanced Terraform techniques for AWS. Multi-cloud, modules, remote state and production patterns.',
+               'course8.desc':'Implement GitOps on Kubernetes with ArgoCD. Learn declarative deployments, sync strategies and multi-cluster management.',
+               'footer.contact':'Contact','footer.navigation':'Navigation','footer.support':'Support',
+               'footer.nav.home':'Home','footer.nav.courses':'Courses','footer.nav.blog':'Blog',
+               'footer.nav.events':'Events','footer.nav.pricing':'Sponsor',
+               'footer.sup.about':'About Us','footer.sup.faq':'FAQ',
+               'footer.sup.contact':'Contact & Support',
+               'footer.copy':'All rights reserved.'
+            },
+            fr: {
+               'header.tagline':'Cours de formation en ligne – Des millions de personnes apprennent !',
+               'header.call':'Appeler','header.email':'E-mail','header.address':'Adresse',
+               'nav.home':'Accueil','nav.aboutus':'À propos',
+               'nav.faq':'Questions fréquentes','nav.support':'Support',
+               'nav.courses':'Cours', 'nav.lab': 'Laboratoire','nav.events':'Événements','nav.aboutme':'À propos de moi',
+               'nav.pricing':'Sponsor','nav.blog':'Blog','nav.contact':'Contact',
+               'nav.login':'Connexion / Inscription',
+               'hero.title':'Ingénierie des Plateformes & Architecture IA',
+               'hero.subtitle':'Maîtrisez l\'ingénierie des plateformes, les systèmes d\'IA, les LLMs et MLOps avec des bootcamps complets, des cours et des laboratoires pratiques',
+               'hero.search':'Rechercher des bootcamps, cours, labs...',
+               'hero.cta':'Vous ne savez pas par où commencer ?',
+               'hero.help':'Faites une évaluation de 2 minutes et obtenez un parcours d\'apprentissage personnalisé – du débutant Linux à l\'ingénieur de plateforme IA.',
+               'filter.all':'Tous les cours','filter.bootcamp':'Bootcamps','filter.course':'Cours individuels',
+               'sort.popular':'Trier par : Plus populaires','sort.name':'Trier par : Nom A-Z','sort.duration':'Trier par : Durée',
+               'badge.popular':'★ Bestseller','badge.new':'🆕 Nouveau',
+               'level.beginner':'📖 Débutant','level.intermediate':'🚀 Intermédiaire','level.expert':'🎯 Expert',
+               'btn.course':'Voir le cours →','duration.weeks':'semaines',
+               'course1.desc':'Apprenez l\'Infrastructure as Code avec Terraform. Automatisez les déploiements AWS, gérez l\'infrastructure cloud et maîtrisez le workflow IaC complet.',
+               'course2.desc':'Maîtrisez le Platform Engineering, la culture DevOps et l\'automatisation d\'infrastructure moderne. Apprenez CI/CD, GitOps et les plateformes de développeurs internes.',
+               'course3.desc':'Comprenez l\'architecture Kubernetes, les Pods, Deployments, Services et Ingress. Apprenez l\'orchestration de conteneurs avec des exemples pratiques.',
+               'course4.desc':'Automatisez vos déploiements avec GitHub Actions. Apprenez les pipelines CI/CD, les tests automatisés et les déploiements cloud.',
+               'course5.desc':'Maîtrisez la gestion des secrets avec HashiCorp Vault. Apprenez les secrets dynamiques, le chiffrement et les patterns de sécurité enterprise.',
+               'course6.desc':'Construisez des plateformes de développeurs internes avec Backstage, Golden Paths, Kubernetes et la gouvernance automatisée.',
+               'course7.desc':'Techniques Terraform avancées pour AWS. Multi-cloud, modules, état distant et patterns de production.',
+               'course8.desc':'Implémentez GitOps sur Kubernetes avec ArgoCD. Apprenez les déploiements déclaratifs, les stratégies de synchronisation et la gestion multi-cluster.',
+               'footer.contact':'Contact','footer.navigation':'Navigation','footer.support':'Support',
+               'footer.nav.home':'Accueil','footer.nav.courses':'Cours','footer.nav.blog':'Blog',
+               'footer.nav.events':'Événements','footer.nav.pricing':'Sponsor',
+               'footer.sup.about':'À propos','footer.sup.faq':'Questions fréquentes',
+               'footer.sup.contact':'Contact & Support',
+               'footer.copy':'Tous droits réservés.'
+            }
+         };
+
+         // ── Moteur de traduction ──────────────────────────────
+         function applyTranslations(t) {
+            document.querySelectorAll('[data-i18n]').forEach(function(el) {
+               var key = el.getAttribute('data-i18n');
+               if (t[key] !== undefined) el.textContent = t[key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+               var key = el.getAttribute('data-i18n-placeholder');
+               if (t[key] !== undefined) el.placeholder = t[key];
+            });
+         }
+
+         function setLanguage(lang) {
+            if (!i18n[lang]) return;
+            document.documentElement.lang = lang;
+            // Sync header buttons
+            document.querySelectorAll('.lang-btn').forEach(function(b) {
+               b.classList.toggle('active', b.dataset.lang === lang);
+            });
+            applyTranslations(i18n[lang]);
+            try { localStorage.setItem('preferred-lang', lang); localStorage.setItem('courses-lang', lang); } catch(e) {}
+         }
+
+
+         // ── Filter & Recherche ────────────────────────────────
+         var filterBtns = document.querySelectorAll('.filter-btn');
+         var searchInput = document.getElementById('searchInput');
+         var sortSelect = document.getElementById('sortSelect');
+         var coursesContainer = document.getElementById('coursesContainer');
+
+         function filterAndSort() {
+            var activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            var searchTerm = searchInput.value.toLowerCase();
+            var sortBy = sortSelect.value;
+            var cards = Array.from(document.querySelectorAll('#coursesContainer .col-xl-4'));
+            cards.forEach(function(card) {
+               var type = card.dataset.type;
+               var name = (card.dataset.name || '').toLowerCase();
+               var show = (activeFilter === 'all' || type === activeFilter) && (searchTerm === '' || name.includes(searchTerm));
+               card.style.display = show ? 'block' : 'none';
+            });
+            var visibleCards = cards.filter(function(c) { return c.style.display !== 'none'; });
+            visibleCards.sort(function(a, b) {
+               if (sortBy === 'name') return (a.dataset.name || '').localeCompare(b.dataset.name || '');
+               if (sortBy === 'duration') return (parseInt(a.dataset.duration) || 0) - (parseInt(b.dataset.duration) || 0);
+               return 0;
+            });
+            visibleCards.forEach(function(card) { coursesContainer.appendChild(card); });
+         }
+
+         filterBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+               filterBtns.forEach(function(b) { b.classList.remove('active'); });
+               btn.classList.add('active');
+               filterAndSort();
+            });
+         });
+         searchInput.addEventListener('input', filterAndSort);
+         sortSelect.addEventListener('change', filterAndSort);
+
+         document.getElementById('assessmentBtn').addEventListener('click', function() {
+            var msgs = { de: 'Die persönliche Lernpfad-Analyse wird in Kürze verfügbar sein!', en: 'The personalized learning path analysis will be available soon!', fr: 'L\'analyse de parcours personnalisé sera bientôt disponible !' };
+            alert(msgs[document.documentElement.lang] || msgs.de);
+         });
+
+         // ── Init ──────────────────────────────────────────────
+         document.addEventListener('DOMContentLoaded', function() {
+            var saved = 'de';
+            try { saved = localStorage.getItem('preferred-lang') || localStorage.getItem('courses-lang') || 'de'; } catch(e) {}
+            setLanguage(saved);
+         });
+      </script>
+   <script src="../assets/js/kontakt-popup.js"></script>
+<script src="../assets/js/announce.js"></script>
+<script src="../assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

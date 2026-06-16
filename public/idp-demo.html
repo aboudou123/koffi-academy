@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koffi IDP · Self-Service</title>
+<link rel="shortcut icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+/* ─── Reset & Base ─────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:14px;background:#f1f5f9;color:#1e293b}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;border:none;background:none;font:inherit}
+
+/* ─── Layout shell ─────────────────────────────────────────────────────────── */
+.idp-shell{display:flex;height:100vh;overflow:hidden}
+
+/* ─── Sidebar ──────────────────────────────────────────────────────────────── */
+.idp-sidebar{
+  width:220px;min-width:220px;height:100%;
+  background:#0f172a;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  transition:width .2s ease;
+  z-index:20;
+  flex-shrink:0;
+}
+.idp-sidebar.collapsed{width:60px;min-width:60px}
+.idp-sidebar.collapsed .sb-label,.idp-sidebar.collapsed .sb-brand-name,
+.idp-sidebar.collapsed .sb-section-title,.idp-sidebar.collapsed .sb-badge{display:none}
+
+/* Brand */
+.sb-brand{
+  display:flex;align-items:center;gap:10px;
+  padding:18px 16px 16px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+}
+.sb-brand-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,#3b82f6,#6366f1);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.sb-brand-icon svg{width:18px;height:18px;fill:#fff}
+.sb-brand-name{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;letter-spacing:.01em}
+.sb-brand-sub{font-size:10px;color:#64748b;letter-spacing:.06em;text-transform:uppercase}
+
+/* Nav */
+.sb-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px 0}
+.sb-nav::-webkit-scrollbar{width:4px}
+.sb-nav::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px}
+
+.sb-section-title{
+  padding:14px 16px 6px;
+  font-size:10px;font-weight:700;color:#475569;
+  text-transform:uppercase;letter-spacing:.08em;
+  white-space:nowrap;
+}
+
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 16px;
+  border-radius:0;
+  color:#94a3b8;
+  font-size:13px;font-weight:500;
+  transition:background .15s,color .15s;
+  white-space:nowrap;
+  position:relative;
+  cursor:pointer;
+  text-decoration:none;
+}
+.sb-item:hover{background:rgba(255,255,255,.05);color:#e2e8f0}
+.sb-item.active{
+  background:rgba(59,130,246,.15);color:#60a5fa;
+}
+.sb-item.active::before{
+  content:'';position:absolute;left:0;top:4px;bottom:4px;
+  width:3px;background:#3b82f6;border-radius:0 2px 2px 0;
+}
+.sb-item i{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+
+.sb-badge{
+  margin-left:auto;
+  background:#3b82f6;color:#fff;
+  font-size:10px;font-weight:700;
+  padding:2px 6px;border-radius:10px;
+  flex-shrink:0;
+}
+
+/* Bottom */
+.sb-bottom{
+  padding:10px 0 8px;
+  border-top:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+}
+.sb-user{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 14px;
+  cursor:pointer;
+}
+.sb-avatar{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:12px;font-weight:700;
+  flex-shrink:0;
+}
+.sb-user-info{overflow:hidden}
+.sb-user-name{font-size:12px;font-weight:600;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-role{font-size:10px;color:#64748b;white-space:nowrap}
+
+/* Toggle collapse btn */
+.sb-toggle{
+  width:24px;height:24px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  color:#475569;font-size:12px;
+  margin:0 14px 8px auto;
+  transition:background .15s,color .15s;
+  cursor:pointer;
+}
+.sb-toggle:hover{background:rgba(255,255,255,.06);color:#94a3b8}
+
+/* ─── Main area ─────────────────────────────────────────────────────────────── */
+.idp-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* Topbar */
+.idp-topbar{
+  height:56px;min-height:56px;
+  background:#fff;
+  border-bottom:1px solid #e2e8f0;
+  display:flex;align-items:center;gap:12px;
+  padding:0 24px;
+  flex-shrink:0;
+  z-index:10;
+}
+.topbar-breadcrumb{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:#94a3b8;
+  flex-shrink:0;
+}
+.topbar-breadcrumb span{color:#1e293b;font-weight:600}
+.topbar-breadcrumb i{font-size:10px}
+
+.topbar-search{
+  flex:1;max-width:420px;
+  display:flex;align-items:center;gap:8px;
+  background:#f8fafc;border:1.5px solid #e2e8f0;
+  border-radius:10px;padding:7px 12px;
+  transition:border-color .15s,box-shadow .15s;
+}
+.topbar-search:focus-within{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.topbar-search i{color:#94a3b8;font-size:13px;flex-shrink:0}
+.topbar-search input{
+  border:none;background:transparent;outline:none;
+  font-size:13px;color:#1e293b;width:100%;
+}
+.topbar-search input::placeholder{color:#94a3b8}
+
+.topbar-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+.topbar-icon-btn{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  color:#64748b;font-size:15px;
+  transition:background .15s,color .15s;
+  position:relative;
+}
+.topbar-icon-btn:hover{background:#f1f5f9;color:#1e293b}
+.notif-dot{
+  position:absolute;top:6px;right:6px;
+  width:7px;height:7px;border-radius:50%;
+  background:#ef4444;border:1.5px solid #fff;
+}
+.topbar-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:12px;font-weight:700;cursor:pointer;
+  margin-left:4px;
+}
+
+/* Lang switcher (topbar) */
+.kl-topbar{position:relative}
+.kl-topbar-btn{
+  display:flex;align-items:center;gap:5px;
+  height:32px;padding:0 10px;border-radius:8px;
+  background:#f8fafc;border:1.5px solid #e2e8f0;
+  color:#475569;font-size:12px;font-weight:600;
+  transition:border-color .15s;cursor:pointer;
+}
+.kl-topbar-btn:hover{border-color:#94a3b8}
+.kl-topbar-panel{
+  position:absolute;top:calc(100% + 6px);right:0;
+  background:#fff;border:1.5px solid #e2e8f0;
+  border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);
+  padding:4px;min-width:130px;z-index:100;
+  display:none;
+}
+.kl-topbar-panel.open{display:block}
+.kl-topt{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 10px;border-radius:7px;
+  font-size:12px;font-weight:500;color:#475569;cursor:pointer;
+  transition:background .12s;
+}
+.kl-topt:hover{background:#f8fafc}
+.kl-topt.active{color:#3b82f6;font-weight:700;background:#eff6ff}
+
+/* ─── Content ────────────────────────────────────────────────────────────────── */
+.idp-content{flex:1;overflow-y:auto;padding:28px 28px 40px}
+.idp-content::-webkit-scrollbar{width:6px}
+.idp-content::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+
+/* Page header */
+.page-header{margin-bottom:24px}
+.page-title{font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:4px}
+.page-sub{font-size:13px;color:#64748b;font-weight:400}
+.page-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.new-action-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:9px 16px;border-radius:9px;
+  background:#3b82f6;color:#fff;
+  font-size:13px;font-weight:600;
+  transition:background .15s,box-shadow .15s;
+  white-space:nowrap;flex-shrink:0;
+}
+.new-action-btn:hover{background:#2563eb;box-shadow:0 4px 14px rgba(59,130,246,.4)}
+
+/* Stats row */
+.stats-row{
+  display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;
+}
+.stat-card{
+  background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+  padding:14px 20px;flex:1;min-width:120px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.stat-num{font-size:24px;font-weight:800;color:#0f172a}
+.stat-label{font-size:11px;color:#64748b;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+.stat-delta{font-size:11px;color:#10b981;font-weight:600;margin-top:2px}
+
+/* Filter tabs */
+.filter-row{display:flex;align-items:center;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.filter-tab{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 14px;border-radius:8px;
+  font-size:12px;font-weight:600;color:#64748b;
+  border:1.5px solid transparent;
+  background:#fff;
+  transition:all .15s;cursor:pointer;
+}
+.filter-tab:hover{border-color:#cbd5e1;color:#1e293b}
+.filter-tab.active{
+  background:#eff6ff;border-color:#bfdbfe;color:#2563eb;
+}
+.filter-tab .ft-count{
+  background:#e2e8f0;color:#64748b;
+  font-size:10px;font-weight:700;
+  padding:1px 5px;border-radius:6px;
+}
+.filter-tab.active .ft-count{background:#bfdbfe;color:#1d4ed8}
+
+/* Search filter row */
+.search-filter-row{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.sf-search{
+  display:flex;align-items:center;gap:8px;
+  background:#fff;border:1.5px solid #e2e8f0;
+  border-radius:9px;padding:8px 12px;
+  flex:1;max-width:320px;
+  transition:border-color .15s;
+}
+.sf-search:focus-within{border-color:#3b82f6}
+.sf-search i{color:#94a3b8;font-size:12px}
+.sf-search input{border:none;background:transparent;outline:none;font-size:13px;color:#1e293b;width:100%}
+.sf-search input::placeholder{color:#94a3b8}
+
+.sf-select{
+  padding:8px 32px 8px 12px;
+  background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;
+  border:1.5px solid #e2e8f0;border-radius:9px;
+  font-size:12px;font-weight:500;color:#475569;
+  appearance:none;cursor:pointer;outline:none;
+  transition:border-color .15s;
+}
+.sf-select:focus{border-color:#3b82f6}
+
+.sf-view-btns{display:flex;gap:2px;margin-left:auto}
+.sf-view-btn{
+  width:32px;height:32px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  color:#94a3b8;font-size:13px;
+  transition:background .12s,color .12s;cursor:pointer;
+}
+.sf-view-btn:hover{background:#e2e8f0;color:#475569}
+.sf-view-btn.active{background:#eff6ff;color:#3b82f6}
+
+/* ─── Cards grid ─────────────────────────────────────────────────────────────── */
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
+}
+
+.action-card{
+  background:#fff;
+  border:1.5px solid #e2e8f0;
+  border-radius:14px;
+  padding:20px;
+  display:flex;flex-direction:column;gap:12px;
+  transition:border-color .2s,box-shadow .2s,transform .2s;
+  cursor:default;
+  position:relative;
+  overflow:hidden;
+}
+.action-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--card-color,#3b82f6);
+  opacity:0;
+  transition:opacity .2s;
+}
+.action-card:hover{
+  border-color:#bfdbfe;
+  box-shadow:0 8px 28px rgba(59,130,246,.10);
+  transform:translateY(-2px);
+}
+.action-card:hover::before{opacity:1}
+
+.card-header{display:flex;align-items:flex-start;gap:12px}
+.card-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+  background:var(--card-icon-bg,#eff6ff);
+  color:var(--card-color,#3b82f6);
+}
+.card-meta{flex:1;min-width:0}
+.card-title{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:3px;line-height:1.3}
+.card-category{font-size:11px;font-weight:600;color:var(--card-color,#3b82f6);text-transform:uppercase;letter-spacing:.06em}
+.card-desc{font-size:12.5px;color:#64748b;line-height:1.6;flex:1}
+
+.card-tags{display:flex;gap:5px;flex-wrap:wrap}
+.card-tag{
+  padding:3px 8px;border-radius:6px;
+  font-size:10px;font-weight:600;
+  background:#f1f5f9;color:#475569;
+}
+.card-tag.green{background:#dcfce7;color:#15803d}
+.card-tag.blue{background:#dbeafe;color:#1d4ed8}
+.card-tag.purple{background:#ede9fe;color:#6d28d9}
+.card-tag.orange{background:#ffedd5;color:#c2410c}
+.card-tag.red{background:#fee2e2;color:#dc2626}
+
+.card-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:12px;
+  border-top:1px solid #f1f5f9;
+}
+.card-complexity{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;color:#94a3b8;font-weight:500;
+}
+.complexity-dots{display:flex;gap:3px}
+.cd{width:8px;height:8px;border-radius:50%;background:#e2e8f0}
+.cd.on{background:var(--card-color,#3b82f6)}
+
+.run-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 16px;border-radius:8px;
+  background:var(--card-color,#3b82f6);color:#fff;
+  font-size:12px;font-weight:700;
+  transition:filter .15s,box-shadow .15s,transform .15s;
+  letter-spacing:.01em;
+}
+.run-btn:hover{filter:brightness(1.1);box-shadow:0 4px 14px rgba(59,130,246,.35);transform:translateY(-1px)}
+.run-btn i{font-size:11px}
+
+/* ─── Modal ──────────────────────────────────────────────────────────────────── */
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(15,23,42,.55);
+  backdrop-filter:blur(4px);
+  z-index:200;
+  display:none;align-items:center;justify-content:center;
+  padding:20px;
+}
+.modal-backdrop.open{display:flex}
+.modal{
+  background:#fff;border-radius:18px;
+  width:100%;max-width:520px;
+  box-shadow:0 24px 60px rgba(0,0,0,.22);
+  animation:modal-in .2s ease;
+  overflow:hidden;
+}
+@keyframes modal-in{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
+
+.modal-header{
+  padding:20px 24px;
+  border-bottom:1px solid #f1f5f9;
+  display:flex;align-items:center;gap:12px;
+}
+.modal-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.modal-title-block{flex:1}
+.modal-title{font-size:16px;font-weight:800;color:#0f172a}
+.modal-subtitle{font-size:12px;color:#64748b;margin-top:2px}
+.modal-close{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  color:#94a3b8;font-size:16px;
+  transition:background .12s,color .12s;cursor:pointer;
+}
+.modal-close:hover{background:#f1f5f9;color:#475569}
+
+.modal-body{padding:22px 24px;display:flex;flex-direction:column;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:12px;font-weight:700;color:#374151;letter-spacing:.01em}
+.form-label span{color:#ef4444;margin-left:2px}
+.form-input,.form-select,.form-textarea{
+  padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;
+  font:inherit;font-size:13px;color:#1e293b;
+  outline:none;transition:border-color .15s,box-shadow .15s;
+  background:#fff;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12);
+}
+.form-textarea{resize:vertical;min-height:72px}
+.form-hint{font-size:11px;color:#94a3b8;margin-top:2px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.modal-footer{
+  padding:16px 24px;
+  border-top:1px solid #f1f5f9;
+  display:flex;align-items:center;gap:10px;justify-content:flex-end;
+}
+.btn-cancel{
+  padding:9px 18px;border-radius:9px;
+  border:1.5px solid #e2e8f0;color:#475569;
+  font-size:13px;font-weight:600;
+  transition:background .12s;
+}
+.btn-cancel:hover{background:#f8fafc}
+.btn-run{
+  padding:9px 20px;border-radius:9px;
+  background:#3b82f6;color:#fff;
+  font-size:13px;font-weight:700;
+  display:flex;align-items:center;gap:7px;
+  transition:background .15s,box-shadow .15s;
+}
+.btn-run:hover{background:#2563eb;box-shadow:0 4px 14px rgba(59,130,246,.4)}
+.btn-run i{font-size:12px}
+
+/* ─── Success toast ──────────────────────────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:300;
+  background:#0f172a;color:#fff;
+  padding:12px 18px;border-radius:12px;
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:600;
+  box-shadow:0 8px 28px rgba(0,0,0,.25);
+  transform:translateY(80px);opacity:0;
+  transition:transform .3s ease,opacity .3s ease;
+  pointer-events:none;
+}
+.toast.show{transform:none;opacity:1}
+.toast i{color:#34d399;font-size:16px}
+
+/* ─── Empty / loading ────────────────────────────────────────────────────────── */
+.no-results{
+  grid-column:1/-1;
+  text-align:center;padding:60px 20px;
+  color:#94a3b8;
+}
+.no-results i{font-size:40px;margin-bottom:12px;display:block;color:#cbd5e1}
+
+/* ─── Responsive ──────────────────────────────────────────────────────────────── */
+@media(max-width:768px){
+  .idp-sidebar{width:60px;min-width:60px}
+  .idp-sidebar .sb-label,.idp-sidebar .sb-brand-name,
+  .idp-sidebar .sb-section-title,.idp-sidebar .sb-badge,
+  .idp-sidebar .sb-user-info{display:none}
+  .cards-grid{grid-template-columns:1fr}
+  .stats-row{display:none}
+  .form-row{grid-template-columns:1fr}
+  .idp-content{padding:18px 16px 40px}
+  .topbar-search{display:none}
+}
+@media(max-width:480px){
+  .filter-row{gap:4px}
+  .filter-tab{padding:5px 10px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ SHELL ═══════════════════════════════════════════════════════════════════ -->
+<div class="idp-shell">
+
+  <!-- ═══ SIDEBAR ══════════════════════════════════════════════════════════════ -->
+  <aside class="idp-sidebar" id="sidebar">
+
+    <!-- Brand -->
+    <div class="sb-brand">
+      <div class="sb-brand-icon">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div>
+        <div class="sb-brand-name">Koffi IDP</div>
+        <div class="sb-brand-sub">Dev Portal</div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sb-nav">
+      <div class="sb-section-title" data-i18n="nav.main">Hauptmenü</div>
+
+      <a class="sb-item" href="index.html">
+        <i class="fa-solid fa-house"></i>
+        <span class="sb-label" data-i18n="nav.home">Startseite</span>
+      </a>
+      <a class="sb-item" href="laboratoire.html">
+        <i class="fa-solid fa-cubes"></i>
+        <span class="sb-label" data-i18n="nav.catalog">Katalog</span>
+        <span class="sb-badge">58</span>
+      </a>
+      <a class="sb-item active" href="#">
+        <i class="fa-solid fa-bolt"></i>
+        <span class="sb-label" data-i18n="nav.selfserve">Self-Service</span>
+        <span class="sb-badge" id="totalBadge">12</span>
+      </a>
+      <a class="sb-item" href="#">
+        <i class="fa-solid fa-chart-bar"></i>
+        <span class="sb-label" data-i18n="nav.scorecards">Scorecards</span>
+      </a>
+      <a class="sb-item" href="#">
+        <i class="fa-solid fa-gauge-high"></i>
+        <span class="sb-label" data-i18n="nav.dashboards">Dashboards</span>
+      </a>
+
+      <div class="sb-section-title" style="margin-top:8px" data-i18n="nav.platform">Platform</div>
+      <a class="sb-item" href="#">
+        <i class="fa-solid fa-server"></i>
+        <span class="sb-label" data-i18n="nav.services">Services</span>
+      </a>
+      <a class="sb-item" href="#">
+        <i class="fa-brands fa-docker"></i>
+        <span class="sb-label" data-i18n="nav.environments">Environments</span>
+      </a>
+      <a class="sb-item" href="#">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span class="sb-label" data-i18n="nav.secrets">Secrets</span>
+      </a>
+      <a class="sb-item" href="#">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <span class="sb-label" data-i18n="nav.audit">Audit Log</span>
+      </a>
+
+      <div class="sb-section-title" style="margin-top:8px" data-i18n="nav.admin">Admin</div>
+      <a class="sb-item" href="#">
+        <i class="fa-solid fa-users"></i>
+        <span class="sb-label" data-i18n="nav.teams">Teams</span>
+      </a>
+      <a class="sb-item" href="#">
+        <i class="fa-solid fa-gear"></i>
+        <span class="sb-label" data-i18n="nav.settings">Einstellungen</span>
+      </a>
+    </nav>
+
+    <!-- User -->
+    <div class="sb-bottom">
+      <div class="sb-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+        <i class="fa-solid fa-sidebar" id="toggleIcon"></i>
+      </div>
+      <div class="sb-user">
+        <div class="sb-avatar">KA</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name">Koffi Academy</div>
+          <div class="sb-user-role" data-i18n="user.role">Platform Engineer</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ══════════════════════════════════════════════════════════════════ -->
+  <div class="idp-main">
+
+    <!-- Topbar -->
+    <header class="idp-topbar">
+      <div class="topbar-breadcrumb">
+        <i class="fa-solid fa-bolt"></i>
+        <span data-i18n="page.title">Self-Service</span>
+      </div>
+
+      <div class="topbar-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" id="globalSearch" data-i18n-placeholder="search.placeholder" placeholder="Aktion suchen…" oninput="filterCards()">
+      </div>
+
+      <div class="topbar-actions">
+        <div class="topbar-icon-btn" title="Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="notif-dot"></span>
+        </div>
+        <div class="topbar-icon-btn" title="Help">
+          <i class="fa-regular fa-circle-question"></i>
+        </div>
+
+        <!-- Language picker -->
+        <div class="kl-topbar" id="klWrap">
+          <button class="kl-topbar-btn" onclick="klToggle()" id="klBtn" aria-haspopup="listbox" aria-expanded="false">
+            <span id="klFlag">🇩🇪</span>
+            <span id="klCode">DE</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:9px"></i>
+          </button>
+          <div class="kl-topbar-panel" id="klPanel" role="listbox">
+            <div class="kl-topt active" data-kl="de" onclick="pickLang('de')">🇩🇪 Deutsch</div>
+            <div class="kl-topt" data-kl="en" onclick="pickLang('en')">🇬🇧 English</div>
+            <div class="kl-topt" data-kl="fr" onclick="pickLang('fr')">🇫🇷 Français</div>
+          </div>
+        </div>
+
+        <div class="topbar-avatar">KA</div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="idp-content">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title" data-i18n="page.title">Self-Service</h1>
+            <p class="page-sub" data-i18n="page.sub">Infrastruktur provisionieren, Services deployen und Plattformressourcen verwalten — ohne Ticket.</p>
+          </div>
+          <button class="new-action-btn" onclick="openModal('custom')">
+            <i class="fa-solid fa-plus"></i>
+            <span data-i18n="btn.newAction">Neue Aktion</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-num" id="statTotal">12</span>
+          <span class="stat-label" data-i18n="stat.actions">Aktionen</span>
+          <span class="stat-delta">↑ 3 <span data-i18n="stat.thisMonth">diesen Monat</span></span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">47</span>
+          <span class="stat-label" data-i18n="stat.runs">Ausführungen</span>
+          <span class="stat-delta">↑ 12 <span data-i18n="stat.thisWeek">diese Woche</span></span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">98%</span>
+          <span class="stat-label" data-i18n="stat.success">Erfolgsrate</span>
+          <span class="stat-delta" style="color:#10b981">● Live</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">4</span>
+          <span class="stat-label" data-i18n="stat.teams">Teams</span>
+          <span class="stat-delta" data-i18n="stat.active">aktiv</span>
+        </div>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-row" id="filterRow">
+        <button class="filter-tab active" data-filter="all" onclick="setFilter('all',this)">
+          <span data-i18n="filter.all">Alle</span>
+          <span class="ft-count" id="countAll">12</span>
+        </button>
+        <button class="filter-tab" data-filter="kubernetes" onclick="setFilter('kubernetes',this)">
+          <i class="fa-solid fa-dharmachakra" style="color:#326CE5;font-size:11px"></i>
+          Kubernetes
+          <span class="ft-count" id="countKubernetes">3</span>
+        </button>
+        <button class="filter-tab" data-filter="cloud" onclick="setFilter('cloud',this)">
+          <i class="fa-solid fa-cloud" style="color:#FF9900;font-size:11px"></i>
+          Cloud / AWS
+          <span class="ft-count" id="countCloud">3</span>
+        </button>
+        <button class="filter-tab" data-filter="security" onclick="setFilter('security',this)">
+          <i class="fa-solid fa-shield-halved" style="color:#7c3aed;font-size:11px"></i>
+          <span data-i18n="filter.security">Sicherheit</span>
+          <span class="ft-count" id="countSecurity">3</span>
+        </button>
+        <button class="filter-tab" data-filter="cicd" onclick="setFilter('cicd',this)">
+          <i class="fa-solid fa-code-branch" style="color:#e11d48;font-size:11px"></i>
+          CI/CD
+          <span class="ft-count" id="countCicd">3</span>
+        </button>
+      </div>
+
+      <!-- Search + sort row -->
+      <div class="search-filter-row">
+        <div class="sf-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="search" id="cardSearch" data-i18n-placeholder="search.placeholder" placeholder="Aktion suchen…" oninput="filterCards()">
+        </div>
+        <select class="sf-select" id="sortSelect" onchange="filterCards()">
+          <option value="name" data-i18n="sort.name">A–Z</option>
+          <option value="cat" data-i18n="sort.category">Kategorie</option>
+          <option value="complexity" data-i18n="sort.complexity">Komplexität</option>
+        </select>
+        <div class="sf-view-btns">
+          <button class="sf-view-btn active" title="Grid" onclick="setView('grid',this)"><i class="fa-solid fa-grid-2"></i></button>
+          <button class="sf-view-btn" title="List" onclick="setView('list',this)"><i class="fa-solid fa-list"></i></button>
+        </div>
+      </div>
+
+      <!-- Cards -->
+      <div class="cards-grid" id="cardsGrid"></div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ═══ MODAL ════════════════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-icon" id="modalIcon"></div>
+      <div class="modal-title-block">
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-subtitle" id="modalSubtitle"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()" data-i18n="btn.cancel">Abbrechen</button>
+      <button class="btn-run" id="runBtn" onclick="runAction()">
+        <i class="fa-solid fa-play"></i>
+        <span data-i18n="btn.run">Ausführen</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ════════════════════════════════════════════════════════════════════ -->
+<div class="toast" id="toast">
+  <i class="fa-solid fa-circle-check"></i>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+/* ─── Translations ─────────────────────────────────────────────────────────── */
+var I18N = {
+  de: {
+    'page.title': 'Self-Service',
+    'page.sub': 'Infrastruktur provisionieren, Services deployen und Plattformressourcen verwalten — ohne Ticket.',
+    'nav.main': 'Hauptmenü', 'nav.home': 'Startseite', 'nav.catalog': 'Katalog',
+    'nav.selfserve': 'Self-Service', 'nav.scorecards': 'Scorecards', 'nav.dashboards': 'Dashboards',
+    'nav.platform': 'Platform', 'nav.services': 'Services', 'nav.environments': 'Environments',
+    'nav.secrets': 'Secrets', 'nav.audit': 'Audit Log', 'nav.admin': 'Admin',
+    'nav.teams': 'Teams', 'nav.settings': 'Einstellungen',
+    'user.role': 'Platform Engineer',
+    'btn.newAction': 'Neue Aktion', 'btn.cancel': 'Abbrechen', 'btn.run': 'Ausführen',
+    'stat.actions': 'Aktionen', 'stat.runs': 'Ausführungen', 'stat.success': 'Erfolgsrate',
+    'stat.teams': 'Teams', 'stat.thisMonth': 'diesen Monat', 'stat.thisWeek': 'diese Woche', 'stat.active': 'aktiv',
+    'filter.all': 'Alle', 'filter.security': 'Sicherheit',
+    'sort.name': 'A–Z', 'sort.category': 'Kategorie', 'sort.complexity': 'Komplexität',
+    'search.placeholder': 'Aktion suchen…',
+    'modal.run': 'Aktion wird ausgeführt…',
+    'toast.success': 'Aktion erfolgreich gestartet',
+    'complexity.low': 'Einfach', 'complexity.mid': 'Mittel', 'complexity.high': 'Komplex',
+    'label.run': 'Ausführen',
+    'field.serviceName': 'Service-Name', 'field.env': 'Umgebung', 'field.region': 'Region',
+    'field.namespace': 'Namespace', 'field.replicas': 'Anzahl Replicas', 'field.image': 'Docker Image',
+    'field.bucket': 'Bucket-Name', 'field.team': 'Team', 'field.email': 'E-Mail',
+    'field.role': 'Rolle', 'field.desc': 'Beschreibung', 'field.cluster': 'Cluster',
+    'field.secret': 'Secret-Pfad', 'field.value': 'Wert', 'field.pipeline': 'Pipeline-Name',
+    'field.repo': 'Repository', 'field.branch': 'Branch', 'field.domain': 'Domain',
+    'field.cidr': 'CIDR Block', 'field.az': 'Availability Zones', 'field.ttl': 'TTL (Tage)',
+    'hint.serviceName': 'z.B. payment-service, auth-api',
+    'hint.namespace': 'Nur Kleinbuchstaben, Bindestriche erlaubt',
+    'hint.bucket': 'Global eindeutig, nur Kleinbuchstaben',
+  },
+  en: {
+    'page.title': 'Self-Service',
+    'page.sub': 'Provision infrastructure, deploy services and manage platform resources — without a ticket.',
+    'nav.main': 'Main Menu', 'nav.home': 'Home', 'nav.catalog': 'Catalog',
+    'nav.selfserve': 'Self-Service', 'nav.scorecards': 'Scorecards', 'nav.dashboards': 'Dashboards',
+    'nav.platform': 'Platform', 'nav.services': 'Services', 'nav.environments': 'Environments',
+    'nav.secrets': 'Secrets', 'nav.audit': 'Audit Log', 'nav.admin': 'Admin',
+    'nav.teams': 'Teams', 'nav.settings': 'Settings',
+    'user.role': 'Platform Engineer',
+    'btn.newAction': 'New Action', 'btn.cancel': 'Cancel', 'btn.run': 'Run',
+    'stat.actions': 'Actions', 'stat.runs': 'Executions', 'stat.success': 'Success Rate',
+    'stat.teams': 'Teams', 'stat.thisMonth': 'this month', 'stat.thisWeek': 'this week', 'stat.active': 'active',
+    'filter.all': 'All', 'filter.security': 'Security',
+    'sort.name': 'A–Z', 'sort.category': 'Category', 'sort.complexity': 'Complexity',
+    'search.placeholder': 'Search action…',
+    'modal.run': 'Running action…',
+    'toast.success': 'Action successfully started',
+    'complexity.low': 'Simple', 'complexity.mid': 'Medium', 'complexity.high': 'Complex',
+    'label.run': 'Run',
+    'field.serviceName': 'Service Name', 'field.env': 'Environment', 'field.region': 'Region',
+    'field.namespace': 'Namespace', 'field.replicas': 'Number of Replicas', 'field.image': 'Docker Image',
+    'field.bucket': 'Bucket Name', 'field.team': 'Team', 'field.email': 'Email',
+    'field.role': 'Role', 'field.desc': 'Description', 'field.cluster': 'Cluster',
+    'field.secret': 'Secret Path', 'field.value': 'Value', 'field.pipeline': 'Pipeline Name',
+    'field.repo': 'Repository', 'field.branch': 'Branch', 'field.domain': 'Domain',
+    'field.cidr': 'CIDR Block', 'field.az': 'Availability Zones', 'field.ttl': 'TTL (days)',
+    'hint.serviceName': 'e.g. payment-service, auth-api',
+    'hint.namespace': 'Lowercase only, hyphens allowed',
+    'hint.bucket': 'Globally unique, lowercase only',
+  },
+  fr: {
+    'page.title': 'Self-Service',
+    'page.sub': 'Provisionnez l\'infrastructure, déployez des services et gérez les ressources de la plateforme — sans ticket.',
+    'nav.main': 'Menu principal', 'nav.home': 'Accueil', 'nav.catalog': 'Catalogue',
+    'nav.selfserve': 'Self-Service', 'nav.scorecards': 'Scorecards', 'nav.dashboards': 'Tableaux de bord',
+    'nav.platform': 'Plateforme', 'nav.services': 'Services', 'nav.environments': 'Environnements',
+    'nav.secrets': 'Secrets', 'nav.audit': 'Journal d\'audit', 'nav.admin': 'Admin',
+    'nav.teams': 'Équipes', 'nav.settings': 'Paramètres',
+    'user.role': 'Platform Engineer',
+    'btn.newAction': 'Nouvelle action', 'btn.cancel': 'Annuler', 'btn.run': 'Exécuter',
+    'stat.actions': 'Actions', 'stat.runs': 'Exécutions', 'stat.success': 'Taux de succès',
+    'stat.teams': 'Équipes', 'stat.thisMonth': 'ce mois', 'stat.thisWeek': 'cette semaine', 'stat.active': 'actives',
+    'filter.all': 'Toutes', 'filter.security': 'Sécurité',
+    'sort.name': 'A–Z', 'sort.category': 'Catégorie', 'sort.complexity': 'Complexité',
+    'search.placeholder': 'Rechercher une action…',
+    'modal.run': 'Exécution en cours…',
+    'toast.success': 'Action démarrée avec succès',
+    'complexity.low': 'Simple', 'complexity.mid': 'Moyen', 'complexity.high': 'Complexe',
+    'label.run': 'Exécuter',
+    'field.serviceName': 'Nom du service', 'field.env': 'Environnement', 'field.region': 'Région',
+    'field.namespace': 'Namespace', 'field.replicas': 'Nombre de replicas', 'field.image': 'Image Docker',
+    'field.bucket': 'Nom du bucket', 'field.team': 'Équipe', 'field.email': 'E-mail',
+    'field.role': 'Rôle', 'field.desc': 'Description', 'field.cluster': 'Cluster',
+    'field.secret': 'Chemin du secret', 'field.value': 'Valeur', 'field.pipeline': 'Nom du pipeline',
+    'field.repo': 'Dépôt', 'field.branch': 'Branche', 'field.domain': 'Domaine',
+    'field.cidr': 'Bloc CIDR', 'field.az': 'Zones de disponibilité', 'field.ttl': 'TTL (jours)',
+    'hint.serviceName': 'ex. payment-service, auth-api',
+    'hint.namespace': 'Minuscules uniquement, tirets autorisés',
+    'hint.bucket': 'Globalement unique, minuscules uniquement',
+  }
+};
+
+/* ─── Action cards data ────────────────────────────────────────────────────── */
+var ACTIONS = [
+  {
+    id:'create-service', filter:'kubernetes',
+    color:'#3b82f6', iconBg:'#eff6ff', icon:'fa-solid fa-microchip',
+    titleKey:{de:'Microservice erstellen',en:'Create Microservice',fr:'Créer un microservice'},
+    descKey:{de:'Neuen Service in Kubernetes deployen. Erstellt Namespace, Deployment, Service und optionale Ingress-Regel automatisch.',en:'Deploy a new service in Kubernetes. Automatically creates Namespace, Deployment, Service and optional Ingress rule.',fr:'Déployer un nouveau service dans Kubernetes. Crée automatiquement le Namespace, Deployment, Service et la règle Ingress optionnelle.'},
+    tags:['Kubernetes','GitOps'], tagStyles:['blue','green'],
+    complexity:2,
+    fields:['serviceName','namespace','image','replicas','env'],
+  },
+  {
+    id:'deploy-prod', filter:'cicd',
+    color:'#10b981', iconBg:'#dcfce7', icon:'fa-solid fa-rocket',
+    titleKey:{de:'In Produktion deployen',en:'Deploy to Production',fr:'Déployer en production'},
+    descKey:{de:'Rollout eines neuen Container-Images in der Produktionsumgebung mit automatischen Health Checks und Rollback.',en:'Roll out a new container image in the production environment with automatic health checks and rollback.',fr:'Déployer une nouvelle image conteneur en production avec vérifications de santé automatiques et rollback.'},
+    tags:['CI/CD','Production'], tagStyles:['red','orange'],
+    complexity:3,
+    fields:['image','env','cluster','branch'],
+  },
+  {
+    id:'scale-deploy', filter:'kubernetes',
+    color:'#6366f1', iconBg:'#ede9fe', icon:'fa-solid fa-arrows-up-down',
+    titleKey:{de:'Deployment skalieren',en:'Scale Deployment',fr:'Mettre à l\'échelle le déploiement'},
+    descKey:{de:'Horizontale Skalierung eines laufenden Kubernetes-Deployments — Anzahl der Replicas anpassen.',en:'Horizontally scale a running Kubernetes deployment — adjust the number of replicas.',fr:'Mise à l\'échelle horizontale d\'un déploiement Kubernetes en cours — ajuster le nombre de replicas.'},
+    tags:['Kubernetes','HPA'], tagStyles:['blue','purple'],
+    complexity:1,
+    fields:['serviceName','namespace','replicas','cluster'],
+  },
+  {
+    id:'provision-s3', filter:'cloud',
+    color:'#f59e0b', iconBg:'#fef9c3', icon:'fa-brands fa-aws',
+    titleKey:{de:'S3 Bucket erstellen',en:'Provision S3 Bucket',fr:'Créer un bucket S3'},
+    descKey:{de:'AWS S3 Bucket mit konfigurierbaren Zugriffsrichtlinien, Versionierung und optionaler Replikation bereitstellen.',en:'Provision an AWS S3 bucket with configurable access policies, versioning and optional replication.',fr:'Créer un bucket AWS S3 avec politiques d\'accès configurables, versioning et réplication optionnelle.'},
+    tags:['AWS','Terraform'], tagStyles:['orange','blue'],
+    complexity:2,
+    fields:['bucket','region','team'],
+  },
+  {
+    id:'vault-secret', filter:'security',
+    color:'#7c3aed', iconBg:'#ede9fe', icon:'fa-solid fa-vault',
+    titleKey:{de:'Secret in Vault speichern',en:'Add Secret to Vault',fr:'Ajouter un secret dans Vault'},
+    descKey:{de:'Neues Secret in HashiCorp Vault anlegen mit RBAC-Richtlinie und optionalem TTL für automatische Rotation.',en:'Create a new secret in HashiCorp Vault with RBAC policy and optional TTL for automatic rotation.',fr:'Créer un nouveau secret dans HashiCorp Vault avec politique RBAC et TTL optionnel pour rotation automatique.'},
+    tags:['HashiCorp','PKI'], tagStyles:['purple','blue'],
+    complexity:2,
+    fields:['secret','value','team','ttl'],
+  },
+  {
+    id:'namespace', filter:'kubernetes',
+    color:'#326CE5', iconBg:'#dbeafe', icon:'fa-solid fa-folder-tree',
+    titleKey:{de:'Kubernetes Namespace anlegen',en:'Create Kubernetes Namespace',fr:'Créer un Namespace Kubernetes'},
+    descKey:{de:'Neuen Namespace mit ResourceQuota, LimitRange und NetworkPolicy für ein Team oder Projekt erstellen.',en:'Create a new Namespace with ResourceQuota, LimitRange and NetworkPolicy for a team or project.',fr:'Créer un nouveau Namespace avec ResourceQuota, LimitRange et NetworkPolicy pour une équipe ou un projet.'},
+    tags:['Kubernetes','RBAC'], tagStyles:['blue','purple'],
+    complexity:1,
+    fields:['namespace','team','cluster'],
+  },
+  {
+    id:'add-member', filter:'cicd',
+    color:'#0ea5e9', iconBg:'#e0f2fe', icon:'fa-solid fa-user-plus',
+    titleKey:{de:'Teammitglied hinzufügen',en:'Add Team Member',fr:'Ajouter un membre d\'équipe'},
+    descKey:{de:'Neues Mitglied zu einem bestehenden Team hinzufügen und Zugangsrechte für Cluster, Vault und CI/CD vergeben.',en:'Add a new member to an existing team and assign access rights for Cluster, Vault and CI/CD.',fr:'Ajouter un nouveau membre à une équipe existante et attribuer les droits d\'accès pour Cluster, Vault et CI/CD.'},
+    tags:['IAM','Team'], tagStyles:['blue','green'],
+    complexity:1,
+    fields:['email','team','role'],
+  },
+  {
+    id:'rotate-cert', filter:'security',
+    color:'#ef4444', iconBg:'#fee2e2', icon:'fa-solid fa-certificate',
+    titleKey:{de:'TLS-Zertifikat rotieren',en:'Rotate TLS Certificate',fr:'Rotation du certificat TLS'},
+    descKey:{de:'TLS-Zertifikat für eine Domain automatisch erneuern via Vault PKI oder Let\'s Encrypt mit Zero-Downtime.',en:'Automatically renew a TLS certificate for a domain via Vault PKI or Let\'s Encrypt with zero downtime.',fr:'Renouveler automatiquement un certificat TLS pour un domaine via Vault PKI ou Let\'s Encrypt sans interruption.'},
+    tags:['PKI','Vault'], tagStyles:['red','purple'],
+    complexity:2,
+    fields:['domain','team','ttl'],
+  },
+  {
+    id:'create-pipeline', filter:'cicd',
+    color:'#e11d48', iconBg:'#fee2e2', icon:'fa-solid fa-code-branch',
+    titleKey:{de:'CI/CD Pipeline erstellen',en:'Create CI/CD Pipeline',fr:'Créer un pipeline CI/CD'},
+    descKey:{de:'GitHub Actions oder GitLab CI Pipeline für ein neues Repository konfigurieren mit Build, Test und Deploy-Stages.',en:'Configure a GitHub Actions or GitLab CI pipeline for a new repository with Build, Test and Deploy stages.',fr:'Configurer un pipeline GitHub Actions ou GitLab CI pour un nouveau dépôt avec les stages Build, Test et Deploy.'},
+    tags:['GitHub Actions','GitLab CI'], tagStyles:['green','orange'],
+    complexity:2,
+    fields:['pipeline','repo','branch','env'],
+  },
+  {
+    id:'provision-vpc', filter:'cloud',
+    color:'#FF9900', iconBg:'#fef3c7', icon:'fa-solid fa-network-wired',
+    titleKey:{de:'VPC provisionieren',en:'Provision VPC',fr:'Provisionner un VPC'},
+    descKey:{de:'AWS VPC mit Public/Private Subnets, IGW, NAT Gateway und Security Groups via Terraform Workspace erstellen.',en:'Create an AWS VPC with Public/Private Subnets, IGW, NAT Gateway and Security Groups via Terraform Workspace.',fr:'Créer un VPC AWS avec Subnets Public/Private, IGW, NAT Gateway et Security Groups via Terraform Workspace.'},
+    tags:['AWS','IaC'], tagStyles:['orange','blue'],
+    complexity:3,
+    fields:['region','cidr','az','team'],
+  },
+  {
+    id:'create-env', filter:'cloud',
+    color:'#14b8a6', iconBg:'#ccfbf1', icon:'fa-brands fa-docker',
+    titleKey:{de:'Environment erstellen',en:'Create Environment',fr:'Créer un environnement'},
+    descKey:{de:'Vollständiges Entwicklungs- oder Staging-Environment auf Kubernetes klonen: Config, Secrets, Ingress, DNS.',en:'Clone a complete development or staging environment on Kubernetes: Config, Secrets, Ingress, DNS.',fr:'Cloner un environnement complet de développement ou staging sur Kubernetes : Config, Secrets, Ingress, DNS.'},
+    tags:['Kubernetes','Helm'], tagStyles:['blue','green'],
+    complexity:3,
+    fields:['env','namespace','cluster','team'],
+  },
+  {
+    id:'audit-report', filter:'security',
+    color:'#64748b', iconBg:'#f1f5f9', icon:'fa-solid fa-file-shield',
+    titleKey:{de:'Security-Audit exportieren',en:'Export Security Audit',fr:'Exporter l\'audit sécurité'},
+    descKey:{de:'RBAC-Konfiguration, Secrets-Zugriffe und Cluster-Policies auswerten und als PDF- oder JSON-Report exportieren.',en:'Evaluate RBAC configuration, secrets access and cluster policies and export as PDF or JSON report.',fr:'Évaluer la configuration RBAC, les accès aux secrets et les politiques de cluster et exporter en rapport PDF ou JSON.'},
+    tags:['Audit','Compliance'], tagStyles:['purple','orange'],
+    complexity:1,
+    fields:['cluster','team','desc'],
+  },
+];
+
+/* ─── State ────────────────────────────────────────────────────────────────── */
+var lang = localStorage.getItem('preferred-lang') || 'de';
+if (!I18N[lang]) lang = 'de';
+var activeFilter = 'all';
+var activeCard = null;
+
+/* ─── i18n ─────────────────────────────────────────────────────────────────── */
+function t(key) { return (I18N[lang] && I18N[lang][key]) || (I18N.de[key]) || key; }
+
+function applyLang(l) {
+  if (!I18N[l]) return;
+  lang = l;
+  localStorage.setItem('preferred-lang', l);
+  document.documentElement.lang = l;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var k = el.getAttribute('data-i18n');
+    if (I18N[l][k] !== undefined) el.textContent = I18N[l][k];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    var k = el.getAttribute('data-i18n-placeholder');
+    if (I18N[l][k] !== undefined) el.placeholder = I18N[l][k];
+  });
+  // Sync both search inputs
+  document.querySelectorAll('input[data-i18n-placeholder="search.placeholder"]').forEach(function(el){
+    el.placeholder = t('search.placeholder');
+  });
+  renderCards();
+  syncLangUI();
+}
+
+function syncLangUI() {
+  var flags = {de:'🇩🇪',en:'🇬🇧',fr:'🇫🇷'};
+  var codes = {de:'DE',en:'EN',fr:'FR'};
+  document.getElementById('klFlag').textContent = flags[lang] || '🇩🇪';
+  document.getElementById('klCode').textContent = codes[lang] || 'DE';
+  document.querySelectorAll('.kl-topt').forEach(function(o){
+    o.classList.toggle('active', o.getAttribute('data-kl') === lang);
+  });
+}
+
+function klToggle() {
+  var p = document.getElementById('klPanel');
+  var btn = document.getElementById('klBtn');
+  var open = p.classList.toggle('open');
+  btn.setAttribute('aria-expanded', String(open));
+}
+function pickLang(l) {
+  applyLang(l);
+  document.getElementById('klPanel').classList.remove('open');
+  document.getElementById('klBtn').setAttribute('aria-expanded','false');
+}
+document.addEventListener('click', function(e) {
+  var w = document.getElementById('klWrap');
+  if (w && !w.contains(e.target)) {
+    document.getElementById('klPanel').classList.remove('open');
+    document.getElementById('klBtn').setAttribute('aria-expanded','false');
+  }
+});
+
+/* ─── Sidebar toggle ───────────────────────────────────────────────────────── */
+function toggleSidebar() {
+  var sb = document.getElementById('sidebar');
+  sb.classList.toggle('collapsed');
+  document.getElementById('toggleIcon').className =
+    sb.classList.contains('collapsed') ? 'fa-solid fa-sidebar-flip' : 'fa-solid fa-sidebar';
+}
+
+/* ─── Filter & sort ────────────────────────────────────────────────────────── */
+function setFilter(f, el) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(function(b){ b.classList.remove('active'); });
+  el.classList.add('active');
+  filterCards();
+}
+
+function filterCards() {
+  var q = (document.getElementById('cardSearch').value || document.getElementById('globalSearch').value || '').toLowerCase().trim();
+  var sort = document.getElementById('sortSelect').value;
+  var list = ACTIONS.filter(function(a){
+    var matchFilter = activeFilter === 'all' || a.filter === activeFilter;
+    var title = a.titleKey[lang] || a.titleKey.de || '';
+    var desc = a.descKey[lang] || a.descKey.de || '';
+    var matchQ = !q || title.toLowerCase().includes(q) || desc.toLowerCase().includes(q) || (a.filter || '').includes(q);
+    return matchFilter && matchQ;
+  });
+  if (sort === 'name') list.sort(function(a,b){ return (a.titleKey[lang]||'').localeCompare(b.titleKey[lang]||''); });
+  if (sort === 'cat') list.sort(function(a,b){ return (a.filter||'').localeCompare(b.filter||''); });
+  if (sort === 'complexity') list.sort(function(a,b){ return a.complexity - b.complexity; });
+  renderCardList(list);
+  updateCounts();
+}
+
+function updateCounts() {
+  var cats = ['all','kubernetes','cloud','security','cicd'];
+  cats.forEach(function(c){
+    var cnt = c === 'all' ? ACTIONS.length : ACTIONS.filter(function(a){ return a.filter===c; }).length;
+    var el = document.getElementById('count' + c.charAt(0).toUpperCase() + c.slice(1));
+    if (el) el.textContent = cnt;
+  });
+  document.getElementById('totalBadge').textContent = ACTIONS.length;
+  document.getElementById('statTotal').textContent = ACTIONS.length;
+}
+
+/* ─── Render ───────────────────────────────────────────────────────────────── */
+function renderCards() { filterCards(); }
+
+function renderCardList(list) {
+  var grid = document.getElementById('cardsGrid');
+  if (!list.length) {
+    grid.innerHTML = '<div class="no-results"><i class="fa-solid fa-magnifying-glass"></i><p>' + (lang==='fr'?'Aucune action trouvée':lang==='en'?'No actions found':'Keine Aktionen gefunden') + '</p></div>';
+    return;
+  }
+  grid.innerHTML = list.map(function(a) {
+    var title = a.titleKey[lang] || a.titleKey.de;
+    var desc = a.descKey[lang] || a.descKey.de;
+    var dots = [1,2,3].map(function(i){ return '<span class="cd'+(i<=a.complexity?' on':'')+'"></span>'; }).join('');
+    var cLabel = a.complexity===1?t('complexity.low'):a.complexity===2?t('complexity.mid'):t('complexity.high');
+    var tags = a.tags.map(function(tag,i){
+      return '<span class="card-tag '+(a.tagStyles[i]||'')+'">' + tag + '</span>';
+    }).join('');
+    return '<div class="action-card" style="--card-color:'+a.color+';--card-icon-bg:'+a.iconBg+'" data-id="'+a.id+'">' +
+      '<div class="card-header">' +
+        '<div class="card-icon"><i class="'+a.icon+'"></i></div>' +
+        '<div class="card-meta">' +
+          '<div class="card-title">'+title+'</div>' +
+          '<div class="card-category">'+a.filter.toUpperCase()+'</div>' +
+        '</div>' +
+      '</div>' +
+      '<p class="card-desc">'+desc+'</p>' +
+      '<div class="card-tags">'+tags+'</div>' +
+      '<div class="card-footer">' +
+        '<div class="card-complexity"><div class="complexity-dots">'+dots+'</div> '+cLabel+'</div>' +
+        '<button class="run-btn" style="background:'+a.color+'" onclick="openModal(\''+a.id+'\')">' +
+          '<i class="fa-solid fa-play"></i> '+t('label.run')+
+        '</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function setView(v, btn) {
+  document.querySelectorAll('.sf-view-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var grid = document.getElementById('cardsGrid');
+  if (v === 'list') {
+    grid.style.gridTemplateColumns = '1fr';
+  } else {
+    grid.style.gridTemplateColumns = '';
+  }
+}
+
+/* ─── Modal ────────────────────────────────────────────────────────────────── */
+var FIELD_DEFS = {
+  serviceName: function(){ return field('field.serviceName','text','my-service','hint.serviceName',true); },
+  env:         function(){ return select('field.env',['dev','staging','production']); },
+  region:      function(){ return select('field.region',['eu-west-1','us-east-1','ap-southeast-1','eu-central-1']); },
+  namespace:   function(){ return field('field.namespace','text','my-namespace','hint.namespace',true); },
+  replicas:    function(){ return field('field.replicas','number','2','',true); },
+  image:       function(){ return field('field.image','text','nginx:latest','',true); },
+  bucket:      function(){ return field('field.bucket','text','my-bucket-2026','hint.bucket',true); },
+  team:        function(){ return select('field.team',['platform-team','devops-team','backend-team','frontend-team']); },
+  email:       function(){ return field('field.email','email','john@example.com','',true); },
+  role:        function(){ return select('field.role',['developer','maintainer','admin','read-only']); },
+  desc:        function(){ return textarea('field.desc',''); },
+  cluster:     function(){ return select('field.cluster',['prod-k8s-eu','staging-k8s-eu','dev-k8s-eu']); },
+  secret:      function(){ return field('field.secret','text','secret/data/myapp/config','',true); },
+  value:       function(){ return field('field.value','password','','',true); },
+  pipeline:    function(){ return field('field.pipeline','text','deploy-production','',true); },
+  repo:        function(){ return field('field.repo','text','org/my-repo','',true); },
+  branch:      function(){ return field('field.branch','text','main','',false); },
+  domain:      function(){ return field('field.domain','text','api.myapp.com','',true); },
+  cidr:        function(){ return field('field.cidr','text','10.0.0.0/16','',true); },
+  az:          function(){ return select('field.az',['eu-central-1a, eu-central-1b','us-east-1a, us-east-1b','ap-southeast-1a, ap-southeast-1b']); },
+  ttl:         function(){ return field('field.ttl','number','90','',false); },
+};
+
+function field(labelKey, type, placeholder, hintKey, required) {
+  var req = required ? '<span>*</span>' : '';
+  var hint = hintKey ? '<div class="form-hint">'+t(hintKey)+'</div>' : '';
+  return '<div class="form-group"><label class="form-label">'+t(labelKey)+req+'</label>' +
+    '<input class="form-input" type="'+type+'" placeholder="'+placeholder+'">' + hint + '</div>';
+}
+function select(labelKey, opts) {
+  return '<div class="form-group"><label class="form-label">'+t(labelKey)+'</label>' +
+    '<select class="form-select">'+opts.map(function(o){ return '<option>'+o+'</option>'; }).join('')+'</select></div>';
+}
+function textarea(labelKey, hint) {
+  return '<div class="form-group"><label class="form-label">'+t(labelKey)+'</label>' +
+    '<textarea class="form-textarea" rows="3"></textarea></div>';
+}
+function pairRow(a, b) {
+  return '<div class="form-row">' + FIELD_DEFS[a]() + FIELD_DEFS[b]() + '</div>';
+}
+
+function openModal(id) {
+  if (id === 'create-pipeline') { window.location.href = 'cicd-pipeline-demo.html'; return; }
+  activeCard = id === 'custom' ? null : ACTIONS.find(function(a){ return a.id===id; });
+  var title = activeCard ? (activeCard.titleKey[lang]||activeCard.titleKey.de) : t('btn.newAction');
+  var subtitle = activeCard ? activeCard.filter.toUpperCase() + ' · Self-Service' : 'Custom Action';
+  var color = activeCard ? activeCard.color : '#3b82f6';
+  var icon = activeCard ? activeCard.icon : 'fa-solid fa-bolt';
+  var iconBg = activeCard ? activeCard.iconBg : '#eff6ff';
+
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalSubtitle').textContent = subtitle;
+  var mi = document.getElementById('modalIcon');
+  mi.style.background = iconBg;
+  mi.style.color = color;
+  mi.innerHTML = '<i class="'+icon+'"></i>';
+  document.getElementById('runBtn').style.background = color;
+
+  // Build form fields
+  var fields = activeCard ? activeCard.fields : ['serviceName','env','desc'];
+  var html = '';
+  var i = 0;
+  while (i < fields.length) {
+    if (i + 1 < fields.length && FIELD_DEFS[fields[i]] && FIELD_DEFS[fields[i+1]]) {
+      // Check if both are short fields (pair them)
+      var short = ['replicas','ttl','az','region','cluster','env','team','role','branch'];
+      if (short.indexOf(fields[i]) !== -1 || short.indexOf(fields[i+1]) !== -1) {
+        html += pairRow(fields[i], fields[i+1]);
+        i += 2;
+        continue;
+      }
+    }
+    if (FIELD_DEFS[fields[i]]) html += FIELD_DEFS[fields[i]]();
+    i++;
+  }
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalBackdrop').classList.add('open');
+  // Focus first input
+  setTimeout(function(){ var inp = document.querySelector('.modal .form-input,.modal .form-select'); if(inp) inp.focus(); }, 50);
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modalBackdrop')) return;
+  document.getElementById('modalBackdrop').classList.remove('open');
+  activeCard = null;
+}
+
+function runAction() {
+  var btn = document.getElementById('runBtn');
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + t('modal.run');
+  btn.disabled = true;
+  setTimeout(function(){
+    document.getElementById('modalBackdrop').classList.remove('open');
+    btn.innerHTML = '<i class="fa-solid fa-play"></i> ' + t('btn.run');
+    btn.disabled = false;
+    showToast(t('toast.success'));
+  }, 1400);
+}
+
+/* ─── Toast ────────────────────────────────────────────────────────────────── */
+function showToast(msg) {
+  var toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(function(){ toast.classList.remove('show'); }, 3500);
+}
+
+/* ─── Keyboard ──────────────────────────────────────────────────────────────── */
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') document.getElementById('modalBackdrop').classList.remove('open');
+  if ((e.ctrlKey||e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('globalSearch').focus();
+  }
+});
+
+/* ─── Boot ──────────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function(){
+  applyLang(lang);
+  updateCounts();
+});
+</script>
+</body>
+</html>

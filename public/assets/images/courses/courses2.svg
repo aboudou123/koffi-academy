@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="bgc2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a3a00"/>
+      <stop offset="100%" stop-color="#07294d"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bgc2)"/>
+  <pattern id="gridC2" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  </pattern>
+  <rect width="600" height="400" fill="url(#gridC2)"/>
+  <circle cx="120" cy="320" r="200" fill="rgba(255,198,0,0.04)"/>
+
+  <!-- Star/award icon -->
+  <polygon points="300,120 315,165 362,165 325,192 339,237 300,212 261,237 275,192 238,165 285,165"
+    fill="none" stroke="#ffc600" stroke-width="2.5" stroke-linejoin="round" opacity="0.75"/>
+
+  <text x="300" y="280" text-anchor="middle" font-family="'Inter',Arial,sans-serif" font-size="16" font-weight="700" fill="rgba(255,255,255,0.6)" letter-spacing="2">SPONSORING</text>
+  <text x="300" y="305" text-anchor="middle" font-family="'Inter',Arial,sans-serif" font-size="12" fill="rgba(255,198,0,0.5)">Koffi Academy</text>
+</svg>

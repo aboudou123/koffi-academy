@@ -1,0 +1,1135 @@
+<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="../assets/css/style.css">
+      <link rel="stylesheet" href="../assets/css/responsive.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="stylesheet" href="../assets/css/modern.css">
+      <link rel="shortcut icon" href="../assets/images/logo.png">
+      <title>IDP Masterclass | Internal Developer Platforms</title>
+      <meta name="description" content="Lesen Sie die freigeschaltete IDP Masterclass: Architektur, Developer Experience, Backstage, Kubernetes, Golden Paths und Platform Engineering.">
+      <meta name="theme-color" content="#07294d">
+
+      <style>
+         .course-preview-page {
+            background: #f5f7ff;
+            color: #27364a;
+         }
+
+         .preview-hero {
+            position: relative;
+            overflow: hidden;
+            background:
+               linear-gradient(120deg, rgba(4, 26, 50, 0.96), rgba(7, 41, 77, 0.88)),
+               url("assets/images/courses/courses3.jpg") center/cover no-repeat;
+            padding: 96px 0 110px;
+         }
+
+         .preview-hero::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 64px;
+            background: #f5f7ff;
+            clip-path: polygon(0 52%, 100% 0, 100% 100%, 0 100%);
+         }
+
+         .preview-hero-content,
+         .preview-hero-visual {
+            position: relative;
+            z-index: 1;
+         }
+
+         .preview-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 18px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            color: #07294d;
+            background: #ffc600;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+         }
+
+         .preview-hero h1 {
+            color: #fff;
+            font-family: "Rubik", sans-serif;
+            font-size: 54px;
+            font-weight: 800;
+            line-height: 1.12;
+            margin-bottom: 22px;
+         }
+
+         .preview-hero p {
+            color: rgba(255, 255, 255, 0.86);
+            font-size: 18px;
+            line-height: 1.75;
+            margin-bottom: 28px;
+            max-width: 720px;
+         }
+
+         .preview-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 28px;
+         }
+
+         .preview-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-weight: 600;
+         }
+
+         .preview-link:hover {
+            color: #ffc600;
+         }
+
+         .preview-hero-meta {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(120px, 1fr));
+            gap: 14px;
+            max-width: 680px;
+         }
+
+         .preview-hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 56px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+         }
+
+         .preview-hero-meta i {
+            color: #ffc600;
+         }
+
+         .preview-hero-visual {
+            padding: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+            backdrop-filter: blur(12px);
+         }
+
+         .preview-dashboard {
+            overflow: hidden;
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+         }
+
+         .preview-dashboard img {
+            display: block;
+            width: 100%;
+            height: 230px;
+            object-fit: cover;
+         }
+
+         .dashboard-body {
+            padding: 22px;
+         }
+
+         .dashboard-body h3 {
+            color: #07294d;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+         }
+
+         .dashboard-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 12px 0;
+            border-top: 1px solid #edf1f7;
+            color: #5a6a8a;
+            font-size: 14px;
+         }
+
+         .dashboard-row strong {
+            color: #07294d;
+         }
+
+         .access-strip {
+            margin-top: -46px;
+            position: relative;
+            z-index: 2;
+         }
+
+         .access-strip-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 24px 28px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 18px 45px rgba(7, 41, 77, 0.13);
+         }
+
+         .access-strip h2 {
+            color: #07294d;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 6px;
+         }
+
+         .access-strip p {
+            margin: 0;
+            color: #5a6a8a;
+         }
+
+         .access-badge {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #0f8f6a;
+            font-weight: 700;
+         }
+
+         .preview-section {
+            padding: 78px 0;
+         }
+
+         .preview-section.alt {
+            background: #fff;
+         }
+
+         .section-heading {
+            margin-bottom: 34px;
+         }
+
+         .section-heading h2 {
+            color: #07294d;
+            font-family: "Rubik", sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 12px;
+         }
+
+         .section-heading p {
+            color: #5a6a8a;
+            font-size: 16px;
+            line-height: 1.75;
+            margin: 0;
+            max-width: 760px;
+         }
+
+         .preview-card {
+            height: 100%;
+            padding: 28px;
+            border: 1px solid #e8edf5;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 12px 32px rgba(7, 41, 77, 0.08);
+            transition: all 0.25s ease;
+         }
+
+         .preview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 42px rgba(7, 41, 77, 0.13);
+         }
+
+         .preview-card .card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            color: #07294d;
+            background: #ffc600;
+            font-size: 20px;
+         }
+
+         .preview-card h3 {
+            color: #07294d;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+         }
+
+         .preview-card p {
+            color: #5a6a8a;
+            line-height: 1.7;
+            margin: 0;
+         }
+
+         .course-layout {
+            align-items: flex-start;
+         }
+
+         .course-sidebar {
+            position: sticky;
+            top: 98px;
+            padding: 24px;
+            border: 1px solid #e8edf5;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 12px 32px rgba(7, 41, 77, 0.08);
+         }
+
+         .course-sidebar h3 {
+            color: #07294d;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 18px;
+         }
+
+         .course-sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 0;
+            border-bottom: 1px solid #eef2f6;
+            color: #52627a;
+            font-weight: 600;
+         }
+
+         .course-sidebar a:last-child {
+            border-bottom: 0;
+         }
+
+         .course-sidebar a:hover {
+            color: #07294d;
+         }
+
+         .course-sidebar i {
+            color: #ffc600;
+         }
+
+         .reader-panel {
+            padding: 42px;
+            border: 1px solid #e8edf5;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 12px 32px rgba(7, 41, 77, 0.08);
+         }
+
+         .reader-panel h2,
+         .reader-panel h3 {
+            color: #07294d;
+            font-family: "Rubik", sans-serif;
+            font-weight: 800;
+         }
+
+         .reader-panel h2 {
+            font-size: 32px;
+            margin: 4px 0 18px;
+         }
+
+         .reader-panel h3 {
+            font-size: 24px;
+            margin: 34px 0 14px;
+         }
+
+         .reader-panel p,
+         .reader-panel li {
+            color: #4d5e76;
+            font-size: 16px;
+            line-height: 1.84;
+         }
+
+         .reader-panel p {
+            margin-bottom: 18px;
+         }
+
+         .reader-panel ul {
+            margin: 0 0 20px;
+            padding: 0;
+         }
+
+         .reader-panel li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 10px;
+            list-style: none;
+         }
+
+         .reader-panel li::before {
+            content: "\f00c";
+            position: absolute;
+            left: 0;
+            top: 1px;
+            color: #0f8f6a;
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+         }
+
+         .reader-note {
+            margin: 28px 0;
+            padding: 22px 24px;
+            border-left: 4px solid #ffc600;
+            border-radius: 8px;
+            background: #fff8d8;
+            color: #27364a;
+         }
+
+         .architecture-map {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 24px 0 30px;
+         }
+
+         .map-step {
+            padding: 18px;
+            border: 1px solid #e8edf5;
+            border-radius: 8px;
+            background: #f8faff;
+         }
+
+         .map-step span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            background: #07294d;
+            color: #fff;
+            font-weight: 800;
+         }
+
+         .map-step h4 {
+            color: #07294d;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+         }
+
+         .map-step p {
+            font-size: 14px;
+            line-height: 1.65;
+            margin: 0;
+         }
+
+         .module-list {
+            display: grid;
+            gap: 16px;
+         }
+
+         .module-item {
+            display: grid;
+            grid-template-columns: 92px 1fr;
+            gap: 18px;
+            padding: 22px;
+            border: 1px solid #e8edf5;
+            border-radius: 8px;
+            background: #fff;
+         }
+
+         .module-week {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 44px;
+            border-radius: 8px;
+            background: #07294d;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+         }
+
+         .module-item h3 {
+            color: #07294d;
+            font-size: 21px;
+            font-weight: 800;
+            margin: 0 0 8px;
+         }
+
+         .module-item p {
+            color: #5a6a8a;
+            line-height: 1.72;
+            margin: 0;
+         }
+
+         .related-card {
+            display: block;
+            height: 100%;
+            overflow: hidden;
+            border: 1px solid #e8edf5;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 12px 32px rgba(7, 41, 77, 0.08);
+         }
+
+         .related-card img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+         }
+
+         .related-card-body {
+            padding: 22px;
+         }
+
+         .related-card h3 {
+            color: #07294d;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 10px;
+         }
+
+         .related-card p {
+            color: #5a6a8a;
+            line-height: 1.7;
+            margin: 0;
+         }
+
+         .final-cta {
+            background:
+               linear-gradient(135deg, rgba(7, 41, 77, 0.96), rgba(10, 58, 107, 0.92)),
+               url("assets/images/banner1.png") right center/contain no-repeat;
+            color: #fff;
+            padding: 70px 0;
+         }
+
+         .final-cta h2 {
+            color: #fff;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 14px;
+         }
+
+         .final-cta p {
+            color: rgba(255, 255, 255, 0.84);
+            font-size: 16px;
+            line-height: 1.76;
+            margin-bottom: 24px;
+            max-width: 680px;
+         }
+
+         @media (max-width: 991px) {
+            .preview-hero {
+               padding: 74px 0 96px;
+            }
+
+            .preview-hero h1 {
+               font-size: 42px;
+            }
+
+            .preview-hero-visual {
+               margin-top: 34px;
+            }
+
+            .course-sidebar {
+               position: static;
+               margin-bottom: 28px;
+            }
+
+            .architecture-map {
+               grid-template-columns: 1fr;
+            }
+         }
+
+         @media (max-width: 767px) {
+            .preview-hero h1 {
+               font-size: 34px;
+            }
+
+            .preview-hero p {
+               font-size: 16px;
+            }
+
+            .preview-hero-meta {
+               grid-template-columns: 1fr;
+            }
+
+            .access-strip-inner {
+               align-items: flex-start;
+               flex-direction: column;
+            }
+
+            .reader-panel {
+               padding: 28px 22px;
+            }
+
+            .module-item {
+               grid-template-columns: 1fr;
+            }
+
+            .section-heading h2,
+            .reader-panel h2,
+            .final-cta h2 {
+               font-size: 28px;
+            }
+         }
+
+         /* ── Next Steps Cards ── */
+         .ns-section { padding: 70px 0 80px; background: #f4f7fc; }
+         .ns-section-heading { text-align: center; margin-bottom: 50px; }
+         .ns-tag {
+            display: inline-block;
+            background: rgba(7,41,77,.08);
+            color: #07294d;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 6px 18px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+         }
+         .ns-heading { font-size: clamp(26px,4vw,38px); color: #07294d; font-weight: 800; margin-bottom: 14px; }
+         .ns-sub { color: #5a6a8a; max-width: 580px; margin: 0 auto; font-size: 16px; line-height: 1.7; }
+         .ns-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #fff;
+            text-decoration: none;
+            box-shadow: 0 4px 24px rgba(7,41,77,.09);
+            transition: transform .28s ease, box-shadow .28s ease;
+            border: 1px solid #e8edf5;
+         }
+         .ns-card:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(7,41,77,.16); text-decoration: none; }
+         .ns-card-img { position: relative; overflow: hidden; }
+         .ns-card-img img { width: 100%; height: 180px; object-fit: cover; display: block; transition: transform .4s ease; }
+         .ns-card:hover .ns-card-img img { transform: scale(1.04); }
+         .ns-card-badge {
+            position: absolute;
+            top: 14px; left: 14px;
+            background: rgba(7,41,77,.75);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(6px);
+         }
+         .ns-card-badge--gold { background: rgba(255,198,0,.85); color: #07294d; }
+         .ns-card-body { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+         .ns-card-meta { font-size: 11px; font-weight: 600; color: #1a5fa0; letter-spacing: .5px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+         .ns-card-body h3 { font-size: 19px; font-weight: 800; color: #07294d; margin-bottom: 10px; line-height: 1.3; }
+         .ns-card-body p { font-size: 14px; color: #5a6a8a; line-height: 1.7; margin: 0; flex: 1; }
+         .ns-card-cta {
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #07294d;
+            border-top: 1px solid #e8edf5;
+            padding-top: 16px;
+            transition: gap .2s;
+         }
+         .ns-card-cta--gold { color: #c48a00; }
+         .ns-card:hover .ns-card-cta { gap: 12px; }
+         @media(max-width:767px){ .ns-card { margin-bottom: 24px; } }
+      .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+   <style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style><link rel="stylesheet" href="../assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+   <body class="course-preview-page">
+      <div class="page-main">
+         <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="../index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="../index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="../laboratoire.html">Laboratoire</a><a href="../courses/courses.html">Kurskatalog</a></span></span>
+<a href="../blog.html">Blog</a>
+<a href="../culture.html">Culture</a>
+<a href="../koffi-profile.html">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="../login.html">Anmelden</a><a class="kh__btn" href="../register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+
+         <section class="preview-hero">
+            <div class="container">
+               <div class="row align-items-center">
+                  <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12">
+                     <div class="preview-hero-content">
+                        <span class="preview-kicker"><i class="fas fa-unlock-alt"></i> Aktuell frei zugänglich</span>
+                        <h1>IDP Masterclass: Internal Developer Platforms verstehen und bauen</h1>
+                        <p>Diese Kursvorschau ist vorübergehend vollständig freigeschaltet. Lernen Sie, wie moderne Engineering-Organisationen Self-Service, Golden Paths, Kubernetes, Backstage und automatisierte Governance zu einer produktiven Plattform verbinden.</p>
+                        <div class="preview-actions">
+                           <a href="#kursinhalt" class="theme-btn">Jetzt lesen</a>
+                           <a href="../courses/courses.html" class="preview-link"><i class="fas fa-arrow-left"></i> Zur Kursübersicht</a>
+                        </div>
+                        <div class="preview-hero-meta">
+                           <span><i class="far fa-clock"></i> 6 Wochen</span>
+                           <span><i class="fas fa-signal"></i> Fortgeschritten</span>
+                           <span><i class="fas fa-certificate"></i> Zertifikatspfad</span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-12">
+                     <div class="preview-hero-visual">
+                        <div class="preview-dashboard">
+                           <img src="../assets/images/banner.png" alt="Platform Engineering Kursübersicht">
+                           <div class="dashboard-body">
+                              <h3>Learning Path</h3>
+                              <div class="dashboard-row"><span>Golden Paths</span><strong>Design</strong></div>
+                              <div class="dashboard-row"><span>Developer Portal</span><strong>Backstage</strong></div>
+                              <div class="dashboard-row"><span>Runtime</span><strong>Kubernetes</strong></div>
+                              <div class="dashboard-row"><span>Automation</span><strong>GitOps</strong></div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+
+         <section class="access-strip">
+            <div class="container">
+               <div class="access-strip-inner">
+                  <div>
+                     <h2>Theoretische Grundlagen und Konzeptionelle Einführung</h2>
+                     <p>Dieser Kursabschnitt vermittelt das konzeptionelle Fundament und die theoretischen Grundlagen des Themas. Die praktischen Übungen, Hands-on-Projekte und vertiefenden Anwendungsszenarien sind Bestandteil des vollständigen Kursprogramms.</p>
+                     <div class="lab-cta-strip">
+                        <div class="lab-cta-note">
+                           Für praxisnahes, im Unternehmen direkt einsetzbares Wissen empfehlen wir unser <strong>Laboratoire</strong>.
+                        </div>
+                        <a href="../laboratoire.html" class="lab-btn">
+                           <i class="fas fa-flask"></i> Laboratoire entdecken
+                        </a>
+                     </div>
+                  </div>
+                  <span class="access-badge"><i class="fas fa-check-circle"></i> Inhalt freigeschaltet</span>
+               </div>
+            </div>
+         </section>
+
+         <section class="preview-section">
+            <div class="container">
+               <div class="section-heading text-center">
+                  <h2>Warum diese Masterclass lesen?</h2>
+                  <p>Die Seite führt Besucher schnell von der Problemstellung zur konkreten Lernreise. Sie erklärt nicht nur Werkzeuge, sondern zeigt, wie eine interne Plattform organisatorisch, technisch und operativ tragfähig wird.</p>
+               </div>
+               <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                     <div class="preview-card">
+                        <span class="card-icon"><i class="fas fa-route"></i></span>
+                        <h3>Klare Golden Paths</h3>
+                        <p>Sie lernen, wie Teams wiederholbare Wege für Services, Infrastruktur, Security und Deployments bereitstellen.</p>
+                     </div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                     <div class="preview-card">
+                        <span class="card-icon"><i class="fas fa-layer-group"></i></span>
+                        <h3>Portal statt Tool-Chaos</h3>
+                        <p>Backstage, Kataloge und Templates werden als Nutzeroberfläche der Plattform eingeordnet, nicht als Selbstzweck.</p>
+                     </div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                     <div class="preview-card">
+                        <span class="card-icon"><i class="fas fa-shield-alt"></i></span>
+                        <h3>Governance eingebaut</h3>
+                        <p>Policies, Kostenkontrolle und Compliance werden dort verankert, wo Entwickler ohnehin arbeiten.</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+
+         <section class="preview-section alt" id="kursinhalt">
+            <div class="container">
+               <div class="row course-layout">
+                  <div class="col-xl-3 col-lg-4 col-md-12 col-sm-12 col-12">
+                     <aside class="course-sidebar">
+                        <h3>In dieser Vorschau</h3>
+                        <a href="#idp"><i class="fas fa-chevron-right"></i> Was ist eine IDP?</a>
+                        <a href="#warum"><i class="fas fa-chevron-right"></i> Warum IDP?</a>
+                        <a href="#architektur"><i class="fas fa-chevron-right"></i> Architektur</a>
+                        <a href="#module"><i class="fas fa-chevron-right"></i> Kursmodule</a>
+                        <a href="#weiterlernen"><i class="fas fa-chevron-right"></i> Weiterlernen</a>
+                     </aside>
+                  </div>
+                  <div class="col-xl-9 col-lg-8 col-md-12 col-sm-12 col-12">
+                     <article class="reader-panel">
+                        <h2 id="idp">Was ist eine Internal Developer Platform?</h2>
+                        <p>Eine Internal Developer Platform, kurz IDP, ist ein internes Produkt für Entwicklungsteams. Sie bündelt Infrastruktur, CI/CD, Cloud-Ressourcen, Security, Observability und Dokumentation hinter einer konsistenten Self-Service-Erfahrung. Entwickler müssen dadurch nicht jedes Tool einzeln beherrschen, sondern können über klare Workflows produktiv arbeiten.</p>
+                        <p>Der zentrale Unterschied zu einer reinen Tool-Sammlung liegt in der Produktperspektive. Eine IDP hat Nutzer, Service-Level, Roadmap, Feedback-Schleifen und messbare Ziele. Sie soll Entwicklungszeit reduzieren, Standards erhöhen und neue Services schneller in Produktion bringen.</p>
+
+                        <div class="reader-note">
+                           <strong>Praktischer Merksatz:</strong> Eine IDP ersetzt nicht die Engineering-Teams. Sie entfernt Reibung, wiederholt sichere Muster und macht gute technische Entscheidungen zum einfachsten Weg.
+                        </div>
+
+                        <h3 id="warum">Warum Unternehmen eine IDP brauchen</h3>
+                        <p>Mit wachsender Systemlandschaft entstehen viele lokale Speziallösungen. Jedes Team baut eigene Pipelines, eigene Terraform-Module, eigene Dashboards und eigene Dokumentationslogik. Das funktioniert kurzfristig, erzeugt langfristig aber hohe Betriebskosten und unklare Verantwortlichkeiten.</p>
+                        <ul>
+                           <li>Self-Service beschleunigt das Anlegen neuer Services, Umgebungen und Deployments.</li>
+                           <li>Automatisierung reduziert manuelle Tickets und wiederkehrende Abstimmungen.</li>
+                           <li>Standardisierung macht Security, Kosten und Observability verlässlicher.</li>
+                           <li>Developer Experience wird messbar, weil Teams klare Wege und Feedback erhalten.</li>
+                        </ul>
+
+                        <h3 id="architektur">Die Bausteine einer professionellen Plattform</h3>
+                        <p>Eine tragfähige IDP verbindet Portal, Automatisierung, Laufzeitumgebung und Governance. Die Masterclass behandelt diese Bausteine Schritt für Schritt und zeigt, wie sie zusammenwirken.</p>
+
+                        <div class="architecture-map">
+                           <div class="map-step">
+                              <span>1</span>
+                              <h4>Developer Portal</h4>
+                              <p>Service-Katalog, Dokumentation, Templates und zentrale Einstiege für Teams.</p>
+                           </div>
+                           <div class="map-step">
+                              <span>2</span>
+                              <h4>Golden Paths</h4>
+                              <p>Vordefinierte Wege für neue Services, APIs, Deployments und Infrastruktur.</p>
+                           </div>
+                           <div class="map-step">
+                              <span>3</span>
+                              <h4>Platform APIs</h4>
+                              <p>Automatisierte Schnittstellen zu Cloud, Kubernetes, GitOps, Secrets und Policies.</p>
+                           </div>
+                        </div>
+
+                        <p>Für Unternehmen mit regulatorischen Anforderungen ist diese Struktur besonders wertvoll. Teams erhalten Geschwindigkeit, ohne Compliance zu umgehen. Die Plattform erzwingt Standards nicht über Meetings, sondern über geprüfte Templates, klare Ownership und automatisierte Kontrollen.</p>
+
+                        <h3>Was Sie nach der Vorschau können</h3>
+                        <ul>
+                           <li>Sie erkennen, welche Plattform-Fähigkeiten wirklich benötigt werden und welche nur zusätzliche Komplexität erzeugen.</li>
+                           <li>Sie können eine IDP-Roadmap priorisieren: zuerst die schmerzhaftesten Developer Journeys, danach Skalierung.</li>
+                           <li>Sie verstehen, wie Backstage, Kubernetes, Terraform, GitOps und Observability in ein gemeinsames Betriebsmodell passen.</li>
+                           <li>Sie können Stakeholdern erklären, warum Platform Engineering ein Produktansatz ist und kein reines Infrastrukturprojekt.</li>
+                        </ul>
+                     </article>
+                  </div>
+               </div>
+            </div>
+         </section>
+
+         <section class="preview-section" id="module">
+            <div class="container">
+               <div class="section-heading">
+                  <h2>Kursmodule</h2>
+                  <p>Der Lernpfad ist so aufgebaut, dass Leser erst die Plattformstrategie verstehen und danach konkrete technische Bausteine zusammensetzen.</p>
+               </div>
+               <div class="module-list">
+                  <div class="module-item">
+                     <span class="module-week">Woche 1</span>
+                     <div>
+                        <h3>Platform Engineering Grundlagen</h3>
+                        <p>Rollen, Team Topologies, Produktdenken, Metriken und typische Anti-Patterns beim Aufbau interner Plattformen.</p>
+                     </div>
+                  </div>
+                  <div class="module-item">
+                     <span class="module-week">Woche 2</span>
+                     <div>
+                        <h3>Developer Portal und Service Catalog</h3>
+                        <p>Backstage-Konzepte, Ownership, TechDocs, Templates und ein sinnvoller Einstieg in die Portal-Struktur.</p>
+                     </div>
+                  </div>
+                  <div class="module-item">
+                     <span class="module-week">Woche 3</span>
+                     <div>
+                        <h3>Golden Paths und Automatisierung</h3>
+                        <p>Blueprints für Services, Repository-Strukturen, CI/CD, Infrastruktur-Provisionierung und GitOps-Workflows.</p>
+                     </div>
+                  </div>
+                  <div class="module-item">
+                     <span class="module-week">Woche 4</span>
+                     <div>
+                        <h3>Kubernetes und Runtime Platform</h3>
+                        <p>Namespaces, Deployments, Ingress, Secrets, Observability und produktionsnahe Betriebsstandards.</p>
+                     </div>
+                  </div>
+                  <div class="module-item">
+                     <span class="module-week">Woche 5</span>
+                     <div>
+                        <h3>Security, Compliance und Kostenkontrolle</h3>
+                        <p>Policy-as-Code, Guardrails, Auditierbarkeit, FinOps-Grundlagen und sichere Self-Service-Modelle.</p>
+                     </div>
+                  </div>
+                  <div class="module-item">
+                     <span class="module-week">Woche 6</span>
+                     <div>
+                        <h3>Roadmap und Rollout</h3>
+                        <p>Adoption-Strategie, Feedback-Loops, interne Kommunikation, Plattform-Metriken und kontinuierliche Verbesserung.</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+
+         <section class="ns-section" id="weiterlernen">
+            <div class="container">
+               <div class="section-heading ns-section-heading">
+                  <span class="ns-tag" data-i18n="ns-tag">WEITERLERNEN</span>
+                  <h2 class="ns-heading" data-i18n="ns-title">Passende nächste Schritte</h2>
+                  <p class="ns-sub" data-i18n="ns-sub">Vertiefen Sie Ihr Wissen mit den passenden Ressourcen — von Terraform bis KI-Strategie.</p>
+               </div>
+               <div class="row g-4">
+
+                  <!-- Card 1: Infrastructure as Code -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                     <a class="ns-card" href="../free-courses/infrastructure-as-code.html">
+                        <div class="ns-card-img">
+                           <img src="../assets/images/courses/card-iac.svg" alt="Infrastructure as Code">
+                           <div class="ns-card-badge" data-i18n="ns-badge-article">ARTIKEL</div>
+                        </div>
+                        <div class="ns-card-body">
+                           <div class="ns-card-meta"><i class="fas fa-code"></i> <span data-i18n="ns-meta-iac">Terraform · Ansible · Cloud</span></div>
+                           <h3 data-i18n="ns-title-iac">Infrastructure as Code</h3>
+                           <p data-i18n="ns-desc-iac">Terraform, Module, Remote State und reproduzierbare Cloud-Infrastruktur — von Grund auf verstehen.</p>
+                           <div class="ns-card-cta"><span data-i18n="ns-read">Jetzt lesen</span> <i class="fas fa-arrow-right"></i></div>
+                        </div>
+                     </a>
+                  </div>
+
+                  <!-- Card 2: Platform Engineering & DevOps -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                     <a class="ns-card" href="../free-courses/platform-engineering-devops.html">
+                        <div class="ns-card-img">
+                           <img src="../assets/images/courses/card-pe-devops.svg" alt="Platform Engineering und DevOps">
+                           <div class="ns-card-badge" data-i18n="ns-badge-article">ARTIKEL</div>
+                        </div>
+                        <div class="ns-card-body">
+                           <div class="ns-card-meta"><i class="fas fa-layer-group"></i> <span data-i18n="ns-meta-pe">IDP · GitOps · Culture</span></div>
+                           <h3 data-i18n="ns-title-pe">Platform Engineering &amp; DevOps</h3>
+                           <p data-i18n="ns-desc-pe">DevOps-Kultur, Plattformteams und GitOps im Vergleich — was hängt wie zusammen?</p>
+                           <div class="ns-card-cta"><span data-i18n="ns-read">Jetzt lesen</span> <i class="fas fa-arrow-right"></i></div>
+                        </div>
+                     </a>
+                  </div>
+
+                  <!-- Card 3: AI Consulting -->
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                     <a class="ns-card" href="../ai-consulting.html">
+                        <div class="ns-card-img">
+                           <img src="../assets/images/courses/card-consulting.svg" alt="AI Consulting">
+                           <div class="ns-card-badge ns-card-badge--gold" data-i18n="ns-badge-consult">BERATUNG</div>
+                        </div>
+                        <div class="ns-card-body">
+                           <div class="ns-card-meta"><i class="fas fa-robot"></i> <span data-i18n="ns-meta-ai">KI-Strategie · Infrastruktur · Roadmap</span></div>
+                           <h3 data-i18n="ns-title-ai">AI Infrastructure Consulting</h3>
+                           <p data-i18n="ns-desc-ai">Wie baut Ihr Team eine produktionsreife KI-Plattform auf der Infrastruktur, die Sie bereits kennen?</p>
+                           <div class="ns-card-cta ns-card-cta--gold"><span data-i18n="ns-consult">Beratung anfragen</span> <i class="fas fa-arrow-right"></i></div>
+                        </div>
+                     </a>
+                  </div>
+
+               </div>
+            </div>
+         </section>
+
+
+         <section class="final-cta">
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-8 col-lg-9 col-md-12 col-sm-12 col-12">
+                     <h2>Bereit für die vollständige Lernreise?</h2>
+                     <p>Starten Sie mit der freigeschalteten Vorschau, vergleichen Sie passende Kurse und nutzen Sie die Plattform, um Platform Engineering Schritt für Schritt aufzubauen.</p>
+                     <div class="preview-actions">
+                        <a href="#kursinhalt" class="theme-btn">Vorschau weiter lesen</a>
+                        <a href="../courses/courses.html" class="theme-btn btn-ghost">Alle Kurse ansehen</a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+
+         <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../index.html">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../laboratoire.html">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="../courses/courses.html">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../blog.html">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../event.html">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../about.html">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../faq.html">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="../contact.html">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p>Copyright &copy; 2026 <a href="../index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+      </div>
+
+      <script src="../assets/js/jquery.min.js"></script>
+      <script src="../assets/js/bootstrap.min.js"></script>
+      <script src="../assets/js/jquery.fancybox.min.js"></script>
+      <script src="../assets/js/owl.carousel.min.js"></script>
+      <script src="../assets/js/isotope.pkgd.min.js"></script>
+      <script src="../assets/js/wow.min.js"></script>
+      <script src="../assets/js/custom.js"></script>
+
+      <!-- i18n Language Switcher -->
+      <script>
+      var i18n = {
+        de: {
+          'nav-home': 'Startseite', 'nav-courses': 'Kurse', 'nav-lab': 'Laboratoire',
+          'nav-events': 'Veranstaltungen', 'nav-about-me': 'Über mich',
+          'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Kontakt',
+          'nav-about': 'Über uns', 'nav-faq': 'Häufige Fragen', 'nav-support': 'Support', 'nav-login': 'Anmelden / Registrieren',
+          'ns-tag': 'WEITERLERNEN',
+          'ns-title': 'Passende nächste Schritte',
+          'ns-sub': 'Vertiefen Sie Ihr Wissen mit den passenden Ressourcen — von Terraform bis KI-Strategie.',
+          'ns-badge-article': 'ARTIKEL', 'ns-badge-consult': 'BERATUNG',
+          'ns-meta-iac': 'Terraform · Ansible · Cloud',
+          'ns-title-iac': 'Infrastructure as Code',
+          'ns-desc-iac': 'Terraform, Module, Remote State und reproduzierbare Cloud-Infrastruktur — von Grund auf verstehen.',
+          'ns-meta-pe': 'IDP · GitOps · Culture',
+          'ns-title-pe': 'Platform Engineering & DevOps',
+          'ns-desc-pe': 'DevOps-Kultur, Plattformteams und GitOps im Vergleich — was hängt wie zusammen?',
+          'ns-meta-ai': 'KI-Strategie · Infrastruktur · Roadmap',
+          'ns-title-ai': 'AI Infrastructure Consulting',
+          'ns-desc-ai': 'Wie baut Ihr Team eine produktionsreife KI-Plattform auf der Infrastruktur, die Sie bereits kennen?',
+          'ns-read': 'Jetzt lesen', 'ns-consult': 'Beratung anfragen'
+        },
+        fr: {
+          'nav-home': 'Accueil', 'nav-courses': 'Cours', 'nav-lab': 'Laboratoire',
+          'nav-events': 'Événements', 'nav-about-me': 'À propos de moi',
+          'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+          'nav-about': 'À propos', 'nav-faq': 'FAQ', 'nav-support': 'Support', 'nav-login': "Se connecter / S'inscrire",
+          'ns-tag': 'CONTINUER',
+          'ns-title': 'Prochaines étapes recommandées',
+          'ns-sub': 'Approfondissez vos connaissances avec les ressources adaptées — de Terraform à la stratégie IA.',
+          'ns-badge-article': 'ARTICLE', 'ns-badge-consult': 'CONSEIL',
+          'ns-meta-iac': 'Terraform · Ansible · Cloud',
+          'ns-title-iac': 'Infrastructure as Code',
+          'ns-desc-iac': 'Terraform, modules, Remote State et infrastructure cloud reproductible — comprendre depuis la base.',
+          'ns-meta-pe': 'IDP · GitOps · Culture',
+          'ns-title-pe': 'Platform Engineering & DevOps',
+          'ns-desc-pe': 'Culture DevOps, équipes platform et GitOps comparés — comment tout s\'articule-t-il ?',
+          'ns-meta-ai': 'Stratégie IA · Infrastructure · Roadmap',
+          'ns-title-ai': 'AI Infrastructure Consulting',
+          'ns-desc-ai': 'Comment votre équipe peut-elle construire une plateforme IA production-ready sur l\'infrastructure qu\'elle connaît déjà ?',
+          'ns-read': 'Lire maintenant', 'ns-consult': 'Demander un conseil'
+        },
+        en: {
+          'nav-home': 'Home', 'nav-courses': 'Courses', 'nav-lab': 'Laboratoire',
+          'nav-events': 'Events', 'nav-about-me': 'About Me',
+          'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+          'nav-about': 'About Us', 'nav-faq': 'FAQ', 'nav-support': 'Support', 'nav-login': 'Login / Register',
+          'ns-tag': 'KEEP LEARNING',
+          'ns-title': 'Recommended Next Steps',
+          'ns-sub': 'Deepen your knowledge with the right resources — from Terraform to AI strategy.',
+          'ns-badge-article': 'ARTICLE', 'ns-badge-consult': 'CONSULTING',
+          'ns-meta-iac': 'Terraform · Ansible · Cloud',
+          'ns-title-iac': 'Infrastructure as Code',
+          'ns-desc-iac': 'Terraform, modules, Remote State and reproducible cloud infrastructure — understand from the ground up.',
+          'ns-meta-pe': 'IDP · GitOps · Culture',
+          'ns-title-pe': 'Platform Engineering & DevOps',
+          'ns-desc-pe': 'DevOps culture, platform teams and GitOps compared — how does it all fit together?',
+          'ns-meta-ai': 'AI Strategy · Infrastructure · Roadmap',
+          'ns-title-ai': 'AI Infrastructure Consulting',
+          'ns-desc-ai': 'How can your team build a production-ready AI platform on the infrastructure you already know?',
+          'ns-read': 'Read now', 'ns-consult': 'Request consulting'
+        }
+      };
+
+      function setLanguage(lang) {
+        if (!i18n[lang]) return;
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+          var key = el.getAttribute('data-i18n');
+          if (i18n[lang][key] !== undefined) { el.textContent = i18n[lang][key]; }
+        });
+        document.querySelectorAll('.lang-btn').forEach(function(btn) {
+          btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+        });
+        document.documentElement.lang = lang;
+        localStorage.setItem('preferred-lang', lang);
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var saved = localStorage.getItem('preferred-lang') || 'de';
+        setLanguage(saved);
+      });
+      </script>
+      <!-- end i18n -->
+   <script src="../assets/js/kontakt-popup.js"></script>
+<script src="../assets/js/announce.js"></script>
+<script src="../assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

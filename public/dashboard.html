@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+  <link rel="shortcut icon" href="assets/images/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Nachrichten</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        .dashboard-container {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+        .dashboard-sidebar {
+            background: #07294d;
+            min-height: 100vh;
+            color: white;
+            padding: 30px 20px;
+        }
+        .dashboard-sidebar .user-info {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 25px;
+        }
+        .dashboard-sidebar .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: #ffc600;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 32px;
+            color: #07294d;
+        }
+        .dashboard-sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 5px 0;
+            transition: all 0.3s;
+            display: block;
+            text-decoration: none;
+        }
+        .dashboard-sidebar .nav-link:hover,
+        .dashboard-sidebar .nav-link.active {
+            background: #ffc600;
+            color: #07294d;
+        }
+        .dashboard-sidebar .nav-link i {
+            width: 25px;
+            margin-right: 10px;
+        }
+        .dashboard-content {
+            padding: 30px;
+        }
+        .message-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .message-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .message-sender {
+            font-weight: bold;
+            color: #07294d;
+        }
+        .message-date {
+            font-size: 12px;
+            color: #999;
+        }
+        .send-message-area {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .btn-send {
+            background: #ffc600;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #07294d;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-send:hover {
+            background: #e6b200;
+        }
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .badge-unread {
+            background: #ff4757;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 10px;
+            color: #999;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .user-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        @media (max-width: 768px) {
+            .dashboard-sidebar {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2">
+                <div class="dashboard-sidebar">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h5 id="userName">Laden...</h5>
+                        <small id="userEmail">-</small>
+                    </div>
+                    
+                    <nav>
+                        <a href="javascript:void(0)" class="nav-link active" data-tab="inbox">
+                            <i class="fas fa-inbox"></i> Posteingang
+                            <span id="unreadBadge" class="badge-unread" style="display: none;">0</span>
+                        </a>
+                        <a href="javascript:void(0)" class="nav-link" data-tab="sent">
+                            <i class="fas fa-paper-plane"></i> Gesendet
+                        </a>
+                        <a href="javascript:void(0)" class="nav-link" data-tab="users">
+                            <i class="fas fa-users"></i> Benutzer
+                        </a>
+                    </nav>
+                    
+                    <button onclick="logout()" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Abmelden
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10">
+                <div class="dashboard-content">
+                    <!-- Send Message Area -->
+                    <div class="send-message-area">
+                        <h5><i class="fas fa-pen-alt"></i> Neue Nachricht senden</h5>
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <select id="recipientSelect" class="user-select">
+                                    <option value="">-- Benutzer auswählen --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8">
+                                <textarea id="messageText" rows="3" placeholder="Nachricht eingeben..."></textarea>
+                            </div>
+                            <div class="col-12 mt-3 text-end">
+                                <button onclick="sendMessage()" class="btn-send">
+                                    <i class="fas fa-paper-plane"></i> Senden
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Posteingang Tab -->
+                    <div id="inboxTab" class="tab-content active">
+                        <h4><i class="fas fa-inbox"></i> Posteingang</h4>
+                        <div id="inboxMessages"></div>
+                    </div>
+                    
+                    <!-- Gesendet Tab -->
+                    <div id="sentTab" class="tab-content">
+                        <h4><i class="fas fa-paper-plane"></i> Gesendete Nachrichten</h4>
+                        <div id="sentMessages"></div>
+                    </div>
+                    
+                    <!-- Benutzer Tab -->
+                    <div id="usersTab" class="tab-content">
+                        <h4><i class="fas fa-users"></i> Alle Benutzer</h4>
+                        <div id="usersList" class="row"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // ============================================
+        // ⚠️ HIER MÜSSEN SIE IHRE FIREBASE-KONFIGURATION EINFÜGEN! ⚠️
+        // ============================================
+        const firebaseConfig = {
+  apiKey: "AIzaSyC3fYlrW38VMCyUOmTgucVu_2xKb4u85GY",
+  authDomain: "platform-engineering-b91c6.firebaseapp.com",
+  projectId: "platform-engineering-b91c6",
+  storageBucket: "platform-engineering-b91c6.firebasestorage.app",
+  messagingSenderId: "823441785848",
+  appId: "1:823441785848:web:bcc28b946d4b58e4240c0d",
+  measurementId: "G-Q93PWNCBSV"
+};
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let currentUser = null;
+        
+        // Tab-Wechsel
+        document.querySelectorAll('[data-tab]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tab = btn.dataset.tab;
+                
+                document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(`${tab}Tab`).classList.add('active');
+                
+                if (tab === 'inbox') loadInbox();
+                if (tab === 'sent') loadSent();
+                if (tab === 'users') loadUsers();
+            });
+        });
+        
+        // Benutzer-Status prüfen
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    document.getElementById('userName').innerText = userDoc.data().name || user.email;
+                    document.getElementById('userEmail').innerText = user.email;
+                } else {
+                    document.getElementById('userName').innerText = user.email;
+                    document.getElementById('userEmail').innerText = user.email;
+                }
+                loadUsers();
+                loadInbox();
+                setupRealtimeListeners();
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+        
+        // Echtzeit-Listener
+        function setupRealtimeListeners() {
+            if (!currentUser) return;
+            const q = query(collection(db, "messages"), where("recipientId", "==", currentUser.uid), orderBy("timestamp", "desc"));
+            onSnapshot(q, () => loadInbox());
+        }
+        
+        // Alle Benutzer laden
+        async function loadUsers() {
+            const usersList = document.getElementById('usersList');
+            usersList.innerHTML = '<div class="empty-state">Lade Benutzer...</div>';
+            const recipientSelect = document.getElementById('recipientSelect');
+            recipientSelect.innerHTML = '<option value="">-- Benutzer auswählen --</option>';
+            
+            try {
+                const usersSnapshot = await getDocs(collection(db, "users"));
+                let usersHtml = '';
+                let hasUsers = false;
+                
+                usersSnapshot.forEach(doc => {
+                    const userData = doc.data();
+                    if (doc.id !== currentUser?.uid) {
+                        hasUsers = true;
+                        const option = document.createElement('option');
+                        option.value = doc.id;
+                        option.textContent = `${userData.name || userData.email}`;
+                        recipientSelect.appendChild(option);
+                        
+                        usersHtml += `
+                            <div class="col-md-4 mb-3">
+                                <div class="message-card">
+                                    <div class="message-header">
+                                        <span class="message-sender"><i class="fas fa-user-circle"></i> ${userData.name || userData.email}</span>
+                                    </div>
+                                    <div class="message-content">
+                                        <small class="text-muted">E-Mail: ${userData.email}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                if (!hasUsers) {
+                    usersList.innerHTML = '<div class="empty-state"><i class="fas fa-users fa-3x mb-3"></i><p>Keine anderen Benutzer gefunden.</p></div>';
+                } else {
+                    usersList.innerHTML = usersHtml;
+                }
+            } catch (error) {
+                usersList.innerHTML = '<div class="empty-state">Fehler beim Laden der Benutzer.</div>';
+            }
+        }
+        
+        // Posteingang laden
+        async function loadInbox() {
+            if (!currentUser) return;
+            const inboxDiv = document.getElementById('inboxMessages');
+            inboxDiv.innerHTML = '<div class="empty-state">Lade Nachrichten...</div>';
+            
+            try {
+                const q = query(collection(db, "messages"), where("recipientId", "==", currentUser.uid), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                const messages = [];
+                
+                for (const docSnapshot of querySnapshot.docs) {
+                    const message = { id: docSnapshot.id, ...docSnapshot.data() };
+                    const senderDoc = await getDoc(doc(db, "users", message.senderId));
+                    message.senderName = senderDoc.exists() ? (senderDoc.data().name || senderDoc.data().email) : message.senderEmail;
+                    messages.push(message);
+                }
+                
+                if (messages.length === 0) {
+                    inboxDiv.innerHTML = '<div class="empty-state"><i class="fas fa-inbox fa-3x mb-3"></i><p>Keine Nachrichten im Posteingang.</p></div>';
+                    document.getElementById('unreadBadge').style.display = 'none';
+                } else {
+                    const unreadCount = messages.filter(m => !m.read).length;
+                    if (unreadCount > 0) {
+                        document.getElementById('unreadBadge').style.display = 'inline-block';
+                        document.getElementById('unreadBadge').innerText = unreadCount;
+                    } else {
+                        document.getElementById('unreadBadge').style.display = 'none';
+                    }
+                    
+                    inboxDiv.innerHTML = '';
+                    messages.forEach(message => {
+                        const date = message.timestamp ? new Date(message.timestamp.toDate()).toLocaleString('de-DE') : 'Unbekannt';
+                        inboxDiv.innerHTML += `
+                            <div class="message-card">
+                                <div class="message-header">
+                                    <span class="message-sender"><i class="fas fa-user"></i> ${escapeHtml(message.senderName)}</span>
+                                    <span class="message-date"><i class="far fa-clock"></i> ${date}</span>
+                                </div>
+                                <div class="message-content">
+                                    <p>${escapeHtml(message.content)}</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (error) {
+                inboxDiv.innerHTML = '<div class="empty-state">Fehler beim Laden der Nachrichten.</div>';
+            }
+        }
+        
+        // Gesendete Nachrichten laden
+        async function loadSent() {
+            if (!currentUser) return;
+            const sentDiv = document.getElementById('sentMessages');
+            sentDiv.innerHTML = '<div class="empty-state">Lade Nachrichten...</div>';
+            
+            try {
+                const q = query(collection(db, "messages"), where("senderId", "==", currentUser.uid), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                const messages = [];
+                
+                for (const docSnapshot of querySnapshot.docs) {
+                    const message = { id: docSnapshot.id, ...docSnapshot.data() };
+                    const recipientDoc = await getDoc(doc(db, "users", message.recipientId));
+                    message.recipientName = recipientDoc.exists() ? (recipientDoc.data().name || recipientDoc.data().email) : message.recipientEmail;
+                    messages.push(message);
+                }
+                
+                if (messages.length === 0) {
+                    sentDiv.innerHTML = '<div class="empty-state"><i class="fas fa-paper-plane fa-3x mb-3"></i><p>Keine gesendeten Nachrichten.</p></div>';
+                } else {
+                    sentDiv.innerHTML = '';
+                    messages.forEach(message => {
+                        const date = message.timestamp ? new Date(message.timestamp.toDate()).toLocaleString('de-DE') : 'Unbekannt';
+                        sentDiv.innerHTML += `
+                            <div class="message-card">
+                                <div class="message-header">
+                                    <span class="message-sender"><i class="fas fa-envelope"></i> An: ${escapeHtml(message.recipientName)}</span>
+                                    <span class="message-date"><i class="far fa-clock"></i> ${date}</span>
+                                </div>
+                                <div class="message-content">
+                                    <p>${escapeHtml(message.content)}</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (error) {
+                sentDiv.innerHTML = '<div class="empty-state">Fehler beim Laden der Nachrichten.</div>';
+            }
+        }
+        
+        // Nachricht senden
+        window.sendMessage = async function() {
+            const recipientId = document.getElementById('recipientSelect').value;
+            const content = document.getElementById('messageText').value.trim();
+            
+            if (!recipientId) {
+                alert('Bitte wählen Sie einen Empfänger aus.');
+                return;
+            }
+            if (!content) {
+                alert('Bitte geben Sie eine Nachricht ein.');
+                return;
+            }
+            
+            try {
+                const recipientDoc = await getDoc(doc(db, "users", recipientId));
+                await addDoc(collection(db, "messages"), {
+                    senderId: currentUser.uid,
+                    senderEmail: currentUser.email,
+                    recipientId: recipientId,
+                    recipientEmail: recipientDoc.exists() ? recipientDoc.data().email : '',
+                    content: content,
+                    timestamp: new Date(),
+                    read: false
+                });
+                
+                document.getElementById('messageText').value = '';
+                document.getElementById('recipientSelect').value = '';
+                alert('✓ Nachricht erfolgreich gesendet!');
+            } catch (error) {
+                alert('Fehler beim Senden der Nachricht: ' + error.message);
+            }
+        };
+        
+        // Abmelden
+        window.logout = async function() {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        };
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+    
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/kontakt-popup.js"></script>
+</body>
+</html>

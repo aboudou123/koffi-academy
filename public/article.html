@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+  <link rel="shortcut icon" href="assets/images/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDP – Schnell, sicher, compliant | Fachartikel</title>
+    
+    <!-- Google Translate API für automatische Übersetzung -->
+    <meta name="google" content="notranslate">
+    
+    <!-- CSS (angepasst an Ihr Design) -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/modern.css">
+
+    <style>
+        .lang-switcher { display:inline-flex; align-items:center; gap:4px; vertical-align:middle; }
+        .lang-btn { background:rgba(7,41,77,0.08); color:#07294d; border:1px solid rgba(7,41,77,0.25); border-radius:5px; padding:3px 9px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.3s; letter-spacing:0.8px; font-family:sans-serif; line-height:1.6; }
+        .lang-btn:hover { background:rgba(255,198,0,0.2); border-color:#ffc600; color:#07294d; }
+        .lang-btn.active { background:#ffc600; border-color:#ffc600; color:#07294d; }
+
+        /* Lock-Overlay für gesperrten Inhalt */
+        .locked-content {
+            position: relative;
+            max-height: 500px;
+            overflow: hidden;
+        }
+        .locked-content::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(transparent, white);
+            pointer-events: none;
+        }
+        .lock-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+        }
+        .lock-badge {
+            background: #07294d;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .lock-badge i {
+            margin-right: 8px;
+            color: #ffc600;
+        }
+        
+        /* Login/Register Modal (Popup) */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .auth-modal.active {
+            display: flex;
+        }
+        .auth-modal-content {
+            background: white;
+            max-width: 450px;
+            width: 90%;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        .close-modal:hover {
+            color: #07294d;
+        }
+        .auth-modal-content h3 {
+            color: #07294d;
+            margin-bottom: 10px;
+        }
+        .auth-modal-content .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .auth-modal-content input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .auth-modal-content button {
+            width: 100%;
+            padding: 12px;
+            background: #ffc600;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .switch-auth {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .switch-auth a {
+            color: #07294d;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Eingeloggter Zustand - voller Artikel sichtbar */
+        .full-content {
+            display: none;
+        }
+        .full-content.visible {
+            display: block;
+        }
+        .locked-container {
+            display: block;
+        }
+        .locked-container.hidden {
+            display: none;
+        }
+        
+        /* User Badge */
+        .user-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #07294d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            z-index: 100;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .user-badge a {
+            color: #ffc600;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .alert-custom {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+
+<!-- User Badge (nur sichtbar wenn eingeloggt) -->
+<div id="userBadge" class="user-badge" style="display: none;">
+    <i class="fas fa-user-circle"></i> <span id="userName">Benutzer</span>
+    <a onclick="logout()"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+</div>
+
+<div class="page-main">
+    <!-- Language Switcher -->
+    <div class="container mt-3" style="text-align: right;">
+        <div class="lang-switcher" role="group" aria-label="Sprache / Language">
+          <button type="button" class="lang-btn active" data-lang="de" onclick="setLanguage('de')">DE</button>
+          <button type="button" class="lang-btn" data-lang="fr" onclick="setLanguage('fr')">FR</button>
+          <button type="button" class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="blog-post">
+                    <!-- Blog Header -->
+                    <div class="blog-post-images">
+                        <img src="assets/images/blog/blog1.jpg" alt="IDP Platform" style="width: 100%; border-radius: 15px;">
+                    </div>
+                    
+                    <!-- GESPERRTER INHALT (nur Teil sichtbar) -->
+                    <div id="lockedContainer" class="locked-container">
+                        <div class="post-content-text">
+                            <div class="news-tag"><a href="blog.html">Technologie</a></div>
+                            <h1>IDP – Schnell, sicher, compliant: Warum Internal Developer Platforms ein Muss in 2026 sind</h1>
+                            <p class="meta">30. April 2026 | Dokumenten-KI / OCR</p>
+                            
+                            <div class="locked-content">
+                                <h2>Der Entwickler-Albtraum in der regulierten Industrie</h2>
+                                <p>Für Unternehmen ist es entscheidend, Software effizient und gleichzeitig sicher zu entwickeln. Das gilt insbesondere in sensiblen Bereichen wie der IT, dem Gesundheitswesen oder der Energiebranche – hier haben Sicherheits- und Compliance-Anforderungen höchste Priorität.</p>
+                                
+                                <p>Stellen Sie sich vor, Sie sind Entwickler bei einem deutschen Energieversorger. Ihr Team soll eine intelligente Lösung entwickeln, die Stromausfälle vorhersagen kann. Die Idee hat großes Potenzial und könnte Ihrem Unternehmen einen klaren Wettbewerbsvorteil verschaffen. Doch die Umsetzung gestaltet sich schwierig: Sie warten wochenlang auf verfügbare Serverkapazitäten, arbeiten mit veralteten Prozessen und sind auf mehrere andere Teams angewiesen, bevor Sie überhaupt mit der eigentlichen Entwicklung beginnen können.</p>
+                                
+                                <h2>Was ist eine Internal Developer Platform?</h2>
+                                <p>Eine <strong>Internal Developer Platform (IDP)</strong> ist eine Plattform für Entwickler. Sie ist vergleichbar mit einem Selbstbedienungsbuffet, bei dem sich Entwickler die ihnen notwendigen Komponenten auswählen können.</p>
+                                
+                                <p>Vor allem für Unternehmen, die strengen Regularien unterliegen, ist eine IDP von unschätzbarem Wert. Sie stellt sicher, dass alle Entwicklungsprozesse die erforderte Sicherheit und Compliance einhalten.</p>
+                                
+                                <!-- HIER WIRD DER INHALT ABGESCHNITTEN -->
+                            </div>
+                            
+                            <div class="lock-overlay">
+                                <div class="lock-badge">
+                                    <i class="fas fa-lock"></i> Vollständiger Artikel gesperrt
+                                </div>
+                                <button class="theme-btn" onclick="showAuthModal()">
+                                    <i class="fas fa-unlock-alt"></i> Jetzt registrieren und weiterlesen
+                                </button>
+                                <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                                    <i class="fas fa-check-circle"></i> Kostenlos registrieren und vollen Zugriff erhalten
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- VOLLSTÄNDIGER INHALT (nur sichtbar nach Login) -->
+                    <div id="fullContent" class="full-content">
+                        <div class="post-content-text">
+                            <div class="news-tag"><a href="blog.html">Technologie</a></div>
+                            <h1>IDP – Schnell, sicher, compliant: Warum Internal Developer Platforms ein Muss in 2026 sind</h1>
+                            <p class="meta">30. April 2026 | Dokumenten-KI / OCR</p>
+                            
+                            <h2>Der Entwickler-Albtraum in der regulierten Industrie</h2>
+                            <p>Für Unternehmen ist es entscheidend, Software effizient und gleichzeitig sicher zu entwickeln. Das gilt insbesondere in sensiblen Bereichen wie der IT, dem Gesundheitswesen oder der Energiebranche – hier haben Sicherheits- und Compliance-Anforderungen höchste Priorität.</p>
+                            <p>Stellen Sie sich vor, Sie sind Entwickler bei einem deutschen Energieversorger. Ihr Team soll eine intelligente Lösung entwickeln, die Stromausfälle vorhersagen kann. Die Idee hat großes Potenzial und könnte Ihrem Unternehmen einen klaren Wettbewerbsvorteil verschaffen. Doch die Umsetzung gestaltet sich schwierig: Sie warten wochenlang auf verfügbare Serverkapazitäten, arbeiten mit veralteten Prozessen und sind auf mehrere andere Teams angewiesen, bevor Sie überhaupt mit der eigentlichen Entwicklung beginnen können. Das Projekt verzögert sich erheblich – und die Konkurrenz ist längst einen Schritt weiter, weil ihre Abläufe schneller und effizienter funktionieren.</p>
+                            
+                            <h2>Was ist eine Internal Developer Platform?</h2>
+                            <p>Eine <strong>Internal Developer Platform (IDP)</strong> ist eine Plattform für Entwickler. Sie ist vergleichbar mit einem Selbstbedienungsbuffet, bei dem sich Entwickler die ihnen notwendigen Komponenten auswählen können. Die IDP integriert eine Vielfalt von Tools und Technologien, wie zum Beispiel <strong>Kubernetes</strong> für Container-Orchestrierung oder <strong>Crossplane</strong> in Verbindung mit <strong>GitOps</strong>, wodurch Infrastrukturen automatisiert in Public oder Private Cloud Umgebungen bereitgestellt werden können.</p>
+                            <p>Vor allem für Unternehmen, die strengen Regularien unterliegen, ist eine IDP von unschätzbarem Wert. Sie stellt sicher, dass alle Entwicklungsprozesse die erforderte Sicherheit und Compliance einhalten, indem Security-Mechanismen in jeden Schritt der Applikationsentwicklung eingebunden sind. In Summe verbindet eine IDP standardisierte und effiziente Entwicklungsprozesse mit bewährten <strong>DevSecOps</strong> Prinzipien.</p>
+                            
+                            <h2>Die Herausforderungen</h2>
+                            <p>Viele Unternehmen, wie Energieversorgungsunternehmen, Krankenhäuser oder Telekommunikationsunternehmen, sind von strengen Regulierungen betroffen. Dies schließt das <strong>IT-Sicherheitsgesetz 2.0</strong> und die <strong>DSGVO</strong> ein, die hohe Anforderungen an Sicherheit und Compliance stellen.</p>
+                            <p>IT-Leiter stehen vor beträchtlichen Herausforderungen: Langsame IT-Prozesse, Exit-Strategie-Probleme, strenge Regulierungen und die Integration von Künstlicher Intelligenz (KI).</p>
+                            
+                            <h2>Fazit: IDP ist ein Muss – und jetzt ist der richtige Zeitpunkt</h2>
+                            <p>In einer Zeit, in der digitale Transformation und technologische Innovationsfähigkeit über den nachhaltigen Erfolg eines Unternehmens entscheiden, ist eine Internal Developer Platform (IDP) kein "Nice-to-have" mehr – sondern von strategischer Wichtigkeit.</p>
+                            <p>Die Zahlen sprechen für sich: Über 55% der befragten Unternehmen befinden sich derzeit erst seit weniger als zwei Jahren auf ihrer IDP-Reise. Es ist keineswegs zu spät, jetzt damit zu starten.</p>
+                            
+                            <div class="cta" style="background: #07294d; color: white; padding: 20px; border-radius: 10px; text-align: center; margin-top: 30px;">
+                                <p>Wenn Sie mehr über die Implementierung einer IDP erfahren möchten oder Unterstützung bei der Einführung suchen, <strong>sprechen Sie uns an.</strong></p>
+                            </div>
+                            
+                            <div class="blog-single-tag">
+                                <a href="blog-detail.html">Internal Developer Platform</a>
+                                <a href="free-courses/platform-engineering-devops.html">DevSecOps</a>
+                                <a href="free-courses/kubernetes.html">Kubernetes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- LOGIN/REGISTER MODAL -->
+<div id="authModal" class="auth-modal">
+    <div class="auth-modal-content">
+        <span class="close-modal" onclick="closeAuthModal()">&times;</span>
+        
+        <div id="loginForm">
+            <h3><i class="fas fa-lock-open"></i> Zugriff auf vollständigen Artikel</h3>
+            <p>Registrieren Sie sich kostenlos, um den gesamten Artikel zu lesen.</p>
+            
+            <div id="modalMessage"></div>
+            
+            <div class="input-group">
+                <input type="email" id="modalEmail" placeholder="E-Mail-Adresse">
+            </div>
+            <div class="input-group">
+                <input type="password" id="modalPassword" placeholder="Passwort">
+            </div>
+            <button onclick="handleLogin()">Anmelden</button>
+            
+            <div class="switch-auth">
+                Neu hier? <a onclick="showRegisterInModal()">Kostenlos registrieren</a>
+            </div>
+        </div>
+        
+        <div id="registerForm" style="display: none;">
+            <h3><i class="fas fa-user-plus"></i> Kostenlose Registrierung</h3>
+            <p>Erstellen Sie ein Konto und lesen Sie den vollständigen Artikel.</p>
+            
+            <div id="registerModalMessage"></div>
+            
+            <div class="input-group">
+                <input type="text" id="modalName" placeholder="Ihr Name">
+            </div>
+            <div class="input-group">
+                <input type="email" id="modalRegEmail" placeholder="E-Mail-Adresse">
+            </div>
+            <div class="input-group">
+                <input type="password" id="modalRegPassword" placeholder="Passwort (min. 6 Zeichen)">
+            </div>
+            <button onclick="handleRegister()">Registrieren</button>
+            
+            <div class="switch-auth">
+                Bereits Kunde? <a onclick="showLoginInModal()">Anmelden</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+    // Firebase Konfiguration (IHRE KONFIGURATION EINFÜGEN)
+    const firebaseConfig = {
+        apiKey: "AIzaSyC3fYlrW38VMCyUOmTgucVu_2xKb4u85GY",
+        authDomain: "platform-engineering-b91c6.firebaseapp.com",
+        projectId: "platform-engineering-b91c6",
+        storageBucket: "platform-engineering-b91c6.firebasestorage.app",
+        messagingSenderId: "823441785848",
+        appId: "1:823441785848:web:bcc28b946d4b58e4240c0d",
+        measurementId: "G-Q93PWNCBSV"
+    };
+    
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    
+    // DOM Elemente
+    const lockedContainer = document.getElementById('lockedContainer');
+    const fullContent = document.getElementById('fullContent');
+    const userBadge = document.getElementById('userBadge');
+    const userNameSpan = document.getElementById('userName');
+    const authModal = document.getElementById('authModal');
+    
+    // Benutzerstatus prüfen
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // Benutzer ist eingeloggt → Vollständigen Artikel anzeigen
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            const name = userDoc.exists() ? userDoc.data().name : user.email;
+            userNameSpan.innerText = name.split(' ')[0];
+            userBadge.style.display = 'block';
+            lockedContainer.classList.add('hidden');
+            fullContent.classList.add('visible');
+            closeAuthModal();
+        } else {
+            // Benutzer nicht eingeloggt → Gesperrten Inhalt anzeigen
+            userBadge.style.display = 'none';
+            lockedContainer.classList.remove('hidden');
+            fullContent.classList.remove('visible');
+        }
+    });
+    
+    // Modal Funktionen (global verfügbar)
+    window.showAuthModal = function() {
+        authModal.classList.add('active');
+    };
+    
+    window.closeAuthModal = function() {
+        authModal.classList.remove('active');
+    };
+    
+    window.handleLogin = async function() {
+        const email = document.getElementById('modalEmail').value;
+        const password = document.getElementById('modalPassword').value;
+        const messageDiv = document.getElementById('modalMessage');
+        
+        if (!email || !password) {
+            messageDiv.innerHTML = '<div class="alert-custom alert-error">❌ Bitte E-Mail und Passwort eingeben.</div>';
+            return;
+        }
+        
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            messageDiv.innerHTML = '<div class="alert-custom alert-success">✅ Anmeldung erfolgreich! Artikel wird geladen...</div>';
+            setTimeout(() => {
+                closeAuthModal();
+            }, 1500);
+        } catch (error) {
+            let message = '';
+            switch(error.code) {
+                case 'auth/user-not-found':
+                    message = '❌ E-Mail nicht gefunden. Bitte registrieren Sie sich.';
+                    break;
+                case 'auth/wrong-password':
+                    message = '❌ Falsches Passwort.';
+                    break;
+                default:
+                    message = '❌ Fehler: ' + error.message;
+            }
+            messageDiv.innerHTML = `<div class="alert-custom alert-error">${message}</div>`;
+        }
+    };
+    
+    window.handleRegister = async function() {
+        const name = document.getElementById('modalName').value;
+        const email = document.getElementById('modalRegEmail').value;
+        const password = document.getElementById('modalRegPassword').value;
+        const messageDiv = document.getElementById('registerModalMessage');
+        
+        if (!name || !email || !password) {
+            messageDiv.innerHTML = '<div class="alert-custom alert-error">❌ Bitte alle Felder ausfüllen.</div>';
+            return;
+        }
+        
+        if (password.length < 6) {
+            messageDiv.innerHTML = '<div class="alert-custom alert-error">❌ Passwort muss mindestens 6 Zeichen lang sein.</div>';
+            return;
+        }
+        
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(db, "users", userCredential.user.uid), {
+                name: name,
+                email: email,
+                createdAt: new Date().toISOString()
+            });
+            messageDiv.innerHTML = '<div class="alert-custom alert-success">✅ Registrierung erfolgreich! Sie werden eingeloggt...</div>';
+            setTimeout(() => {
+                closeAuthModal();
+            }, 1500);
+        } catch (error) {
+            let message = '';
+            switch(error.code) {
+                case 'auth/email-already-in-use':
+                    message = '❌ Diese E-Mail wird bereits verwendet.';
+                    break;
+                default:
+                    message = '❌ Fehler: ' + error.message;
+            }
+            messageDiv.innerHTML = `<div class="alert-custom alert-error">${message}</div>`;
+        }
+    };
+    
+    window.showRegisterInModal = function() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+        document.getElementById('modalMessage').innerHTML = '';
+        document.getElementById('registerModalMessage').innerHTML = '';
+    };
+    
+    window.showLoginInModal = function() {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('modalMessage').innerHTML = '';
+        document.getElementById('registerModalMessage').innerHTML = '';
+    };
+    
+    window.logout = async function() {
+        await signOut(auth);
+    };
+    
+    // Modal schließen wenn außerhalb geklickt wird
+    window.onclick = function(event) {
+        if (event.target === authModal) {
+            closeAuthModal();
+        }
+    };
+</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/wow.min.js"></script>
+<script>
+    new WOW().init();
+</script>
+
+<!-- i18n Language Switcher -->
+<script>
+var i18n = {
+  de: {
+    'header-msg': 'Online-Bildungskurse — Millionen von Menschen lernen!',
+    'nav-home': 'Startseite', 'nav-courses': 'Kurse',
+    'nav-events': 'Veranstaltungen', 'nav-about-me': 'Über mich',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Kontakt',
+    'nav-about': 'Über uns', 'nav-support': 'Support',
+    'nav-login': 'Anmelden / Registrieren'
+  },
+  fr: {
+    'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
+    'nav-home': 'Accueil', 'nav-courses': 'Cours',
+    'nav-events': 'Événements', 'nav-about-me': 'À propos de moi',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+    'nav-about': 'À propos', 'nav-support': 'Support',
+    'nav-login': 'Se connecter / S\'inscrire'
+  },
+  en: {
+    'header-msg': 'Online Courses — Millions of people are learning!',
+    'nav-home': 'Home', 'nav-courses': 'Courses',
+    'nav-events': 'Events', 'nav-about-me': 'About Me',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+    'nav-about': 'About Us', 'nav-support': 'Support',
+    'nav-login': 'Login / Register'
+  }
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) { el.textContent = i18n[lang][key]; }
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+});
+</script>
+<!-- end i18n -->
+
+<script src="assets/js/kontakt-popup.js"></script>
+</body>
+</html>

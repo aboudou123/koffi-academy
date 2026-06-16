@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Culture | Koffi Academy</title>
+  <meta name="description" content="Culture bei Koffi Academy: ein eigener Bereich für Integration, deutsche Gesellschaft und Einbürgerungstest-Vorbereitung.">
+  <meta name="theme-color" content="#06243a">
+  <link rel="shortcut icon" href="assets/images/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/modern.css">
+  <link rel="stylesheet" href="assets/css/modern-header.css">
+  <style>
+    :root{--culture-navy:#06243a;--culture-wine:#6f1e34;--culture-gold:#f2c94c;--culture-green:#1f9d68;--culture-bg:#f6f8fb;--culture-text:#102033;--culture-muted:#5c6b7d;--culture-border:#dce5ee}
+    body{background:var(--culture-bg);color:var(--culture-text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+    .culture-wrap{width:min(1120px,calc(100% - 32px));margin:0 auto}
+    .culture-hero{position:relative;min-height:520px;display:flex;align-items:center;overflow:hidden;color:#fff;background:#061f3c}
+    .culture-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,36,58,.94),rgba(6,36,58,.74) 46%,rgba(6,36,58,.18)),url("assets/images/einbuergerung-passport-training.png");background-size:cover;background-position:center right}
+    .culture-hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:42px 42px;opacity:.35}
+    .culture-hero__content{position:relative;z-index:1;max-width:690px;padding:76px 0 84px}
+    .culture-kicker{margin:0 0 13px;color:#f2c94c;font-size:12px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}
+    .culture-hero h1{margin:0 0 18px;color:#fff;font-size:4.5rem;line-height:1.02;font-weight:900;letter-spacing:0}
+    .culture-hero p{max-width:610px;margin:0 0 28px;color:rgba(255,255,255,.84);font-size:1.08rem;line-height:1.68}
+    .culture-actions{display:flex;flex-wrap:wrap;gap:12px}
+    .culture-btn{min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:8px;padding:12px 18px;font-weight:850;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,color .18s ease}
+    .culture-btn:hover{transform:translateY(-2px);text-decoration:none}
+    .culture-btn--primary{background:linear-gradient(135deg,#f2c94c,#f89035);color:#082236;box-shadow:0 14px 28px rgba(248,144,53,.26)}
+    .culture-btn--primary:hover{color:#082236}
+    .culture-btn--ghost{border:1px solid rgba(255,255,255,.36);color:#fff;background:rgba(255,255,255,.06)}
+    .culture-btn--ghost:hover{color:#fff;background:rgba(255,255,255,.12)}
+    .culture-band{background:#fff;border-bottom:1px solid var(--culture-border)}
+    .culture-band__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--culture-border)}
+    .culture-stat{background:#fff;padding:24px 18px}
+    .culture-stat strong{display:block;color:var(--culture-navy);font-size:26px;font-weight:900;line-height:1}
+    .culture-stat span{display:block;margin-top:8px;color:var(--culture-muted);font-size:13px;line-height:1.4}
+    .culture-section{padding:70px 0}
+    .culture-head{max-width:690px;margin:0 auto 34px;text-align:center}
+    .culture-head h2{margin:0 0 12px;color:var(--culture-navy);font-size:2.35rem;font-weight:900;letter-spacing:0}
+    .culture-head p{margin:0;color:var(--culture-muted);font-size:1rem;line-height:1.65}
+    .culture-feature{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:34px;align-items:stretch}
+    .culture-image{min-height:420px;border-radius:8px;overflow:hidden;background:#102033}
+    .culture-image img{width:100%;height:100%;object-fit:cover;display:block}
+    .culture-panel{border:1px solid var(--culture-border);border-radius:8px;background:#fff;padding:34px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 14px 34px rgba(6,36,58,.08)}
+    .culture-pill{display:inline-flex;align-items:center;gap:7px;width:max-content;margin-bottom:18px;border-radius:999px;background:#fff4d4;color:#4d3210;padding:7px 12px;font-size:12px;font-weight:850}
+    .culture-panel h3{margin:0 0 12px;color:var(--culture-navy);font-size:2rem;font-weight:900;letter-spacing:0}
+    .culture-panel p{margin:0 0 22px;color:var(--culture-muted);font-size:15.5px;line-height:1.72}
+    .culture-list{display:grid;gap:10px;margin:0 0 26px;padding:0;list-style:none}
+    .culture-list li{display:flex;gap:10px;align-items:flex-start;color:#26364a;font-size:14.5px;line-height:1.45}
+    .culture-list i{color:var(--culture-green);margin-top:3px}
+    .culture-note{margin-top:28px;border:1px solid rgba(111,30,52,.18);background:#fff;border-radius:8px;padding:18px;display:flex;gap:14px;align-items:flex-start}
+    .culture-note i{color:var(--culture-wine);font-size:20px;margin-top:2px}
+    .culture-note p{margin:0;color:var(--culture-muted);line-height:1.58}
+    .culture-footer{background:#061f3c;color:rgba(255,255,255,.66);padding:34px 0;text-align:center}
+    .culture-footer a{color:#f2c94c;text-decoration:none}
+    .kl-drop{position:relative;flex-shrink:0}
+    .kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+    .kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+    .kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+    .kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+    .kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+    .kl-drop.open .kl-caret{transform:rotate(180deg)}
+    .kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+    .kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+    .kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+    .kl-opt:hover{background:rgba(255,255,255,.08)}
+    .kl-opt.kl-on{background:rgba(255,198,0,.15)}
+    .kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+    .kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+    .kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+    @media(max-width:900px){.culture-hero{min-height:auto}.culture-hero h1{font-size:3.2rem}.culture-hero::before{background:linear-gradient(180deg,rgba(6,36,58,.92),rgba(6,36,58,.78)),url("assets/images/einbuergerung-passport-training.png");background-size:cover;background-position:center}.culture-band__grid{grid-template-columns:repeat(2,1fr)}.culture-feature{grid-template-columns:1fr}.culture-image{min-height:320px}}
+    @media(max-width:560px){.culture-hero h1{font-size:2.55rem}.culture-head h2{font-size:1.85rem}.culture-panel h3{font-size:1.6rem}.culture-actions .culture-btn{width:100%}.culture-band__grid{grid-template-columns:1fr}.culture-panel{padding:24px}.culture-section{padding:50px 0}}
+  </style>
+</head>
+<body>
+  <div class="page-main">
+    <header class="kh">
+      <div class="kh__in">
+        <a class="kh__brand" href="index.html">
+          <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+          <span class="kh__name">Koffi Academy</span>
+        </a>
+        <nav class="kh__nav">
+          <a href="index.html" data-i18n="navHome">Startseite</a>
+          <span class="kh__drop"><span class="kh__droplabel" data-i18n="navCourses">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="laboratoire.html" data-i18n="navLab">Labore</a><a href="courses/courses.html" data-i18n="navCatalog">Kurskatalog</a></span></span>
+          <a href="blog.html" data-i18n="navBlog">Blog</a>
+          <a href="culture.html" class="active" data-i18n="navCulture">Kultur</a>
+          <a href="koffi-profile.html" data-i18n="navAbout">Über mich</a>
+          <span class="kh__auth"><a class="kh__login" href="login.html" data-i18n="navLogin">Anmelden</a><a class="kh__btn" href="register.html" data-i18n="navRegister">Registrieren</a></span>
+        </nav>
+        <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="culture-hero">
+        <div class="culture-wrap">
+          <div class="culture-hero__content">
+            <p class="culture-kicker" data-i18n="heroKicker">Koffi Academy · Kultur & Integration</p>
+            <h1 data-i18n="heroTitle">Kultur</h1>
+            <p data-i18n="heroLead">Ein eigener Bereich für gesellschaftliches Wissen, Integration und Orientierung in Deutschland. Hier steht nicht Cloud, DevOps oder Platform Engineering im Mittelpunkt, sondern das, was Menschen im Alltag und auf dem Weg zur Einbürgerung wirklich brauchen.</p>
+            <div class="culture-actions">
+              <a class="culture-btn culture-btn--primary" href="culture/einbuergerungstest.html"><i class="fa-solid fa-play"></i> <span data-i18n="heroPrimary">Einbürgerungstest starten</span></a>
+              <a class="culture-btn culture-btn--ghost" href="#einbuergerungstest"><i class="fa-solid fa-circle-info"></i> <span data-i18n="heroSecondary">Bereich ansehen</span></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="culture-band" aria-label="Culture Kennzahlen">
+        <div class="culture-wrap">
+          <div class="culture-band__grid">
+            <div class="culture-stat"><strong>296</strong><span data-i18n="statQuestions">Fragen im Browser-Trainer</span></div>
+            <div class="culture-stat"><strong>33</strong><span data-i18n="statExam">Fragen im Prüfungsmodus</span></div>
+            <div class="culture-stat"><strong>3</strong><span data-i18n="statLang">Sprachen: Deutsch, Französisch, Englisch</span></div>
+            <div class="culture-stat"><strong>0</strong><span data-i18n="statBackend">Backend nötig, Fortschritt lokal gespeichert</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="culture-section" id="einbuergerungstest">
+        <div class="culture-wrap">
+          <div class="culture-head">
+            <p class="culture-kicker" data-i18n="sectionKicker">Vorbereitung mit Struktur</p>
+            <h2 data-i18n="sectionTitle">Einbürgerungstest Training</h2>
+            <p data-i18n="sectionLead">Der Trainer bekommt hier seinen eigenen Platz, weil er fachlich nicht in den technischen Kurskatalog gehört. Er ist ein Kultur-Tool: Prüfungsvorbereitung, Orientierung und Wiederholung in einer fokussierten Oberfläche.</p>
+          </div>
+          <div class="culture-feature">
+            <figure class="culture-image">
+              <img src="assets/images/einbuergerung-passport-training.png" alt="Einbürgerungstest Training Illustration">
+            </figure>
+            <article class="culture-panel">
+              <span class="culture-pill"><i class="fa-solid fa-passport"></i> <span data-i18n="panelPill">Kultur-Tool</span></span>
+              <h3 data-i18n="panelTitle">Lernen, wiederholen, Prüfung simulieren</h3>
+              <p data-i18n="panelLead">Ein strukturierter Browser-Trainer für den deutschen Einbürgerungstest mit Lernmodus, Prüfungsmodus, Favoriten, Fehlerwiederholung und lokal gespeichertem Fortschritt.</p>
+              <ul class="culture-list">
+                <li><i class="fa-solid fa-check"></i><span data-i18n="panelL1">Offizielle Themenfelder klar gegliedert und filterbar.</span></li>
+                <li><i class="fa-solid fa-check"></i><span data-i18n="panelL2">Prüfungsmodus mit Timer und direkter Auswertung.</span></li>
+                <li><i class="fa-solid fa-check"></i><span data-i18n="panelL3">Gezielte Wiederholung von Fehlern, schwierigen Fragen und Favoriten.</span></li>
+                <li><i class="fa-solid fa-check"></i><span data-i18n="panelL4">Mehrsprachige Oberfläche für Deutsch, Französisch und Englisch.</span></li>
+              </ul>
+              <a class="culture-btn culture-btn--primary" href="culture/einbuergerungstest.html"><i class="fa-solid fa-arrow-right"></i> <span data-i18n="panelButton">Zum Training</span></a>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="culture-footer">
+      <div class="culture-wrap">
+        <p data-i18n-html="footerCopy">Copyright &copy; 2026 <a href="index.html">Koffi Academy</a> · <a href="culture/einbuergerungstest.html">Einbürgerungstest Training</a></p>
+      </div>
+    </footer>
+  </div>
+  <script>
+    var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+    var I18N_CULTURE={
+      de:{
+        navHome:"Startseite",navCourses:"Kurse",navLab:"Labore",navCatalog:"Kurskatalog",navBlog:"Blog",navCulture:"Kultur",navAbout:"Über mich",navLogin:"Anmelden",navRegister:"Registrieren",
+        heroKicker:"Koffi Academy · Kultur & Integration",heroTitle:"Kultur",heroLead:"Ein eigener Bereich für gesellschaftliches Wissen, Integration und Orientierung in Deutschland. Hier steht nicht Cloud, DevOps oder Platform Engineering im Mittelpunkt, sondern das, was Menschen im Alltag und auf dem Weg zur Einbürgerung wirklich brauchen.",heroPrimary:"Einbürgerungstest starten",heroSecondary:"Bereich ansehen",
+        statQuestions:"Fragen im Browser-Trainer",statExam:"Fragen im Prüfungsmodus",statLang:"Sprachen: Deutsch, Französisch, Englisch",statBackend:"Backend nötig, Fortschritt lokal gespeichert",
+        sectionKicker:"Vorbereitung mit Struktur",sectionTitle:"Einbürgerungstest Training",sectionLead:"Der Trainer bekommt hier seinen eigenen Platz, weil er fachlich nicht in den technischen Kurskatalog gehört. Er ist ein Kultur-Tool: Prüfungsvorbereitung, Orientierung und Wiederholung in einer fokussierten Oberfläche.",
+        panelPill:"Kultur-Tool",panelTitle:"Lernen, wiederholen, Prüfung simulieren",panelLead:"Ein strukturierter Browser-Trainer für den deutschen Einbürgerungstest mit Lernmodus, Prüfungsmodus, Favoriten, Fehlerwiederholung und lokal gespeichertem Fortschritt.",
+        panelL1:"Offizielle Themenfelder klar gegliedert und filterbar.",panelL2:"Prüfungsmodus mit Timer und direkter Auswertung.",panelL3:"Gezielte Wiederholung von Fehlern, schwierigen Fragen und Favoriten.",panelL4:"Mehrsprachige Oberfläche für Deutsch, Französisch und Englisch.",panelButton:"Zum Training",
+        footerCopy:"Copyright &copy; 2026 <a href=\"index.html\">Koffi Academy</a> · <a href=\"culture/einbuergerungstest.html\">Einbürgerungstest Training</a>"
+      },
+      en:{
+        navHome:"Home",navCourses:"Courses",navLab:"Labs",navCatalog:"Course catalog",navBlog:"Blog",navCulture:"Culture",navAbout:"About me",navLogin:"Login",navRegister:"Register",
+        heroKicker:"Koffi Academy · Culture & Integration",heroTitle:"Culture",heroLead:"A dedicated space for civic knowledge, integration and orientation in Germany. This area is not about Cloud, DevOps or Platform Engineering, but about what people need in everyday life and on the path to naturalization.",heroPrimary:"Start the Einbürgerungstest",heroSecondary:"View section",
+        statQuestions:"questions in the browser trainer",statExam:"questions in exam mode",statLang:"languages: German, French, English",statBackend:"backend required, progress saved locally",
+        sectionKicker:"Structured preparation",sectionTitle:"Einbürgerungstest Training",sectionLead:"The trainer has its own place here because it does not belong in the technical course catalog. It is a Culture tool: exam preparation, orientation and review in a focused interface.",
+        panelPill:"Culture tool",panelTitle:"Learn, review, simulate the exam",panelLead:"A structured browser trainer for the German naturalization test with learning mode, exam mode, favorites, error review and locally saved progress.",
+        panelL1:"Official topic areas are clearly structured and filterable.",panelL2:"Exam mode with timer and direct evaluation.",panelL3:"Targeted review of mistakes, difficult questions and favorites.",panelL4:"Multilingual interface for German, French and English.",panelButton:"Go to training",
+        footerCopy:"Copyright &copy; 2026 <a href=\"index.html\">Koffi Academy</a> · <a href=\"culture/einbuergerungstest.html\">Einbürgerungstest Training</a>"
+      },
+      fr:{
+        navHome:"Accueil",navCourses:"Cours",navLab:"Laboratoires",navCatalog:"Catalogue de cours",navBlog:"Blog",navCulture:"Culture",navAbout:"À propos de moi",navLogin:"Connexion",navRegister:"Inscription",
+        heroKicker:"Koffi Academy · Culture & intégration",heroTitle:"Culture",heroLead:"Un espace dédié aux connaissances civiques, à l'intégration et à l'orientation en Allemagne. Ici, le sujet principal n'est pas le Cloud, le DevOps ou le Platform Engineering, mais ce dont les personnes ont besoin au quotidien et sur le chemin de la naturalisation.",heroPrimary:"Démarrer l'Einbürgerungstest",heroSecondary:"Voir la rubrique",
+        statQuestions:"questions dans le trainer navigateur",statExam:"questions en mode examen",statLang:"langues : allemand, français, anglais",statBackend:"backend requis, progression locale",
+        sectionKicker:"Préparation structurée",sectionTitle:"Training Einbürgerungstest",sectionLead:"Le trainer a sa propre place ici parce qu'il n'appartient pas au catalogue technique. C'est un outil Culture : préparation à l'examen, orientation et répétition dans une interface ciblée.",
+        panelPill:"Outil Culture",panelTitle:"Apprendre, répéter, simuler l'examen",panelLead:"Un trainer navigateur structuré pour l'Einbürgerungstest allemand avec mode apprentissage, mode examen, favoris, répétition des erreurs et progression locale.",
+        panelL1:"Thèmes officiels clairement structurés et filtrables.",panelL2:"Mode examen avec timer et évaluation directe.",panelL3:"Répétition ciblée des erreurs, questions difficiles et favoris.",panelL4:"Interface multilingue en allemand, français et anglais.",panelButton:"Aller au training",
+        footerCopy:"Copyright &copy; 2026 <a href=\"index.html\">Koffi Academy</a> · <a href=\"culture/einbuergerungstest.html\">Training Einbürgerungstest</a>"
+      }
+    };
+    function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+    function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+    function klSync(lang){var m=klMeta[lang];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===lang);});}
+    function setCultureLang(lang){if(!I18N_CULTURE[lang])return;localStorage.setItem('preferred-lang',lang);document.documentElement.lang=lang;var d=I18N_CULTURE[lang];document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(d[k]!==undefined)el.textContent=d[k];});document.querySelectorAll('[data-i18n-html]').forEach(function(el){var k=el.getAttribute('data-i18n-html');if(d[k]!==undefined)el.innerHTML=d[k];});klSync(lang);}
+    function klPick(lang){setCultureLang(lang);klClose();}
+    document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+    document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';setCultureLang(I18N_CULTURE[l]?l:'de');});
+  </script>
+  <script src="assets/js/mobile-nav.js"></script>
+</body>
+</html>

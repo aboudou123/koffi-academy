@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <link rel="stylesheet" href="../assets/css/style.css">
+   <link rel="stylesheet" href="../assets/css/responsive.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <link rel="stylesheet" href="../assets/css/modern.css">
+   <link rel="stylesheet" href="../assets/css/modern-header.css">
+   <link rel="shortcut icon" href="../assets/images/logo.png">
+   <title>HashiCorp Vault 101 | Koffi Academy</title>
+   <meta name="description" content="Vollstandiger Vault-Kurs: Auth-Methoden, Secret Engines, Policies, Dynamic Secrets und Kubernetes-Integration. DE/EN/FR.">
+   <meta name="theme-color" content="#09213d">
+   <style>
+      :root{--go-navy-950:#020c1a;--go-navy-900:#061a30;--go-navy-800:#09213d;--go-navy-700:#12304f;--go-navy-600:#16456f;--go-gold:#d6a02d;--go-gold-soft:#f9d77e;--go-coral:#ef7b4d;--go-blue:#2563eb;--go-green:#047857;--go-red:#b91c1c;--go-amber:#b45309;--go-slate-50:#f8fafc;--go-slate-100:#f1f5f9;--go-slate-200:#e2e8f0;--go-slate-300:#cbd5e1;--go-slate-500:#64748b;--go-slate-600:#475569;--go-slate-700:#334155;--go-slate-800:#1e293b}
+      *{box-sizing:border-box;letter-spacing:0}html{scroll-behavior:smooth}
+      body.go-page{margin:0;background:var(--go-slate-50);color:var(--go-slate-700);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+      .page-main{overflow-x:clip}.go-shell{max-width:1180px;margin:0 auto;padding:0 24px}
+      .go-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:12px 18px;border-radius:8px;border:1px solid transparent;font-weight:800;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,color .18s ease}
+      .go-btn:hover{transform:translateY(-2px);text-decoration:none}
+      .go-btn-primary{background:linear-gradient(135deg,var(--go-gold-soft),var(--go-gold));color:#07294d;box-shadow:0 12px 28px rgba(214,160,45,.30)}
+      .go-btn-primary:hover{color:#07294d;box-shadow:0 16px 34px rgba(214,160,45,.42)}
+      .go-btn-ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.24);color:#fff}
+      .go-btn-ghost:hover{background:rgba(255,255,255,.14);color:#fff}
+      .go-hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#020c1a 0%,#09213d 45%,#12304f 74%,#16456f 100%);color:#fff;padding:86px 0 92px}
+      .go-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:44px 44px;opacity:.55}
+      .go-hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:52px;background:var(--go-slate-50);clip-path:polygon(0 42%,100% 0,100% 100%,0 100%)}
+      .go-hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);gap:42px;align-items:center}
+      .go-kicker{display:inline-flex;align-items:center;gap:9px;margin-bottom:18px;padding:8px 13px;border:1px solid rgba(214,160,45,.45);border-radius:8px;background:rgba(214,160,45,.13);color:#f9d77e;font-size:12px;font-weight:900;text-transform:uppercase}
+      .go-hero h1{font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;color:#fff;font-size:54px;line-height:1.08;font-weight:800;margin:0 0 20px}
+      .go-hero p{font-size:18px;line-height:1.75;color:rgba(255,255,255,.84);max-width:760px;margin:0 0 28px}
+      .go-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:26px}
+      .go-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:840px}
+      .go-meta span{display:flex;align-items:center;gap:9px;min-height:54px;padding:12px 13px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.08);color:#fff;font-size:13px;font-weight:700}
+      .go-meta i{color:var(--go-gold-soft)}
+      .go-visual{position:relative;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(2,12,26,.52);box-shadow:0 28px 70px rgba(0,0,0,.30);overflow:hidden}
+      .go-visual-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06)}
+      .go-dots{display:flex;gap:7px}.go-dots span{width:10px;height:10px;border-radius:50%;background:#94a3b8}
+      .go-dots span:nth-child(1){background:#ef4444}.go-dots span:nth-child(2){background:#f59e0b}.go-dots span:nth-child(3){background:#10b981}
+      .go-visual-head strong{font-family:"JetBrains Mono",Consolas,monospace;color:#cbd5e1;font-size:12px}
+      .go-visual-body{padding:18px}
+      .go-flow{display:grid;grid-template-columns:1fr 28px 1fr;gap:10px;align-items:center;margin-bottom:16px}
+      .go-flow-card{min-height:118px;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:8px;background:rgba(255,255,255,.06)}
+      .go-flow-card i{display:block;color:var(--go-gold-soft);font-size:28px;margin-bottom:12px}
+      .go-flow-card strong{display:block;color:#fff;font-size:15px;margin-bottom:5px}
+      .go-flow-card small{display:block;color:#cbd5e1;line-height:1.45}
+      .go-arrow{display:flex;align-items:center;justify-content:center;color:var(--go-gold-soft);font-size:18px}
+      .go-state{display:grid;gap:10px}
+      .go-state-row{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:11px 12px;border:1px solid rgba(255,255,255,.10);border-radius:8px;background:rgba(255,255,255,.045)}
+      .go-state-row small{font-family:"JetBrains Mono",Consolas,monospace;color:#93c5fd;font-weight:700}
+      .go-state-row strong{color:#fff;font-size:14px}.go-state-row i{color:#10b981}
+      .go-access{position:relative;z-index:2;margin-top:-38px}
+      .go-access-inner{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding:24px 26px;border:1px solid rgba(9,33,61,.08);border-radius:8px;background:#fff;box-shadow:0 18px 48px rgba(9,33,61,.12)}
+      .go-access h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:24px;font-weight:800;margin:0 0 6px}
+      .go-access p{margin:0;color:var(--go-slate-600);line-height:1.65}
+      .go-price-pill{display:inline-flex;align-items:center;gap:9px;padding:11px 14px;border-radius:8px;background:#fffbeb;color:#9a6510;font-weight:900;white-space:nowrap}
+      .go-section{padding:78px 0}.go-section.white{background:#fff}
+      .go-heading{max-width:840px;margin-bottom:34px}
+      .go-heading.center{text-align:center;margin-left:auto;margin-right:auto}
+      .go-heading .eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;color:#9a6510;font-size:12px;font-weight:900;text-transform:uppercase}
+      .go-heading h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:36px;font-weight:800;line-height:1.18;margin:0 0 12px}
+      .go-heading p{color:var(--go-slate-600);font-size:16px;line-height:1.75;margin:0}
+      .go-outcomes{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+      .go-card{height:100%;padding:24px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+      .go-card:hover{transform:translateY(-4px);border-color:rgba(214,160,45,.45);box-shadow:0 16px 42px rgba(9,33,61,.11)}
+      .go-icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin-bottom:16px;border-radius:8px;background:#fffbeb;color:#9a6510;font-size:18px}
+      .go-card h3{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:19px;font-weight:800;margin:0 0 9px}
+      .go-card p{color:var(--go-slate-600);line-height:1.7;margin:0}
+      .go-layout{display:grid;grid-template-columns:282px minmax(0,1fr);gap:28px;align-items:start}
+      .go-sidebar{position:sticky;top:86px;padding:20px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07)}
+      .go-sidebar h3{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:17px;font-weight:800;margin:0 0 14px}
+      .go-sidebar a{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--go-slate-100);color:var(--go-slate-600);font-size:14px;font-weight:700;text-decoration:none}
+      .go-sidebar a:last-child{border-bottom:0}.go-sidebar a:hover{color:#9a6510}.go-sidebar i{width:16px;color:var(--go-gold)}
+      .go-reader{padding:42px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07)}
+      .go-reader section{scroll-margin-top:96px;margin-bottom:56px}
+      .go-reader section:last-child{margin-bottom:0}
+      .go-reader h2,.go-reader h3,.go-reader h4{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-weight:800}
+      .go-reader h2{font-size:31px;line-height:1.2;margin:0 0 16px}
+      .go-reader h3{font-size:23px;margin:30px 0 12px}
+      .go-reader h4{font-size:18px;margin:22px 0 10px}
+      .go-reader p{font-size:16px;line-height:1.86;color:var(--go-slate-700);margin:0 0 16px}
+      .go-reader ul,.go-reader ol{padding:0;margin:0 0 18px}
+      .go-reader li{position:relative;list-style:none;padding-left:29px;margin-bottom:10px;line-height:1.78;color:var(--go-slate-700)}
+      .go-reader li::before{content:"";position:absolute;left:0;top:11px;width:8px;height:8px;border-radius:50%;background:var(--go-gold)}
+      .go-note,.go-warning,.go-rule{margin:24px 0;padding:20px 22px;border-radius:8px;border:1px solid var(--go-slate-200);background:var(--go-slate-50)}
+      .go-note{border-left:4px solid var(--go-blue)}
+      .go-warning{border-left:4px solid var(--go-amber);background:#fffbeb}
+      .go-rule{border-left:4px solid var(--go-green);background:#ecfdf5}
+      .go-note strong,.go-warning strong,.go-rule strong{color:var(--go-navy-800)}
+      .go-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:22px 0}
+      .go-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:22px 0}
+      .go-mini{padding:18px;border:1px solid var(--go-slate-200);border-radius:8px;background:var(--go-slate-50)}
+      .go-mini h4{margin:0 0 8px;font-size:17px}.go-mini p{margin:0;color:var(--go-slate-600);font-size:15px;line-height:1.65}
+      .code-card{margin:20px 0;border-radius:8px;overflow:hidden;border:1px solid #1e293b;background:#0f172a}
+      .code-title{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:#111827;border-bottom:1px solid #1f2937;color:#cbd5e1;font-family:"JetBrains Mono",Consolas,monospace;font-size:12px;font-weight:700}
+      .copy-code{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.18);border-radius:6px;background:rgba(255,255,255,.08);color:#e5e7eb;padding:6px 10px;font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:800;cursor:pointer}
+      .copy-code:hover{background:rgba(255,255,255,.14)}
+      .code-card pre{margin:0;padding:18px;overflow:auto;color:#d1d5db;font-family:"JetBrains Mono",Consolas,monospace;font-size:13px;line-height:1.72}
+      .code-card code{font-family:inherit;color:inherit}
+      .go-inline-code{font-family:"JetBrains Mono",Consolas,monospace;background:var(--go-slate-100);border:1px solid var(--go-slate-200);border-radius:6px;padding:1px 6px;color:var(--go-navy-800)}
+      .go-table-wrap{overflow-x:auto;margin:22px 0;border:1px solid var(--go-slate-200);border-radius:8px}
+      .go-table{width:100%;border-collapse:collapse;background:#fff;min-width:720px}
+      .go-table th{background:#f8fafc;color:var(--go-navy-800);font-weight:900;text-align:left;padding:14px;border-bottom:1px solid var(--go-slate-200)}
+      .go-table td{padding:14px;border-bottom:1px solid var(--go-slate-200);vertical-align:top;line-height:1.65;color:var(--go-slate-700)}
+      .go-table tr:last-child td{border-bottom:0}
+      .go-lab{padding:22px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;margin:18px 0;box-shadow:0 8px 24px rgba(9,33,61,.06)}
+      .go-lab-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+      .go-lab h3{margin:0;font-size:21px}
+      .go-badge{display:inline-flex;align-items:center;gap:7px;border-radius:8px;background:#fffbeb;color:#9a6510;font-size:12px;font-weight:900;padding:7px 10px;white-space:nowrap}
+      .go-checklist{display:grid;gap:10px;margin-top:16px}
+      .go-check{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--go-slate-200);border-radius:8px;background:var(--go-slate-50)}
+      .go-check i{color:var(--go-green);margin-top:4px}.go-check span{line-height:1.6}
+      .go-project{padding:28px;border-radius:8px;background:linear-gradient(135deg,#061a30,#12304f);color:#fff}
+      .go-project h3{color:#fff;margin-top:0}
+      .go-project p,.go-project li{color:rgba(255,255,255,.82)}
+      .go-project li::before{background:var(--go-gold-soft)}
+      .source-list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+      .source-list a{display:flex;align-items:flex-start;gap:10px;padding:16px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;color:var(--go-navy-800);font-weight:800;text-decoration:none}
+      .source-list a:hover{border-color:rgba(214,160,45,.55);color:#9a6510}
+      .source-list i{color:var(--go-gold);margin-top:3px}
+      .go-icon-warn{color:#f59e0b;margin-right:7px}.go-icon-ok{color:#10b981;margin-right:7px}
+      .kh__mark svg{width:62%;height:62%;display:block}
+      .simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0}
+      .simple-footer a{color:rgba(255,255,255,.82);text-decoration:none}
+      .simple-footer a:hover{color:#f9d77e}
+      .simple-footer h3{color:#fff;font-size:13px;font-weight:800;text-transform:uppercase;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(214,160,45,.30)}
+      .simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+      .simple-footer li{font-size:13.5px;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+      .simple-footer li::before{display:none}
+      .simple-footer li i.lead-icon{color:#f9d77e;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+      .sfooter-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding-bottom:36px}
+      .simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+      .simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42)}
+      @media (max-width:1080px){.go-hero-grid,.go-layout{grid-template-columns:1fr}.go-sidebar{position:relative;top:auto}.go-outcomes{grid-template-columns:repeat(2,1fr)}.go-grid-3{grid-template-columns:1fr}}
+      @media (max-width:760px){.go-shell{padding:0 18px}.go-hero{padding:70px 0 82px}.go-hero h1{font-size:38px}.go-hero p{font-size:16px}.go-meta{grid-template-columns:1fr}.go-access-inner{grid-template-columns:1fr}.go-section{padding:58px 0}.go-reader{padding:26px 18px}.go-reader h2{font-size:26px}.go-heading h2{font-size:29px}.go-outcomes,.go-grid-2,.source-list,.sfooter-cols{grid-template-columns:1fr}.go-flow{grid-template-columns:1fr}.go-arrow{transform:rotate(90deg)}.go-state-row{grid-template-columns:1fr}.go-lab-head{flex-direction:column}}
+      .kl-drop{position:relative;flex-shrink:0}
+      .kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+      .kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+      .kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+      .kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+      .kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+      .kl-drop.open .kl-caret{transform:rotate(180deg)}
+      .kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+      .kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+      .kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+      .kl-opt:hover{background:rgba(255,255,255,.08)}.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+      .kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+      .kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+      .kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+      .lang-sect{display:none}.lang-sect.active{display:block}
+   </style>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body class="go-page">
+<div class="page-main">
+   <header class="kh">
+      <div class="kh__in">
+         <a class="kh__brand" href="../index.html">
+            <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+            <span class="kh__name">Koffi Academy</span>
+         </a>
+         <nav class="kh__nav">
+            <a href="../index.html">Startseite</a>
+            <span class="kh__drop"><span class="kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="../laboratoire.html">Laboratoire</a><a href="../courses/courses.html" class="active">Kurskatalog</a></span></span>
+            <a href="../blog.html">Blog</a>
+            <a href="../culture.html">Culture</a>
+            <a href="../koffi-profile.html">&Uuml;ber mich</a>
+            <span class="kh__auth"><a class="kh__login" href="../login.html">Anmelden</a><a class="kh__btn" href="../register.html">Registrieren</a></span>
+         </nav>
+         <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Fran&ccedil;ais</span><span class="kl-opt-code">FR</span></button></div></div>
+      </div>
+   </header>
+
+   <main>
+      <section class="go-hero">
+         <div class="go-shell">
+            <div class="go-hero-grid">
+               <div>
+                  <span class="go-kicker"><i class="fa-solid fa-lock"></i> Secrets Management</span>
+                  <h1 data-i18n="heroTitle">HashiCorp Vault 101</h1>
+                  <p data-i18n="heroSubtitle">Lernen Sie, wie Vault als zentrales Secrets-Management-System Passworter, API-Schlussel, Zertifikate und Dynamic Secrets sicher verwaltet — mit tiefer Kubernetes-Integration.</p>
+                  <div class="go-actions">
+                     <a class="go-btn go-btn-primary" href="#kursbuch"><i class="fa-solid fa-play"></i> <span data-i18n="startBtn">Kurs starten</span></a>
+                     <a class="go-btn go-btn-ghost" href="#labs"><i class="fa-solid fa-flask"></i> <span data-i18n="labsBtn">Praktische Labs</span></a>
+                  </div>
+                  <div class="go-meta">
+                     <span><i class="fa-regular fa-clock"></i> <span data-i18n="duration">2 Wochen</span></span>
+                     <span><i class="fa-solid fa-layer-group"></i> <span data-i18n="modules">7 Module</span></span>
+                     <span><i class="fa-solid fa-terminal"></i> <span data-i18n="labs">5 Labs</span></span>
+                     <span><i class="fa-solid fa-signal"></i> <span data-i18n="level">Mittelstufe</span></span>
+                  </div>
+               </div>
+               <div class="go-visual">
+                  <div class="go-visual-head"><div class="go-dots"><span></span><span></span><span></span></div><strong>vault status</strong></div>
+                  <div class="go-visual-body">
+                     <div class="go-flow">
+                        <div class="go-flow-card"><i class="fa-solid fa-key"></i><strong>Auth Method</strong><small>Kubernetes, GitHub, LDAP — Identity-basierter Zugriff auf alle Secrets.</small></div>
+                        <div class="go-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="go-flow-card"><i class="fa-solid fa-lock"></i><strong>Secret Engine</strong><small>KV, Database, PKI, AWS — dynamische, kurzlebige Credentials.</small></div>
+                     </div>
+                     <div class="go-state">
+                        <div class="go-state-row"><small>sealed</small><strong>false — Vault ist entsperrt</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>ha_mode</small><strong>active (3 Nodes, HA)</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>lease</small><strong>DB creds: 1h TTL, auto-renew</strong><i class="fa-solid fa-check"></i></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <section class="go-access">
+         <div class="go-shell">
+            <div class="go-access-inner">
+               <div>
+                  <h2 data-i18n="accessTitle">Zentrales Secrets Management fur Zero-Trust-Architekturen</h2>
+                  <p data-i18n="accessDesc">Vault ist der Industriestandard fur Secrets Management — von Startups bis zu Fortune-500-Unternehmen mit Tausenden von Services.</p>
+               </div>
+               <span class="go-price-pill"><i class="fa-solid fa-certificate"></i> <span data-i18n="certLabel">Abschlussprojekt inklusive</span></span>
+            </div>
+         </div>
+      </section>
+
+      <section class="go-section white" id="ziele">
+         <div class="go-shell">
+            <div class="go-heading center">
+               <span class="eyebrow"><i class="fa-solid fa-bullseye"></i> <span data-i18n="eyebrowGoals">Lernziele</span></span>
+               <h2 data-i18n="goalsTitle">Was Sie nach diesem Kurs beherrschen</h2>
+               <p data-i18n="goalsDesc">Von Vault-Installation uber Auth-Methoden, Secret Engines und Policies bis hin zur Kubernetes-Integration und Produktion.</p>
+            </div>
+            <div class="go-outcomes">
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-key"></i></span><h3 data-i18n="goal1Title">Auth-Methoden</h3><p data-i18n="goal1Desc">Kubernetes, GitHub, LDAP und AppRole-Authentifizierung konfigurieren und absichern.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-database"></i></span><h3 data-i18n="goal2Title">Secret Engines</h3><p data-i18n="goal2Desc">KV v2, Database, PKI und AWS Secret Engine fur dynamische Credentials einrichten.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-shield-halved"></i></span><h3 data-i18n="goal3Title">Policies &amp; RBAC</h3><p data-i18n="goal3Desc">Feingranulare Zugriffssteuerung mit HCL-Policies: wer darf welche Secrets lesen, schreiben oder rotieren.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-brands fa-docker"></i></span><h3 data-i18n="goal4Title">Kubernetes Integration</h3><p data-i18n="goal4Desc">Vault Agent Injector und Vault Secrets Operator fur nahtlose Secret-Injektion in Pods.</p></article>
+            </div>
+         </div>
+      </section>
+
+      <section class="go-section" id="kursbuch">
+         <div class="go-shell">
+            <div class="go-layout">
+               <aside class="go-sidebar">
+                  <h3 data-i18n="tocTitle">Kursinhalt</h3>
+                  <a href="#intro"><i class="fa-solid fa-circle-info"></i> <span data-i18n="toc0">Was ist Vault?</span></a>
+                  <a href="#modul1"><i class="fa-solid fa-rocket"></i> <span data-i18n="toc1">Modul 1 — Installation</span></a>
+                  <a href="#modul2"><i class="fa-solid fa-key"></i> <span data-i18n="toc2">Modul 2 — Auth-Methoden</span></a>
+                  <a href="#modul3"><i class="fa-solid fa-database"></i> <span data-i18n="toc3">Modul 3 — Secret Engines</span></a>
+                  <a href="#modul4"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="toc4">Modul 4 — Policies</span></a>
+                  <a href="#modul5"><i class="fa-solid fa-rotate"></i> <span data-i18n="toc5">Modul 5 — Dynamic Secrets</span></a>
+                  <a href="#modul6"><i class="fa-brands fa-docker"></i> <span data-i18n="toc6">Modul 6 — Kubernetes</span></a>
+                  <a href="#modul7"><i class="fa-solid fa-server"></i> <span data-i18n="toc7">Modul 7 — Produktion</span></a>
+                  <a href="#labs"><i class="fa-solid fa-flask"></i> <span data-i18n="tocLabs">Praktische Labs</span></a>
+               </aside>
+
+               <div class="go-reader">
+
+                  <!-- INTRO -->
+                  <section id="intro">
+                     <div class="lang-sect active" data-lang="de">
+                        <h2>Was ist HashiCorp Vault?</h2>
+                        <p>HashiCorp Vault ist ein <strong>Secrets-Management-System</strong> zur sicheren Speicherung, dem Zugriff und der Rotation von sensiblen Daten: Passwortern, API-Schlusseln, Datenbank-Credentials, Zertifikaten und Verschlusselungsschlusseln. Vault wurde 2015 von HashiCorp veroffentlicht und ist heute der Industriestandard fur Secrets Management in Cloud-Native-Umgebungen.</p>
+                        <p>Das zentrale Konzept von Vault: Anstatt Secrets fest in Konfigurationsdateien, Umgebungsvariablen oder Code-Repositories zu hardcoden, werden sie zentral in Vault gespeichert. Applikationen authentifizieren sich bei Vault und erhalten kurzlebige, automatisch rotierte Credentials — sogenannte <strong>Dynamic Secrets</strong>.</p>
+                        <div class="go-rule"><strong>Industriestandard:</strong> Vault wird von Unternehmen wie GitHub, Cloudflare, Shopify und Zalando in Produktion eingesetzt. Es ist integriert mit Kubernetes, AWS, Azure, GCP und allen grossen CI/CD-Plattformen.</div>
+                        <h3>Das Problem: Secrets-Sprawl in modernen Architekturen</h3>
+                        <div class="go-grid-2">
+                           <div class="go-mini"><h4><i class="go-icon-warn"></i>Ohne Vault</h4><p>Datenbankpassworter in Umgebungsvariablen, API-Schlussel in .env-Dateien, Zertifikate manuell verwaltet. Secrets leben ewig ohne Rotation. Ein kompromittierter Server gibt alle Secrets preis. Kein Audit-Trail: wer hat wann auf was zugegriffen?</p></div>
+                           <div class="go-mini"><h4><i class="go-icon-ok"></i>Mit Vault</h4><p>Zentrales Secrets-Register mit kurzlebigen Dynamic Credentials. Jede Applikation erhaelt nur Zugriff auf ihre eigenen Secrets. Automatische Rotation: Datenbankpassworter ablaufen nach 1 Stunde. Vollstandiger Audit-Log jedes Zugriffs.</p></div>
+                        </div>
+                        <h3>Vault-Kernkonzepte</h3>
+                        <div class="go-table-wrap"><table class="go-table"><thead><tr><th>Konzept</th><th>Beschreibung</th></tr></thead><tbody>
+                           <tr><td><strong>Auth Method</strong></td><td>Wie authentifiziert sich ein Client? Kubernetes ServiceAccount, GitHub Token, LDAP, AppRole, OIDC, AWS IAM</td></tr>
+                           <tr><td><strong>Secret Engine</strong></td><td>Wo und wie werden Secrets gespeichert? KV (Key-Value), Database, PKI, AWS, Azure, SSH</td></tr>
+                           <tr><td><strong>Policy</strong></td><td>Was darf ein authentifizierter Client? HCL-Regeln: read, write, delete, list auf bestimmten Pfaden</td></tr>
+                           <tr><td><strong>Token</strong></td><td>Das Zugriffs-Token mit TTL, Renewal-Limit und Policy-Binding</td></tr>
+                           <tr><td><strong>Lease</strong></td><td>Zeitbegrenzter Mietvertrag fur Dynamic Secrets: automatisch erneuert oder ablaufend</td></tr>
+                           <tr><td><strong>Seal/Unseal</strong></td><td>Vault startet versiegelt. Zum Entsperren: Shamir Key Shares oder AWS KMS Auto-Unseal</td></tr>
+                        </tbody></table></div>
+                        <h3>Warum Sie Vault beherrschen sollten</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Sicherheits-Compliance:</strong> SOC 2, ISO 27001, PCI DSS und HIPAA fordern zentrales Secrets Management. Vault ist die Standardlosung fur Compliance-Anforderungen.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Zero-Trust-Security:</strong> Vault ist ein Kernbaustein jeder Zero-Trust-Architektur — kurzlebige Credentials, explizite Autorisierung, vollstandiger Audit-Trail.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Kubernetes-Pflicht:</strong> In Kubernetes-Umgebungen ist Vault die Standardwahl fur Secret-Injektion — uber den Vault Agent Injector oder den Vault Secrets Operator.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Karriererelevanz:</strong> Vault-Kenntnisse erscheinen in uber 45% der Senior-DevOps- und Platform-Engineer-Stellenanzeigen.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>HashiCorp-Zertifizierung:</strong> Der HashiCorp Vault Associate ist eine gefragte Zertifizierung im Bereich Security und DevOps.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Kursansatz:</strong> Praktisch von Anfang an — Vault im Dev-Modus, dann Produktionsbetrieb, Auth-Methoden, Secret Engines, Policies und Kubernetes-Integration. Jedes Modul endet mit einem lauffehigen Lab.</div>
+                     </div>
+                     <div class="lang-sect" data-lang="en">
+                        <h2>What is HashiCorp Vault?</h2>
+                        <p>HashiCorp Vault is a <strong>secrets management system</strong> for securely storing, accessing, and rotating sensitive data: passwords, API keys, database credentials, certificates, and encryption keys. Released in 2015 by HashiCorp, it is now the industry standard for secrets management in cloud-native environments.</p>
+                        <p>The core concept: instead of hardcoding secrets in config files, environment variables, or repositories, they are stored centrally in Vault. Applications authenticate to Vault and receive short-lived, automatically rotated credentials — called <strong>Dynamic Secrets</strong>.</p>
+                        <div class="go-rule"><strong>Industry standard:</strong> Vault is used in production by companies like GitHub, Cloudflare, Shopify, and Zalando. It integrates with Kubernetes, AWS, Azure, GCP, and all major CI/CD platforms.</div>
+                        <h3>Why You Should Master Vault</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Security compliance:</strong> SOC 2, ISO 27001, PCI DSS, and HIPAA require centralized secrets management. Vault is the standard solution.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Zero-Trust security:</strong> Vault is a core building block of any Zero Trust architecture — short-lived credentials, explicit authorization, complete audit trail.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Kubernetes essential:</strong> In Kubernetes environments, Vault is the standard choice for secret injection via the Vault Agent Injector or Vault Secrets Operator.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Career relevance:</strong> Vault skills appear in over 45% of senior DevOps and Platform Engineer job postings.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Course approach:</strong> Hands-on from the start — Vault in dev mode, then production, auth methods, secret engines, policies, and Kubernetes integration. Every module ends with a working lab.</div>
+                     </div>
+                     <div class="lang-sect" data-lang="fr">
+                        <h2>Qu'est-ce que HashiCorp Vault ?</h2>
+                        <p>HashiCorp Vault est un <strong>systeme de gestion des secrets</strong> pour stocker, acceder et faire tourner de maniere securisee les donnees sensibles : mots de passe, cles API, credentials de base de donnees, certificats et cles de chiffrement. Lance en 2015 par HashiCorp, c'est aujourd'hui le standard industriel pour la gestion des secrets dans les environnements cloud-native.</p>
+                        <div class="go-rule"><strong>Standard industriel :</strong> Vault est utilise en production par GitHub, Cloudflare, Shopify et Zalando, integre avec Kubernetes, AWS, Azure et GCP.</div>
+                        <h3>Pourquoi maitriser Vault ?</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Conformite securite :</strong> SOC 2, ISO 27001, PCI DSS et HIPAA exigent une gestion centralisee des secrets. Vault est la solution standard.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Zero-Trust :</strong> Vault est un composant central de toute architecture Zero Trust — credentials ephemeres, autorisation explicite, audit complet.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Kubernetes :</strong> Dans les environnements Kubernetes, Vault est le choix standard pour l'injection de secrets via le Vault Agent Injector ou le Vault Secrets Operator.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Approche pedagogique :</strong> Pratique des le debut — Vault en mode dev, puis production, methodes d'auth, moteurs de secrets, policies et integration Kubernetes.</div>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 1 -->
+                  <section id="modul1">
+                     <h2>Modul 1 — Installation &amp; Dev-Modus</h2>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Vault Installation</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># macOS via Homebrew
+brew tap hashicorp/tap
+brew install hashicorp/tap/vault
+
+# Linux (Ubuntu/Debian)
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update &amp;&amp; sudo apt install vault
+
+# Version pruefen
+vault version</code></pre>
+                     </div>
+                     <h3>Vault im Dev-Modus starten</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Dev-Server</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Dev-Server starten (nur fuer Entwicklung/Lernen!)
+vault server -dev
+
+# In neuem Terminal:
+export VAULT_ADDR='http://127.0.0.1:8200'
+export VAULT_TOKEN='root'  # Dev-Token
+
+vault status
+vault secrets list
+vault auth list</code></pre>
+                     </div>
+                     <div class="go-warning"><strong>Dev-Modus:</strong> Der Dev-Modus speichert alle Daten im Arbeitsspeicher — nicht persistent. Beim Neustart sind alle Daten verloren. Nur fur lokales Lernen geeignet, niemals fur Produktion.</div>
+                     <div class="go-lab" id="labs">
+                        <div class="go-lab-head"><h3>Lab 1.1 — Erste Vault-Operationen</h3><span class="go-badge"><i class="fa-solid fa-flask"></i> Hands-On</span></div>
+                        <p>Starten Sie Vault im Dev-Modus, schreiben und lesen Sie Secrets mit der CLI und der Web-UI.</p>
+                        <ul>
+                           <li>Vault installieren und im Dev-Modus starten</li>
+                           <li>Secret mit <code class="go-inline-code">vault kv put</code> schreiben und mit <code class="go-inline-code">vault kv get</code> lesen</li>
+                           <li>Vault-UI unter http://localhost:8200 erkunden</li>
+                        </ul>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 2 -->
+                  <section id="modul2">
+                     <h2>Modul 2 — Authentifizierungsmethoden</h2>
+                     <p>Auth-Methoden definieren, wie sich Clients bei Vault identifizieren. Jede Auth-Methode gibt nach erfolgreicher Authentifizierung ein Token mit einer oder mehreren Policies zuruck.</p>
+                     <h3>AppRole — Service-zu-Service-Authentifizierung</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — AppRole konfigurieren</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># AppRole Auth-Methode aktivieren
+vault auth enable approle
+
+# AppRole erstellen
+vault write auth/approle/role/meine-app \
+  token_policies="meine-app-policy" \
+  token_ttl=1h \
+  token_max_ttl=4h \
+  secret_id_ttl=10m \
+  secret_id_num_uses=40
+
+# RoleID und SecretID abrufen
+vault read auth/approle/role/meine-app/role-id
+vault write -f auth/approle/role/meine-app/secret-id
+
+# Mit AppRole einloggen
+vault write auth/approle/login \
+  role_id="..." \
+  secret_id="..."</code></pre>
+                     </div>
+                     <h3>Kubernetes-Authentifizierung</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Kubernetes Auth einrichten</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Kubernetes Auth aktivieren
+vault auth enable kubernetes
+
+# Vault konfigurieren (aus dem Kubernetes-Cluster heraus)
+vault write auth/kubernetes/config \
+  kubernetes_host="https://kubernetes.default.svc" \
+  kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+# Rolle erstellen: Kubernetes ServiceAccount auf Vault-Policy mappen
+vault write auth/kubernetes/role/meine-app \
+  bound_service_account_names=meine-app-sa \
+  bound_service_account_namespaces=production \
+  policies=meine-app-policy \
+  ttl=1h</code></pre>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 3 -->
+                  <section id="modul3">
+                     <h2>Modul 3 — Secret Engines</h2>
+                     <h3>KV v2 — Key-Value Secrets</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — KV v2</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># KV v2 aktivieren
+vault secrets enable -path=secret kv-v2
+
+# Secret schreiben (mit Versioning)
+vault kv put secret/meine-app/database \
+  username="admin" \
+  password="SuperGeheim123!" \
+  host="postgres.intern:5432"
+
+# Secret lesen
+vault kv get secret/meine-app/database
+
+# Bestimmte Version lesen
+vault kv get -version=2 secret/meine-app/database
+
+# Versionshistorie anzeigen
+vault kv metadata get secret/meine-app/database</code></pre>
+                     </div>
+                     <h3>PKI Secret Engine — Zertifikate</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — PKI Engine</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># PKI Engine aktivieren
+vault secrets enable pki
+vault secrets tune -max-lease-ttl=87600h pki
+
+# Root CA generieren
+vault write -field=certificate pki/root/generate/internal \
+  common_name="Meine Firma Root CA" \
+  ttl=87600h &gt; root_ca.crt
+
+# Intermediate CA
+vault secrets enable -path=pki_int pki
+vault write pki_int/intermediate/generate/internal \
+  common_name="Meine Firma Intermediate CA"
+
+# Zertifikat ausstellen
+vault write pki_int/issue/meine-app-role \
+  common_name="meine-app.intern" \
+  ttl="24h"</code></pre>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 4 -->
+                  <section id="modul4">
+                     <h2>Modul 4 — Policies &amp; Zugriffskontrolle</h2>
+                     <p>Policies steuern, was ein authentifizierter Client mit seinen Tokens tun darf. Sie sind in HCL geschrieben und folgen dem Prinzip des geringsten Privilegs (Least Privilege).</p>
+                     <div class="code-card">
+                        <div class="code-title"><span>meine-app-policy.hcl</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Datenbankpassworter lesen (nur lesen, nicht schreiben)
+path "secret/data/meine-app/database" {
+  capabilities = ["read"]
+}
+
+# Alle Secrets unter meine-app/ auflisten
+path "secret/metadata/meine-app/*" {
+  capabilities = ["list"]
+}
+
+# Dynamische DB-Credentials erzeugen
+path "database/creds/meine-app-role" {
+  capabilities = ["read"]
+}
+
+# Eigene Token erneuern
+path "auth/token/renew-self" {
+  capabilities = ["update"]
+}
+
+# Eigene Token-Infos lesen
+path "auth/token/lookup-self" {
+  capabilities = ["read"]
+}</code></pre>
+                     </div>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Policy deployen</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Policy hochladen
+vault policy write meine-app-policy meine-app-policy.hcl
+
+# Policies auflisten
+vault policy list
+
+# Policy anzeigen
+vault policy read meine-app-policy</code></pre>
+                     </div>
+                     <div class="go-note"><strong>Least Privilege:</strong> Vault verweigert standardmasig alles — nur explizit erlaubte Pfade und Capabilities sind zuganglich. Starten Sie immer mit minimalen Rechten und erweitem Sie bei Bedarf.</div>
+                  </section>
+
+                  <!-- MODULE 5 -->
+                  <section id="modul5">
+                     <h2>Modul 5 — Dynamic Secrets</h2>
+                     <p>Dynamic Secrets sind eines der machtigen Features von Vault. Statt statischer Passworter generiert Vault bei jeder Anfrage kurzlebige, einmalige Credentials — direkt in der Datenbank oder Cloud.</p>
+                     <h3>Database Secret Engine</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — PostgreSQL Dynamic Credentials</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Database Engine aktivieren
+vault secrets enable database
+
+# PostgreSQL-Verbindung konfigurieren
+vault write database/config/meine-postgres \
+  plugin_name=postgresql-database-plugin \
+  allowed_roles="meine-app-role" \
+  connection_url="postgresql://{{username}}:{{password}}@postgres:5432/meindb?sslmode=disable" \
+  username="vault-root" \
+  password="vault-root-password"
+
+# Dynamische Rolle definieren
+vault write database/roles/meine-app-role \
+  db_name=meine-postgres \
+  creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+  default_ttl="1h" \
+  max_ttl="24h"
+
+# Dynamische Credentials abrufen (Vault erstellt PostgreSQL-User)
+vault read database/creds/meine-app-role</code></pre>
+                     </div>
+                     <div class="go-rule"><strong>Ergebnis:</strong> Jeder Aufruf von <code>vault read database/creds/meine-app-role</code> erstellt einen einmaligen PostgreSQL-User mit 1 Stunde TTL. Nach Ablauf wird der User automatisch geloscht. Kein statisches Passwort mehr — und keine Moglichkeit, alte Credentials wiederzuverwenden.</div>
+                  </section>
+
+                  <!-- MODULE 6 -->
+                  <section id="modul6">
+                     <h2>Modul 6 — Kubernetes-Integration</h2>
+                     <h3>Vault Agent Injector</h3>
+                     <p>Der Vault Agent Injector ist ein Kubernetes Mutating Admission Webhook. Er injiziert automatisch einen Vault Agent als Sidecar-Container in Pods — ohne dass die Applikation Vault kennen muss.</p>
+                     <div class="code-card">
+                        <div class="code-title"><span>k8s/deployment.yaml — Vault Agent Injector</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meine-app
+spec:
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "meine-app"
+        # Secret als Datei injizieren
+        vault.hashicorp.com/agent-inject-secret-database.env: "secret/data/meine-app/database"
+        # Template fuer das Secret-Format
+        vault.hashicorp.com/agent-inject-template-database.env: |
+          {{- with secret "secret/data/meine-app/database" -}}
+          export DB_USER="{{ .Data.data.username }}"
+          export DB_PASS="{{ .Data.data.password }}"
+          export DB_HOST="{{ .Data.data.host }}"
+          {{- end -}}
+    spec:
+      serviceAccountName: meine-app-sa
+      containers:
+        - name: meine-app
+          image: meine-app:1.0.0
+          command: ["/bin/sh", "-c"]
+          args: ["source /vault/secrets/database.env &amp;&amp; ./meine-app"]</code></pre>
+                     </div>
+                     <h3>Vault Secrets Operator (VSO)</h3>
+                     <p>Der Vault Secrets Operator ist der modernere Ansatz: Er synchronisiert Vault Secrets als native Kubernetes Secrets und hallt sie automatisch aktuell.</p>
+                     <div class="code-card">
+                        <div class="code-title"><span>vso-secret.yaml — VaultStaticSecret</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: meine-app-database
+  namespace: production
+spec:
+  type: kv-v2
+  mount: secret
+  path: meine-app/database
+  destination:
+    name: meine-app-database-secret  # K8s Secret-Name
+    create: true
+  refreshAfter: 30s
+  vaultAuthRef: vault-auth</code></pre>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 7 -->
+                  <section id="modul7">
+                     <h2>Modul 7 — Produktionsbetrieb</h2>
+                     <h3>Vault Cluster mit Raft-Backend</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>vault.hcl — Produktionskonfiguration</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>storage "raft" {
+  path    = "/vault/data"
+  node_id = "vault-node-1"
+
+  retry_join {
+    leader_api_addr = "https://vault-node-2:8200"
+  }
+  retry_join {
+    leader_api_addr = "https://vault-node-3:8200"
+  }
+}
+
+listener "tcp" {
+  address     = "0.0.0.0:8200"
+  tls_cert_file = "/vault/tls/vault.crt"
+  tls_key_file  = "/vault/tls/vault.key"
+}
+
+# Auto-Unseal mit AWS KMS
+seal "awskms" {
+  region     = "eu-central-1"
+  kms_key_id = "arn:aws:kms:eu-central-1:123456789:key/abc-def"
+}
+
+api_addr     = "https://vault-node-1:8200"
+cluster_addr = "https://vault-node-1:8201"
+ui           = true</code></pre>
+                     </div>
+                     <div class="go-rule"><strong>Produktions-Checkliste:</strong> HA-Cluster mit mindestens 3 Nodes (Raft), Auto-Unseal (AWS KMS, Azure Key Vault oder GCP KMS), TLS fur alle Verbindungen, Audit-Log aktiviert, regelmassige Snapshots des Raft-State, Monitoring (Prometheus-Metriken unter /v1/sys/metrics), Vault-Agents fur Zero-Downtime-Rotation.</div>
+                     <div class="go-project">
+                        <h3>Abschlussprojekt — Vollstandiges Secrets Management</h3>
+                        <p>Bauen Sie ein vollstandiges Vault-Setup mit Kubernetes-Integration.</p>
+                        <ul>
+                           <li>Vault auf Kubernetes via Helm deployen (HA-Modus mit 3 Nodes)</li>
+                           <li>Kubernetes Auth-Methode konfigurieren</li>
+                           <li>KV v2 und Database Secret Engine einrichten</li>
+                           <li>Policies nach Least-Privilege-Prinzip schreiben</li>
+                           <li>Vault Agent Injector fur eine Demo-Applikation konfigurieren</li>
+                           <li>Dynamic PostgreSQL Credentials demonstrieren (TTL 5min)</li>
+                        </ul>
+                     </div>
+                  </section>
+
+                  <!-- SOURCES -->
+                  <section id="quellen">
+                     <h2 data-i18n="sourcesTitle">Quellen &amp; Weiterfuhrende Ressourcen</h2>
+                     <div class="source-list">
+                        <a href="https://developer.hashicorp.com/vault/docs" target="_blank" rel="noopener"><i class="fa-solid fa-book"></i> Offizielle Vault-Dokumentation</a>
+                        <a href="https://developer.hashicorp.com/vault/tutorials" target="_blank" rel="noopener"><i class="fa-solid fa-graduation-cap"></i> HashiCorp Learn — Vault Tutorials</a>
+                        <a href="https://github.com/hashicorp/vault" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub — hashicorp/vault</a>
+                        <a href="https://developer.hashicorp.com/certifications/security-automation" target="_blank" rel="noopener"><i class="fa-solid fa-certificate"></i> Vault Associate Zertifizierung</a>
+                     </div>
+                  </section>
+
+               </div>
+            </div>
+         </div>
+      </section>
+   </main>
+
+   <footer class="simple-footer">
+      <div class="go-shell">
+         <div class="sfooter-cols">
+            <div>
+               <h3>Koffi Academy</h3>
+               <ul>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>Cloud-Native &amp; DevOps Kurse</li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>Praxisorientiertes Lernen</li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>CNCF Zertifizierungen</li>
+               </ul>
+            </div>
+            <div>
+               <h3>Kurse</h3>
+               <ul>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="../gitops-argocd.html">GitOps mit ArgoCD</a></li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="terraform-beginners.html">Terraform Grundlagen</a></li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="backstage-101.html">Backstage Portal</a></li>
+               </ul>
+            </div>
+            <div>
+               <h3>Kontakt</h3>
+               <ul>
+                  <li><i class="fa-solid fa-envelope lead-icon"></i><a href="mailto:info@koffi.academy">info@koffi.academy</a></li>
+                  <li><i class="fa-brands fa-github lead-icon"></i><a href="https://github.com/koffi-academy" target="_blank" rel="noopener">GitHub</a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <div class="go-shell"><p>&copy; 2025 Koffi Academy &mdash; HashiCorp Vault 101 Kurs</p></div>
+      </div>
+   </footer>
+</div>
+
+<script>
+var i18n={
+  de:{heroTitle:"HashiCorp Vault 101",heroSubtitle:"Lernen Sie, wie Vault als zentrales Secrets-Management-System Passworter, API-Schlussel, Zertifikate und Dynamic Secrets sicher verwaltet.",startBtn:"Kurs starten",labsBtn:"Praktische Labs",duration:"2 Wochen",modules:"7 Module",labs:"5 Labs",level:"Mittelstufe",accessTitle:"Zentrales Secrets Management fur Zero-Trust-Architekturen",accessDesc:"Vault ist der Industriestandard fur Secrets Management von Startups bis Fortune-500.",certLabel:"Abschlussprojekt inklusive",eyebrowGoals:"Lernziele",goalsTitle:"Was Sie nach diesem Kurs beherrschen",goalsDesc:"Von Vault-Installation uber Auth-Methoden, Secret Engines und Policies bis zur Kubernetes-Integration.",goal1Title:"Auth-Methoden",goal1Desc:"Kubernetes, GitHub, LDAP und AppRole konfigurieren.",goal2Title:"Secret Engines",goal2Desc:"KV v2, Database, PKI und AWS Secret Engine einrichten.",goal3Title:"Policies & RBAC",goal3Desc:"Feingranulare Zugriffssteuerung mit HCL-Policies.",goal4Title:"Kubernetes Integration",goal4Desc:"Vault Agent Injector und Vault Secrets Operator.",tocTitle:"Kursinhalt",toc0:"Was ist Vault?",toc1:"Modul 1 — Installation",toc2:"Modul 2 — Auth-Methoden",toc3:"Modul 3 — Secret Engines",toc4:"Modul 4 — Policies",toc5:"Modul 5 — Dynamic Secrets",toc6:"Modul 6 — Kubernetes",toc7:"Modul 7 — Produktion",tocLabs:"Praktische Labs",sourcesTitle:"Quellen & Weiterfuhrende Ressourcen"},
+  en:{heroTitle:"HashiCorp Vault 101",heroSubtitle:"Learn how Vault as a central secrets management system securely manages passwords, API keys, certificates and dynamic secrets.",startBtn:"Start Course",labsBtn:"Hands-On Labs",duration:"2 weeks",modules:"7 Modules",labs:"5 Labs",level:"Intermediate",accessTitle:"Central Secrets Management for Zero-Trust Architectures",accessDesc:"Vault is the industry standard for secrets management from startups to Fortune 500.",certLabel:"Final project included",eyebrowGoals:"Learning Objectives",goalsTitle:"What You'll Master After This Course",goalsDesc:"From Vault installation through auth methods, secret engines and policies to Kubernetes integration.",goal1Title:"Auth Methods",goal1Desc:"Configure Kubernetes, GitHub, LDAP and AppRole.",goal2Title:"Secret Engines",goal2Desc:"Set up KV v2, Database, PKI and AWS Secret Engine.",goal3Title:"Policies & RBAC",goal3Desc:"Fine-grained access control with HCL policies.",goal4Title:"Kubernetes Integration",goal4Desc:"Vault Agent Injector and Vault Secrets Operator.",tocTitle:"Course Content",toc0:"What is Vault?",toc1:"Module 1 — Installation",toc2:"Module 2 — Auth Methods",toc3:"Module 3 — Secret Engines",toc4:"Module 4 — Policies",toc5:"Module 5 — Dynamic Secrets",toc6:"Module 6 — Kubernetes",toc7:"Module 7 — Production",tocLabs:"Hands-On Labs",sourcesTitle:"Sources & Further Resources"},
+  fr:{heroTitle:"HashiCorp Vault 101",heroSubtitle:"Apprenez comment Vault, en tant que systeme central de gestion des secrets, gere en toute securite les mots de passe, cles API, certificats et secrets dynamiques.",startBtn:"Demarrer le cours",labsBtn:"Labs pratiques",duration:"2 semaines",modules:"7 Modules",labs:"5 Labs",level:"Intermediaire",accessTitle:"Gestion centralisee des secrets pour architectures Zero-Trust",accessDesc:"Vault est le standard industriel pour la gestion des secrets, des startups aux Fortune 500.",certLabel:"Projet final inclus",eyebrowGoals:"Objectifs",goalsTitle:"Ce que vous maittriserez apres ce cours",goalsDesc:"De l'installation Vault aux methodes d'auth, moteurs de secrets, policies et integration Kubernetes.",goal1Title:"Methodes d'auth",goal1Desc:"Configurer Kubernetes, GitHub, LDAP et AppRole.",goal2Title:"Moteurs de secrets",goal2Desc:"Configurer KV v2, Database, PKI et AWS.",goal3Title:"Policies & RBAC",goal3Desc:"Controle d'acces fin avec les policies HCL.",goal4Title:"Integration Kubernetes",goal4Desc:"Vault Agent Injector et Vault Secrets Operator.",tocTitle:"Contenu du cours",toc0:"Qu'est-ce que Vault ?",toc1:"Module 1 — Installation",toc2:"Module 2 — Auth",toc3:"Module 3 — Secret Engines",toc4:"Module 4 — Policies",toc5:"Module 5 — Dynamic Secrets",toc6:"Module 6 — Kubernetes",toc7:"Module 7 — Production",tocLabs:"Labs pratiques",sourcesTitle:"Sources & Ressources"}
+};
+var flagMap={de:'fi-de',en:'fi-gb',fr:'fi-fr'};
+var codeMap={de:'DE',en:'EN',fr:'FR'};
+function setLanguage(lang){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(i18n[lang]&&i18n[lang][k])el.textContent=i18n[lang][k];});
+  document.querySelectorAll('.lang-sect').forEach(function(s){s.classList.toggle('active',s.getAttribute('data-lang')===lang);});
+  document.documentElement.lang=lang;
+  localStorage.setItem('preferred-lang',lang);
+  klSync(lang);
+}
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',o);}
+function klClose(){document.getElementById('klDrop').classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}
+function klSync(lang){var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+flagMap[lang];if(c)c.textContent=codeMap[lang];document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.getAttribute('data-kl')===lang);});}
+function klPick(lang){setLanguage(lang);klClose();}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&!d.contains(e.target))klClose();});
+(function(){setLanguage(localStorage.getItem('preferred-lang')||'de');})();
+</script>
+<script src="../assets/js/mobile-nav.js"></script>
+</body>
+</html>

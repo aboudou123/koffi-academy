@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400">
+  <defs>
+    <linearGradient id="bgb" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#041424"/>
+      <stop offset="50%" stop-color="#07294d"/>
+      <stop offset="100%" stop-color="#0e3a62"/>
+    </linearGradient>
+    <linearGradient id="goldb" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffc600"/>
+      <stop offset="100%" stop-color="#ffdf5c"/>
+    </linearGradient>
+    <pattern id="gridb" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="400" fill="url(#bgb)"/>
+  <rect width="1200" height="400" fill="url(#gridb)"/>
+  <circle cx="980" cy="80" r="240" fill="rgba(255,198,0,0.05)"/>
+  <circle cx="200" cy="350" r="180" fill="rgba(14,58,98,0.4)"/>
+
+  <!-- Left gold bar -->
+  <rect x="0" y="0" width="6" height="400" fill="url(#goldb)"/>
+
+  <!-- Koffi Academy logo area -->
+  <rect x="72" y="40" width="48" height="48" rx="12" fill="rgba(255,198,0,0.15)" stroke="#ffc600" stroke-width="1.5"/>
+  <text x="96" y="72" text-anchor="middle" font-family="'Inter',Arial,sans-serif" font-size="22" font-weight="900" fill="#ffc600">K</text>
+
+  <!-- Platform mockup - sidebar -->
+  <rect x="72" y="120" width="160" height="240" rx="8" fill="rgba(0,0,0,0.3)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <!-- Sidebar items -->
+  <rect x="88" y="138" width="80" height="8" rx="4" fill="rgba(255,198,0,0.5)"/>
+  <rect x="88" y="158" width="120" height="6" rx="3" fill="rgba(255,255,255,0.12)"/>
+  <rect x="88" y="174" width="100" height="6" rx="3" fill="rgba(255,255,255,0.12)"/>
+  <rect x="88" y="190" width="110" height="6" rx="3" fill="rgba(255,255,255,0.12)"/>
+  <rect x="88" y="206" width="90" height="6" rx="3" fill="rgba(255,255,255,0.08)"/>
+  <rect x="88" y="235" width="70" height="6" rx="3" fill="rgba(255,198,0,0.35)"/>
+  <rect x="88" y="251" width="120" height="6" rx="3" fill="rgba(255,255,255,0.1)"/>
+  <rect x="88" y="267" width="95" height="6" rx="3" fill="rgba(255,255,255,0.1)"/>
+  <rect x="88" y="283" width="115" height="6" rx="3" fill="rgba(255,255,255,0.08)"/>
+
+  <!-- Platform mockup - main content -->
+  <rect x="248" y="120" width="440" height="240" rx="8" fill="rgba(0,0,0,0.2)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <!-- Header area -->
+  <rect x="248" y="120" width="440" height="36" rx="8" fill="rgba(0,0,0,0.25)"/>
+  <rect x="260" y="131" width="100" height="14" rx="7" fill="rgba(255,198,0,0.25)"/>
+  <!-- Content cards -->
+  <rect x="262" y="170" width="190" height="80" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.08)"/>
+  <rect x="266" y="178" width="60" height="8" rx="4" fill="rgba(255,198,0,0.4)"/>
+  <rect x="266" y="194" width="170" height="6" rx="3" fill="rgba(255,255,255,0.12)"/>
+  <rect x="266" y="208" width="150" height="6" rx="3" fill="rgba(255,255,255,0.1)"/>
+  <rect x="266" y="224" width="80" height="18" rx="9" fill="rgba(255,198,0,0.2)" stroke="#ffc600" stroke-width="1"/>
+
+  <rect x="466" y="170" width="190" height="80" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.08)"/>
+  <rect x="470" y="178" width="60" height="8" rx="4" fill="rgba(100,200,255,0.4)"/>
+  <rect x="470" y="194" width="170" height="6" rx="3" fill="rgba(255,255,255,0.12)"/>
+  <rect x="470" y="208" width="150" height="6" rx="3" fill="rgba(255,255,255,0.1)"/>
+  <rect x="470" y="224" width="80" height="18" rx="9" fill="rgba(100,200,255,0.15)" stroke="rgba(100,200,255,0.5)" stroke-width="1"/>
+
+  <!-- Code block -->
+  <rect x="262" y="264" width="394" height="72" rx="6" fill="rgba(4,20,36,0.6)"/>
+  <text x="276" y="282" font-family="monospace" font-size="11" fill="#ffc600">$ platform status --verbose</text>
+  <text x="276" y="298" font-family="monospace" font-size="11" fill="rgba(100,210,180,0.85)">✓ All systems operational</text>
+  <text x="276" y="314" font-family="monospace" font-size="11" fill="rgba(255,255,255,0.4)">Nodes: 12 ready  · Pods: 48 running</text>
+  <text x="276" y="328" font-family="monospace" font-size="11" fill="#ffc600">▌</text>
+
+  <!-- Right: label -->
+  <text x="800" y="180" font-family="'Inter',Arial,sans-serif" font-size="32" font-weight="900" fill="rgba(255,255,255,0.08)" letter-spacing="2">KOFFI</text>
+  <text x="800" y="215" font-family="'Inter',Arial,sans-serif" font-size="32" font-weight="900" fill="rgba(255,255,255,0.08)" letter-spacing="2">ACADEMY</text>
+  <text x="800" y="250" font-family="'Inter',Arial,sans-serif" font-size="13" fill="rgba(255,198,0,0.3)" letter-spacing="3">E-LEARNING PLATFORM</text>
+
+  <rect x="0" y="395" width="1200" height="5" fill="url(#goldb)" opacity="0.5"/>
+</svg>

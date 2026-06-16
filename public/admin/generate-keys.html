@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin – Génération de clés | Koffi Academy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0f1623;color:#e2e8f0;font-family:Inter,system-ui,sans-serif;min-height:100vh;padding:24px}
+    .header{max-width:1100px;margin:0 auto 32px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-size:20px;font-weight:900;color:#fff}.logo span{color:#ffc600}
+    .badge{background:#ffc600;color:#07294d;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;letter-spacing:.5px}
+    .grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    @media(max-width:768px){.grid{grid-template-columns:1fr}}
+    .card{background:#1a2233;border-radius:16px;padding:24px;border:1px solid #2d3748}
+    .card h2{font-size:16px;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+    .card h2 i{color:#ffc600}
+    label{display:block;font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+    .input{width:100%;padding:10px 14px;background:#0f1623;border:1px solid #2d3748;border-radius:8px;color:#e2e8f0;font-size:14px;margin-bottom:14px;outline:none;transition:.18s}
+    .input:focus{border-color:#ffc600;box-shadow:0 0 0 3px rgba(255,198,0,.15)}
+    select.input option{background:#1a2233}
+    .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:8px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:.18s}
+    .btn-primary{background:#ffc600;color:#07294d}.btn-primary:hover{background:#f5bd00}
+    .btn-danger{background:#ef4444;color:#fff;margin-top:6px}.btn-danger:hover{background:#dc2626}
+    .btn:disabled{opacity:.4;cursor:not-allowed}
+    .key-result{background:#07294d;border-radius:8px;padding:14px;margin-top:14px;display:none;text-align:center}
+    .key-result .key{font-size:22px;font-family:monospace;color:#ffc600;letter-spacing:3px;font-weight:900}
+    .key-result p{font-size:12px;color:#94a3b8;margin-top:6px}
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th{text-align:left;color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;border-bottom:1px solid #2d3748}
+    td{padding:10px 12px;border-bottom:1px solid #1a2233;color:#e2e8f0}
+    .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700}
+    .pill-ok{background:rgba(16,185,129,.2);color:#10b981}
+    .pill-used{background:rgba(107,114,128,.2);color:#9ca3af}
+    .pill-pending{background:rgba(255,198,0,.2);color:#ffc600}
+    .msg{font-size:13px;padding:10px 14px;border-radius:8px;margin-top:10px;display:none}
+    .msg.error{background:#7f1d1d;color:#fca5a5;display:block}
+    .msg.success{background:#064e3b;color:#6ee7b7;display:block}
+    #auth-gate{position:fixed;inset:0;background:#0f1623;z-index:100;display:flex;align-items:center;justify-content:center}
+    .auth-box{background:#1a2233;border-radius:16px;padding:40px;max-width:360px;width:100%;border:1px solid #2d3748;text-align:center}
+    .auth-box h1{font-size:22px;font-weight:800;color:#fff;margin-bottom:8px}.auth-box p{color:#94a3b8;font-size:14px;margin-bottom:24px}
+    .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+
+<!-- Auth gate -->
+<div id="auth-gate">
+  <div class="auth-box">
+    <div style="font-size:32px;margin-bottom:16px">🔐</div>
+    <h1>Admin Koffi Academy</h1>
+    <p>Saisissez votre mot de passe admin pour continuer.</p>
+    <input id="admin-pw" class="input" type="password" placeholder="Mot de passe admin" style="margin-bottom:14px">
+    <button class="btn btn-primary" onclick="authenticate()">Accéder</button>
+    <div id="auth-msg" class="msg"></div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="header">
+    <div class="logo">Koffi <span>Academy</span></div>
+    <span class="badge"><i class="fas fa-shield-alt"></i> ADMIN</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- Generate Key -->
+    <div class="card">
+      <h2><i class="fas fa-key"></i> Générer une clé d'accès</h2>
+      <label>Cours</label>
+      <select id="gen-course" class="input">
+        <option value="vault-security">HashiCorp Vault 101 (79 €)</option>
+        <option value="terraform-aws-advanced">Terraform AWS Advanced (99 €)</option>
+        <option value="devops-platform-overview">DevOps Platform Overview (59 €)</option>
+      </select>
+      <label>Email du destinataire</label>
+      <input id="gen-email" class="input" type="email" placeholder="client@email.com">
+      <label>Note interne (optionnel)</label>
+      <input id="gen-note" class="input" type="text" placeholder="Virement reçu le 22/05">
+      <button class="btn btn-primary" id="btn-gen" onclick="generateKey()">
+        <i class="fas fa-plus-circle"></i> Générer et envoyer
+      </button>
+      <div id="gen-result" class="key-result">
+        <div class="key" id="generated-key"></div>
+        <p>Clé envoyée par email. Copiez-la si besoin.</p>
+      </div>
+      <div id="gen-msg" class="msg"></div>
+    </div>
+
+    <!-- Bank Transfer Requests -->
+    <div class="card">
+      <h2><i class="fas fa-university"></i> Demandes de virement</h2>
+      <button class="btn btn-primary" onclick="loadRequests()" style="margin-bottom:16px">
+        <i class="fas fa-sync"></i> Rafraîchir
+      </button>
+      <div id="requests-table">
+        <p style="color:#94a3b8;font-size:13px">Cliquez sur Rafraîchir pour charger.</p>
+      </div>
+    </div>
+
+    <!-- Existing Keys -->
+    <div class="card" style="grid-column:1/-1">
+      <h2><i class="fas fa-list"></i> Clés générées</h2>
+      <button class="btn btn-primary" onclick="loadKeys()" style="margin-bottom:16px;width:auto;padding:10px 20px">
+        <i class="fas fa-sync"></i> Rafraîchir
+      </button>
+      <div id="keys-table">
+        <p style="color:#94a3b8;font-size:13px">Cliquez sur Rafraîchir pour charger.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let ADMIN_SECRET = "";
+
+function authenticate() {
+  const pw = document.getElementById("admin-pw").value;
+  if (!pw) return;
+  ADMIN_SECRET = pw;
+  // Test with a quick API call
+  fetch("/api/admin/keys", { headers: { "x-admin-secret": pw } })
+    .then(r => {
+      if (r.ok) {
+        document.getElementById("auth-gate").style.display = "none";
+        document.getElementById("app").style.display = "block";
+        loadKeys();
+        loadRequests();
+      } else {
+        const msg = document.getElementById("auth-msg");
+        msg.className = "msg error";
+        msg.textContent = "Mot de passe incorrect.";
+      }
+    });
+}
+
+document.getElementById("admin-pw").addEventListener("keydown", e => {
+  if (e.key === "Enter") authenticate();
+});
+
+async function generateKey() {
+  const courseId = document.getElementById("gen-course").value;
+  const email = document.getElementById("gen-email").value.trim();
+  const note = document.getElementById("gen-note").value.trim();
+  const msg = document.getElementById("gen-msg");
+  const result = document.getElementById("gen-result");
+
+  if (!email) { showMsg(msg, "Email requis.", true); return; }
+
+  const btn = document.getElementById("btn-gen");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Génération…';
+  result.style.display = "none";
+
+  try {
+    const res = await fetch("/api/admin/generate-key", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-secret": ADMIN_SECRET },
+      body: JSON.stringify({ courseId, email, note }),
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      document.getElementById("generated-key").textContent = data.key;
+      result.style.display = "block";
+      showMsg(msg, `✅ Clé envoyée à ${data.email}`, false);
+      document.getElementById("gen-email").value = "";
+      document.getElementById("gen-note").value = "";
+      loadKeys();
+    } else {
+      showMsg(msg, data.error || "Erreur", true);
+    }
+  } catch (e) {
+    showMsg(msg, e.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-plus-circle"></i> Générer et envoyer';
+  }
+}
+
+async function loadKeys() {
+  const res = await fetch("/api/admin/keys", { headers: { "x-admin-secret": ADMIN_SECRET } });
+  const { keys } = await res.json();
+  const wrap = document.getElementById("keys-table");
+  if (!keys.length) { wrap.innerHTML = '<p style="color:#94a3b8;font-size:13px">Aucune clé générée.</p>'; return; }
+  wrap.innerHTML = `<div class="table-wrap"><table>
+    <thead><tr><th>Clé</th><th>Cours</th><th>Email</th><th>Statut</th><th>Note</th><th>Créée le</th></tr></thead>
+    <tbody>${keys.map(k => `<tr>
+      <td style="font-family:monospace;letter-spacing:1px">${k.key}</td>
+      <td>${k.courseId}</td>
+      <td>${k.email}</td>
+      <td>${k.used ? '<span class="pill pill-used">Utilisée</span>' : '<span class="pill pill-ok">Disponible</span>'}</td>
+      <td>${k.note || '—'}</td>
+      <td>${k.createdAt ? new Date(k.createdAt).toLocaleDateString("fr") : '—'}</td>
+    </tr>`).join("")}</tbody>
+  </table></div>`;
+}
+
+async function loadRequests() {
+  const res = await fetch("/api/admin/bank-requests", { headers: { "x-admin-secret": ADMIN_SECRET } });
+  const { requests } = await res.json();
+  const wrap = document.getElementById("requests-table");
+  if (!requests.length) { wrap.innerHTML = '<p style="color:#94a3b8;font-size:13px">Aucune demande.</p>'; return; }
+  wrap.innerHTML = `<div class="table-wrap"><table>
+    <thead><tr><th>Nom</th><th>Email</th><th>Cours</th><th>Ref</th><th>Statut</th><th>Date</th></tr></thead>
+    <tbody>${requests.map(r => `<tr>
+      <td>${r.name}</td>
+      <td>${r.email}</td>
+      <td>${r.courseId}</td>
+      <td style="font-family:monospace">LING-${r.ref}</td>
+      <td><span class="pill ${r.status === 'pending' ? 'pill-pending' : 'pill-ok'}">${r.status}</span></td>
+      <td>${r.createdAt ? new Date(r.createdAt).toLocaleDateString("fr") : '—'}</td>
+    </tr>`).join("")}</tbody>
+  </table></div>`;
+}
+
+function showMsg(el, text, isError) {
+  el.className = "msg " + (isError ? "error" : "success");
+  el.textContent = text;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Banküberweisung – Koffi Academy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;background:linear-gradient(135deg,#07294d,#0d3d73);font-family:Inter,system-ui,sans-serif;display:grid;place-items:center;padding:24px}
+    .card{background:#fff;border-radius:20px;padding:40px;max-width:500px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+    .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+    .logo{font-size:22px;font-weight:900;color:#07294d}.logo span{color:#f89035}
+    .lang-switcher{display:inline-flex;gap:4px;background:#f0f4f8;border-radius:8px;padding:3px}
+    .lang-btn{border:none;background:transparent;border-radius:5px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;color:#5a6a8a;transition:.15s}
+    .lang-btn.active,.lang-btn:hover{background:#07294d;color:#fff}
+    h1{font-size:20px;font-weight:800;color:#07294d;margin-bottom:8px}
+    .sub{color:#6b7280;font-size:14px;margin-bottom:20px;line-height:1.6}
+    .info-box{background:#f0f4f8;border-radius:12px;padding:16px;margin-bottom:24px;font-size:13px;color:#374151;line-height:1.8}
+    .info-box strong{color:#07294d}
+    label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px}
+    .input{width:100%;padding:11px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;margin-bottom:16px;outline:none;transition:.18s}
+    .input:focus{border-color:#07294d;box-shadow:0 0 0 3px rgba(7,41,77,.1)}
+    select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;appearance:none}
+    select.input option{background:#fff}
+    textarea.input{resize:vertical;min-height:80px}
+    .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:.18s;background:#07294d;color:#fff}
+    .btn:hover{transform:translateY(-2px)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .msg{font-size:14px;padding:14px;border-radius:8px;margin-top:16px;display:none}
+    .msg.error{background:#fee2e2;color:#c00;display:block}
+    .msg.success{background:#d1fae5;color:#065f46;display:block}
+    .back{display:block;text-align:center;color:#6b7280;font-size:13px;margin-top:20px;text-decoration:none}
+    .back:hover{color:#07294d}
+    .spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .icon-bank{color:#f89035}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="card-top">
+    <div class="logo">Koffi <span>Academy</span></div>
+    <div class="lang-switcher" role="group">
+      <button type="button" class="lang-btn active" data-lang="de" onclick="setLanguage('de')">DE</button>
+      <button type="button" class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+      <button type="button" class="lang-btn" data-lang="fr" onclick="setLanguage('fr')">FR</button>
+    </div>
+  </div>
+
+  <h1><i class="fas fa-university icon-bank"></i> <span data-i18n="page-heading">Banküberweisung</span></h1>
+  <p class="sub" data-i18n="page-sub">Füllen Sie dieses Formular aus. Wir senden Ihnen die Bankdaten und Sie erhalten Ihren Zugangscode innerhalb von 24–48 Stunden nach Zahlungseingang.</p>
+
+  <div class="info-box">
+    <strong data-i18n="how-title">So funktioniert es:</strong><br>
+    <span data-i18n="step1">1. Formular absenden → Bankdaten werden per E-Mail zugesandt</span><br>
+    <span data-i18n="step2">2. Überweisung durchführen (Verwendungszweck angeben)</span><br>
+    <span data-i18n="step3">3. Zugangscode wird nach Zahlungseingang per E-Mail versendet</span><br>
+    <span data-i18n="step4">4. Code eingeben → sofortiger Kurszugang</span>
+  </div>
+
+  <form id="transfer-form">
+    <label data-i18n="lbl-name">Vor- und Nachname *</label>
+    <input id="inp-name" class="input" type="text" data-i18n-ph="ph-name" placeholder="Max Mustermann" required>
+
+    <label data-i18n="lbl-email">E-Mail *</label>
+    <input id="inp-email" class="input" type="email" data-i18n-ph="ph-email" placeholder="max@beispiel.de" required autocomplete="email">
+
+    <label for="inp-course" data-i18n="lbl-course">Gewünschter Kurs *</label>
+    <select id="inp-course" class="input" aria-label="Kurs auswählen" required>
+      <option value="" data-i18n="opt-select">Kurs auswählen…</option>
+      <option value="vault-security" data-i18n="opt-vault">HashiCorp Vault 101 — 79 €</option>
+      <option value="terraform-aws-advanced" data-i18n="opt-terraform">Terraform on AWS Advanced — 99 €</option>
+      <option value="devops-platform-overview" data-i18n="opt-devops">DevOps Platform Overview — 59 €</option>
+    </select>
+
+    <label data-i18n="lbl-message">Nachricht (optional)</label>
+    <textarea id="inp-message" class="input" data-i18n-ph="ph-message" placeholder="Frage oder Hinweis…"></textarea>
+
+    <button type="submit" class="btn" id="btn-submit">
+      <i class="fas fa-paper-plane"></i> <span data-i18n="btn-send">Anfrage absenden</span>
+    </button>
+  </form>
+
+  <div id="msg" class="msg"></div>
+  <a href="../courses/courses.html" class="back" data-i18n="back">← Zurück zu den Kursen</a>
+</div>
+
+<script>
+var i18n = {
+  de: {
+    'page-title':   'Banküberweisung – Koffi Academy',
+    'page-heading': 'Banküberweisung',
+    'page-sub':     'Füllen Sie dieses Formular aus. Wir senden Ihnen die Bankdaten und Sie erhalten Ihren Zugangscode innerhalb von 24–48 Stunden nach Zahlungseingang.',
+    'how-title':    'So funktioniert es:',
+    'step1':        '1. Formular absenden → Bankdaten werden per E-Mail zugesandt',
+    'step2':        '2. Überweisung durchführen (Verwendungszweck angeben)',
+    'step3':        '3. Zugangscode wird nach Zahlungseingang per E-Mail versendet',
+    'step4':        '4. Code eingeben → sofortiger Kurszugang',
+    'lbl-name':     'Vor- und Nachname *',
+    'ph-name':      'Max Mustermann',
+    'lbl-email':    'E-Mail *',
+    'ph-email':     'max@beispiel.de',
+    'lbl-course':   'Gewünschter Kurs *',
+    'opt-select':   'Kurs auswählen…',
+    'opt-vault':    'HashiCorp Vault 101 — 79 €',
+    'opt-terraform':'Terraform on AWS Advanced — 99 €',
+    'opt-devops':   'DevOps Platform Overview — 59 €',
+    'lbl-message':  'Nachricht (optional)',
+    'ph-message':   'Frage oder Hinweis…',
+    'btn-send':     'Anfrage absenden',
+    'back':         '← Zurück zu den Kursen',
+    'err-required': 'Bitte Name, E-Mail und Kurs ausfüllen.',
+    'err-server':   'Fehler: ',
+    'success':      '✅ Anfrage erfolgreich gesendet! Referenz: '
+  },
+  en: {
+    'page-title':   'Bank Transfer – Koffi Academy',
+    'page-heading': 'Bank Transfer',
+    'page-sub':     'Fill out this form. We will email you the bank details and you will receive your access code within 24–48 hours after payment is received.',
+    'how-title':    'How it works:',
+    'step1':        '1. Submit form → receive bank details by email',
+    'step2':        '2. Make the transfer (include the reference)',
+    'step3':        '3. Access code sent by email once payment is confirmed',
+    'step4':        '4. Enter code → instant course access',
+    'lbl-name':     'Full name *',
+    'ph-name':      'John Doe',
+    'lbl-email':    'Email *',
+    'ph-email':     'john@example.com',
+    'lbl-course':   'Desired course *',
+    'opt-select':   'Select a course…',
+    'opt-vault':    'HashiCorp Vault 101 — €79',
+    'opt-terraform':'Terraform on AWS Advanced — €99',
+    'opt-devops':   'DevOps Platform Overview — €59',
+    'lbl-message':  'Message (optional)',
+    'ph-message':   'Question or note…',
+    'btn-send':     'Send request',
+    'back':         '← Back to courses',
+    'err-required': 'Please fill in name, email and course.',
+    'err-server':   'Error: ',
+    'success':      '✅ Request sent! Reference: '
+  },
+  fr: {
+    'page-title':   'Virement bancaire – Koffi Academy',
+    'page-heading': 'Paiement par virement',
+    'page-sub':     'Remplissez ce formulaire. Nous vous enverrons les coordonnées bancaires et vous recevrez votre clé d\'accès dans les 24–48 h après réception du virement.',
+    'how-title':    'Comment ça marche :',
+    'step1':        '1. Soumettez ce formulaire → vous recevez les coordonnées bancaires',
+    'step2':        '2. Effectuez le virement (mentionnez la référence)',
+    'step3':        '3. Nous vous envoyons une clé d\'accès par email',
+    'step4':        '4. Saisissez la clé → accès immédiat',
+    'lbl-name':     'Prénom et nom *',
+    'ph-name':      'Jean Dupont',
+    'lbl-email':    'Email *',
+    'ph-email':     'jean@exemple.com',
+    'lbl-course':   'Cours souhaité *',
+    'opt-select':   'Sélectionner un cours…',
+    'opt-vault':    'HashiCorp Vault 101 — 79 €',
+    'opt-terraform':'Terraform on AWS Advanced — 99 €',
+    'opt-devops':   'DevOps Platform Overview — 59 €',
+    'lbl-message':  'Message (optionnel)',
+    'ph-message':   'Précision ou question…',
+    'btn-send':     'Envoyer la demande',
+    'back':         '← Retour aux cours',
+    'err-required': 'Veuillez remplir le nom, l\'email et le cours.',
+    'err-server':   'Erreur : ',
+    'success':      '✅ Demande envoyée ! Référence : '
+  }
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-ph');
+    if (i18n[lang][key] !== undefined) el.placeholder = i18n[lang][key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+  if (i18n[lang]['page-title']) document.title = i18n[lang]['page-title'];
+}
+
+function t(key) {
+  var lang = localStorage.getItem('preferred-lang') || 'de';
+  return (i18n[lang] && i18n[lang][key]) || (i18n['de'] && i18n['de'][key]) || key;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang') || 'de';
+
+  // Pre-select course from URL
+  var params = new URLSearchParams(location.search);
+  var courseParam = params.get('course');
+  var langParam = params.get('lang');
+  if (langParam && i18n[langParam]) saved = langParam;
+  setLanguage(saved);
+
+  var priceParam = params.get('price');
+  var titleParam = params.get('title');
+  if (courseParam) {
+    var sel = document.getElementById('inp-course');
+    var found=false;
+    for (var i=0;i<sel.options.length;i++){ if(sel.options[i].value===courseParam){sel.options[i].selected=true;found=true;break;} }
+    if(!found){ var o=document.createElement('option'); o.value=courseParam; o.textContent=(titleParam?decodeURIComponent(titleParam):courseParam)+(priceParam?(' — '+priceParam+' \u20ac'):''); o.selected=true; sel.insertBefore(o, sel.firstChild.nextSibling); }
+  }
+});
+
+document.getElementById('transfer-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  var name = document.getElementById('inp-name').value.trim();
+  var email = document.getElementById('inp-email').value.trim();
+  var courseId = document.getElementById('inp-course').value;
+  var message = document.getElementById('inp-message').value.trim();
+  var lang = localStorage.getItem('preferred-lang') || 'de';
+
+  if (!name || !email || !courseId) {
+    showMsg(t('err-required'), true); return;
+  }
+
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  var ref='KA-'+Date.now().toString(36).toUpperCase();
+  var courseLabel=document.getElementById('inp-course').selectedOptions[0].textContent;
+  var subject='Banküberweisung – '+courseLabel+' ['+ref+']';
+  var body='Name: '+name+'\nE-Mail: '+email+'\nKurs: '+courseLabel+' ('+courseId+')\nReferenz: '+ref+'\n'+(message?('Nachricht: '+message+'\n'):'')+'\nBitte senden Sie mir die Bankdaten. Danke!';
+  window.location.href='mailto:info@lingenieur.de?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  showMsg(t('success')+'<strong>'+ref+'</strong>', false);
+  document.getElementById('transfer-form').style.display='none';
+});
+
+function showMsg(html, isError) {
+  var el = document.getElementById('msg');
+  el.className = 'msg ' + (isError ? 'error' : 'success');
+  el.innerHTML = html;
+}
+</script>
+</body>
+</html>

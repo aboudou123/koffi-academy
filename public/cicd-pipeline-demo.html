@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Koffi IDP · CI/CD Pipelines</title>
+<link rel="shortcut icon" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Inter',system-ui,sans-serif;font-size:14px;background:#f1f5f9;color:#1e293b}
+a{text-decoration:none;color:inherit} button{cursor:pointer;border:none;background:none;font:inherit}
+::-webkit-scrollbar{width:6px;height:6px} ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+
+/* ── Shell / Sidebar ── */
+.shell{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:220px;min-width:220px;height:100%;background:#0f172a;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;z-index:20}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:18px 16px 16px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round}
+.sb-name{font-size:13px;font-weight:700;color:#fff} .sb-sub{font-size:10px;color:#64748b;letter-spacing:.06em;text-transform:uppercase}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0}
+.sb-sec{padding:14px 16px 6px;font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.08em}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:#94a3b8;font-size:13px;font-weight:500;transition:background .15s,color .15s;cursor:pointer;position:relative;white-space:nowrap}
+.sb-item:hover{background:rgba(255,255,255,.05);color:#e2e8f0}
+.sb-item.active{background:rgba(59,130,246,.15);color:#60a5fa}
+.sb-item.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:#3b82f6;border-radius:0 2px 2px 0}
+.sb-item i{width:18px;text-align:center;font-size:15px}
+.sb-badge{margin-left:auto;background:#3b82f6;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px}
+.sb-bottom{padding:10px 0 8px;border-top:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:8px 14px}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
+
+/* ── Main ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* ── Topbar ── */
+.topbar{height:56px;min-height:56px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;padding:0 24px;flex-shrink:0;z-index:10}
+.tb-breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:#94a3b8}
+.tb-breadcrumb a{color:#94a3b8;transition:color .12s} .tb-breadcrumb a:hover{color:#3b82f6}
+.tb-breadcrumb .sep{color:#e2e8f0} .tb-breadcrumb .cur{color:#0f172a;font-weight:700}
+.tb-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+.tb-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:15px;transition:background .15s}
+.tb-icon:hover{background:#f1f5f9;color:#1e293b}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:#ef4444;border:1.5px solid #fff}
+.tb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
+
+/* ── Lang picker ── */
+.kl-wrap{position:relative}
+.kl-btn{display:flex;align-items:center;gap:5px;height:32px;padding:0 10px;border-radius:8px;background:#f8fafc;border:1.5px solid #e2e8f0;color:#475569;font-size:12px;font-weight:600;cursor:pointer;transition:border-color .15s}
+.kl-btn:hover{border-color:#94a3b8}
+.kl-panel{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);padding:4px;min-width:130px;z-index:100;display:none}
+.kl-panel.open{display:block}
+.kl-opt{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;font-size:12px;font-weight:500;color:#475569;cursor:pointer;transition:background .12s}
+.kl-opt:hover{background:#f8fafc} .kl-opt.active{color:#3b82f6;font-weight:700;background:#eff6ff}
+
+/* ── Content area ── */
+.content{flex:1;overflow-y:auto;padding:28px 28px 40px}
+
+/* ── Page header ── */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.ph-title{font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:4px}
+.ph-sub{font-size:13px;color:#64748b}
+.btn-primary{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:9px;background:#e11d48;color:#fff;font-size:13px;font-weight:700;transition:background .15s,box-shadow .15s,transform .15s;white-space:nowrap}
+.btn-primary:hover{background:#be123c;box-shadow:0 4px 14px rgba(225,29,72,.4);transform:translateY(-1px)}
+.btn-secondary{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:9px;border:1.5px solid #e2e8f0;background:#fff;color:#475569;font-size:13px;font-weight:600;transition:background .15s,border-color .15s}
+.btn-secondary:hover{background:#f8fafc;border-color:#94a3b8}
+
+/* ── Stats row ── */
+.stats{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.stat{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 20px;flex:1;min-width:120px}
+.stat-num{font-size:24px;font-weight:800;color:#0f172a}
+.stat-label{font-size:11px;color:#64748b;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.stat-delta{font-size:11px;color:#10b981;font-weight:600;margin-top:4px}
+
+/* ── Pipeline list ── */
+.pipelines-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.filter-tabs{display:flex;gap:4px}
+.ftab{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;color:#64748b;border:1.5px solid transparent;background:#fff;cursor:pointer;transition:all .15s}
+.ftab:hover{border-color:#cbd5e1} .ftab.active{background:#eff6ff;border-color:#bfdbfe;color:#2563eb}
+
+.pipeline-row{
+  background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;
+  padding:16px 20px;margin-bottom:10px;
+  display:flex;align-items:center;gap:16px;
+  transition:border-color .15s,box-shadow .15s;cursor:pointer;
+}
+.pipeline-row:hover{border-color:#bfdbfe;box-shadow:0 4px 14px rgba(59,130,246,.08)}
+.pipeline-status-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.status-success{background:#dcfce7;color:#15803d}
+.status-running{background:#dbeafe;color:#1d4ed8}
+.status-failed{background:#fee2e2;color:#dc2626}
+.status-pending{background:#f1f5f9;color:#94a3b8}
+
+.pipeline-info{flex:1;min-width:0}
+.pipeline-name{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:3px}
+.pipeline-meta{display:flex;align-items:center;gap:12px;font-size:12px;color:#64748b;flex-wrap:wrap}
+.pipeline-meta span{display:flex;align-items:center;gap:4px}
+
+.pipeline-stages{display:flex;align-items:center;gap:4px;margin:0 16px}
+.ps{display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;border:1.5px solid transparent}
+.ps.done{background:#dcfce7;color:#15803d;border-color:#bbf7d0}
+.ps.run{background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe;animation:ps-pulse .8s ease-in-out infinite}
+.ps.fail{background:#fee2e2;color:#dc2626;border-color:#fecaca}
+.ps.skip{background:#f1f5f9;color:#94a3b8}
+.ps-arrow{color:#e2e8f0;font-size:10px}
+@keyframes ps-pulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+.pipeline-actions{display:flex;gap:6px;flex-shrink:0}
+.icon-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#64748b;transition:background .12s,color .12s;border:1.5px solid #e2e8f0}
+.icon-btn:hover{background:#f1f5f9;color:#1e293b}
+.icon-btn.run-icon{background:#e11d48;color:#fff;border-color:#e11d48}
+.icon-btn.run-icon:hover{background:#be123c}
+
+/* ── WIZARD ── */
+.wizard-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.wizard-overlay.open{display:flex}
+.wizard{background:#fff;border-radius:20px;width:100%;max-width:760px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.22);animation:wiz-in .22s ease}
+@keyframes wiz-in{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:none}}
+
+.wiz-header{padding:22px 28px;border-bottom:1px solid #f1f5f9;flex-shrink:0}
+.wiz-steps{display:flex;gap:0;margin-top:16px}
+.wiz-step{flex:1;display:flex;align-items:center;gap:8px;position:relative}
+.wiz-step:not(:last-child)::after{content:'';flex:1;height:2px;background:#e2e8f0;margin:0 8px}
+.wiz-step.done::after{background:#10b981}
+.wiz-step.active::after{background:#e2e8f0}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;border:2px solid #e2e8f0;background:#fff;color:#94a3b8;transition:all .2s}
+.wiz-step.active .step-dot{border-color:#3b82f6;background:#3b82f6;color:#fff}
+.wiz-step.done .step-dot{border-color:#10b981;background:#10b981;color:#fff}
+.step-label{font-size:12px;font-weight:600;color:#94a3b8;white-space:nowrap}
+.wiz-step.active .step-label{color:#3b82f6}
+.wiz-step.done .step-label{color:#10b981}
+
+.wiz-body{flex:1;overflow-y:auto;padding:24px 28px}
+.wiz-footer{padding:16px 28px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;gap:12px}
+
+/* wizard forms */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid.single{grid-template-columns:1fr}
+.fg{display:flex;flex-direction:column;gap:6px}
+.fg.span2{grid-column:1/-1}
+.label{font-size:12px;font-weight:700;color:#374151} .label span{color:#ef4444}
+.fi,.fsel,.fta{padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font:inherit;font-size:13px;color:#1e293b;outline:none;transition:border-color .15s,box-shadow .15s;background:#fff}
+.fi:focus,.fsel:focus,.fta:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.fta{resize:vertical;min-height:68px}
+.hint{font-size:11px;color:#94a3b8;margin-top:2px}
+.fsel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer}
+
+/* Stage selection */
+.stages-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stage-card{border:2px solid #e2e8f0;border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .15s;display:flex;gap:12px;align-items:flex-start;user-select:none}
+.stage-card:hover{border-color:#bfdbfe}
+.stage-card.selected{border-color:var(--sc);background:var(--sc-bg)}
+.stage-card.locked{opacity:.5;cursor:not-allowed}
+.sc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--sc-bg);color:var(--sc)}
+.sc-check{width:18px;height:18px;border-radius:50%;border:2px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;margin-left:auto;flex-shrink:0;transition:all .15s}
+.stage-card.selected .sc-check{background:var(--sc);border-color:var(--sc);color:#fff}
+.sc-title{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:2px}
+.sc-sub{font-size:11px;color:#64748b;line-height:1.5}
+.sc-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:5px;margin-top:4px;display:inline-block}
+
+.stage-flow{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:16px;padding:12px 14px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.sf-label{font-size:11px;color:#94a3b8;font-weight:600;margin-right:4px;white-space:nowrap}
+.sf-pill{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;white-space:nowrap}
+.sf-arr{color:#cbd5e1;font-size:10px}
+
+/* YAML preview */
+.yaml-wrap{position:relative;border-radius:12px;overflow:hidden;border:1.5px solid #1e293b}
+.yaml-topbar{background:#1e293b;padding:10px 16px;display:flex;align-items:center;gap:8px}
+.yaml-dot{width:10px;height:10px;border-radius:50%}
+.yaml-file{margin-left:auto;font-size:11px;color:#64748b;font-family:monospace}
+.yaml-copy{margin-left:8px;font-size:11px;color:#64748b;cursor:pointer;padding:3px 8px;border-radius:5px;background:rgba(255,255,255,.06);transition:background .12s}
+.yaml-copy:hover{background:rgba(255,255,255,.12);color:#94a3b8}
+.yaml-code{background:#0d1117;padding:16px;overflow-x:auto;max-height:320px;overflow-y:auto}
+.yaml-code pre{font-family:'Fira Mono','Courier New',monospace;font-size:12px;line-height:1.7;color:#e2e8f0}
+.yk{color:#79c0ff} .yv{color:#a5d6ff} .ys{color:#ff7b72} .yc{color:#8b949e;font-style:italic} .yn{color:#ffa657}
+
+/* Step 4 summary */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sum-card{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:12px 16px}
+.sum-label{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.sum-value{font-size:13px;font-weight:600;color:#0f172a}
+.sum-stages{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+
+/* ── RUN VIEW ── */
+#run-view{display:none}
+.run-header{background:#0f172a;border-radius:14px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px}
+.run-icon{width:44px;height:44px;border-radius:12px;background:rgba(225,29,72,.2);display:flex;align-items:center;justify-content:center;font-size:20px;color:#f87171}
+.run-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:3px}
+.run-sub{font-size:12px;color:#64748b}
+.run-actions{display:flex;gap:8px;margin-left:auto}
+.run-status-badge{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1.5px solid currentColor}
+
+/* Stage pipeline diagram */
+.pipeline-diagram{display:flex;align-items:stretch;gap:0;margin-bottom:24px;overflow-x:auto;padding-bottom:4px}
+.diag-stage{flex:1;min-width:120px;background:#fff;border:1.5px solid #e2e8f0;border-radius:0;display:flex;flex-direction:column;padding:16px 12px;transition:border-color .2s;position:relative}
+.diag-stage:first-child{border-radius:12px 0 0 12px}
+.diag-stage:last-child{border-radius:0 12px 12px 0}
+.diag-stage+.diag-stage{border-left:none}
+.diag-stage.ds-done{border-color:#bbf7d0;background:#f0fdf4}
+.diag-stage.ds-run{border-color:#bfdbfe;background:#eff6ff}
+.diag-stage.ds-fail{border-color:#fecaca;background:#fff1f2}
+.diag-stage.ds-skip{opacity:.5}
+.ds-icon{font-size:20px;margin-bottom:8px}
+.ds-name{font-size:11px;font-weight:800;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.ds-status{font-size:11px;font-weight:600;display:flex;align-items:center;gap:4px}
+.ds-done .ds-status{color:#15803d} .ds-run .ds-status{color:#1d4ed8} .ds-fail .ds-status{color:#dc2626}
+.ds-dur{font-size:10px;color:#94a3b8;margin-top:3px}
+.ds-bar{height:3px;background:#e2e8f0;border-radius:2px;margin-top:8px;overflow:hidden}
+.ds-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#3b82f6,#6366f1);width:0%;transition:width .3s ease}
+.diag-stage.ds-done .ds-bar-fill{background:linear-gradient(90deg,#10b981,#059669);width:100%}
+.diag-stage.ds-fail .ds-bar-fill{background:#ef4444;width:100%}
+
+/* Arrow between stages */
+.diag-arrow{display:flex;align-items:center;justify-content:center;width:20px;flex-shrink:0;color:#94a3b8;font-size:12px}
+
+/* Log terminal */
+.log-panel{background:#0d1117;border-radius:12px;overflow:hidden;border:1.5px solid #1e293b}
+.log-topbar{background:#161b22;padding:10px 16px;display:flex;align-items:center;gap:8px}
+.log-dot{width:10px;height:10px;border-radius:50%}
+.log-title{font-size:12px;font-weight:600;color:#8b949e;margin-left:4px}
+.log-stage-tabs{display:flex;gap:2px;margin-left:auto}
+.log-tab{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;color:#8b949e;cursor:pointer;transition:all .12s}
+.log-tab:hover{background:rgba(255,255,255,.06)} .log-tab.active{background:#21262d;color:#e2e8f0}
+.log-body{padding:12px 16px;height:240px;overflow-y:auto;font-family:'Fira Mono','Courier New',monospace;font-size:12px;line-height:1.8}
+.log-body::-webkit-scrollbar{width:4px} .log-body::-webkit-scrollbar-thumb{background:#21262d}
+.log-line{display:flex;gap:10px;align-items:flex-start}
+.log-ts{color:#484f58;flex-shrink:0;user-select:none}
+.log-ok{color:#3fb950} .log-info{color:#58a6ff} .log-warn{color:#d29922} .log-err{color:#f85149} .log-dim{color:#8b949e}
+.log-cursor{display:inline-block;width:8px;height:14px;background:#58a6ff;animation:blink .8s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Run summary */
+.run-summary{display:none;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:20px 24px;margin-top:16px}
+.run-summary.fail{background:#fff1f2;border-color:#fecaca}
+.rs-title{font-size:15px;font-weight:800;color:#0f172a;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.rs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.rs-stat{text-align:center} .rs-stat-num{font-size:20px;font-weight:800;color:#0f172a} .rs-stat-label{font-size:11px;color:#64748b}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;z-index:300;background:#0f172a;color:#fff;padding:12px 18px;border-radius:12px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,.25);transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s;pointer-events:none}
+.toast.show{transform:none;opacity:1}
+
+/* Responsive */
+@media(max-width:640px){
+  .sidebar{width:60px;min-width:60px} .sb-name,.sb-sub,.sb-sec,.sb-badge,.sb-user-info{display:none}
+  .form-grid{grid-template-columns:1fr} .stages-grid{grid-template-columns:1fr}
+  .summary-grid{grid-template-columns:1fr} .rs-grid{grid-template-columns:1fr 1fr}
+  .content{padding:16px 14px 40px}
+  .pipeline-stages{display:none}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <svg viewBox="0 0 40 40"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div><div class="sb-name">Koffi IDP</div><div class="sb-sub">Dev Portal</div></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Hauptmenü</div>
+    <a class="sb-item" href="index.html"><i class="fa-solid fa-house"></i><span>Startseite</span></a>
+    <a class="sb-item" href="laboratoire.html"><i class="fa-solid fa-cubes"></i><span>Katalog</span><span class="sb-badge">58</span></a>
+    <a class="sb-item" href="idp-demo.html"><i class="fa-solid fa-bolt"></i><span>Self-Service</span></a>
+    <a class="sb-item" href="#"><i class="fa-solid fa-chart-bar"></i><span>Scorecards</span></a>
+    <a class="sb-item" href="#"><i class="fa-solid fa-gauge-high"></i><span>Dashboards</span></a>
+    <div class="sb-sec">Platform</div>
+    <a class="sb-item" href="#"><i class="fa-solid fa-server"></i><span>Services</span></a>
+    <a class="sb-item" href="#"><i class="fa-brands fa-docker"></i><span>Environments</span></a>
+    <a class="sb-item active" href="cicd-pipeline-demo.html"><i class="fa-solid fa-code-branch"></i><span>CI/CD</span><span class="sb-badge">5</span></a>
+    <a class="sb-item" href="#"><i class="fa-solid fa-shield-halved"></i><span>Secrets</span></a>
+    <a class="sb-item" href="#"><i class="fa-solid fa-clock-rotate-left"></i><span>Audit Log</span></a>
+    <div class="sb-sec">Admin</div>
+    <a class="sb-item" href="#"><i class="fa-solid fa-users"></i><span>Teams</span></a>
+    <a class="sb-item" href="#"><i class="fa-solid fa-gear"></i><span>Einstellungen</span></a>
+  </nav>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="sb-avatar">KA</div>
+      <div style="overflow:hidden">
+        <div style="font-size:12px;font-weight:600;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Koffi Academy</div>
+        <div style="font-size:10px;color:#64748b">Platform Engineer</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="tb-breadcrumb">
+      <a href="idp-demo.html"><i class="fa-solid fa-bolt"></i> Self-Service</a>
+      <span class="sep">/</span>
+      <span class="cur"><i class="fa-solid fa-code-branch"></i> CI/CD Pipelines</span>
+    </div>
+    <div class="tb-actions">
+      <div class="tb-icon" style="position:relative"><i class="fa-regular fa-bell"></i><span class="notif-dot"></span></div>
+      <div class="tb-icon"><i class="fa-regular fa-circle-question"></i></div>
+      <div class="kl-wrap" id="klWrap">
+        <button class="kl-btn" onclick="klToggle()"><span id="klFlag">🇩🇪</span><span id="klCode">DE</span><i class="fa-solid fa-chevron-down" style="font-size:9px"></i></button>
+        <div class="kl-panel" id="klPanel">
+          <div class="kl-opt active" data-kl="de" onclick="pickLang('de')">🇩🇪 Deutsch</div>
+          <div class="kl-opt" data-kl="en" onclick="pickLang('en')">🇬🇧 English</div>
+          <div class="kl-opt" data-kl="fr" onclick="pickLang('fr')">🇫🇷 Français</div>
+        </div>
+      </div>
+      <div class="tb-avatar">KA</div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content" id="mainContent">
+
+    <!-- HUB VIEW -->
+    <div id="hub-view">
+      <div class="ph">
+        <div>
+          <h1 class="ph-title"><i class="fa-solid fa-code-branch" style="color:#e11d48"></i> CI/CD Pipelines</h1>
+          <p class="ph-sub" id="ph-sub">Pipelines erstellen, konfigurieren und in Echtzeit ausführen.</p>
+        </div>
+        <button class="btn-primary" onclick="openWizard()"><i class="fa-solid fa-plus"></i> <span id="btn-new">Neue Pipeline</span></button>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="stat-num">5</div><div class="stat-label" id="sl-pipelines">Pipelines</div><div class="stat-delta">↑ 2 diesen Monat</div></div>
+        <div class="stat"><div class="stat-num">94%</div><div class="stat-label" id="sl-success">Erfolgsrate</div><div class="stat-delta" style="color:#10b981">● Stabil</div></div>
+        <div class="stat"><div class="stat-num">1:42</div><div class="stat-label" id="sl-avgdur">Ø Laufzeit</div><div class="stat-delta">min</div></div>
+        <div class="stat"><div class="stat-num" id="running-count">1</div><div class="stat-label" id="sl-running">Aktiv</div><div class="stat-delta" style="color:#3b82f6">● Live</div></div>
+      </div>
+
+      <div class="pipelines-header">
+        <div class="filter-tabs">
+          <button class="ftab active" onclick="setFTab('all',this)" id="ft-all">Alle (5)</button>
+          <button class="ftab" onclick="setFTab('running',this)" id="ft-running"><span style="color:#3b82f6">●</span> Running (1)</button>
+          <button class="ftab" onclick="setFTab('success',this)" id="ft-success"><span style="color:#10b981">●</span> Erfolg (3)</button>
+          <button class="ftab" onclick="setFTab('failed',this)" id="ft-failed"><span style="color:#ef4444">●</span> Fehler (1)</button>
+        </div>
+      </div>
+
+      <div id="pipeline-list"></div>
+    </div><!-- /hub-view -->
+
+    <!-- RUN VIEW -->
+    <div id="run-view">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <button class="btn-secondary" onclick="backToHub()"><i class="fa-solid fa-arrow-left"></i> <span id="back-btn">Zurück</span></button>
+        <div style="font-size:13px;color:#64748b" id="run-breadcrumb">CI/CD ▸ Pipeline ausführen</div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="btn-secondary" id="rerun-btn" onclick="startRun(currentRunPipeline)" style="display:none"><i class="fa-solid fa-rotate-right"></i> <span>Erneut starten</span></button>
+        </div>
+      </div>
+
+      <div class="run-header">
+        <div class="run-icon"><i class="fa-solid fa-code-branch"></i></div>
+        <div>
+          <div class="run-title" id="run-title">deploy-backend-prod</div>
+          <div class="run-sub" id="run-sub">main · org/backend-service · Run #12</div>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:12px">
+          <div id="run-elapsed" style="font-size:20px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums">0:00</div>
+          <div class="run-status-badge" id="run-status-badge" style="color:#58a6ff;border-color:rgba(88,166,255,.4)">
+            <i class="fa-solid fa-spinner fa-spin"></i> Running
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage diagram -->
+      <div class="pipeline-diagram" id="diag-stages"></div>
+
+      <!-- Log panel -->
+      <div class="log-panel">
+        <div class="log-topbar">
+          <div class="log-dot" style="background:#ff5f56"></div>
+          <div class="log-dot" style="background:#ffbd2e"></div>
+          <div class="log-dot" style="background:#27c93f"></div>
+          <div class="log-title">Live Logs</div>
+          <div class="log-stage-tabs" id="log-tabs"></div>
+        </div>
+        <div class="log-body" id="log-body"></div>
+      </div>
+
+      <div class="run-summary" id="run-summary">
+        <div class="rs-title" id="rs-title"><i class="fa-solid fa-circle-check" style="color:#10b981"></i> Pipeline erfolgreich abgeschlossen</div>
+        <div class="rs-grid">
+          <div class="rs-stat"><div class="rs-stat-num" id="rs-dur">—</div><div class="rs-stat-label">Gesamtdauer</div></div>
+          <div class="rs-stat"><div class="rs-stat-num" id="rs-steps">—</div><div class="rs-stat-label">Steps ausgeführt</div></div>
+          <div class="rs-stat"><div class="rs-stat-num" id="rs-tests">—</div><div class="rs-stat-label">Tests bestanden</div></div>
+          <div class="rs-stat"><div class="rs-stat-num" id="rs-coverage">—</div><div class="rs-stat-label">Coverage</div></div>
+        </div>
+      </div>
+    </div><!-- /run-view -->
+
+  </main>
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- ══════════════════════════════════════════════════════════
+     WIZARD
+══════════════════════════════════════════════════════════ -->
+<div class="wizard-overlay" id="wizOverlay" onclick="wOverlayClick(event)">
+<div class="wizard">
+  <div class="wiz-header">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:8px">
+          <span style="background:#fee2e2;color:#e11d48;width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:15px"><i class="fa-solid fa-code-branch"></i></span>
+          <span id="wiz-title">CI/CD Pipeline erstellen</span>
+        </div>
+        <div style="font-size:12px;color:#64748b;margin-top:4px" id="wiz-sub">Konfiguriere Stages, YAML und Repository-Einstellungen</div>
+      </div>
+      <button onclick="closeWizard()" style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:16px;transition:background .12s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background=''"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <!-- Step indicator -->
+    <div class="wiz-steps" id="wizSteps">
+      <div class="wiz-step active" id="ws0"><div class="step-dot">1</div><div class="step-label" id="wsl0">Repository</div></div>
+      <div class="wiz-step" id="ws1"><div class="step-dot">2</div><div class="step-label" id="wsl1">Stages</div></div>
+      <div class="wiz-step" id="ws2"><div class="step-dot">3</div><div class="step-label" id="wsl2">YAML Vorschau</div></div>
+      <div class="wiz-step" id="ws3"><div class="step-dot">4</div><div class="step-label" id="wsl3">Bestätigen</div></div>
+    </div>
+  </div>
+
+  <div class="wiz-body" id="wizBody"></div>
+
+  <div class="wiz-footer">
+    <button class="btn-secondary" id="wizBack" onclick="wizPrev()" style="visibility:hidden"><i class="fa-solid fa-arrow-left"></i> <span id="wfb">Zurück</span></button>
+    <div style="font-size:12px;color:#94a3b8" id="wizStepLabel">Schritt 1 / 4</div>
+    <button class="btn-primary" id="wizNext" onclick="wizNext()"><span id="wfn">Weiter</span> <i class="fa-solid fa-arrow-right"></i></button>
+  </div>
+</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check" style="color:#34d399;font-size:16px"></i><span id="toastMsg"></span></div>
+
+<script>
+/* ══════════════════ DATA ══════════════════ */
+var lang = localStorage.getItem('preferred-lang') || 'de';
+if (!['de','en','fr'].includes(lang)) lang = 'de';
+var wizStep = 0;
+var wizData = {};
+var currentRunPipeline = null;
+var runTimerInterval = null;
+var runElapsed = 0;
+
+var PIPELINES_DATA = [
+  {id:'p1', name:'deploy-backend-prod', repo:'org/backend-service', branch:'main',
+   status:'running', stages:['build','test','security','deploy-dev','deploy-prod'],
+   stageStatus:['done','done','run','skip','skip'], lastRun:'Gerade eben', runs:12, avgDur:'1:38'},
+  {id:'p2', name:'frontend-ci', repo:'org/frontend-app', branch:'release/2.4',
+   status:'success', stages:['build','lint','test','deploy-dev'],
+   stageStatus:['done','done','done','done'], lastRun:'vor 14 Min', runs:47, avgDur:'1:12'},
+  {id:'p3', name:'infrastructure-iac', repo:'org/terraform-modules', branch:'main',
+   status:'success', stages:['lint','security','deploy-dev','deploy-staging','deploy-prod'],
+   stageStatus:['done','done','done','done','done'], lastRun:'vor 2 Std', runs:8, avgDur:'2:54'},
+  {id:'p4', name:'auth-service-test', repo:'org/auth-service', branch:'feature/oauth2',
+   status:'failed', stages:['build','test','security'],
+   stageStatus:['done','fail','skip'], lastRun:'vor 3 Std', runs:3, avgDur:'0:48'},
+  {id:'p5', name:'data-pipeline-etl', repo:'org/data-platform', branch:'main',
+   status:'success', stages:['build','test','deploy-staging','deploy-prod'],
+   stageStatus:['done','done','done','done'], lastRun:'vor 1 Tag', runs:21, avgDur:'3:10'},
+];
+
+var STAGE_META = {
+  'build':        {icon:'🔨', label:{de:'Build',en:'Build',fr:'Build'}, color:'#3b82f6', bg:'#eff6ff', badge:{de:'required',en:'required',fr:'requis'}},
+  'lint':         {icon:'📐', label:{de:'Lint',en:'Lint',fr:'Lint'}, color:'#8b5cf6', bg:'#ede9fe', badge:'optional'},
+  'test':         {icon:'🧪', label:{de:'Test',en:'Test',fr:'Test'}, color:'#10b981', bg:'#dcfce7', badge:{de:'required',en:'required',fr:'requis'}},
+  'security':     {icon:'🛡️', label:{de:'Security Scan',en:'Security Scan',fr:'Scan sécurité'}, color:'#7c3aed', bg:'#ede9fe', badge:'optional'},
+  'deploy-dev':   {icon:'🚀', label:{de:'Deploy Dev',en:'Deploy Dev',fr:'Deploy Dev'}, color:'#0ea5e9', bg:'#e0f2fe', badge:'optional'},
+  'deploy-staging':{icon:'🎯', label:{de:'Deploy Staging',en:'Deploy Staging',fr:'Deploy Staging'}, color:'#f59e0b', bg:'#fef9c3', badge:'optional'},
+  'deploy-prod':  {icon:'⚡', label:{de:'Deploy Prod',en:'Deploy Prod',fr:'Deploy Prod'}, color:'#e11d48', bg:'#fee2e2', badge:{de:'manuell',en:'manual',fr:'manuel'}},
+};
+
+/* ══════════════════ I18N ══════════════════ */
+var T = {
+  de:{
+    'ph-sub':'Pipelines erstellen, konfigurieren und in Echtzeit ausführen.',
+    'btn-new':'Neue Pipeline','back-btn':'Zurück',
+    'sl-pipelines':'Pipelines','sl-success':'Erfolgsrate','sl-avgdur':'Ø Laufzeit','sl-running':'Aktiv',
+    'wiz-title':'CI/CD Pipeline erstellen','wiz-sub':'Konfiguriere Stages, YAML und Repository-Einstellungen',
+    'wsl0':'Repository','wsl1':'Stages','wsl2':'YAML Vorschau','wsl3':'Bestätigen',
+    'wizStepLabel':'Schritt %s / 4','wfb':'Zurück','wfn':'Weiter',
+    'wfn-last':'Pipeline erstellen & starten',
+    'f-name':'Pipeline-Name','f-repo':'Repository','f-branch':'Branch',
+    'f-runner':'Runner','f-trigger':'Trigger','f-desc':'Beschreibung (optional)',
+    'hint-name':'z.B. deploy-backend-prod','hint-repo':'org/repository',
+    'step2-title':'Stages auswählen',
+    'step2-sub':'Wähle die Stages für deine Pipeline. Build und Test sind empfohlen.',
+    'step3-title':'Generiertes GitHub Actions YAML',
+    'step3-sub':'Diese Datei wird als .github/workflows/{name}.yml in deinem Repository angelegt.',
+    'step4-title':'Pipeline-Zusammenfassung',
+    'step4-sub':'Überprüfe die Konfiguration und starte die Pipeline.',
+    'running':'Running','success':'Erfolg','failed':'Fehler','pending':'Ausstehend',
+    'toast-created':'Pipeline erstellt und gestartet!',
+    'rs-ok':'Pipeline erfolgreich abgeschlossen','rs-fail':'Pipeline fehlgeschlagen',
+  },
+  en:{
+    'ph-sub':'Create, configure and execute pipelines in real time.',
+    'btn-new':'New Pipeline','back-btn':'Back',
+    'sl-pipelines':'Pipelines','sl-success':'Success Rate','sl-avgdur':'Avg Duration','sl-running':'Active',
+    'wiz-title':'Create CI/CD Pipeline','wiz-sub':'Configure stages, YAML and repository settings',
+    'wsl0':'Repository','wsl1':'Stages','wsl2':'YAML Preview','wsl3':'Confirm',
+    'wizStepLabel':'Step %s / 4','wfb':'Back','wfn':'Next',
+    'wfn-last':'Create & Run Pipeline',
+    'f-name':'Pipeline Name','f-repo':'Repository','f-branch':'Branch',
+    'f-runner':'Runner','f-trigger':'Trigger','f-desc':'Description (optional)',
+    'hint-name':'e.g. deploy-backend-prod','hint-repo':'org/repository',
+    'step2-title':'Select Stages',
+    'step2-sub':'Choose the stages for your pipeline. Build and Test are recommended.',
+    'step3-title':'Generated GitHub Actions YAML',
+    'step3-sub':'This file will be created as .github/workflows/{name}.yml in your repository.',
+    'step4-title':'Pipeline Summary',
+    'step4-sub':'Review the configuration and launch the pipeline.',
+    'running':'Running','success':'Success','failed':'Failed','pending':'Pending',
+    'toast-created':'Pipeline created and started!',
+    'rs-ok':'Pipeline completed successfully','rs-fail':'Pipeline failed',
+  },
+  fr:{
+    'ph-sub':'Créer, configurer et exécuter des pipelines en temps réel.',
+    'btn-new':'Nouvelle pipeline','back-btn':'Retour',
+    'sl-pipelines':'Pipelines','sl-success':'Taux de succès','sl-avgdur':'Durée moy.','sl-running':'Actives',
+    'wiz-title':'Créer un pipeline CI/CD','wiz-sub':'Configurez les stages, le YAML et les paramètres du dépôt',
+    'wsl0':'Dépôt','wsl1':'Stages','wsl2':'Aperçu YAML','wsl3':'Confirmer',
+    'wizStepLabel':'Étape %s / 4','wfb':'Retour','wfn':'Suivant',
+    'wfn-last':'Créer et lancer le pipeline',
+    'f-name':'Nom du pipeline','f-repo':'Dépôt','f-branch':'Branche',
+    'f-runner':'Runner','f-trigger':'Déclencheur','f-desc':'Description (optionnel)',
+    'hint-name':'ex. deploy-backend-prod','hint-repo':'org/repository',
+    'step2-title':'Sélectionner les stages',
+    'step2-sub':'Choisissez les stages de votre pipeline. Build et Test sont recommandés.',
+    'step3-title':'YAML GitHub Actions généré',
+    'step3-sub':'Ce fichier sera créé en tant que .github/workflows/{name}.yml dans votre dépôt.',
+    'step4-title':'Récapitulatif du pipeline',
+    'step4-sub':'Vérifiez la configuration et lancez le pipeline.',
+    'running':'Running','success':'Succès','failed':'Échec','pending':'En attente',
+    'toast-created':'Pipeline créé et démarré !',
+    'rs-ok':'Pipeline terminé avec succès','rs-fail':'Échec du pipeline',
+  }
+};
+function t(k){ return (T[lang]&&T[lang][k])||T.de[k]||k; }
+function applyLang(l){
+  if(!T[l])return; lang=l; localStorage.setItem('preferred-lang',l);
+  document.documentElement.lang=l;
+  ['ph-sub','btn-new','back-btn','sl-pipelines','sl-success','sl-avgdur','sl-running'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.textContent=t(id);
+  });
+  renderPipelineList(); syncLangUI();
+}
+function syncLangUI(){
+  var f={de:'🇩🇪',en:'🇬🇧',fr:'🇫🇷'},c={de:'DE',en:'EN',fr:'FR'};
+  document.getElementById('klFlag').textContent=f[lang]; document.getElementById('klCode').textContent=c[lang];
+  document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('active',o.dataset.kl===lang);});
+}
+function klToggle(){var p=document.getElementById('klPanel');p.classList.toggle('open')}
+function pickLang(l){applyLang(l);document.getElementById('klPanel').classList.remove('open')}
+document.addEventListener('click',function(e){
+  var w=document.getElementById('klWrap');
+  if(w&&!w.contains(e.target))document.getElementById('klPanel').classList.remove('open');
+});
+
+/* ══════════════════ PIPELINE LIST ══════════════════ */
+var activeFilter='all';
+function setFTab(f,el){
+  activeFilter=f;
+  document.querySelectorAll('.ftab').forEach(function(b){b.classList.remove('active')});
+  el.classList.add('active');
+  renderPipelineList();
+}
+function renderPipelineList(){
+  var list=PIPELINES_DATA.filter(function(p){
+    if(activeFilter==='all')return true;
+    return p.status===activeFilter;
+  });
+  var html=list.map(function(p){ return pipelineRowHtml(p); }).join('');
+  document.getElementById('pipeline-list').innerHTML=html||'<div style="text-align:center;padding:40px;color:#94a3b8">Keine Pipelines gefunden</div>';
+}
+function pipelineRowHtml(p){
+  var icons={'done':'fa-solid fa-circle-check','run':'fa-solid fa-spinner fa-spin','fail':'fa-solid fa-circle-xmark','skip':'fa-regular fa-circle'};
+  var colors={'done':'#10b981','run':'#3b82f6','fail':'#ef4444','skip':'#94a3b8'};
+  var statusIconClass={'running':'status-running','success':'status-success','failed':'status-failed','pending':'status-pending'};
+  var statusIcon={'running':'fa-solid fa-spinner fa-spin','success':'fa-solid fa-circle-check','failed':'fa-solid fa-circle-xmark','pending':'fa-regular fa-clock'};
+  var stagesHtml=p.stages.map(function(s,i){
+    var ss=p.stageStatus[i]||'skip';
+    var m=STAGE_META[s]||{icon:'?',label:{de:s,en:s,fr:s}};
+    var lbl=m.label[lang]||m.label.de;
+    return (i>0?'<span class="ps-arrow"><i class="fa-solid fa-chevron-right"></i></span>':'')+
+      '<span class="ps '+ss+'"><i class="'+icons[ss]+'" style="color:'+colors[ss]+';margin-right:4px"></i>'+lbl+'</span>';
+  }).join('');
+  var timeSince=p.status==='running'?'<span style="color:#3b82f6"><i class="fa-solid fa-circle" style="font-size:7px;animation:ps-pulse .8s infinite"></i> Running</span>':p.lastRun;
+  return '<div class="pipeline-row" onclick="viewRun(\''+p.id+'\')">'+
+    '<div class="pipeline-status-icon '+statusIconClass[p.status]+'"><i class="'+statusIcon[p.status]+'"></i></div>'+
+    '<div class="pipeline-info">'+
+      '<div class="pipeline-name">'+p.name+'</div>'+
+      '<div class="pipeline-meta">'+
+        '<span><i class="fa-brands fa-github"></i>'+p.repo+'</span>'+
+        '<span><i class="fa-solid fa-code-branch"></i>'+p.branch+'</span>'+
+        '<span><i class="fa-regular fa-clock"></i>'+timeSince+'</span>'+
+        '<span><i class="fa-solid fa-rotate-right"></i>Run #'+p.runs+'</span>'+
+        '<span><i class="fa-solid fa-timer"></i>'+p.avgDur+'</span>'+
+      '</div>'+
+    '</div>'+
+    '<div class="pipeline-stages">'+stagesHtml+'</div>'+
+    '<div class="pipeline-actions" onclick="event.stopPropagation()">'+
+      '<button class="icon-btn" title="View logs" onclick="viewRun(\''+p.id+'\')"><i class="fa-solid fa-eye"></i></button>'+
+      '<button class="icon-btn run-icon" title="Run pipeline" onclick="event.stopPropagation();startRunById(\''+p.id+'\')"><i class="fa-solid fa-play"></i></button>'+
+    '</div>'+
+  '</div>';
+}
+
+/* ══════════════════ WIZARD ══════════════════ */
+var selectedStages=['build','test'];
+
+function openWizard(){
+  wizStep=0; wizData={}; selectedStages=['build','test'];
+  document.getElementById('wizOverlay').classList.add('open');
+  renderWizStep();
+}
+function closeWizard(){document.getElementById('wizOverlay').classList.remove('open')}
+function wOverlayClick(e){if(e.target===document.getElementById('wizOverlay'))closeWizard()}
+
+function updateWizHeader(){
+  for(var i=0;i<4;i++){
+    var ws=document.getElementById('ws'+i);
+    ws.className='wiz-step'+(i<wizStep?' done':i===wizStep?' active':'');
+    document.getElementById('wsl'+i).textContent=t('wsl'+i);
+  }
+  document.getElementById('wizBack').style.visibility=wizStep>0?'visible':'hidden';
+  var isLast=wizStep===3;
+  document.getElementById('wizNext').innerHTML=(isLast?t('wfn-last')+' <i class="fa-solid fa-rocket"></i>':'<span>'+t('wfn')+'</span> <i class="fa-solid fa-arrow-right"></i>');
+  document.getElementById('wfb').textContent=t('wfb');
+  document.getElementById('wizStepLabel').textContent=t('wizStepLabel').replace('%s',wizStep+1);
+  document.getElementById('wiz-title').textContent=t('wiz-title');
+  document.getElementById('wiz-sub').textContent=t('wiz-sub');
+}
+
+function wizNext(){
+  if(wizStep===0){
+    var n=document.getElementById('wf-name'); var r=document.getElementById('wf-repo'); var b=document.getElementById('wf-branch');
+    if(!n||!n.value.trim()){showToast('⚠ '+( lang==='fr'?'Nom requis':lang==='en'?'Name required':'Name erforderlich'));return;}
+    wizData.name=n.value.trim(); wizData.repo=r.value.trim()||'org/my-service';
+    wizData.branch=b.value.trim()||'main';
+    wizData.runner=document.getElementById('wf-runner').value;
+    wizData.trigger=document.getElementById('wf-trigger').value;
+    wizData.desc=document.getElementById('wf-desc').value.trim();
+  }
+  if(wizStep===1){ wizData.stages=[...selectedStages]; if(!wizData.stages.length){showToast('⚠ Min. 1 Stage'); return;} }
+  if(wizStep<3){wizStep++;renderWizStep();}
+  else{launchFromWizard();}
+}
+function wizPrev(){if(wizStep>0){wizStep--;renderWizStep();}}
+
+function renderWizStep(){
+  updateWizHeader();
+  var b=document.getElementById('wizBody');
+  if(wizStep===0) b.innerHTML=renderStep1();
+  else if(wizStep===1) b.innerHTML=renderStep2();
+  else if(wizStep===2) b.innerHTML=renderStep3();
+  else b.innerHTML=renderStep4();
+  if(wizStep===1) attachStageClicks();
+}
+
+function renderStep1(){
+  return '<div class="form-grid">'+
+    '<div class="fg span2"><label class="label">'+t('f-name')+' <span>*</span></label>'+
+    '<input class="fi" id="wf-name" type="text" placeholder="'+t('hint-name')+'" value="'+(wizData.name||'')+'"></div>'+
+    '<div class="fg"><label class="label">'+t('f-repo')+' <span>*</span></label>'+
+    '<input class="fi" id="wf-repo" type="text" placeholder="'+t('hint-repo')+'" value="'+(wizData.repo||'org/')+'"></div>'+
+    '<div class="fg"><label class="label">'+t('f-branch')+'</label>'+
+    '<input class="fi" id="wf-branch" type="text" placeholder="main" value="'+(wizData.branch||'main')+'"></div>'+
+    '<div class="fg"><label class="label">'+t('f-runner')+'</label>'+
+    '<select class="fsel" id="wf-runner"><option value="ubuntu-latest">ubuntu-latest</option><option value="ubuntu-22.04">ubuntu-22.04</option><option value="self-hosted">self-hosted</option><option value="windows-latest">windows-latest</option></select></div>'+
+    '<div class="fg"><label class="label">'+t('f-trigger')+'</label>'+
+    '<select class="fsel" id="wf-trigger"><option value="push">push</option><option value="push+pr">push + pull_request</option><option value="manual">workflow_dispatch only</option><option value="schedule">schedule (cron)</option></select></div>'+
+    '<div class="fg span2"><label class="label">'+t('f-desc')+'</label>'+
+    '<textarea class="fta" id="wf-desc" rows="2" placeholder="'+(lang==='fr'?'Description du pipeline...':lang==='en'?'Pipeline description...':'Pipeline Beschreibung...')+'">'+(wizData.desc||'')+'</textarea></div>'+
+  '</div>';
+}
+
+function renderStep2(){
+  var allStages=['build','lint','test','security','deploy-dev','deploy-staging','deploy-prod'];
+  var required=['build','test'];
+  var cards=allStages.map(function(s){
+    var m=STAGE_META[s];
+    var isSelected=selectedStages.includes(s);
+    var isRequired=required.includes(s);
+    var lbl=m.label[lang]||m.label.de;
+    var badge=(typeof m.badge==='object')?(m.badge[lang]||m.badge.de):m.badge;
+    var desc={
+      'build':{de:'npm ci + npm run build, Artefakte speichern',en:'npm ci + npm run build, save artifacts',fr:'npm ci + npm run build, sauvegarder les artefacts'},
+      'lint':{de:'ESLint + Prettier Code-Qualitätsprüfung',en:'ESLint + Prettier code quality check',fr:'Vérification qualité ESLint + Prettier'},
+      'test':{de:'Jest unit tests + Coverage Report (min. 80%)',en:'Jest unit tests + Coverage Report (min. 80%)',fr:'Tests unitaires Jest + rapport de couverture (min. 80%)'},
+      'security':{de:'Trivy SAST + Dependency-Scan (CRITICAL/HIGH)',en:'Trivy SAST + Dependency scan (CRITICAL/HIGH)',fr:'Trivy SAST + scan des dépendances (CRITICAL/HIGH)'},
+      'deploy-dev':{de:'kubectl apply in dev Namespace',en:'kubectl apply in dev namespace',fr:'kubectl apply dans le namespace dev'},
+      'deploy-staging':{de:'helm upgrade --install in staging',en:'helm upgrade --install in staging',fr:'helm upgrade --install en staging'},
+      'deploy-prod':{de:'Manueller Approval → helm upgrade in production',en:'Manual approval → helm upgrade in production',fr:'Approbation manuelle → helm upgrade en production'},
+    };
+    var d=desc[s][lang]||desc[s].de;
+    return '<div class="stage-card'+(isSelected?' selected':'')+(isRequired?' locked':'')+'" data-stage="'+s+'"'+
+      ' style="--sc:'+m.color+';--sc-bg:'+m.bg+'">'+
+      '<div class="sc-icon">'+m.icon+'</div>'+
+      '<div style="flex:1;min-width:0">'+
+        '<div class="sc-title">'+lbl+'</div>'+
+        '<div class="sc-sub">'+d+'</div>'+
+        '<span class="sc-badge" style="background:'+m.bg+';color:'+m.color+'">'+badge+'</span>'+
+      '</div>'+
+      '<div class="sc-check">'+(isSelected?'<i class="fa-solid fa-check"></i>':'')+'</div>'+
+    '</div>';
+  }).join('');
+  var flowPills=selectedStages.map(function(s,i){
+    var m=STAGE_META[s]||{label:{de:s}};
+    return (i>0?'<span class="sf-arr">→</span>':'')+
+      '<span class="sf-pill" style="background:'+m.bg+';color:'+m.color+'">'+m.icon+' '+(m.label[lang]||m.label.de)+'</span>';
+  }).join('');
+  return '<div style="margin-bottom:12px"><p style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px">'+t('step2-title')+'</p>'+
+    '<p style="font-size:12px;color:#64748b">'+t('step2-sub')+'</p></div>'+
+    '<div class="stages-grid" id="stages-grid">'+cards+'</div>'+
+    '<div class="stage-flow" id="stage-flow"><span class="sf-label">Flow:</span>'+flowPills+'</div>';
+}
+
+function attachStageClicks(){
+  var required=['build','test'];
+  document.querySelectorAll('.stage-card:not(.locked)').forEach(function(card){
+    card.addEventListener('click',function(){
+      var s=card.dataset.stage;
+      var idx=selectedStages.indexOf(s);
+      if(idx>=0){ selectedStages.splice(idx,1); }
+      else { selectedStages.push(s); }
+      card.classList.toggle('selected');
+      var chk=card.querySelector('.sc-check');
+      chk.innerHTML=selectedStages.includes(s)?'<i class="fa-solid fa-check"></i>':'';
+      // update flow
+      var ordered=['build','lint','test','security','deploy-dev','deploy-staging','deploy-prod'];
+      var flow=ordered.filter(function(x){return selectedStages.includes(x);});
+      var pills=flow.map(function(x,i){
+        var m=STAGE_META[x];
+        return (i>0?'<span class="sf-arr">→</span>':'')+
+          '<span class="sf-pill" style="background:'+m.bg+';color:'+m.color+'">'+m.icon+' '+(m.label[lang]||m.label.de)+'</span>';
+      }).join('');
+      document.getElementById('stage-flow').innerHTML='<span class="sf-label">Flow:</span>'+pills;
+    });
+  });
+}
+
+function renderStep3(){
+  var name=wizData.name||'my-pipeline';
+  var repo=wizData.repo||'org/repo';
+  var branch=wizData.branch||'main';
+  var runner=wizData.runner||'ubuntu-latest';
+  var trigger=wizData.trigger||'push';
+  var ordered=['build','lint','test','security','deploy-dev','deploy-staging','deploy-prod'];
+  var stages=ordered.filter(function(s){return selectedStages.includes(s);});
+
+  var triggerYaml = trigger==='push'?
+    'push:\n    branches: ["'+branch+'"]\n  workflow_dispatch:':
+    trigger==='push+pr'?
+    'push:\n    branches: ["'+branch+'"]\n  pull_request:\n    branches: ["'+branch+'"]':
+    trigger==='schedule'?
+    'push:\n    branches: ["'+branch+'"]\n  schedule:\n    - cron: "0 6 * * 1-5"':
+    'workflow_dispatch:\n    inputs:\n      environment:\n        type: choice\n        options: [dev, staging, prod]';
+
+  var needs={
+    'lint':['build'],'test':['build'],'security':['build'],
+    'deploy-dev':stages.filter(function(s){return['test','security'].includes(s)}).length?stages.filter(function(s){return['test','security'].includes(s)}):['build'],
+    'deploy-staging':stages.includes('deploy-dev')?['deploy-dev']:['build'],
+    'deploy-prod':stages.includes('deploy-staging')?['deploy-staging']:stages.includes('deploy-dev')?['deploy-dev']:['build'],
+  };
+  var jobsYaml=stages.map(function(s){
+    var m=STAGE_META[s];
+    var jobName={
+      'build':'🔨 Build','lint':'📐 Lint & Format','test':'🧪 Test',
+      'security':'🛡️ Security Scan','deploy-dev':'🚀 Deploy Dev',
+      'deploy-staging':'🎯 Deploy Staging','deploy-prod':'⚡ Deploy Production'
+    }[s]||s;
+    var steps={
+      'build':'- uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: "20"\n          cache: npm\n      - run: npm ci\n      - run: npm run build\n      - uses: actions/upload-artifact@v4\n        with:\n          name: build-artifacts\n          path: dist/',
+      'lint':'- uses: actions/checkout@v4\n      - run: npm ci\n      - run: npm run lint\n      - run: npm run format:check',
+      'test':'- uses: actions/checkout@v4\n      - run: npm ci\n      - uses: actions/download-artifact@v4\n        with:\n          name: build-artifacts\n      - run: npm test -- --coverage --coverageThreshold=\'{"global":{"lines":80}}\'\n      - uses: codecov/codecov-action@v4',
+      'security':'- uses: actions/checkout@v4\n      - name: Trivy FS Scan\n        uses: aquasecurity/trivy-action@master\n        with:\n          scan-type: fs\n          severity: CRITICAL,HIGH\n          exit-code: "1"\n      - name: SAST with Semgrep\n        uses: semgrep/semgrep-action@v1',
+      'deploy-dev':'- uses: actions/checkout@v4\n      - uses: azure/setup-kubectl@v3\n      - name: Deploy to dev\n        run: |\n          kubectl apply -f k8s/dev/ -n dev\n          kubectl rollout status deployment/'+name+' -n dev',
+      'deploy-staging':'- uses: actions/checkout@v4\n      - uses: azure/setup-helm@v3\n      - name: Helm upgrade staging\n        run: |\n          helm upgrade --install '+name+' ./charts/'+name+' \\\n            --namespace staging --create-namespace \\\n            -f values/staging.yaml',
+      'deploy-prod':'- uses: actions/checkout@v4\n      - name: Manual approval gate\n        uses: trstringer/manual-approval@v1\n        with:\n          approvers: platform-team\n          minimum-approvals: 1\n      - uses: azure/setup-helm@v3\n      - name: Helm upgrade production\n        run: |\n          helm upgrade --install '+name+' ./charts/'+name+' \\\n            --namespace production --create-namespace \\\n            -f values/production.yaml\n      - name: Smoke test\n        run: npm run test:smoke -- --env=production',
+    }[s]||'- uses: actions/checkout@v4';
+    var needsArr=needs[s]?needs[s].filter(function(x){return stages.includes(x)}):[];
+    var needsYaml=needsArr.length?'\n    needs: ['+needsArr.map(function(x){return x.replace('-','_')}).join(', ')+']':'';
+    var envYaml=['deploy-dev','deploy-staging','deploy-prod'].includes(s)?'\n    environment: '+{'deploy-dev':'development','deploy-staging':'staging','deploy-prod':'production'}[s]:'';
+    return '  '+s.replace('-','_')+':\n    name: '+jobName+needsYaml+envYaml+'\n    runs-on: '+runner+'\n    steps:\n      '+steps;
+  }).join('\n\n');
+
+  var yaml='name: '+name+'\n\non:\n  '+triggerYaml+'\n\njobs:\n'+jobsYaml;
+  var colored=yaml.replace(/^(name|on|jobs):/gm,'<span class="yk">$1</span>:')
+    .replace(/    (name|runs-on|needs|steps|environment|uses|with|run):/g,'    <span class="yk">$1</span>:')
+    .replace(/: "([^"]+)"/g,': <span class="yv">"$1"</span>')
+    .replace(/: (\[.+?\])/g,': <span class="yv">$1</span>')
+    .replace(/(#.+)/g,'<span class="yc">$1</span>');
+
+  return '<p style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px">'+t('step3-title')+'</p>'+
+    '<p style="font-size:12px;color:#64748b;margin-bottom:14px">'+t('step3-sub').replace('{name}',name)+'</p>'+
+    '<div class="yaml-wrap">'+
+      '<div class="yaml-topbar">'+
+        '<div class="yaml-dot" style="background:#ff5f56"></div>'+
+        '<div class="yaml-dot" style="background:#ffbd2e"></div>'+
+        '<div class="yaml-dot" style="background:#27c93f"></div>'+
+        '<div class="yaml-file">.github/workflows/'+name+'.yml</div>'+
+        '<span class="yaml-copy" onclick="copyYaml()"><i class="fa-regular fa-copy"></i> Copy</span>'+
+      '</div>'+
+      '<div class="yaml-code"><pre id="yaml-pre">'+colored+'</pre></div>'+
+    '</div>';
+}
+
+function renderStep4(){
+  var stagesHtml=selectedStages.map(function(s){
+    var m=STAGE_META[s]||{icon:'?',label:{de:s},color:'#64748b',bg:'#f1f5f9'};
+    return '<span style="padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;background:'+m.bg+';color:'+m.color+'">'+m.icon+' '+(m.label[lang]||m.label.de)+'</span>';
+  }).join('');
+  return '<p style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px">'+t('step4-title')+'</p>'+
+    '<p style="font-size:12px;color:#64748b;margin-bottom:16px">'+t('step4-sub')+'</p>'+
+    '<div class="summary-grid">'+
+      sumCard((lang==='fr'?'Nom':'Name'),wizData.name)+
+      sumCard((lang==='fr'?'Dépôt':'Repository'),wizData.repo)+
+      sumCard((lang==='fr'?'Branche':'Branch'),wizData.branch)+
+      sumCard('Runner',wizData.runner)+
+      sumCard('Trigger',wizData.trigger)+
+      sumCard((lang==='fr'?'Stages':'Stages'),selectedStages.length+' ausgewählt')+
+    '</div>'+
+    '<div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:12px 16px;margin-top:12px">'+
+      '<div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Pipeline Flow</div>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center">'+stagesHtml+'</div>'+
+    '</div>'+
+    '<div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:10px;padding:12px 16px;margin-top:12px;display:flex;gap:10px;align-items:flex-start">'+
+      '<i class="fa-solid fa-circle-info" style="color:#3b82f6;margin-top:1px"></i>'+
+      '<div style="font-size:12px;color:#1d4ed8">'+
+        (lang==='fr'?'En cliquant sur "Créer et lancer", le pipeline sera immédiatement créé dans votre dépôt GitHub et la première exécution démarrera automatiquement.':
+        lang==='en'?'Clicking "Create & Run Pipeline" will immediately create the pipeline in your GitHub repository and start the first run automatically.':
+        'Mit Klick auf "Pipeline erstellen" wird die Pipeline sofort in deinem GitHub Repository angelegt und der erste Run startet automatisch.')+
+      '</div>'+
+    '</div>';
+}
+function sumCard(label,val){
+  return '<div class="sum-card"><div class="sum-label">'+label+'</div><div class="sum-value">'+val+'</div></div>';
+}
+
+function copyYaml(){
+  var pre=document.getElementById('yaml-pre');
+  if(pre) navigator.clipboard.writeText(pre.innerText).then(function(){showToast('YAML kopiert!');});
+}
+
+function launchFromWizard(){
+  closeWizard();
+  var newP={id:'p-new-'+Date.now(), name:wizData.name, repo:wizData.repo, branch:wizData.branch,
+    status:'running', stages:selectedStages, stageStatus:selectedStages.map(function(){return'skip'}),
+    lastRun:'Gerade eben', runs:1, avgDur:'—'};
+  PIPELINES_DATA.unshift(newP);
+  document.getElementById('running-count').textContent=
+    PIPELINES_DATA.filter(function(p){return p.status==='running'}).length;
+  showToast(t('toast-created'));
+  setTimeout(function(){ startRunById(newP.id); }, 600);
+}
+
+/* ══════════════════ RUN VIEW ══════════════════ */
+var RUN_STAGES_DEF = {
+  'build':   {
+    dur:7000,
+    logs:[
+      {t:0,  cls:'info',  txt:'Checking out repository...'},
+      {t:400,  cls:'ok',  txt:'✔ Repository checked out at commit a3f92c1'},
+      {t:800, cls:'info', txt:'Setting up Node.js 20 with npm cache...'},
+      {t:1400,cls:'ok',   txt:'✔ Cache hit for node_modules'},
+      {t:1800,cls:'info', txt:'Running: npm ci'},
+      {t:2200,cls:'dim',  txt:'added 847 packages in 3.4s'},
+      {t:3200,cls:'info', txt:'Running: npm run build'},
+      {t:3800,cls:'dim',  txt:'> webpack --config webpack.prod.js'},
+      {t:4400,cls:'dim',  txt:'asset main.js 284 KiB [emitted]'},
+      {t:5000,cls:'dim',  txt:'asset vendors.js 1.12 MiB [emitted]'},
+      {t:5800,cls:'ok',   txt:'✔ Build complete in 4.2s'},
+      {t:6400,cls:'ok',   txt:'✔ Artifacts uploaded: dist/ (1.4 MB)'},
+    ]
+  },
+  'lint':    {
+    dur:4000,
+    logs:[
+      {t:0,   cls:'info', txt:'Running ESLint on 87 files...'},
+      {t:1200,cls:'warn', txt:'⚠ src/utils/format.js:42 — prefer-const'},
+      {t:2000,cls:'warn', txt:'⚠ src/components/Card.jsx:18 — no-unused-vars (minor)'},
+      {t:2800,cls:'ok',   txt:'✔ ESLint: 85/87 files clean (2 warnings, 0 errors)'},
+      {t:3200,cls:'info', txt:'Running Prettier format check...'},
+      {t:3700,cls:'ok',   txt:'✔ Prettier: all files formatted correctly'},
+    ]
+  },
+  'test':    {
+    dur:10000,
+    logs:[
+      {t:0,   cls:'info', txt:'Starting Jest test runner...'},
+      {t:600, cls:'dim',  txt:'PASS  src/__tests__/auth.test.js (18 tests)'},
+      {t:1200,cls:'dim',  txt:'PASS  src/__tests__/api.test.js (32 tests)'},
+      {t:2000,cls:'dim',  txt:'PASS  src/__tests__/components.test.js (61 tests)'},
+      {t:3000,cls:'dim',  txt:'PASS  src/__tests__/utils.test.js (24 tests)'},
+      {t:4200,cls:'dim',  txt:'PASS  src/__tests__/hooks.test.js (15 tests)'},
+      {t:5400,cls:'dim',  txt:'PASS  src/__tests__/store.test.js (29 tests)'},
+      {t:7000,cls:'ok',   txt:'✔ Test Suites: 6 passed, 6 total'},
+      {t:7400,cls:'ok',   txt:'✔ Tests: 179 passed, 179 total'},
+      {t:7800,cls:'ok',   txt:'✔ Coverage: Lines 87.4% | Branches 82.1% | Functions 91.2%'},
+      {t:8400,cls:'ok',   txt:'✔ Coverage threshold met (min 80%)'},
+      {t:9200,cls:'info', txt:'Uploading coverage report to Codecov...'},
+      {t:9700,cls:'ok',   txt:'✔ Coverage report uploaded successfully'},
+    ]
+  },
+  'security':{
+    dur:7000,
+    logs:[
+      {t:0,   cls:'info', txt:'Starting Trivy filesystem scan...'},
+      {t:800, cls:'dim',  txt:'Scanning 847 npm packages for vulnerabilities...'},
+      {t:2400,cls:'ok',   txt:'✔ No CRITICAL vulnerabilities found'},
+      {t:2900,cls:'warn', txt:'⚠ HIGH: lodash@4.17.20 — prototype pollution (CVE-2021-23337)'},
+      {t:3600,cls:'info', txt:'Running Semgrep SAST analysis...'},
+      {t:4200,cls:'dim',  txt:'Scanning 134 source files...'},
+      {t:5600,cls:'ok',   txt:'✔ SAST: 0 critical findings'},
+      {t:6200,cls:'warn', txt:'⚠ Suggest updating lodash to 4.17.21 in package.json'},
+      {t:6700,cls:'ok',   txt:'✔ Security scan passed (1 high warning, non-blocking)'},
+    ]
+  },
+  'deploy-dev':{
+    dur:6000,
+    logs:[
+      {t:0,   cls:'info', txt:'Configuring kubectl for dev cluster...'},
+      {t:700, cls:'ok',   txt:'✔ Connected to cluster: dev-k8s-eu'},
+      {t:1200,cls:'info', txt:'Applying manifests to namespace: dev'},
+      {t:1800,cls:'dim',  txt:'deployment.apps/my-service configured'},
+      {t:2200,cls:'dim',  txt:'service/my-service unchanged'},
+      {t:2700,cls:'dim',  txt:'ingress.networking.k8s.io/my-service configured'},
+      {t:3400,cls:'info', txt:'Waiting for rollout to complete...'},
+      {t:4200,cls:'dim',  txt:'Waiting for deployment "my-service" rollout (1/2 replicas updated)'},
+      {t:5000,cls:'dim',  txt:'Waiting for deployment "my-service" rollout (2/2 replicas ready)'},
+      {t:5600,cls:'ok',   txt:'✔ Deployment successful — https://dev.my-service.internal'},
+    ]
+  },
+  'deploy-staging':{
+    dur:8000,
+    logs:[
+      {t:0,   cls:'info', txt:'Configuring Helm for staging cluster...'},
+      {t:600, cls:'ok',   txt:'✔ Connected to cluster: staging-k8s-eu'},
+      {t:1200,cls:'info', txt:'Running: helm upgrade --install my-service ./charts/my-service'},
+      {t:2000,cls:'dim',  txt:'Release "my-service" does not exist. Installing it now.'},
+      {t:2800,cls:'dim',  txt:'Pulling image: registry.gitlab.com/org/my-service:a3f92c1'},
+      {t:4000,cls:'dim',  txt:'Waiting for pods to become ready (0/2)...'},
+      {t:5200,cls:'dim',  txt:'Waiting for pods to become ready (1/2)...'},
+      {t:6400,cls:'dim',  txt:'Pods ready (2/2)'},
+      {t:7200,cls:'ok',   txt:'✔ Helm release deployed — https://staging.my-service.com'},
+      {t:7700,cls:'ok',   txt:'✔ Health check passed: HTTP 200'},
+    ]
+  },
+  'deploy-prod':{
+    dur:11000,
+    logs:[
+      {t:0,   cls:'info', txt:'⏸ Waiting for manual approval from platform-team...'},
+      {t:1400,cls:'ok',   txt:'✔ Approved by: k.academy@koffi.dev (1/1)'},
+      {t:2000,cls:'info', txt:'Configuring Helm for production cluster...'},
+      {t:2600,cls:'ok',   txt:'✔ Connected to cluster: prod-k8s-eu'},
+      {t:3200,cls:'info', txt:'Running: helm upgrade --install (production)'},
+      {t:4000,cls:'dim',  txt:'Pulling image: registry.gitlab.com/org/my-service:a3f92c1'},
+      {t:5400,cls:'dim',  txt:'Waiting for pods (0/3)...'},
+      {t:6800,cls:'dim',  txt:'Waiting for pods (2/3)...'},
+      {t:8000,cls:'dim',  txt:'Pods ready (3/3) — PodDisruptionBudget maintained'},
+      {t:9000,cls:'info', txt:'Running smoke tests against production...'},
+      {t:9800,cls:'ok',   txt:'✔ Smoke tests passed (8/8)'},
+      {t:10400,cls:'ok',  txt:'✔ Production deployment complete — https://my-service.com'},
+      {t:10800,cls:'ok',  txt:'✔ Rollback point saved (release 12)'},
+    ]
+  },
+};
+
+var activeLogTab = null;
+var logBuffers = {};
+var stageStates = {};
+
+function viewRun(id){
+  currentRunPipeline=PIPELINES_DATA.find(function(p){return p.id===id});
+  if(!currentRunPipeline)return;
+  // Show completed view
+  document.getElementById('hub-view').style.display='none';
+  document.getElementById('run-view').style.display='block';
+  document.getElementById('run-title').textContent=currentRunPipeline.name;
+  document.getElementById('run-sub').textContent=currentRunPipeline.branch+' · '+currentRunPipeline.repo+' · Run #'+currentRunPipeline.runs;
+
+  // Build static diagram from existing data
+  var stages=currentRunPipeline.stages;
+  var ss=currentRunPipeline.stageStatus;
+  var diagHtml=stages.map(function(s,i){
+    var st=ss[i]||'skip';
+    var m=STAGE_META[s]||{icon:'?',label:{de:s},color:'#94a3b8',bg:'#f1f5f9'};
+    var lbl=m.label[lang]||m.label.de;
+    var statusTxt={'done':(lang==='fr'?'Terminé':lang==='en'?'Done':'Abgeschlossen'),'run':'Running…','fail':(lang==='fr'?'Échec':lang==='en'?'Failed':'Fehlgeschlagen'),'skip':(lang==='fr'?'En attente':lang==='en'?'Pending':'Ausstehend')}[st];
+    var sIcon={'done':'fa-solid fa-circle-check','run':'fa-solid fa-spinner fa-spin','fail':'fa-solid fa-circle-xmark','skip':'fa-regular fa-clock'}[st];
+    return (i>0?'<div class="diag-arrow"><i class="fa-solid fa-chevron-right"></i></div>':'')+
+      '<div class="diag-stage ds-'+st+'">'+
+        '<div class="ds-icon">'+m.icon+'</div>'+
+        '<div class="ds-name">'+lbl+'</div>'+
+        '<div class="ds-status"><i class="'+sIcon+'"></i> '+statusTxt+'</div>'+
+        '<div class="ds-dur">'+{'done':'✔','run':'…','fail':'✗','skip':'—'}[st]+'</div>'+
+        '<div class="ds-bar"><div class="ds-bar-fill" style="width:'+{'done':'100%','run':'60%','fail':'100%','skip':'0%'}[st]+'"></div></div>'+
+      '</div>';
+  }).join('');
+  document.getElementById('diag-stages').innerHTML=diagHtml;
+
+  // Status badge
+  var badge=document.getElementById('run-status-badge');
+  var statusMap={'running':{c:'#58a6ff',bc:'rgba(88,166,255,.4)',ico:'fa-solid fa-spinner fa-spin',txt:'Running'},
+                  'success':{c:'#3fb950',bc:'rgba(63,185,80,.4)',ico:'fa-solid fa-circle-check',txt:(lang==='fr'?'Succès':lang==='en'?'Success':'Erfolg')},
+                  'failed':{c:'#f85149',bc:'rgba(248,81,73,.4)',ico:'fa-solid fa-circle-xmark',txt:(lang==='fr'?'Échec':lang==='en'?'Failed':'Fehlgeschlagen')}};
+  var sm=statusMap[currentRunPipeline.status]||statusMap.running;
+  badge.style.color=sm.c; badge.style.borderColor=sm.bc;
+  badge.innerHTML='<i class="'+sm.ico+'"></i> '+sm.txt;
+
+  // Static logs
+  var logBody=document.getElementById('log-body');
+  logBody.innerHTML='<div class="log-line"><span class="log-ts">—</span><span class="log-dim">Wähle eine Stage aus, um die Logs anzuzeigen.</span></div>';
+  document.getElementById('log-tabs').innerHTML='';
+  document.getElementById('run-elapsed').textContent=currentRunPipeline.avgDur||'—';
+  document.getElementById('run-summary').style.display='none';
+  document.getElementById('rerun-btn').style.display='flex';
+}
+
+function startRunById(id){
+  currentRunPipeline=PIPELINES_DATA.find(function(p){return p.id===id});
+  if(!currentRunPipeline)return;
+  document.getElementById('hub-view').style.display='none';
+  document.getElementById('run-view').style.display='block';
+  document.getElementById('rerun-btn').style.display='none';
+  document.getElementById('run-summary').style.display='none';
+  startRun(currentRunPipeline);
+}
+
+function startRun(pipeline){
+  if(!pipeline)return;
+  currentRunPipeline=pipeline;
+  document.getElementById('run-title').textContent=pipeline.name;
+  pipeline.runs=(pipeline.runs||0)+1;
+  document.getElementById('run-sub').textContent=pipeline.branch+' · '+pipeline.repo+' · Run #'+pipeline.runs;
+  var badge=document.getElementById('run-status-badge');
+  badge.style.color='#58a6ff'; badge.style.borderColor='rgba(88,166,255,.4)';
+  badge.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Running';
+  document.getElementById('rerun-btn').style.display='none';
+  document.getElementById('run-summary').style.display='none';
+
+  // Determine stages to run
+  var ordered=['build','lint','test','security','deploy-dev','deploy-staging','deploy-prod'];
+  var stagesToRun=ordered.filter(function(s){return pipeline.stages.includes(s);});
+  stageStates={};
+  logBuffers={};
+  stagesToRun.forEach(function(s){stageStates[s]='pending';logBuffers[s]=[];});
+
+  // Build diagram
+  renderDiagram(stagesToRun, stageStates);
+  // Build log tabs
+  var tabsHtml=stagesToRun.map(function(s,i){
+    var m=STAGE_META[s]||{icon:'?',label:{de:s}};
+    return '<div class="log-tab'+(i===0?' active':'')+'" data-stage="'+s+'" onclick="switchLogTab(this,\''+s+'\')">'+m.icon+' '+(m.label[lang]||m.label.de)+'</div>';
+  }).join('');
+  document.getElementById('log-tabs').innerHTML=tabsHtml;
+  activeLogTab=stagesToRun[0];
+  renderLogs(activeLogTab);
+
+  // Timer
+  runElapsed=0;
+  clearInterval(runTimerInterval);
+  runTimerInterval=setInterval(function(){
+    runElapsed++;
+    var m=Math.floor(runElapsed/60), s=runElapsed%60;
+    document.getElementById('run-elapsed').textContent=m+':'+(s<10?'0':'')+s;
+  },1000);
+
+  // Execute stages sequentially
+  executeStages(stagesToRun, 0);
+}
+
+function executeStages(stages, idx){
+  if(idx>=stages.length){
+    // Done
+    clearInterval(runTimerInterval);
+    var allOk=Object.values(stageStates).every(function(s){return s==='done';});
+    var badge=document.getElementById('run-status-badge');
+    if(allOk){
+      badge.style.color='#3fb950'; badge.style.borderColor='rgba(63,185,80,.4)';
+      badge.innerHTML='<i class="fa-solid fa-circle-check"></i> '+(lang==='fr'?'Succès':lang==='en'?'Success':'Erfolg');
+      currentRunPipeline.status='success';
+    } else {
+      badge.style.color='#f85149'; badge.style.borderColor='rgba(248,81,73,.4)';
+      badge.innerHTML='<i class="fa-solid fa-circle-xmark"></i> '+(lang==='fr'?'Échec':lang==='en'?'Failed':'Fehlgeschlagen');
+      currentRunPipeline.status='failed';
+    }
+    var m=Math.floor(runElapsed/60), s2=runElapsed%60;
+    var durStr=m+':'+(s2<10?'0':'')+s2;
+    currentRunPipeline.avgDur=durStr;
+    showRunSummary(allOk, durStr, stages);
+    document.getElementById('rerun-btn').style.display='flex';
+    renderPipelineList();
+    return;
+  }
+  var s=stages[idx];
+  var def=RUN_STAGES_DEF[s]||{dur:3000,logs:[{t:0,cls:'ok',txt:'Done'}]};
+  stageStates[s]='running';
+  renderDiagram(stages, stageStates);
+  // Switch log tab to active stage
+  document.querySelectorAll('.log-tab').forEach(function(t){t.classList.toggle('active',t.dataset.stage===s);});
+  activeLogTab=s;
+
+  // Stream logs
+  var startTime=Date.now();
+  var barFill=document.querySelector('.diag-stage[data-s="'+s+'"] .ds-bar-fill');
+  var logLines=def.logs.slice();
+  var logTimers=logLines.map(function(l){
+    return setTimeout(function(){
+      logBuffers[s].push(l);
+      if(activeLogTab===s) appendLogLine(l);
+    }, l.t);
+  });
+  // Bar animation
+  var barTimer=setInterval(function(){
+    var el=document.querySelector('[data-s="'+s+'"] .ds-bar-fill');
+    if(el){var pct=Math.min(95,(Date.now()-startTime)/def.dur*100); el.style.width=pct+'%';}
+  }, 100);
+
+  setTimeout(function(){
+    clearInterval(barTimer);
+    logTimers.forEach(clearTimeout);
+    stageStates[s]='done';
+    renderDiagram(stages,stageStates);
+    document.querySelectorAll('.log-tab').forEach(function(t){t.classList.toggle('active',t.dataset.stage===s);});
+    renderLogs(s);
+    executeStages(stages,idx+1);
+  }, def.dur);
+}
+
+function renderDiagram(stages, states){
+  var html=stages.map(function(s,i){
+    var st=states[s]||'pending';
+    var m=STAGE_META[s]||{icon:'?',label:{de:s},color:'#94a3b8',bg:'#f1f5f9'};
+    var lbl=m.label[lang]||m.label.de;
+    var statusTxt={'done':(lang==='fr'?'Terminé':lang==='en'?'Done':'Abgeschlossen'),'running':'Running…','pending':(lang==='fr'?'En attente':lang==='en'?'Pending':'Ausstehend')}[st]||st;
+    var sIcon={'done':'fa-solid fa-circle-check','running':'fa-solid fa-spinner fa-spin','pending':'fa-regular fa-clock'}[st]||'fa-regular fa-clock';
+    var dsClass={'done':'ds-done','running':'ds-run','pending':''}[st]||'ds-skip';
+    return (i>0?'<div class="diag-arrow"><i class="fa-solid fa-chevron-right"></i></div>':'')+
+      '<div class="diag-stage '+dsClass+'" data-s="'+s+'">'+
+        '<div class="ds-icon">'+m.icon+'</div>'+
+        '<div class="ds-name">'+lbl+'</div>'+
+        '<div class="ds-status"><i class="'+sIcon+'"></i> '+statusTxt+'</div>'+
+        '<div class="ds-dur" id="ds-dur-'+s+'"></div>'+
+        '<div class="ds-bar"><div class="ds-bar-fill"></div></div>'+
+      '</div>';
+  }).join('');
+  document.getElementById('diag-stages').innerHTML=html;
+}
+
+function switchLogTab(el,stage){
+  document.querySelectorAll('.log-tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  activeLogTab=stage;
+  renderLogs(stage);
+}
+
+function renderLogs(stage){
+  var body=document.getElementById('log-body');
+  var lines=logBuffers[stage]||[];
+  if(!lines.length){
+    var txt=stageStates[stage]==='running'?'…':stageStates[stage]==='pending'?(lang==='fr'?'En attente…':lang==='en'?'Pending…':'Ausstehend…'):'Keine Logs';
+    body.innerHTML='<div class="log-line"><span class="log-ts">—</span><span class="log-dim">'+txt+'</span></div>';
+    return;
+  }
+  var t0=lines[0]?lines[0].t:0;
+  var html=lines.map(function(l){
+    var secs=((l.t-t0)/1000).toFixed(1);
+    var ts='+'+secs+'s';
+    return '<div class="log-line"><span class="log-ts">'+ts+'</span><span class="log-'+l.cls+'">'+l.txt+'</span></div>';
+  }).join('');
+  if(stageStates[stage]==='running') html+='<div class="log-line"><span class="log-ts"> </span><span class="log-cursor"></span></div>';
+  body.innerHTML=html;
+  body.scrollTop=body.scrollHeight;
+}
+
+function appendLogLine(l){
+  var body=document.getElementById('log-body');
+  var cursor=body.querySelector('.log-cursor');
+  if(cursor&&cursor.parentNode) cursor.parentNode.remove();
+  var lines=logBuffers[activeLogTab]||[];
+  var t0=lines[0]?lines[0].t:0;
+  var ts='+'+(((l.t-t0)/1000).toFixed(1))+'s';
+  var div=document.createElement('div'); div.className='log-line';
+  div.innerHTML='<span class="log-ts">'+ts+'</span><span class="log-'+l.cls+'">'+l.txt+'</span>';
+  body.appendChild(div);
+  var cur=document.createElement('div'); cur.className='log-line';
+  cur.innerHTML='<span class="log-ts"> </span><span class="log-cursor"></span>';
+  body.appendChild(cur);
+  body.scrollTop=body.scrollHeight;
+}
+
+function showRunSummary(ok, dur, stages){
+  var el=document.getElementById('run-summary');
+  el.style.display='block';
+  el.className='run-summary'+(ok?'':' fail');
+  document.getElementById('rs-title').innerHTML=(ok?
+    '<i class="fa-solid fa-circle-check" style="color:#10b981"></i> '+t('rs-ok'):
+    '<i class="fa-solid fa-circle-xmark" style="color:#ef4444"></i> '+t('rs-fail'));
+  document.getElementById('rs-dur').textContent=dur;
+  document.getElementById('rs-steps').textContent=stages.length*3+'+';
+  document.getElementById('rs-tests').textContent=stages.includes('test')?'179':'—';
+  document.getElementById('rs-coverage').textContent=stages.includes('test')?'87%':'—';
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function backToHub(){
+  clearInterval(runTimerInterval);
+  document.getElementById('run-view').style.display='none';
+  document.getElementById('hub-view').style.display='block';
+  renderPipelineList();
+}
+
+/* ══════════════════ UTILS ══════════════════ */
+function showToast(msg){
+  var el=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  el.classList.add('show');
+  setTimeout(function(){el.classList.remove('show');},3200);
+}
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){closeWizard();backToHub();}
+});
+
+/* ══════════════════ BOOT ══════════════════ */
+document.addEventListener('DOMContentLoaded',function(){
+  applyLang(lang);
+});
+</script>
+</body>
+</html>

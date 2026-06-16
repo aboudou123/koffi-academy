@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+<link href="assets/css/style.css" rel="stylesheet"/>
+<link href="assets/css/responsive.css" rel="stylesheet"/>
+<link href="assets/css/jquery.fancybox.min.css" rel="stylesheet"/>
+<link href="assets/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="assets/css/owl.carousel.min.css" rel="stylesheet"/>
+<link href="assets/css/animate.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+<link href="assets/images/logo.png" rel="shortcut icon"/>
+<title>Wirtschafts- &amp; Technologieblog | E-Learning Koffi Academy</title>
+<meta content="Wirtschaftsblog, Afrika Wirtschaft, KMU Finanzierung, Infrastruktur, Platform Engineering, IT, Online-Kurse, Business Analyse, digitale Transformation, Datenanalyse" name="Keywords"/>
+<meta content="Deutschsprachiger Premium-Blog zu Wirtschaft, Afrika, Finanzierung, Infrastruktur, KMU-Beratung, IT und Platform Engineering." name="Description"/>
+<meta content="#07294d" name="theme-color"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Deutschsprachiger Premium-Blog zu Wirtschaft, Afrika, Finanzierung, Infrastruktur, KMU-Beratung, IT und Platform Engineering." name="twitter:description"/>
+<meta content="Wirtschafts- &amp; Technologieblog | Koffi Academy" name="twitter:title"/>
+<meta content="assets/images/meta-banner.jpg" name="twitter:image"/>
+<meta content="de_DE" property="og:locale"/>
+<meta content="article" property="og:type"/>
+<meta content="Wirtschafts- &amp; Technologieblog | Koffi Academy" property="og:title"/>
+<meta content="Analysen zu Wirtschaft, Finanzierung, Infrastruktur, KMU, IT und Platform Engineering." property="og:description"/>
+<meta content="https://www.lingenieur.de/" property="og:url"/>
+<meta content="Koffi Academy" property="og:site_name"/>
+<meta content="assets/images/meta-banner.jpg" property="og:image"/>
+<meta content="assets/images/meta-banner.jpg" property="og:image:secure_url"/>
+<style>
+         .why-choose-us-area {
+            padding: 60px 0px;
+         }
+
+         /* Premium-Erweiterungen für die Blogkarten: Struktur bleibt events-box-basiert */
+         .premium-blog .events-box {
+            height: 100%;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 14px 42px rgba(7, 41, 77, 0.08);
+            border: 1px solid rgba(7, 41, 77, 0.06);
+            transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+         }
+         .premium-blog .events-box:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 24px 60px rgba(7, 41, 77, 0.15);
+            border-color: rgba(255, 198, 0, 0.45);
+         }
+         .premium-blog .events-images {
+            position: relative;
+            padding: 10px 10px 0;
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+         }
+         .premium-blog .expert-avatar {
+            width: 100%;
+            height: 160px;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+            background: #eef2f7;
+            box-shadow: 0 12px 28px rgba(7, 41, 77, 0.12);
+         }
+         .premium-blog .expert-avatar::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(7, 41, 77, 0.02) 0%, rgba(7, 41, 77, 0.36) 100%);
+            pointer-events: none;
+         }
+         .premium-blog .expert-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 18px;
+            display: block;
+            transform: scale(1.01);
+            transition: transform 0.6s ease, filter 0.6s ease;
+         }
+         .premium-blog .events-box:hover .expert-avatar img {
+            transform: scale(1.08);
+            filter: saturate(1.06) contrast(1.03);
+         }
+         .premium-blog .event-date {
+            right: 26px;
+            bottom: -18px;
+            top: auto;
+            border-radius: 999px;
+            min-width: auto;
+            background: #07294d;
+            box-shadow: 0 10px 24px rgba(7, 41, 77, 0.18);
+            border: 2px solid #fff;
+         }
+         .premium-blog .event-date h5 {
+            padding: 8px 14px;
+            margin: 0;
+            color: #fff;
+            line-height: 1.1;
+            font-size: 13px;
+            letter-spacing: 0.2px;
+         }
+         .premium-blog .event-date h5 span {
+            color: #ffc600;
+            display: inline;
+            font-size: 13px;
+            font-weight: 700;
+         }
+         .premium-blog .events-content {
+            padding: 14px 16px 12px;
+         }
+         .premium-blog .theme-title {
+            font-size: 18px;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+         }
+         .premium-blog .theme-title a {
+            color: #07294d;
+            transition: color 0.3s ease;
+         }
+         .premium-blog .events-box:hover .theme-title a {
+            color: #0b4d89;
+         }
+         .premium-blog .theme-description {
+            min-height: 0;
+            color: #5f6b7a;
+            line-height: 1.45;
+            font-size: 14px;
+         }
+         .premium-blog .event-list {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eef1f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+         }
+         .premium-blog .event-list li {
+            margin: 0;
+            float: none;
+         }
+         .premium-blog .event-list a {
+            color: #07294d;
+            font-weight: 600;
+         }
+         .premium-blog .event-list a:hover {
+            color: #ffc600;
+         }
+         .event-list .badge-theme {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(7, 41, 77, 0.08);
+            color: #07294d;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.25px;
+            text-transform: uppercase;
+         }
+         .event-list .badge-theme i {
+            color: #ffc600;
+            font-size: 12px;
+         }
+         .theme-section-title {
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+         }
+         .theme-section-title .section-kicker {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: #07294d;
+            background: rgba(255, 198, 0, 0.22);
+            border: 1px solid rgba(255, 198, 0, 0.42);
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+         }
+         .theme-section-title h2 {
+            font-size: 34px;
+            color: #07294d;
+            font-family: 'Rubik', sans-serif;
+            margin-bottom: 12px;
+            letter-spacing: -0.6px;
+         }
+         .theme-section-title p {
+            font-size: 16px;
+            color: #657284;
+            max-width: 760px;
+            margin: 0 auto;
+            line-height: 1.75;
+         }
+         .section-divider {
+            margin: 32px 0 20px;
+            text-align: center;
+            position: relative;
+         }
+         .section-divider span {
+            background: #fff;
+            padding: 0 20px;
+            font-size: 13px;
+            color: #b6bfcc;
+            letter-spacing: 5px;
+         }
+         .section-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e5eaf1, transparent);
+            z-index: -1;
+         }
+         .blog-intro-panel {
+            margin-top: -30px;
+            margin-bottom: 55px;
+            background: linear-gradient(135deg, #07294d 0%, #0b3d70 60%, #123f68 100%);
+            border-radius: 24px;
+            padding: 34px 38px;
+            color: #fff;
+            box-shadow: 0 26px 65px rgba(7, 41, 77, 0.20);
+            position: relative;
+            overflow: hidden;
+         }
+         .blog-intro-panel::after {
+            content: "";
+            position: absolute;
+            width: 210px;
+            height: 210px;
+            border-radius: 50%;
+            right: -80px;
+            top: -80px;
+            background: rgba(255, 198, 0, 0.18);
+         }
+         .blog-intro-panel h3 {
+            color: #fff;
+            font-size: 27px;
+            margin-bottom: 10px;
+         }
+         .blog-intro-panel p {
+            color: rgba(255,255,255,0.86);
+            margin: 0;
+            max-width: 860px;
+            line-height: 1.75;
+         }
+         .blog-intro-panel strong {
+            color: #ffc600;
+         }
+         @media (max-width: 991px) {
+            .premium-blog .expert-avatar { height: 200px; }
+            .premium-blog .theme-description { min-height: auto; }
+            .premium-blog .event-list { align-items: flex-start; flex-direction: column; }
+         }
+         @media (max-width: 575px) {
+            .theme-section-title h2 { font-size: 27px; }
+            .blog-intro-panel { padding: 28px 24px; }
+            .premium-blog .expert-avatar { height: 190px; }
+         }
+      
+
+/* Korrigierte Hero-Visuals ohne störende weiße Bänder */
+.premium-blog .events-images {position: relative !important; padding: 10px 10px 0 !important; background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%) !important;}
+.premium-blog .events-images > .expert-avatar,
+.premium-blog .events-images > a.hero-visual {
+  display: block !important;
+  width: 100% !important;
+  height: 160px !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  background: #eef2f7 !important;
+  box-shadow: 0 12px 28px rgba(7,41,77,.12) !important;
+}
+.premium-blog .events-images > a.hero-visual img,
+.premium-blog .events-images > .expert-avatar img,
+.premium-blog .events-images > a img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: left center !important;
+  display: block !important;
+  border-radius: 20px !important;
+}
+.premium-blog .events-box:hover .events-images > a.hero-visual img,
+.premium-blog .events-box:hover .events-images > .expert-avatar img,
+.premium-blog .events-box:hover .events-images > a img {
+  transform: scale(1.03) !important;
+}
+.premium-blog .events-box .event-date {
+  position: absolute !important;
+  top: 16px !important;
+  left: 16px !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 88px !important;
+  border-radius: 14px !important;
+  background: #ffc600 !important;
+  border: none !important;
+  box-shadow: 0 14px 28px rgba(7,41,77,.18) !important;
+  overflow: hidden !important;
+  z-index: 4 !important;
+}
+.premium-blog .events-box .event-date::before,
+.premium-blog .events-box .event-date::after,
+.premium-blog .events-box .event-date h5::before,
+.premium-blog .events-box .event-date h5::after {display:none !important; content:none !important;}
+.premium-blog .events-box .event-date h5 {
+  display: block !important;
+  padding: 11px 14px !important;
+  margin: 0 !important;
+  color: #07294d !important;
+  line-height: 1.12 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  background: transparent !important;
+}
+.premium-blog .events-box .event-date h5 span {
+  display: block !important;
+  color: #07294d !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+@media (max-width: 991px){
+  .premium-blog .events-images > .expert-avatar,
+  .premium-blog .events-images > a.hero-visual {height: 150px !important;}
+}
+@media (max-width: 575px){
+  .premium-blog .events-images > .expert-avatar,
+  .premium-blog .events-images > a.hero-visual {height: 140px !important;}
+  .premium-blog .events-box .event-date {top: 14px !important; left: 14px !important;}
+}
+
+/* ===== CORRECTIFS VISUELS GÉNÉRIQUES – s'appliquent à tous les blocs ===== */
+
+/* 1. Chaque carte est une colonne flex : image en haut, contenu en bas */
+.premium-blog .events-box {
+   display: flex !important;
+   flex-direction: column !important;
+}
+
+/* 2. La zone texte occupe tout l'espace restant sous l'image */
+.premium-blog .events-content {
+   flex: 1 1 auto !important;
+   display: flex !important;
+   flex-direction: column !important;
+}
+
+/* 3. La description s'étire et repousse le pied de carte vers le bas */
+.premium-blog .theme-description {
+   flex: 1 1 auto !important;
+}
+
+/* 4. Hauteur minimale homogène pour les titres */
+.premium-blog .theme-title {
+   min-height: 0 !important;
+}
+
+/* 5. Espacement vertical cohérent entre rangées enveloppées */
+.premium-blog .row {
+   row-gap: 16px;
+}
+
+/* 6. Breakpoints responsive */
+@media (max-width: 991px) {
+   .premium-blog .row { row-gap: 14px; }
+}
+@media (max-width: 575px) {
+   .premium-blog .row { row-gap: 12px; }
+   .premium-blog .events-content { padding: 12px 14px 10px !important; }
+}
+
+/* ===== BARRE DE RECHERCHE DYNAMIQUE ===== */
+.blog-search-section {
+  background: #f8fafc;
+  padding: 28px 0 4px;
+}
+.blog-search-wrap {
+  max-width: 660px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.blog-search-ico {
+  position: absolute;
+  left: 18px;
+  color: #9aadc0;
+  font-size: 15px;
+  pointer-events: none;
+  z-index: 1;
+}
+#blog-search {
+  width: 100%;
+  padding: 15px 52px 15px 48px;
+  border: 2px solid #e4ecf5;
+  border-radius: 14px;
+  font-size: 15px;
+  color: #27364a;
+  background: #fff;
+  outline: none;
+  transition: border-color .22s, box-shadow .22s;
+  box-shadow: 0 3px 14px rgba(7,41,77,.06);
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+#blog-search:focus {
+  border-color: #07294d;
+  box-shadow: 0 3px 22px rgba(7,41,77,.13);
+}
+#blog-search::placeholder { color: #bacad8; }
+#blog-search::-webkit-search-cancel-button { display: none; }
+#search-clear {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #bacad8;
+  font-size: 15px;
+  padding: 6px;
+  display: none;
+  transition: color .18s;
+  line-height: 1;
+}
+#search-clear:hover { color: #07294d; }
+#search-clear.vis { display: block; }
+.search-meta {
+  text-align: center;
+  font-size: 13px;
+  color: #8a9bb0;
+  margin-top: 10px;
+  min-height: 20px;
+}
+#blog-no-results {
+  display: none;
+  text-align: center;
+  padding: 72px 24px 48px;
+}
+#blog-no-results .nr-icon {
+  font-size: 46px;
+  color: #dde5f0;
+  margin-bottom: 18px;
+}
+#blog-no-results h3 {
+  color: #07294d;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+#blog-no-results p { color: #8a9bb0; font-size: 15px; margin: 0; }
+@media (max-width: 575px) {
+  #blog-search { font-size: 14px; padding: 13px 48px 13px 44px; }
+  .blog-search-section { padding: 20px 0 4px; }
+}
+.article-author {
+  font-size: 12.5px;
+  color: #64748b;
+  margin: 8px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-style: italic;
+}
+.article-author i { color: #ffc600; font-size: 11px; }
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+<style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+.footer-training-cta{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:22px;
+  margin:0 0 34px;
+  padding:22px 24px;
+  border:1px solid rgba(255,210,95,.22);
+  border-radius:18px;
+  background:radial-gradient(circle at 8% 10%,rgba(255,210,95,.2),transparent 34%),linear-gradient(135deg,rgba(111,30,52,.95),rgba(63,13,33,.92) 58%,rgba(7,41,77,.78));
+  box-shadow:0 20px 46px rgba(0,0,0,.22);
+}
+.footer-training-cta::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.12) 0 33%,rgba(215,40,48,.16) 33% 66%,rgba(255,204,0,.18) 66% 100%);opacity:.52;pointer-events:none}
+.footer-training-cta__text,.footer-training-cta__btn{position:relative;z-index:1}
+.footer-training-cta__text{display:flex;align-items:center;gap:16px}
+.footer-training-cta__icon{width:58px;height:58px;border-radius:17px;overflow:hidden;border:1px solid rgba(255,255,255,.24);box-shadow:0 12px 24px rgba(0,0,0,.24);flex-shrink:0}
+.footer-training-cta__icon img{width:100%;height:100%;display:block;object-fit:cover;object-position:48% 53%}
+.footer-training-cta strong{display:block;color:#fff;font-size:18px;line-height:1.25;margin-bottom:4px}
+.footer-training-cta span{color:rgba(255,255,255,.75);font-size:13.5px;line-height:1.5}
+.footer-training-cta__btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:42px;padding:10px 18px;border-radius:999px;background:#ffd25f;color:#3f0d21!important;font-size:13px;font-weight:800;white-space:nowrap;box-shadow:0 12px 24px rgba(0,0,0,.2)}
+.footer-training-cta__btn:hover{color:#3f0d21!important;background:#ffe193;transform:translateY(-1px)}
+@media(max-width:760px){.footer-training-cta{align-items:flex-start;flex-direction:column}.footer-training-cta__btn{width:100%}}
+</style><style id="bc-premium">
+.breadcrumb-area{background:linear-gradient(130deg,#041a32 0%,#07294d 52%,#0e3d72 100%)!important;padding:66px 0 66px!important;position:relative;overflow:hidden;margin-bottom:0!important}
+.breadcrumb-area::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px)!important;background-size:46px 46px!important;opacity:1!important;-webkit-mask-image:radial-gradient(ellipse 75% 120% at 50% -10%,#000 45%,transparent 80%);mask-image:radial-gradient(ellipse 75% 120% at 50% -10%,#000 45%,transparent 80%)}
+.breadcrumb-area::after{content:"";position:absolute;top:-40%;right:6%;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(248,144,53,.28),transparent 62%);pointer-events:none}
+.breadcrumb-area .breadcrumb-box{position:relative;text-align:center}
+.breadcrumb-area .bc-eyebrow{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#f89035;margin:0 0 12px}
+.breadcrumb-area .breadcrumb-box h2{font-family:"Plus Jakarta Sans","Rubik",sans-serif;font-size:clamp(28px,4vw,42px)!important;font-weight:800;letter-spacing:-.02em;color:#fff;margin:0;display:inline-block}
+.breadcrumb-area .breadcrumb-box h2::after{content:"";display:block;width:56px;height:4px;border-radius:2px;background:#f89035;margin:14px auto 0}
+</style>
+<link rel="stylesheet" href="assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body>
+<div class="page-main">
+<!-- header -->
+<header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="laboratoire.html">Laboratoire</a><a href="courses/courses.html">Kurskatalog</a></span></span>
+<a href="blog.html">Blog</a>
+<a href="culture.html">Culture</a>
+<a href="koffi-profile.html">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="login.html">Anmelden</a><a class="kh__btn" href="register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+<!-- header -->
+<!-- breadcrumb -->
+<section class="breadcrumb-area">
+<div class="container">
+<div class="row">
+<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+<div class="breadcrumb-box">
+<p class="bc-eyebrow">Koffi Academy · Journal</p>
+<h2>Unser Blog</h2>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- breadcrumb -->
+<section class="our-blog-area page-paddings premium-blog" style="padding-bottom: 0;">
+<div class="container">
+<div class="blog-intro-panel wow fadeInUp center" data-wow-delay="0.1s">
+<h3>Analysen für Wirtschaft, Afrika, Finanzierung und Technologie</h3>
+<p>Ein kuratierter deutschsprachiger Fachblog mit Fokus auf <strong>Wachstumsmärkte, Infrastruktur, KMU-Finanzierung, digitale Transformation und Platform Engineering</strong>. Die Inhalte verbinden wirtschaftliche Perspektive, technische Kompetenz und praxisnahe Beratung.</p>
+</div>
+</div>
+</section>
+
+<!-- ===== BARRE DE RECHERCHE ===== -->
+<section class="blog-search-section">
+  <div class="container">
+    <div class="blog-search-wrap">
+      <i class="fas fa-search blog-search-ico"></i>
+      <input type="search" id="blog-search" placeholder="Artikel suchen... / Search articles..." autocomplete="off" spellcheck="false">
+      <button type="button" id="search-clear" aria-label="Suche löschen"><i class="fas fa-times"></i></button>
+    </div>
+    <p class="search-meta" id="search-meta"></p>
+  </div>
+</section>
+<div id="blog-no-results">
+  <div class="nr-icon"><i class="fas fa-search"></i></div>
+  <h3>Keine Artikel gefunden</h3>
+  <p>Kein Artikel entspricht Ihrem Suchbegriff. / No articles match your search.</p>
+</div>
+
+<!-- SECTION 1: WIRTSCHAFT & MÄRKTE -->
+<section class="our-blog-area page-paddings premium-blog" style="padding-bottom: 0;">
+<div class="container">
+<div class="theme-section-title">
+<span class="section-kicker">Makroanalyse</span>
+<h2>Wirtschaft &amp; Märkte</h2>
+<p>Fundierte Einschätzungen zu globalen Konjunkturtrends, Kapitalmärkten und nachhaltigen Investitionsstrategien.</p>
+</div>
+<div class="row">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.1s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Weltwirtschaft 2026" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230B2447%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23113B70%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230E7490%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EMAKRO%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EWeltwirtschaft%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22382%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3E2026%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.92%22%20transform%3D%22translate%28565%20160%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%22160%22%20width%3D%2242%22%20height%3D%2290%22%20rx%3D%2212%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2262%22%20y%3D%22110%22%20width%3D%2242%22%20height%3D%22140%22%20rx%3D%2212%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.22%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22124%22%20y%3D%2255%22%20width%3D%2242%22%20height%3D%22195%22%20rx%3D%2212%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.30%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M10%20145%20C70%20110%2C%20115%20120%2C%20145%2070%22%20fill%3D%22none%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%2210%22%20cy%3D%22145%22%20r%3D%228%22%20fill%3D%22%23F9D65C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%2276%22%20cy%3D%22116%22%20r%3D%228%22%20fill%3D%22%23F9D65C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2270%22%20r%3D%228%22%20fill%3D%22%23F9D65C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Ausblick</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/weltwirtschaft-2026.html">Weltwirtschaft 2026</a></h3>
+<p class="theme-description">Ein kompakter Blick auf Wachstum, Zinspolitik und Investitionsklima in einem volatilen globalen Umfeld.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-chart-simple"></i> Konjunktur</span></li>
+<li><a href="articles/weltwirtschaft-2026.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.2s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Schwellenländer" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23112B3C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23205375%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231F6F8B%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EM%C3%84RKTE%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3ESchwellenl%C3%A4nder%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.96%22%20transform%3D%22translate%28530%20145%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2220%22%20y%3D%22100%22%20width%3D%2275%22%20height%3D%22160%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.14%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22110%22%20y%3D%2255%22%20width%3D%2285%22%20height%3D%22205%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.22%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22210%22%20y%3D%2285%22%20width%3D%2270%22%20height%3D%22175%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.18%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22295%22%20y%3D%22120%22%20width%3D%2258%22%20height%3D%22140%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.13%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M20%20260%20H353%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Märkte</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/schwellenlaender.html">Schwellenländer</a></h3>
+<p class="theme-description">Welche strukturellen Faktoren Emerging Markets widerstandsfähiger machen und wo neue Risiken entstehen.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-globe"></i> Emerging Markets</span></li>
+<li><a href="articles/schwellenlaender.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.3s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Nachhaltige Anlagen" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230B3D2E%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23166534%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230F766E%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EESG%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3ENachhaltige%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22382%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EAnlagen%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.96%22%20transform%3D%22translate%28560%20128%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M120%2040%20C175%2030%20232%2072%20230%20138%20C228%20198%20176%20252%20116%20264%20C56%20252%204%20198%202%20138%20C0%2072%2060%2028%20120%2040%20Z%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.14%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M121%2063%20C163%2086%20183%20124%20182%20162%20C181%20200%20152%20229%20120%20240%20C88%20229%2059%20200%2058%20162%20C57%20124%2077%2086%20121%2063%20Z%22%20fill%3D%22%237FE08C%22%20fill-opacity%3D%220.88%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M120%2090%20V218%22%20stroke%3D%22%230E5030%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M120%20144%20C92%20128%2077%20111%2062%2092%22%20stroke%3D%22%230E5030%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M120%20168%20C152%20154%20174%20135%20187%20113%22%20stroke%3D%22%230E5030%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>ESG</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/nachhaltige-anlagen.html">Nachhaltige Anlagen</a></h3>
+<p class="theme-description">Wie institutionelle Investoren ESG-Kriterien, Renditeerwartungen und reale Wirkung stärker verbinden.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-leaf"></i> Green Finance</span></li>
+<li><a href="articles/nachhaltige-anlagen.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="section-divider"><span>✦ ✦ ✦</span></div>
+<!-- SECTION 2: AFRIKAS WIRTSCHAFT -->
+<section class="our-blog-area page-paddings premium-blog" style="padding-bottom: 0;">
+<div class="container">
+<div class="theme-section-title">
+<span class="section-kicker">Afrika im Fokus</span>
+<h2>Afrikas Wirtschaft</h2>
+<p>Analysen zu Wachstum, Industrialisierung und digitalem Unternehmertum auf einem dynamischen Kontinent.</p>
+</div>
+<div class="row">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.1s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Afrikas Wachstum" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%235B3B17%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%238C5A1E%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23C17C2F%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EAFRIKA%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EAfrikas%20Wachstum%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.97%22%20transform%3D%22translate%28558%20120%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M112%2024%20C148%2042%20175%2064%20186%2098%20C200%20142%20192%20186%20170%20214%20C160%20228%20155%20244%20151%20259%20L120%20281%20L95%20258%20L78%20228%20L42%20197%20L39%20161%20L50%20118%20L78%2078%20L96%2048%20Z%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.14%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M114%2044%20C142%2057%20164%2077%20172%20104%20C183%20139%20176%20176%20156%20199%20C148%20209%20144%20221%20140%20236%20L118%20251%20L101%20236%20L90%20214%20L64%20191%20L61%20164%20L68%20129%20L85%2098%20L98%2071%20Z%22%20fill%3D%22%23F9D65C%22%20fill-opacity%3D%220.92%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22183%22%20cy%3D%22182%22%20r%3D%2226%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.18%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M170%20182%20H196%20M183%20169%20V195%22%20stroke%3D%22%23fff%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Wachstum</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/afrika-wachstum.html">Afrikas Wachstum</a></h3>
+<p class="theme-description">Makroökonomische Chancen, demografische Dynamik und Investitionspotenziale in afrikanischen Märkten.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-chart-line"></i> Afrika</span></li>
+<li><a href="articles/afrika-wachstum.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.2s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Industrialisierung" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23283044%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%233C5A78%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23406882%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EINDUSTRIE%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EIndustrialisierung%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.96%22%20transform%3D%22translate%28532%20166%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2232%22%20y%3D%22110%22%20width%3D%22298%22%20height%3D%22118%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.14%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M32%20140%20L95%20108%20V140%20L155%20108%20V140%20L210%20108%20V228%20H32%20Z%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.28%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22240%22%20y%3D%2265%22%20width%3D%2240%22%20height%3D%22163%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.22%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22295%22%20y%3D%2235%22%20width%3D%2236%22%20height%3D%22193%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2278%22%20y%3D%22168%22%20width%3D%2230%22%20height%3D%2230%22%20rx%3D%226%22%20fill%3D%22%23F9D65C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22124%22%20y%3D%22168%22%20width%3D%2230%22%20height%3D%2230%22%20rx%3D%226%22%20fill%3D%22%23F9D65C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Industrie</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/afrika-industrialisierung.html">Industrialisierung</a></h3>
+<p class="theme-description">Warum lokale Wertschöpfung, Logistik und industrielle Cluster entscheidend für Beschäftigung sind.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-industry"></i> Produktion</span></li>
+<li><a href="articles/afrika-industrialisierung.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.3s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Digitale Wirtschaft" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23312E81%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%234C1D95%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231D4ED8%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EINNOVATION%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EDigitale%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22382%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EWirtschaft%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28555%20120%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2235%22%20y%3D%2235%22%20width%3D%22182%22%20height%3D%22292%22%20rx%3D%2234%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.15%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2253%22%20y%3D%2270%22%20width%3D%22146%22%20height%3D%22190%22%20rx%3D%2218%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.28%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M78%20118%20H172%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2212%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M78%20160%20H152%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2212%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22126%22%20cy%3D%22289%22%20r%3D%2218%22%20fill%3D%22%23F9D65C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M270%2092%20C316%20111%20335%20148%20334%20184%20C333%20220%20310%20254%20271%20274%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.35%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Digital</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/afrika-digital.html">Digitale Wirtschaft</a></h3>
+<p class="theme-description">Fintechs, mobile Plattformen und junge Tech-Unternehmen verändern Wertschöpfung und Zahlungsverkehr.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-microchip"></i> Innovation</span></li>
+<li><a href="articles/afrika-digital.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="section-divider"><span>✦ ✦ ✦</span></div>
+<!-- SECTION 3: FINANZIERUNG & KREDITE -->
+<section class="our-blog-area page-paddings premium-blog" style="padding-bottom: 0;">
+<div class="container">
+<div class="theme-section-title">
+<span class="section-kicker">Kapitalzugang</span>
+<h2>Finanzierung &amp; Kredite</h2>
+<p>Einordnung zu Bankkrediten, Entwicklungsfinanzierung und digitaler finanzieller Inklusion in Afrika.</p>
+</div>
+<div class="row">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.1s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="KMU-Kredite" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%233F2B96%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%235A3FA3%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231E40AF%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EFINANZIERUNG%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EKMU-Kredite%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.96%22%20transform%3D%22translate%28540%20170%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2230%22%20y%3D%2242%22%20width%3D%2290%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.16%22%20transform%3D%22rotate%28-12%2075%2074%29%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22160%22%20y%3D%2242%22%20width%3D%2290%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.16%22%20transform%3D%22rotate%2812%20205%2074%29%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M84%20108%20C98%20127%20118%20146%20143%20153%20C171%20161%20198%20150%20220%20132%22%20fill%3D%22none%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2216%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M110%20136%20C131%20160%20171%20163%20198%20142%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2216%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.44%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Kredit</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/kmu-kredite-afrika.html">KMU-Kredite</a></h3>
+<p class="theme-description">Wie kleine und mittlere Unternehmen Zugang zu Kapital erhalten und ihre Bonität gezielt stärken.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-building"></i> KMU</span></li>
+<li><a href="articles/kmu-kredite-afrika.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.2s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Entwicklungsbanken" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231E3A5F%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%2328587B%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23164E63%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EINSTITUTIONEN%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EEntwicklungsbanken%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.97%22%20transform%3D%22translate%28525%20150%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M30%2085%20L180%2020%20L330%2085%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.22%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2246%22%20y%3D%2292%22%20width%3D%22268%22%20height%3D%2228%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.18%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2266%22%20y%3D%22118%22%20width%3D%2226%22%20height%3D%22110%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.28%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22126%22%20y%3D%22118%22%20width%3D%2226%22%20height%3D%22110%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.28%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22186%22%20y%3D%22118%22%20width%3D%2226%22%20height%3D%22110%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.28%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22246%22%20y%3D%22118%22%20width%3D%2226%22%20height%3D%22110%22%20rx%3D%2210%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.28%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2236%22%20y%3D%22228%22%20width%3D%22288%22%20height%3D%2226%22%20rx%3D%2210%22%20fill%3D%22%23F9D65C%22%20fill-opacity%3D%220.98%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Banken</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/entwicklungsfinanzierung-afrika.html">Entwicklungsbanken</a></h3>
+<p class="theme-description">Die Rolle multilateraler Institute bei Infrastruktur, Risikoteilung und langfristiger Finanzierung.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-building-columns"></i> Institutionen</span></li>
+<li><a href="articles/entwicklungsfinanzierung-afrika.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.3s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Mobile Banking" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230F172A%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%231E3A8A%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230F766E%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EFINTECH%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EMobile%20Banking%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28555%20120%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2235%22%20y%3D%2235%22%20width%3D%22182%22%20height%3D%22292%22%20rx%3D%2234%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.15%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2253%22%20y%3D%2270%22%20width%3D%22146%22%20height%3D%22190%22%20rx%3D%2218%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.28%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M78%20118%20H172%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2212%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M78%20160%20H152%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2212%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22126%22%20cy%3D%22289%22%20r%3D%2218%22%20fill%3D%22%23F9D65C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M270%2092%20C316%20111%20335%20148%20334%20184%20C333%20220%20310%20254%20271%20274%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.35%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Fintech</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/mobile-banking-afrika.html">Mobile Banking</a></h3>
+<p class="theme-description">Warum mobile Finanzdienste Millionen Menschen erstmals Zugang zu Bankleistungen ermöglichen.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-mobile-alt"></i> Digital Finance</span></li>
+<li><a href="articles/mobile-banking-afrika.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="section-divider"><span>✦ ✦ ✦</span></div>
+<!-- SECTION 4: INFRASTRUKTUR & ENTWICKLUNG -->
+<section class="our-blog-area page-paddings premium-blog" style="padding-bottom: 0;">
+<div class="container">
+<div class="theme-section-title">
+<span class="section-kicker">Entwicklung</span>
+<h2>Infrastruktur &amp; Entwicklung</h2>
+<p>Perspektiven zu Verkehr, Energie und Wasserinfrastruktur als Grundlage nachhaltigen Wirtschaftswachstums.</p>
+</div>
+<div class="row">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.1s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Verkehrsnetze" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%233F3F46%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23334155%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231E293B%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EINFRASTRUKTUR%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EVerkehrsnetze%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.96%22%20transform%3D%22translate%28505%20105%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M170%2018%20C115%20112%2096%20213%2078%20330%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2270%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.18%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M256%2018%20C311%20112%20330%20213%20348%20330%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2270%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.18%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M213%2030%20V330%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2294%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.26%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M213%2052%20V307%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%228%22%20stroke-dasharray%3D%2218%2018%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Verkehr</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/infrastruktur-verkehr-afrika.html">Verkehrsnetze</a></h3>
+<p class="theme-description">Wie Korridore, Häfen und Straßen den Binnenhandel beschleunigen und regionale Märkte verbinden.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-truck"></i> Logistik</span></li>
+<li><a href="articles/infrastruktur-verkehr-afrika.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.2s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Energiezugang" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23854D0E%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23B45309%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23D97706%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EENERGIE%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EEnergiezugang%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28520%20120%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22110%22%20cy%3D%2270%22%20r%3D%2238%22%20fill%3D%22%23F9D65C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M260%20245%20H34%20L102%20132%20L170%20245%20Z%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.14%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M260%20245%20H140%20L182%20132%20L300%20245%20Z%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.22%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20transform%3D%22translate%28330%2060%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%22140%22%20x2%3D%220%22%20y2%3D%22265%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2210%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%22140%22%20x2%3D%22-48%22%20y2%3D%22195%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2210%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%22140%22%20x2%3D%2248%22%20y2%3D%22195%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2210%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cline%20x1%3D%22-48%22%20y1%3D%22195%22%20x2%3D%2248%22%20y2%3D%22195%22%20stroke%3D%22%23fff%22%20stroke-width%3D%228%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cline%20x1%3D%22-28%22%20y1%3D%22218%22%20x2%3D%2228%22%20y2%3D%22218%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%228%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Energie</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/infrastruktur-energie-afrika.html">Energiezugang</a></h3>
+<p class="theme-description">Erneuerbare Energien, Netzausbau und Finanzierung als Schlüssel für Industrie und Lebensqualität.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-bolt"></i> Strom</span></li>
+<li><a href="articles/infrastruktur-energie-afrika.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.3s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Wasserinfrastruktur" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230C4A6E%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%230369A1%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230EA5E9%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EWASSER%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EWasserinfrastruktur%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28560%20120%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M120%2028%20C168%2099%20198%20141%20198%20185%20C198%20240%20163%20278%20120%20278%20C77%20278%2042%20240%2042%20185%20C42%20141%2072%2099%20120%2028%20Z%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.18%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M120%2058%20C155%20111%20176%20143%20176%20181%20C176%20223%20150%20252%20120%20252%20C90%20252%2064%20223%2064%20181%20C64%20143%2085%20111%20120%2058%20Z%22%20fill%3D%22%237ED8FF%22%20fill-opacity%3D%220.92%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M24%20300%20C70%20276%20108%20288%20142%20300%20C177%20312%20218%20324%20266%20304%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2212%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.35%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Wasser</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/infrastruktur-wasser-afrika.html">Wasserinfrastruktur</a></h3>
+<p class="theme-description">Investitionen in Wasser, Abwasser und Versorgungssysteme sichern Gesundheit und Stadtentwicklung.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-droplet"></i> Versorgung</span></li>
+<li><a href="articles/infrastruktur-wasser-afrika.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="section-divider"><span>✦ ✦ ✦</span></div>
+<!-- SECTION 5: KMU-BERATUNG -->
+<section class="our-blog-area page-paddings premium-blog" style="padding-bottom: 0;">
+<div class="container">
+<div class="theme-section-title">
+<span class="section-kicker">Beratung</span>
+<h2>KMU-Beratung</h2>
+<p>Praxisnahe Impulse für Unternehmerinnen und Unternehmer: Finanzierung, Strategie und professionelle Begleitung.</p>
+</div>
+<div class="row">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.1s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="KMU-Finanzierung" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%233B0764%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23581C87%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%236D28D9%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EBERATUNG%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EKMU-Finanzierung%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28530%20130%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%2278%22%20r%3D%2244%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.22%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2268%22%20y%3D%22130%22%20width%3D%22106%22%20height%3D%22122%22%20rx%3D%2226%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.28%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22228%22%20y%3D%2298%22%20width%3D%22128%22%20height%3D%22110%22%20rx%3D%2218%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.18%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M255%20132%20H328%20M255%20162%20H302%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22288%22%20cy%3D%22235%22%20r%3D%2228%22%20fill%3D%22%23F9D65C%22%20fill-opacity%3D%220.92%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Finanz.</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title">KMU-Finanzierung</h3>
+<p class="theme-description">Welche Unterlagen, Kennzahlen und Gespräche die Chancen auf passende Finanzierung verbessern.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-chart-line"></i> Kapital</span></li>
+<li><span class="badge-theme"><i class="fas fa-clock"></i> Demnächst</span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.2s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Expertenteam" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231F2937%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23374151%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23475569%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EBERATUNG%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EExpertenteam%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28520%20135%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%2290%22%20cy%3D%2284%22%20r%3D%2234%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.24%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22170%22%20cy%3D%2270%22%20r%3D%2242%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.30%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22255%22%20cy%3D%2284%22%20r%3D%2234%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.24%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2247%22%20y%3D%22126%22%20width%3D%2288%22%20height%3D%2298%22%20rx%3D%2222%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.22%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22122%22%20y%3D%22112%22%20width%3D%2296%22%20height%3D%22118%22%20rx%3D%2224%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.32%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22213%22%20y%3D%22126%22%20width%3D%2288%22%20height%3D%2298%22%20rx%3D%2222%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.22%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M138%20259%20H214%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Team</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title">Expertenteam</h3>
+<p class="theme-description">Wie interdisziplinäre Beratung Finanzierung, Technologie und Marktstrategie sinnvoll verbindet.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-users"></i> Beratung</span></li>
+<li><span class="badge-theme"><i class="fas fa-clock"></i> Demnächst</span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.3s">
+<div class="events-images">
+<div class="expert-avatar"><img alt="Unternehmer-Coaching" loading="lazy" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230F172A%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23155E75%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230F766E%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EMENTORING%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EUnternehmer-Coaching%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28520%20125%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M62%20239%20C94%20183%20145%20164%20188%20159%20C234%20153%20286%20162%20336%20136%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2214%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.28%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M62%20239%20C103%20191%20154%20175%20195%20170%20C241%20165%20286%20171%20340%20140%22%20fill%3D%22none%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M304%20112%20L340%20140%20L296%20152%22%20fill%3D%22none%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%2292%22%20cy%3D%22102%22%20r%3D%2236%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.22%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2252%22%20y%3D%22144%22%20width%3D%2280%22%20height%3D%2298%22%20rx%3D%2222%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.30%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></div>
+<div class="event-date"><h5><span>Coaching</span></h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title">Unternehmer-Coaching</h3>
+<p class="theme-description">Strukturierte Begleitung von der Geschäftsidee über Finanzplanung bis zur Umsetzung.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-star"></i> Wachstum</span></li>
+<li><span class="badge-theme"><i class="fas fa-clock"></i> Demnächst</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="section-divider"><span>✦ ✦ ✦</span></div>
+<!-- BESTEHENDE IT- UND TECHNOLOGIEARTIKEL: ERHALTEN UND EDITORIAL AUFGEWERTET -->
+<section class="our-blog-area page-paddings premium-blog">
+<div class="container">
+<div class="theme-section-title">
+<span class="section-kicker">Technologie</span>
+<h2>Technologie &amp; Platform Engineering</h2>
+<p>Fachartikel zu Softwarequalität, IT-Architektur, Entwicklung, Automatisierung und modernen Engineering-Praktiken.</p>
+</div>
+<div class="row">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.1s">
+<div class="events-images">
+<a class="hero-visual" href="free-courses/what-is-performance-engineering.html"><img alt="Performance Engineering" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2306243A%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%230B4A6A%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230369A1%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EIT%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EPerformance%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22382%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EEngineering%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28540%20145%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M40%20170%20C58%2086%20126%2034%20208%2034%20C290%2034%20358%2086%20376%20170%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2226%22%20opacity%3D%220.22%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M208%20170%20L302%20108%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2212%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22208%22%20cy%3D%22170%22%20r%3D%2222%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.9%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M82%20205%20H338%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2210%22%20opacity%3D%220.3%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></a>
+<div class="event-date"><h5><span>16</span> Mai</h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/performance-engineering.html">Performance Engineering</a></h3>
+<p class="theme-description">Wie Lasttests, Monitoring und Architekturentscheidungen die Zuverlässigkeit digitaler Produkte verbessern.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-gauge-high"></i> IT-Betrieb</span></li>
+<li><a href="articles/performance-engineering.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.2s">
+<div class="events-images">
+<a class="hero-visual" href="articles/application-lifecycle.html"><img alt="Application Lifecycle" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231E293B%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%230F172A%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23111827%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EIT%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EApplication%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22382%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3ELifecycle%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28545%20120%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M150%2026%20C230%2034%20291%2094%20299%20168%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2218%22%20opacity%3D%220.2%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M299%20168%20C291%20245%20226%20304%20150%20310%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2218%22%20opacity%3D%220.2%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M150%20310%20C72%20301%2012%20241%204%20168%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2218%22%20opacity%3D%220.2%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M4%20168%20C12%2090%2072%2034%20150%2026%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2218%22%20opacity%3D%220.2%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M150%2026%20C230%2034%20291%2094%20299%20168%22%20fill%3D%22none%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M299%20168%20L272%20145%20M299%20168%20L271%20188%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></a>
+<div class="event-date"><h5><span>18</span> Mai</h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/application-lifecycle.html">Application Lifecycle</a></h3>
+<p class="theme-description">Von Planung bis Betrieb: Warum ALM Transparenz, Qualität und Zusammenarbeit in IT-Teams stärkt.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-diagram-project"></i> ALM</span></li>
+<li><a href="articles/application-lifecycle.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.3s">
+<div class="events-images">
+<a class="hero-visual" href="articles/platform-engineering.html"><img alt="Platform Engineering" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2309122C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%231E1B4B%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23312E81%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3ECLOUD%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EPlatform%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22382%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EEngineering%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28530%20155%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M136%20200%20H304%20C353%20200%20392%20167%20392%20124%20C392%2081%20355%2048%20307%2048%20C292%2019%20260%200%20221%200%20C170%200%20129%2033%20123%2077%20C118%2076%20112%2076%20106%2076%20C65%2076%2032%20108%2032%20146%20C32%20179%2059%20200%2096%20200%20Z%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.26%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M112%20228%20H312%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%2212%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M155%20112%20L193%20149%20L248%2086%20L307%20145%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2212%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></a>
+<div class="event-date"><h5><span>20</span> Mai</h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/platform-engineering.html">Platform Engineering</a></h3>
+<p class="theme-description">Internal Developer Platforms, Golden Paths und Self-Service als Beschleuniger moderner Softwareteams.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-layer-group"></i> Plattformen</span></li>
+<li><a href="articles/platform-engineering.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.4s">
+<div class="events-images">
+<a class="hero-visual" href="articles/fullstack-entwicklung.html"><img alt="Full-Stack Entwicklung" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23102A43%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23243B53%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23334E68%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3ECODE%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EFull-Stack%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22382%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EEntwicklung%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28535%20145%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M70%2072%20L216%2024%20L360%2072%20L216%20122%20Z%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.24%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M70%20146%20L216%2098%20L360%20146%20L216%20196%20Z%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.18%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M70%20220%20L216%20172%20L360%20220%20L216%20270%20Z%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.13%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M216%20122%20V172%22%20stroke%3D%22%23F9D65C%22%20stroke-width%3D%228%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></a>
+<div class="event-date"><h5><span>22</span> Mai</h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="articles/fullstack-entwicklung.html">Full-Stack Entwicklung</a></h3>
+<p class="theme-description">Welche Fähigkeiten moderne Entwickler brauchen, um Frontend, Backend und Cloud sauber zu verbinden.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-code"></i> Entwicklung</span></li>
+<li><a href="blog-detail.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.5s">
+<div class="events-images">
+<a class="hero-visual" href="blog-detail.html"><img alt="UI/UX Design" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%234C1D95%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%237C3AED%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%239333EA%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EKREATIV%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EUI/UX%20Design%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28530%20135%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%2254%22%20y%3D%2240%22%20width%3D%22132%22%20height%3D%2290%22%20rx%3D%2220%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.26%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22275%22%20cy%3D%2284%22%20r%3D%2248%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.20%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M108%20184%20L166%20254%20L88%20274%20Z%22%20fill%3D%22%23F9D65C%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22216%22%20y%3D%22166%22%20width%3D%22120%22%20height%3D%2290%22%20rx%3D%2220%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.28%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22182%22%20cy%3D%22216%22%20r%3D%2222%22%20fill%3D%22%23F9D65C%22%20fill-opacity%3D%220.95%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></a>
+<div class="event-date"><h5><span>24</span> Mai</h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="blog-detail.html">UI/UX Design</a></h3>
+<p class="theme-description">Gutes Design verbindet Nutzerverständnis, klare Informationsarchitektur und messbare Produktqualität.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fas fa-pen-nib"></i> Design</span></li>
+<li><a href="blog-detail.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+<div class="events-box wow fadeInUp center" data-wow-delay="0.6s">
+<div class="events-images">
+<a class="hero-visual" href="blog-detail.html"><img alt="Python Automatisierung" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22540%22%20viewBox%3D%220%200%20900%20540%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230F172A%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%231D4ED8%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230F766E%22/%3E%0A%20%20%20%20%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%20%20%20%20%3CradialGradient%20id%3D%22glow%22%20cx%3D%2250%25%22%20cy%3D%2240%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220.16%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%20stop-opacity%3D%220%22/%3E%0A%20%20%20%20%20%20%20%20%3C/radialGradient%3E%0A%20%20%20%20%20%20%3C/defs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20rx%3D%2234%22%20fill%3D%22url%28%23glow%29%22/%3E%0A%20%20%20%20%20%20%3Cg%20opacity%3D%220.08%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%2288%22%20r%3D%2274%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22688%22%20cy%3D%22418%22%20r%3D%22104%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20418%20C143%20361%20211%20411%20329%20390%20C465%20365%20556%20294%20668%20287%20C755%20282%20822%20313%20900%20357%20V540%20H0%20Z%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%2238%22%20y%3D%2238%22%20width%3D%22112%22%20height%3D%22112%22%20rx%3D%2224%22%20fill%3D%22%23FFC600%22/%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2294%22%20r%3D%2228%22%20fill%3D%22%2307294d%22%20fill-opacity%3D%220.10%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M77%2094%20H111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M94%2077%20V111%22%20stroke%3D%22%2307294d%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.72%22/%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22198%22%20fill%3D%22%23D6E4F0%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%3EPYTHON%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22322%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EPython%3C/text%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D%2256%22%20y%3D%22382%22%20fill%3D%22%23FFFFFF%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22700%22%3EAutomatisierung%3C/text%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20opacity%3D%220.98%22%20transform%3D%22translate%28555%20125%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M104%2050%20C140%2050%20161%2068%20161%2095%20V122%20H103%20C73%20122%2052%20139%2052%20171%20V202%20C52%20234%2074%20252%20104%20252%20H155%20C188%20252%20210%20233%20210%20201%20V174%20H266%20C297%20174%20318%20156%20318%20124%20V92%20C318%2060%20297%2042%20266%2042%20H214%20C183%2042%20161%2059%20161%2090%20V102%22%20fill%3D%22%23fff%22%20fill-opacity%3D%220.26%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M214%20292%20C178%20292%20157%20274%20157%20247%20V220%20H215%20C245%20220%20266%20203%20266%20171%20V140%20C266%20108%20244%2090%20214%2090%20H163%20C130%2090%20108%20109%20108%20141%20V168%20H52%20C21%20168%200%20186%200%20218%20V250%20C0%20282%2021%20300%2052%20300%20H104%20C135%20300%20157%20283%20157%20252%20V240%22%20fill%3D%22%23F9D65C%22%20fill-opacity%3D%220.95%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22112%22%20cy%3D%2284%22%20r%3D%228%22%20fill%3D%22%2307294d%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22206%22%20cy%3D%22258%22%20r%3D%228%22%20fill%3D%22%2307294d%22/%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/svg%3E"/></a>
+<div class="event-date"><h5><span>26</span> Mai</h5></div>
+</div>
+<div class="events-content">
+<h3 class="theme-title"><a href="blog-detail.html">Python Automatisierung</a></h3>
+<p class="theme-description">Warum Python in Datenanalyse, Cloud-Automatisierung und Backend-Entwicklung so produktiv ist.</p>
+<p class="article-author"><i class="fas fa-user-pen"></i> K.A</p>
+<ul class="event-list clearfix">
+<li><span class="badge-theme"><i class="fab fa-python"></i> Programmierung</span></li>
+<li><a href="blog-detail.html"><i class="fas fa-arrow-right"></i> Weiterlesen</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+<div class="load-more-btn wow fadeInUp center" data-wow-delay="0.7s">
+<button class="load-btn theme-btn"><i class="fa fa-refresh"></i> Mehr anzeigen</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- blog -->
+<!-- footer -->
+<footer class="simple-footer">
+   <div class="container">
+      <div class="footer-training-cta">
+         <div class="footer-training-cta__text">
+            <span class="footer-training-cta__icon"><img src="assets/images/einbuergerung-passport-training.png" alt="Einbürgerungstest Training"></span>
+            <div>
+               <strong>Einbürgerungstest Training</strong>
+               <span>296 Fragen, Prüfungsmodus und Wiederholung deiner Fehler direkt im Browser.</span>
+            </div>
+         </div>
+         <a class="footer-training-cta__btn" href="culture/einbuergerungstest.html">Zum Training <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="index.html">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="laboratoire.html">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="courses/courses.html">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="culture.html">Culture</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="blog.html">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="event.html">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="about.html">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="faq.html">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="contact.html">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p>Copyright &copy; 2026 <a href="index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+<!-- footer -->
+</div>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/jquery.fancybox.min.js"></script>
+<script src="assets/js/owl.carousel.min.js"></script>
+<script src="assets/js/isotope.pkgd.min.js"></script>
+<script src="assets/js/wow.min.js"></script>
+<script src="assets/js/custom.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var searchEl = document.getElementById('blog-search');
+  var clearBtn = document.getElementById('search-clear');
+  var metaEl   = document.getElementById('search-meta');
+  var noResEl  = document.getElementById('blog-no-results');
+
+  /* ── Build index of every card ── */
+  var cards = [];
+  document.querySelectorAll('.events-box').forEach(function (box) {
+    var titleEl = box.querySelector('.theme-title a, .theme-title');
+    var descEl  = box.querySelector('.theme-description');
+    var badgeEl = box.querySelector('.badge-theme');
+    cards.push({
+      col  : box.parentElement,
+      text : [
+        titleEl ? titleEl.textContent : '',
+        descEl  ? descEl.textContent  : '',
+        badgeEl ? badgeEl.textContent : ''
+      ].join(' ').toLowerCase()
+    });
+  });
+
+  /* ── Content sections (skip intro-panel) ── */
+  var sections = Array.prototype.filter.call(
+    document.querySelectorAll('section.premium-blog'),
+    function (s) { return !s.querySelector('.blog-intro-panel'); }
+  );
+
+  var dividers = document.querySelectorAll('.section-divider');
+
+  /* ── Core filter function ── */
+  function filter(raw) {
+    var q       = raw.trim().toLowerCase();
+    var visible = 0;
+
+    /* Show / hide individual card columns */
+    cards.forEach(function (c) {
+      var match = !q || c.text.indexOf(q) !== -1;
+      c.col.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+
+    /* Hide sections whose every card is hidden */
+    sections.forEach(function (sec) {
+      var hasVisible = false;
+      sec.querySelectorAll('.events-box').forEach(function (box) {
+        if (box.parentElement.style.display !== 'none') hasVisible = true;
+      });
+      sec.style.display = hasVisible ? '' : 'none';
+    });
+
+    /* Hide decorative dividers while a query is active */
+    dividers.forEach(function (d) { d.style.display = q ? 'none' : ''; });
+
+    /* No-results banner */
+    noResEl.style.display = (q && visible === 0) ? 'block' : 'none';
+
+    /* Result counter */
+    metaEl.textContent = q
+      ? visible + ' Artikel gefunden / ' + visible + ' articles found'
+      : '';
+
+    /* Clear-button visibility */
+    clearBtn.classList.toggle('vis', raw.length > 0);
+  }
+
+  /* ── Event listeners ── */
+  searchEl.addEventListener('input', function () { filter(this.value); });
+
+  clearBtn.addEventListener('click', function () {
+    searchEl.value = '';
+    filter('');
+    searchEl.focus();
+  });
+
+  searchEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { searchEl.value = ''; filter(''); }
+  });
+
+}());
+</script>
+<script src="assets/js/kontakt-popup.js"></script>
+<script src="assets/js/announce.js"></script>
+<script src="assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

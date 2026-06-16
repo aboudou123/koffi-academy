@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <link rel="stylesheet" href="../assets/css/style.css">
+   <link rel="stylesheet" href="../assets/css/responsive.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <link rel="stylesheet" href="../assets/css/modern.css">
+   <link rel="shortcut icon" href="../assets/images/logo.png">
+   <title>Terraform sur AWS - Niveau avance | Koffi Academy</title>
+   <meta name="description" content="Cours complet Terraform sur AWS niveau avance: state S3, modules, VPC multi-AZ, IAM OIDC, CI/CD, gouvernance, securite et architecture production.">
+   <meta name="theme-color" content="#07294d">
+   <style>
+      :root{
+         --tf-navy-950:#020c1a;
+         --tf-navy-900:#041a32;
+         --tf-navy-800:#061f3c;
+         --tf-navy-700:#07294d;
+         --tf-navy-600:#0a3a6b;
+         --tf-blue:#2563eb;
+         --tf-orange:#f89035;
+         --tf-orange-strong:#ea7818;
+         --tf-slate-50:#f8fafc;
+         --tf-slate-100:#f1f5f9;
+         --tf-slate-200:#e2e8f0;
+         --tf-slate-300:#cbd5e1;
+         --tf-slate-500:#64748b;
+         --tf-slate-600:#475569;
+         --tf-slate-700:#334155;
+         --tf-slate-800:#1e293b;
+         --tf-green:#047857;
+         --tf-amber:#b45309;
+         --tf-red:#b91c1c;
+      }
+      *{box-sizing:border-box;letter-spacing:0}
+      html{scroll-behavior:smooth}
+      body.tf-course{margin:0;background:var(--tf-slate-50);color:var(--tf-slate-700);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+      .tf-course .page-main{overflow-x:clip}
+      .tf-shell{max-width:1180px;margin:0 auto;padding:0 24px}
+      .tf-hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#041a32 0%,#07294d 48%,#0e3d72 78%,#1a5fa0 100%);color:#fff;padding:86px 0 94px}
+      .tf-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);background-size:48px 48px;opacity:.55}
+      .tf-hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:54px;background:var(--tf-slate-50);clip-path:polygon(0 42%,100% 0,100% 100%,0 100%)}
+      .tf-hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:42px;align-items:center}
+      .tf-kicker{display:inline-flex;align-items:center;gap:9px;margin-bottom:18px;padding:8px 13px;border:1px solid rgba(248,144,53,.45);border-radius:999px;background:rgba(248,144,53,.12);color:#fed7aa;font-size:12px;font-weight:800;text-transform:uppercase}
+      .tf-hero h1{font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;color:#fff;font-size:54px;line-height:1.08;font-weight:800;margin:0 0 20px}
+      .tf-hero p{font-size:18px;line-height:1.75;color:rgba(255,255,255,.84);max-width:740px;margin:0 0 28px}
+      .tf-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:26px}
+      .tf-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:12px 18px;border-radius:8px;border:1px solid transparent;font-weight:800;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,color .18s ease}
+      .tf-btn:hover{transform:translateY(-2px);text-decoration:none}
+      .tf-btn-primary{background:linear-gradient(135deg,var(--tf-orange),var(--tf-orange-strong));color:#fff;box-shadow:0 12px 28px rgba(248,144,53,.28)}
+      .tf-btn-primary:hover{color:#fff;box-shadow:0 16px 36px rgba(248,144,53,.38)}
+      .tf-btn-ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.24);color:#fff}
+      .tf-btn-ghost:hover{background:rgba(255,255,255,.14);color:#fff}
+      .tf-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:820px}
+      .tf-meta span{display:flex;align-items:center;gap:9px;min-height:54px;padding:12px 13px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.08);color:#fff;font-size:13px;font-weight:700}
+      .tf-meta i{color:var(--tf-orange)}
+      .tf-console{position:relative;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(2,12,26,.52);box-shadow:0 28px 70px rgba(0,0,0,.30);overflow:hidden}
+      .tf-console-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06)}
+      .tf-dots{display:flex;gap:7px}
+      .tf-dots span{width:10px;height:10px;border-radius:50%;background:#94a3b8}
+      .tf-dots span:nth-child(1){background:#ef4444}.tf-dots span:nth-child(2){background:#f59e0b}.tf-dots span:nth-child(3){background:#10b981}
+      .tf-console-head strong{font-family:"JetBrains Mono",Consolas,monospace;color:#cbd5e1;font-size:12px}
+      .tf-console-body{padding:18px}
+      .tf-pipeline{display:grid;gap:12px}
+      .tf-pipe-row{display:grid;grid-template-columns:112px 1fr auto;gap:12px;align-items:center;padding:12px;border:1px solid rgba(255,255,255,.10);border-radius:8px;background:rgba(255,255,255,.045)}
+      .tf-pipe-row small{font-family:"JetBrains Mono",Consolas,monospace;color:#93c5fd;font-weight:700}
+      .tf-pipe-row strong{color:#fff;font-size:14px}
+      .tf-pipe-row i{color:#10b981}
+      .tf-arch-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+      .tf-arch-mini div{min-height:82px;padding:13px;border-radius:8px;background:#fff;color:var(--tf-navy-700)}
+      .tf-arch-mini i{display:block;margin-bottom:9px;color:var(--tf-orange);font-size:18px}
+      .tf-arch-mini strong{display:block;font-size:13px;margin-bottom:3px}
+      .tf-arch-mini small{display:block;color:var(--tf-slate-600);font-size:12px;line-height:1.4}
+      .tf-access{position:relative;z-index:2;margin-top:-38px}
+      .tf-access-inner{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding:24px 26px;border:1px solid rgba(7,41,77,.08);border-radius:8px;background:#fff;box-shadow:0 18px 48px rgba(7,41,77,.12)}
+      .tf-access h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--tf-navy-700);font-size:24px;font-weight:800;margin:0 0 6px}
+      .tf-access p{margin:0;color:var(--tf-slate-600);line-height:1.65}
+      .tf-price-pill{display:inline-flex;align-items:center;gap:9px;padding:11px 14px;border-radius:8px;background:#fff7ed;color:var(--tf-orange-strong);font-weight:900;white-space:nowrap}
+      .tf-section{padding:78px 0}
+      .tf-section.white{background:#fff}
+      .tf-heading{max-width:820px;margin-bottom:34px}
+      .tf-heading.center{text-align:center;margin-left:auto;margin-right:auto}
+      .tf-heading .eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;color:var(--tf-orange-strong);font-size:12px;font-weight:900;text-transform:uppercase}
+      .tf-heading h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--tf-navy-700);font-size:36px;font-weight:800;line-height:1.18;margin:0 0 12px}
+      .tf-heading p{color:var(--tf-slate-600);font-size:16px;line-height:1.75;margin:0}
+      .tf-outcomes{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+      .tf-card{height:100%;padding:24px;border:1px solid var(--tf-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(7,41,77,.07);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+      .tf-card:hover{transform:translateY(-4px);border-color:rgba(248,144,53,.45);box-shadow:0 16px 42px rgba(7,41,77,.11)}
+      .tf-icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin-bottom:16px;border-radius:8px;background:#fff7ed;color:var(--tf-orange-strong);font-size:18px}
+      .tf-card h3{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--tf-navy-700);font-size:19px;font-weight:800;margin:0 0 9px}
+      .tf-card p{color:var(--tf-slate-600);line-height:1.7;margin:0}
+      .tf-layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:28px;align-items:start}
+      .tf-sidebar{position:sticky;top:86px;padding:20px;border:1px solid var(--tf-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(7,41,77,.07)}
+      .tf-sidebar h3{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--tf-navy-700);font-size:17px;font-weight:800;margin:0 0 14px}
+      .tf-sidebar a{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--tf-slate-100);color:var(--tf-slate-600);font-size:14px;font-weight:700;text-decoration:none}
+      .tf-sidebar a:last-child{border-bottom:0}
+      .tf-sidebar a:hover{color:var(--tf-orange-strong)}
+      .tf-sidebar i{width:16px;color:var(--tf-orange)}
+      .tf-reader{padding:42px;border:1px solid var(--tf-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(7,41,77,.07)}
+      .tf-reader section{scroll-margin-top:96px;margin-bottom:54px}
+      .tf-reader section:last-child{margin-bottom:0}
+      .tf-reader h2,.tf-reader h3,.tf-reader h4{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--tf-navy-700);font-weight:800}
+      .tf-reader h2{font-size:31px;line-height:1.2;margin:0 0 16px}
+      .tf-reader h3{font-size:23px;margin:30px 0 12px}
+      .tf-reader h4{font-size:18px;margin:22px 0 10px}
+      .tf-reader p{font-size:16px;line-height:1.86;color:var(--tf-slate-700);margin:0 0 16px}
+      .tf-reader ul,.tf-reader ol{padding:0;margin:0 0 18px}
+      .tf-reader li{position:relative;list-style:none;padding-left:29px;margin-bottom:10px;line-height:1.78;color:var(--tf-slate-700)}
+      .tf-reader li::before{content:"";position:absolute;left:0;top:11px;width:8px;height:8px;border-radius:50%;background:var(--tf-orange)}
+      .tf-note,.tf-warning,.tf-rule{margin:24px 0;padding:20px 22px;border-radius:8px;border:1px solid var(--tf-slate-200);background:var(--tf-slate-50)}
+      .tf-note{border-left:4px solid var(--tf-blue)}
+      .tf-warning{border-left:4px solid var(--tf-amber);background:#fffbeb}
+      .tf-rule{border-left:4px solid var(--tf-green);background:#ecfdf5}
+      .tf-note strong,.tf-warning strong,.tf-rule strong{color:var(--tf-navy-700)}
+      .tf-code{margin:20px 0;border-radius:8px;overflow:hidden;border:1px solid #1e293b;background:#0f172a}
+      .tf-code-title{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:#111827;border-bottom:1px solid #1f2937;color:#cbd5e1;font-family:"JetBrains Mono",Consolas,monospace;font-size:12px;font-weight:700}
+      .tf-code pre{margin:0;padding:18px;overflow:auto;color:#d1d5db;font-family:"JetBrains Mono",Consolas,monospace;font-size:13px;line-height:1.72}
+      .tf-code code{font-family:inherit;color:inherit}
+      .tf-inline-code{font-family:"JetBrains Mono",Consolas,monospace;background:var(--tf-slate-100);border:1px solid var(--tf-slate-200);border-radius:6px;padding:1px 6px;color:var(--tf-navy-700)}
+      .tf-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:20px 0}
+      .tf-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px 0}
+      .tf-mini{padding:18px;border:1px solid var(--tf-slate-200);border-radius:8px;background:var(--tf-slate-50)}
+      .tf-mini h4{margin-top:0}
+      .tf-mini p{font-size:14px;line-height:1.7;margin-bottom:0}
+      .tf-map{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}
+      .tf-map-step{padding:16px;border-radius:8px;border:1px solid var(--tf-slate-200);background:#fff}
+      .tf-map-step span{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin-bottom:10px;border-radius:8px;background:var(--tf-navy-700);color:#fff;font-weight:900}
+      .tf-map-step h4{font-size:16px;margin:0 0 6px}
+      .tf-map-step p{font-size:13px;line-height:1.62;margin:0;color:var(--tf-slate-600)}
+      .tf-architecture{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.72fr);gap:18px;align-items:center;margin:24px 0;padding:20px;border:1px solid var(--tf-slate-200);border-radius:8px;background:var(--tf-slate-50)}
+      .tf-architecture img{display:block;width:100%;border-radius:8px;border:1px solid var(--tf-slate-200);background:#fff}
+      .tf-architecture ul{margin:0}
+      .tf-table-wrap{overflow:auto;margin:24px 0;border:1px solid var(--tf-slate-200);border-radius:8px}
+      .tf-table{width:100%;border-collapse:collapse;background:#fff}
+      .tf-table th,.tf-table td{padding:13px 14px;border-bottom:1px solid var(--tf-slate-200);vertical-align:top;text-align:left}
+      .tf-table th{background:var(--tf-slate-100);color:var(--tf-navy-700);font-size:13px;font-weight:900}
+      .tf-table td{color:var(--tf-slate-700);font-size:14px;line-height:1.6}
+      .tf-table tr:last-child td{border-bottom:0}
+      .tf-lesson{padding:24px;border:1px solid var(--tf-slate-200);border-radius:8px;background:#fff;margin:24px 0}
+      .tf-lesson-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:14px}
+      .tf-lesson-tag{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:900;text-transform:uppercase;white-space:nowrap}
+      .tf-lesson h3{margin-top:0}
+      .tf-checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
+      .tf-check{display:flex;align-items:flex-start;gap:10px;padding:14px;border:1px solid var(--tf-slate-200);border-radius:8px;background:var(--tf-slate-50)}
+      .tf-check i{margin-top:4px;color:var(--tf-green)}
+      .tf-check span{line-height:1.55;color:var(--tf-slate-700)}
+      .tf-lab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+      .tf-lab{padding:22px;border:1px solid var(--tf-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(7,41,77,.06)}
+      .tf-lab strong{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:var(--tf-orange);color:#fff;margin-bottom:12px}
+      .tf-lab h3{font-size:20px;margin:0 0 10px}
+      .tf-lab p{color:var(--tf-slate-600);line-height:1.72;margin:0 0 12px}
+      .tf-lab ul{margin:0}
+      .tf-final{background:linear-gradient(130deg,#041a32 0%,#07294d 62%,#0a3a6b 100%);color:#fff;padding:72px 0}
+      .tf-final h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:#fff;font-size:36px;font-weight:800;margin:0 0 12px}
+      .tf-final p{max-width:760px;color:rgba(255,255,255,.78);line-height:1.76;margin:0 0 24px}
+      .simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0}
+      .simple-footer a{color:rgba(255,255,255,.82);text-decoration:none}
+      .simple-footer a:hover{color:#f89035}
+      .simple-footer h3{color:#fff;font-size:13px;font-weight:800;text-transform:uppercase;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(248,144,53,.30)}
+      .simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+      .simple-footer li{font-size:13.5px;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+      .simple-footer li::before{display:none}
+      .simple-footer li i.lead-icon{color:#f89035;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+      .sfooter-cols{padding-bottom:36px}
+      .simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+      .simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42)}
+      @media(max-width:1100px){
+         .tf-hero-grid{grid-template-columns:1fr}
+         .tf-console{max-width:760px}
+         .tf-outcomes{grid-template-columns:repeat(2,1fr)}
+         .tf-map{grid-template-columns:repeat(2,1fr)}
+      }
+      @media(max-width:991px){
+         .tf-hero{padding:70px 0 86px}
+         .tf-hero h1{font-size:40px}
+         .tf-layout{grid-template-columns:1fr}
+         .tf-sidebar{position:static}
+         .tf-architecture{grid-template-columns:1fr}
+      }
+      @media(max-width:767px){
+         .tf-shell{padding:0 18px}
+         .tf-hero h1{font-size:31px}
+         .tf-hero p{font-size:16px}
+         .tf-meta{grid-template-columns:1fr}
+         .tf-access-inner{grid-template-columns:1fr}
+         .tf-outcomes,.tf-grid-2,.tf-grid-3,.tf-checklist,.tf-lab-grid{grid-template-columns:1fr}
+         .tf-reader{padding:28px 20px}
+         .tf-reader h2{font-size:26px}
+         .tf-map{grid-template-columns:1fr}
+         .tf-pipe-row{grid-template-columns:1fr auto}
+         .tf-pipe-row small{grid-column:1 / -1}
+         .tf-arch-mini{grid-template-columns:1fr}
+      }
+   .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+   <link rel="stylesheet" href="../assets/css/modern-header.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body class="tf-course">
+<div class="page-main">
+   <header class="kh">
+      <div class="kh__in">
+         <a class="kh__brand" href="../index.html">
+            <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+            <span class="kh__name">Koffi Academy</span>
+         </a>
+         <nav class="kh__nav">
+            <a href="../index.html">Accueil</a>
+            <span class="kh__drop"><span class="kh__droplabel active">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="../laboratoire.html">Laboratoire</a><a href="../courses/courses.html">Catalogue</a></span></span>
+            <a href="../blog.html">Blog</a>
+            <a href="../culture.html">Culture</a>
+<a href="../koffi-profile.html">A propos</a>
+            <span class="kh__auth"><a class="kh__login" href="../login.html">Connexion</a><a class="kh__btn" href="../register.html">S'inscrire</a></span>
+         </nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+      </div>
+   </header>
+
+   <main>
+      <section class="tf-hero">
+         <div class="tf-shell">
+            <div class="tf-hero-grid">
+               <div>
+                  <span class="tf-kicker"><i class="fa-solid fa-cloud"></i> Cours premium avance</span>
+                  <h1>Terraform sur AWS - Advanced</h1>
+                  <p>Construisez une infrastructure AWS de production avec Terraform: state distant, modules reutilisables, VPC multi-AZ, IAM federé, pipelines CI/CD, controles de securite et strategie d'exploitation.</p>
+                  <div class="tf-actions">
+                     <a class="tf-btn tf-btn-primary" href="#cours"><i class="fa-solid fa-play"></i> Commencer le cours</a>
+                     <a class="tf-btn tf-btn-ghost" href="../courses/courses.html"><i class="fa-solid fa-arrow-left"></i> Retour au catalogue</a>
+                  </div>
+                  <div class="tf-meta">
+                     <span><i class="fa-regular fa-clock"></i> 8 semaines</span>
+                     <span><i class="fa-solid fa-signal"></i> Niveau avance</span>
+                     <span><i class="fa-brands fa-aws"></i> AWS production</span>
+                     <span><i class="fa-solid fa-certificate"></i> Projet final</span>
+                  </div>
+               </div>
+               <div class="tf-console" aria-label="Apercu architecture Terraform AWS">
+                  <div class="tf-console-head">
+                     <div class="tf-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                     <strong>terraform plan -out=tfplan</strong>
+                  </div>
+                  <div class="tf-console-body">
+                     <div class="tf-pipeline">
+                        <div class="tf-pipe-row"><small>network</small><strong>VPC multi-AZ, subnets, NAT, endpoints</strong><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="tf-pipe-row"><small>security</small><strong>IAM OIDC, KMS, SG, policies minimales</strong><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="tf-pipe-row"><small>platform</small><strong>EKS, RDS, observability, tagging</strong><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="tf-pipe-row"><small>delivery</small><strong>Plan review, apply controle, drift detection</strong><i class="fa-solid fa-circle-check"></i></div>
+                     </div>
+                     <div class="tf-arch-mini">
+                        <div><i class="fa-solid fa-code-branch"></i><strong>Git</strong><small>Code, revue, historique</small></div>
+                        <div><i class="fa-solid fa-lock"></i><strong>S3 state</strong><small>Versioning, lockfile, chiffrement</small></div>
+                        <div><i class="fa-solid fa-shield-halved"></i><strong>AWS</strong><small>IAM, reseau, compute, data</small></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <section class="tf-access">
+         <div class="tf-shell">
+            <div class="tf-access-inner">
+               <div>
+                  <h2>Objectif: passer du Terraform fonctionnel au Terraform exploitable.</h2>
+                  <p>Le cours evite les demos superficielles. Chaque module relie une decision Terraform a un risque AWS concret: securite, cout, drift, rollback, limites de service et collaboration d'equipe.</p>
+               </div>
+               <span class="tf-price-pill"><i class="fa-solid fa-lock-open"></i> 99 EUR</span>
+            </div>
+         </div>
+      </section>
+
+      <section class="tf-section">
+         <div class="tf-shell">
+            <div class="tf-heading center">
+               <span class="eyebrow"><i class="fa-solid fa-bullseye"></i> Competences visees</span>
+               <h2>Ce que vous saurez faire en fin de parcours</h2>
+               <p>Vous apprendrez a concevoir une base Terraform AWS maintenable, testable et gouvernable par une equipe platform ou cloud engineering.</p>
+            </div>
+            <div class="tf-outcomes">
+               <div class="tf-card"><span class="tf-icon"><i class="fa-solid fa-diagram-project"></i></span><h3>Architecture AWS</h3><p>Structurer un VPC multi-AZ, isoler les workloads, choisir les endpoints et exposer proprement les services.</p></div>
+               <div class="tf-card"><span class="tf-icon"><i class="fa-solid fa-database"></i></span><h3>State robuste</h3><p>Configurer un backend S3 versionne, chiffre, verrouille, separe par environnement et utilisable en equipe.</p></div>
+               <div class="tf-card"><span class="tf-icon"><i class="fa-solid fa-user-shield"></i></span><h3>Securite IAM</h3><p>Remplacer les cles longues durees par OIDC, appliquer le moindre privilege et reduire les blast radius.</p></div>
+               <div class="tf-card"><span class="tf-icon"><i class="fa-solid fa-rocket"></i></span><h3>Delivery controlee</h3><p>Executer plan, policy checks, apply manuel ou automatique et detection de drift depuis une pipeline CI/CD.</p></div>
+            </div>
+         </div>
+      </section>
+
+      <section class="tf-section white" id="cours">
+         <div class="tf-shell">
+            <div class="tf-layout">
+               <aside class="tf-sidebar">
+                  <h3>Plan du cours</h3>
+                  <a href="#prerequis"><i class="fa-solid fa-chevron-right"></i> Prerequis</a>
+                  <a href="#architecture"><i class="fa-solid fa-chevron-right"></i> Architecture cible</a>
+                  <a href="#m1"><i class="fa-solid fa-chevron-right"></i> 1. Provider AWS</a>
+                  <a href="#m2"><i class="fa-solid fa-chevron-right"></i> 2. State S3</a>
+                  <a href="#m3"><i class="fa-solid fa-chevron-right"></i> 3. Reseau AWS</a>
+                  <a href="#m4"><i class="fa-solid fa-chevron-right"></i> 4. Modules</a>
+                  <a href="#m5"><i class="fa-solid fa-chevron-right"></i> 5. IAM &amp; OIDC</a>
+                  <a href="#m6"><i class="fa-solid fa-chevron-right"></i> 6. Compute &amp; data</a>
+                  <a href="#m7"><i class="fa-solid fa-chevron-right"></i> 7. CI/CD</a>
+                  <a href="#m8"><i class="fa-solid fa-chevron-right"></i> 8. Gouvernance</a>
+                  <a href="#labs"><i class="fa-solid fa-chevron-right"></i> Labs</a>
+                  <a href="#evaluation"><i class="fa-solid fa-chevron-right"></i> Evaluation</a>
+               </aside>
+
+               <article class="tf-reader">
+                  <section id="prerequis">
+                     <h2>Prerequis et posture de travail</h2>
+                     <p>Ce cours part du principe que vous savez deja ecrire une ressource Terraform simple. Le niveau avance commence lorsque plusieurs personnes, plusieurs comptes AWS et plusieurs environnements doivent cohabiter sans casser la production.</p>
+                     <div class="tf-grid-3">
+                        <div class="tf-mini"><h4>Terraform</h4><p>Variables, outputs, data sources, <span class="tf-inline-code">for_each</span>, modules, plan/apply/destroy.</p></div>
+                        <div class="tf-mini"><h4>AWS</h4><p>IAM, VPC, subnets, security groups, S3, KMS, CloudWatch, notion de compte et region.</p></div>
+                        <div class="tf-mini"><h4>Git</h4><p>Branches, pull requests, revue de code, tags et workflow CI/CD minimal.</p></div>
+                     </div>
+                     <div class="tf-rule">
+                        <strong>Regle de cours:</strong> toute infrastructure doit pouvoir etre reconstruite a partir de Git, d'un state connu et d'identites AWS temporaires. Les clics console sont reserves au diagnostic, pas au changement durable.
+                     </div>
+                     <h3>Structure de depot recommandee</h3>
+                     <p>Separez les modules reutilisables des stacks deployables. Un module decrit un pattern. Une stack instancie ce pattern pour un environnement donne.</p>
+                     <div class="tf-code">
+                        <div class="tf-code-title"><span>repository</span><span>structure</span></div>
+                        <pre><code>terraform-aws-platform/
+  modules/
+    network/
+    iam-oidc/
+    eks-cluster/
+    rds-postgres/
+  stacks/
+    dev/
+      network/
+      platform/
+      data/
+    prod/
+      network/
+      platform/
+      data/
+  policies/
+  .github/workflows/
+  docs/</code></pre>
+                     </div>
+                  </section>
+
+                  <section id="architecture">
+                     <h2>Architecture cible</h2>
+                     <p>Le projet final construit une fondation AWS typique: state centralise, reseau multi-AZ, roles CI/CD, services prives, controles de qualite et traces d'audit. Le but n'est pas d'empiler des services, mais de comprendre les decisions qui rendent une plateforme exploitable.</p>
+                     <div class="tf-architecture">
+                        <img src="../assets/images/terraform-architecture.png" alt="Architecture Terraform avec providers et state">
+                        <div>
+                           <h3>Flux cible</h3>
+                           <ul>
+                              <li>Le code Terraform vit dans Git et passe par revue.</li>
+                              <li>La pipeline assume un role AWS via OIDC, sans secret statique.</li>
+                              <li>Le state est stocke dans S3 avec versioning, chiffrement et verrouillage.</li>
+                              <li>Les stacks sont separees par domaine: network, platform, data.</li>
+                           </ul>
+                        </div>
+                     </div>
+                     <div class="tf-map">
+                        <div class="tf-map-step"><span>1</span><h4>Bootstrap</h4><p>Compte AWS, bucket state, KMS, politique d'acces et role CI.</p></div>
+                        <div class="tf-map-step"><span>2</span><h4>Network</h4><p>VPC, subnets publics/prives, NAT, endpoints et routes.</p></div>
+                        <div class="tf-map-step"><span>3</span><h4>Platform</h4><p>EKS ou compute, load balancer, logs, metrics et tags.</p></div>
+                        <div class="tf-map-step"><span>4</span><h4>Data</h4><p>RDS prive, KMS, secrets, sauvegardes et monitoring.</p></div>
+                     </div>
+                     <div class="tf-table-wrap">
+                        <table class="tf-table">
+                           <thead><tr><th>Decision</th><th>Choix recommande</th><th>Raison production</th></tr></thead>
+                           <tbody>
+                              <tr><td>State</td><td>S3 versionne + lockfile</td><td>Recuperation, concurrence controlee, audit des versions.</td></tr>
+                              <tr><td>Identite CI</td><td>OIDC vers role AWS</td><td>Pas de cle longue duree dans GitHub, GitLab ou un runner.</td></tr>
+                              <tr><td>Modules</td><td>Interfaces strictes</td><td>Limiter les changements implicites et faciliter les tests.</td></tr>
+                              <tr><td>Environnements</td><td>Stacks separees</td><td>Eviter qu'un plan dev manipule par erreur la prod.</td></tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </section>
+
+                  <section id="m1">
+                     <div class="tf-lesson">
+                        <div class="tf-lesson-head">
+                           <div><span class="tf-lesson-tag"><i class="fa-solid fa-layer-group"></i> Module 1</span><h2>Provider AWS, versions et conventions</h2></div>
+                        </div>
+                        <p>Le provider n'est pas un detail. C'est le contrat entre votre code et l'API AWS. En production, vous devez le versionner, limiter les comptes autorises, imposer des tags et rendre l'authentification explicite.</p>
+                        <h3>Fichiers de base</h3>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>versions.tf</span><span>hcl</span></div>
+                           <pre><code>terraform {
+  required_version = "&gt;= 1.10.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~&gt; 5.0"
+    }
+  }
+}</code></pre>
+                        </div>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>providers.tf</span><span>hcl</span></div>
+                           <pre><code>provider "aws" {
+  region              = var.aws_region
+  allowed_account_ids = [var.aws_account_id]
+
+  default_tags {
+    tags = {
+      ManagedBy   = "Terraform"
+      Project     = var.project
+      Environment = var.environment
+      Owner       = var.owner
+    }
+  }
+}</code></pre>
+                        </div>
+                        <div class="tf-warning">
+                           <strong>Erreur classique:</strong> utiliser le profil AWS local d'un engineer comme mecanisme de production. La bonne cible est un role assumable avec des permissions courtes, auditees et separees par environnement.
+                        </div>
+                     </div>
+                  </section>
+
+                  <section id="m2">
+                     <div class="tf-lesson">
+                        <div class="tf-lesson-head">
+                           <div><span class="tf-lesson-tag"><i class="fa-solid fa-database"></i> Module 2</span><h2>State distant S3 et verrouillage</h2></div>
+                        </div>
+                        <p>Le state Terraform contient des donnees sensibles et represente la verite operationnelle de votre infrastructure. Il doit etre prive, chiffre, versionne, verrouille et separe par stack.</p>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>backend.tf</span><span>hcl</span></div>
+                           <pre><code>terraform {
+  backend "s3" {
+    bucket       = "koffi-terraform-state-prod"
+    key          = "network/prod/terraform.tfstate"
+    region       = "eu-central-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}</code></pre>
+                        </div>
+                        <p>Le verrouillage S3 avec <span class="tf-inline-code">use_lockfile</span> evite deux apply simultanes sur le meme state. Pour les anciens projets, vous pouvez encore rencontrer un verrouillage DynamoDB; considerez-le comme heritage et planifiez la migration.</p>
+                        <h3>Commandes de migration</h3>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>migration</span><span>bash</span></div>
+                           <pre><code>terraform init
+terraform plan
+terraform init -migrate-state
+terraform state list</code></pre>
+                        </div>
+                        <div class="tf-checklist">
+                           <div class="tf-check"><i class="fa-solid fa-check"></i><span>Bucket S3 avec versioning active.</span></div>
+                           <div class="tf-check"><i class="fa-solid fa-check"></i><span>Chiffrement SSE-S3 ou KMS selon la criticite.</span></div>
+                           <div class="tf-check"><i class="fa-solid fa-check"></i><span>Acces limite aux roles Terraform seulement.</span></div>
+                           <div class="tf-check"><i class="fa-solid fa-check"></i><span>Chemins de state separes par environnement.</span></div>
+                        </div>
+                     </div>
+                  </section>
+
+                  <section id="m3">
+                     <div class="tf-lesson">
+                        <div class="tf-lesson-head">
+                           <div><span class="tf-lesson-tag"><i class="fa-solid fa-network-wired"></i> Module 3</span><h2>VPC multi-AZ et patterns reseau</h2></div>
+                        </div>
+                        <p>Un reseau Terraform avance doit rendre les decisions visibles: plage CIDR, segmentation, exposition internet, routage prive, endpoints et cout NAT. Le code doit empecher les architectures ambiguës.</p>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>network stack</span><span>hcl</span></div>
+                           <pre><code>module "network" {
+  source = "../../../modules/network"
+
+  name               = "koffi-prod"
+  cidr_block         = "10.40.0.0/16"
+  availability_zones = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
+
+  public_subnet_bits  = 8
+  private_subnet_bits = 8
+  enable_nat_gateway  = true
+  single_nat_gateway  = false
+}</code></pre>
+                        </div>
+                        <h3>Principes de conception</h3>
+                        <ul>
+                           <li>Un subnet public contient uniquement ce qui doit recevoir une route vers l'internet gateway.</li>
+                           <li>Les workloads applicatifs, bases de donnees et runners restent en subnets prives.</li>
+                           <li>Les endpoints VPC reduisent la dependance au NAT pour S3, ECR, CloudWatch et STS.</li>
+                           <li>La haute disponibilite exige une repartition sur plusieurs AZ, pas seulement plusieurs subnets.</li>
+                        </ul>
+                        <div class="tf-rule">
+                           <strong>Regle reseau:</strong> une ressource n'est pas "privee" parce que son nom contient private. Elle est privee si ses routes, security groups, NACL, DNS et dependances ne l'exposent pas.
+                        </div>
+                     </div>
+                  </section>
+
+                  <section id="m4">
+                     <div class="tf-lesson">
+                        <div class="tf-lesson-head">
+                           <div><span class="tf-lesson-tag"><i class="fa-solid fa-cubes"></i> Module 4</span><h2>Modules reutilisables et interfaces strictes</h2></div>
+                        </div>
+                        <p>Un bon module n'est pas un dossier qui cache du code. C'est une interface stable qui encode une decision d'architecture. Plus le module est generique, moins il protege. Plus il est explicite, plus il devient exploitable.</p>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>variables.tf</span><span>hcl</span></div>
+                           <pre><code>variable "subnets" {
+  description = "Subnets a creer par zone de disponibilite."
+  type = map(object({
+    cidr_block        = string
+    availability_zone = string
+    public            = bool
+  }))
+
+  validation {
+    condition     = length(var.subnets) &gt;= 2
+    error_message = "Au moins deux subnets sont requis pour une architecture multi-AZ."
+  }
+}</code></pre>
+                        </div>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>main.tf</span><span>hcl</span></div>
+                           <pre><code>resource "aws_subnet" "this" {
+  for_each = var.subnets
+
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = each.value.cidr_block
+  availability_zone = each.value.availability_zone
+
+  map_public_ip_on_launch = each.value.public
+}</code></pre>
+                        </div>
+                        <h3>Checklist module production</h3>
+                        <ul>
+                           <li>Inputs typés, avec validations utiles et valeurs par defaut rares.</li>
+                           <li>Outputs explicites, stables et documentes.</li>
+                           <li>Aucun provider cache dans le module sauf cas justifie.</li>
+                           <li>Pas de logique metier implicite basee sur des noms magiques.</li>
+                        </ul>
+                     </div>
+                  </section>
+
+                  <section id="m5">
+                     <div class="tf-lesson">
+                        <div class="tf-lesson-head">
+                           <div><span class="tf-lesson-tag"><i class="fa-solid fa-user-shield"></i> Module 5</span><h2>IAM, federation OIDC et moindre privilege</h2></div>
+                        </div>
+                        <p>La maturite Terraform se voit dans IAM. Le but est simple: aucun secret AWS longue duree dans la CI, des roles par environnement, des permissions minimales et une trace CloudTrail exploitable.</p>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>github-oidc-role.tf</span><span>hcl</span></div>
+                           <pre><code>data "aws_iam_policy_document" "github_oidc_assume" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.github.arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = ["repo:koffi-academy/terraform-aws-platform:ref:refs/heads/main"]
+    }
+  }
+}
+
+resource "aws_iam_role" "terraform_ci" {
+  name               = "terraform-ci-prod"
+  assume_role_policy = data.aws_iam_policy_document.github_oidc_assume.json
+}</code></pre>
+                        </div>
+                        <div class="tf-warning">
+                           <strong>Point de rigueur:</strong> commencez avec une permission plus large uniquement pendant le design initial, puis capturez les actions reelles via CloudTrail et reduisez la policy avant de declarer le module pret pour production.
+                        </div>
+                     </div>
+                  </section>
+
+                  <section id="m6">
+                     <div class="tf-lesson">
+                        <div class="tf-lesson-head">
+                           <div><span class="tf-lesson-tag"><i class="fa-solid fa-server"></i> Module 6</span><h2>Compute, EKS, RDS et donnees sensibles</h2></div>
+                        </div>
+                        <p>Les services managés AWS simplifient l'exploitation, mais ne suppriment pas la responsabilite d'architecture. Terraform doit exprimer le niveau de disponibilite, de sauvegarde, de chiffrement et d'observabilite attendu.</p>
+                        <div class="tf-grid-2">
+                           <div class="tf-mini"><h4>EKS</h4><p>Cluster prive, node groups separes, IRSA, logs control plane, add-ons versionnes et upgrades planifies.</p></div>
+                           <div class="tf-mini"><h4>RDS</h4><p>Subnets prives, Multi-AZ selon criticite, KMS, deletion protection, backup window et monitoring.</p></div>
+                        </div>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>rds-postgres.tf</span><span>hcl</span></div>
+                           <pre><code>module "database" {
+  source = "../../../modules/rds-postgres"
+
+  name                 = "koffi-prod"
+  engine_version       = "16"
+  instance_class       = "db.m7g.large"
+  subnet_ids           = module.network.private_subnet_ids
+  security_group_ids   = [module.network.database_security_group_id]
+  storage_encrypted    = true
+  deletion_protection  = true
+  backup_retention_days = 14
+}</code></pre>
+                        </div>
+                        <p>Ne mettez jamais un mot de passe en clair dans une variable Terraform versionnee. Utilisez AWS Secrets Manager, SSM Parameter Store, un flux Vault ou un mecanisme de rotation controle.</p>
+                     </div>
+                  </section>
+
+                  <section id="m7">
+                     <div class="tf-lesson">
+                        <div class="tf-lesson-head">
+                           <div><span class="tf-lesson-tag"><i class="fa-solid fa-code-pull-request"></i> Module 7</span><h2>CI/CD Terraform: plan, review, apply</h2></div>
+                        </div>
+                        <p>Une pipeline Terraform n'a pas pour mission de deployer le plus vite possible. Elle doit rendre le changement lisible, verifier les risques et appliquer uniquement quand le contexte est clair.</p>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>.github/workflows/terraform.yml</span><span>yaml</span></div>
+                           <pre><code>name: terraform
+
+on:
+  pull_request:
+    paths: ["stacks/**", "modules/**"]
+  push:
+    branches: ["main"]
+    paths: ["stacks/**", "modules/**"]
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/terraform-ci-prod
+          aws-region: eu-central-1
+      - run: terraform -chdir=stacks/prod/network fmt -check
+      - run: terraform -chdir=stacks/prod/network init
+      - run: terraform -chdir=stacks/prod/network validate
+      - run: terraform -chdir=stacks/prod/network plan -out=tfplan</code></pre>
+                        </div>
+                        <h3>Politique d'apply</h3>
+                        <ul>
+                           <li>Pull request: format, init, validate, plan, scan securite.</li>
+                           <li>Main branch: plan final, approbation humaine pour prod, apply avec role dedie.</li>
+                           <li>Plan stocke comme artefact sensible avec retention courte.</li>
+                           <li>Drift detection planifiee hors heures critiques avec notification, pas apply automatique aveugle.</li>
+                        </ul>
+                     </div>
+                  </section>
+
+                  <section id="m8">
+                     <div class="tf-lesson">
+                        <div class="tf-lesson-head">
+                           <div><span class="tf-lesson-tag"><i class="fa-solid fa-scale-balanced"></i> Module 8</span><h2>Gouvernance, tests et operations</h2></div>
+                        </div>
+                        <p>Le Terraform avance n'est pas seulement syntaxique. Il inclut des garde-fous: validations, preconditions, checks, tests, policies, tagging, couts et runbooks.</p>
+                        <div class="tf-code">
+                           <div class="tf-code-title"><span>checks.tf</span><span>hcl</span></div>
+                           <pre><code>check "private_database_subnets" {
+  assert {
+    condition = alltrue([
+      for subnet in module.network.database_subnets : subnet.map_public_ip_on_launch == false
+    ])
+    error_message = "Les subnets database ne doivent pas attribuer d'IP publique."
+  }
+}</code></pre>
+                        </div>
+                        <div class="tf-table-wrap">
+                           <table class="tf-table">
+                              <thead><tr><th>Anti-pattern</th><th>Risque</th><th>Correction</th></tr></thead>
+                              <tbody>
+                                 <tr><td>Un seul state pour tout</td><td>Blast radius enorme et plans illisibles.</td><td>Stacks separees par domaine et environnement.</td></tr>
+                                 <tr><td>Modules trop generiques</td><td>Interfaces floues, changements dangereux.</td><td>Modules orientes pattern avec validations.</td></tr>
+                                 <tr><td>Apply depuis poste local</td><td>Identite non auditee, drift de version, permissions floues.</td><td>Apply via pipeline et roles federes.</td></tr>
+                                 <tr><td>Secrets dans tfvars</td><td>Fuite Git, state sensible, rotation difficile.</td><td>Secrets Manager, SSM, Vault ou injection runtime.</td></tr>
+                              </tbody>
+                           </table>
+                        </div>
+                        <div class="tf-note">
+                           <strong>Discipline operationnelle:</strong> chaque module critique doit avoir un runbook minimal: comment planifier, appliquer, annuler, restaurer le state et diagnostiquer une erreur AWS.
+                        </div>
+                     </div>
+                  </section>
+
+                  <section id="labs">
+                     <h2>Labs pratiques</h2>
+                     <p>Les labs sont conçus pour forcer les bonnes decisions. Vous produisez du code, un plan, une preuve de controle et une note d'exploitation.</p>
+                     <div class="tf-lab-grid">
+                        <div class="tf-lab"><strong>1</strong><h3>Bootstrap state</h3><p>Creer le bucket S3 de state, activer versioning, chiffrement, verrouillage et policy IAM minimale.</p><ul><li>Livrable: backend fonctionnel.</li><li>Verification: deux plans concurrents ne passent pas.</li></ul></div>
+                        <div class="tf-lab"><strong>2</strong><h3>VPC multi-AZ</h3><p>Construire un module network avec subnets publics/prives, NAT, endpoints et outputs consommables.</p><ul><li>Livrable: module documente.</li><li>Verification: routage et tags corrects.</li></ul></div>
+                        <div class="tf-lab"><strong>3</strong><h3>Role OIDC CI</h3><p>Mettre en place l'identite federée pour GitHub Actions et supprimer toute cle AWS statique.</p><ul><li>Livrable: role assumable.</li><li>Verification: CloudTrail montre l'assume-role.</li></ul></div>
+                        <div class="tf-lab"><strong>4</strong><h3>RDS prive</h3><p>Deployer une base PostgreSQL chiffree, protegee contre suppression, non exposee publiquement.</p><ul><li>Livrable: module data.</li><li>Verification: pas d'IP publique, backup actif.</li></ul></div>
+                        <div class="tf-lab"><strong>5</strong><h3>Pipeline Terraform</h3><p>Executer fmt, init, validate, plan, scan et apply controle sur une stack prod simulee.</p><ul><li>Livrable: workflow CI.</li><li>Verification: PR avec plan lisible.</li></ul></div>
+                        <div class="tf-lab"><strong>6</strong><h3>Drift et incident</h3><p>Modifier une ressource hors Terraform, detecter le drift, choisir entre import, revert ou changement de code.</p><ul><li>Livrable: rapport d'incident.</li><li>Verification: decision justifiee.</li></ul></div>
+                     </div>
+                  </section>
+
+                  <section id="evaluation">
+                     <h2>Evaluation finale</h2>
+                     <p>Le projet final consiste a livrer une fondation Terraform AWS prete pour revue d'architecture. Le resultat attendu n'est pas seulement un apply reussi, mais un systeme comprehensible et defendable.</p>
+                     <div class="tf-checklist">
+                        <div class="tf-check"><i class="fa-solid fa-check"></i><span>Le state est separe, verrouille, versionne et chiffre.</span></div>
+                        <div class="tf-check"><i class="fa-solid fa-check"></i><span>Les modules ont des inputs types, validations et outputs stables.</span></div>
+                        <div class="tf-check"><i class="fa-solid fa-check"></i><span>La CI utilise OIDC et publie un plan lisible en pull request.</span></div>
+                        <div class="tf-check"><i class="fa-solid fa-check"></i><span>Le reseau distingue clairement exposition publique et privee.</span></div>
+                        <div class="tf-check"><i class="fa-solid fa-check"></i><span>Les ressources critiques sont taguees, chiffrees et monitorables.</span></div>
+                        <div class="tf-check"><i class="fa-solid fa-check"></i><span>Un runbook explique apply, rollback, drift et restauration state.</span></div>
+                     </div>
+                     <h3>Sources officielles a consulter</h3>
+                     <ul>
+                        <li><a href="https://developer.hashicorp.com/terraform/language/backend/s3" target="_blank" rel="noopener">Documentation HashiCorp - backend S3 Terraform</a></li>
+                        <li><a href="https://github.com/hashicorp/terraform-provider-aws/releases/latest" target="_blank" rel="noopener">Releases officielles du provider AWS Terraform</a></li>
+                        <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html" target="_blank" rel="noopener">Documentation AWS - fournisseurs OIDC IAM</a></li>
+                     </ul>
+                  </section>
+               </article>
+            </div>
+         </div>
+      </section>
+
+      <section class="tf-final">
+         <div class="tf-shell">
+            <h2>Passez a une pratique Terraform defendable en production.</h2>
+            <p>Le niveau avance se mesure a votre capacite a expliquer vos choix, reduire le risque et maintenir l'infrastructure dans le temps. Ce cours vous donne cette structure.</p>
+            <div class="tf-actions">
+               <a class="tf-btn tf-btn-primary" href="../payment/checkout.html?course=terraform-aws-advanced&amp;price=99&amp;currency=EUR&amp;title=Terraform%20sur%20AWS%20-%20Niveau%20avance"><i class="fa-solid fa-credit-card"></i> Acheter le cours</a>
+               <a class="tf-btn tf-btn-ghost" href="../contact.html"><i class="fa-solid fa-message"></i> Poser une question</a>
+            </div>
+         </div>
+      </section>
+   </main>
+
+   <footer class="simple-footer">
+      <div class="container">
+         <div class="row sfooter-cols">
+            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+               <h3>Contact</h3>
+               <ul>
+                  <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+                  <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+                  <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+               </ul>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+               <h3>Navigation</h3>
+               <ul>
+                  <li><i class="fas fa-chevron-right lead-icon"></i><a href="../index.html">Accueil</a></li>
+                  <li><i class="fas fa-chevron-right lead-icon"></i><a href="../laboratoire.html">Laboratoire</a></li>
+                  <li><i class="fas fa-chevron-right lead-icon"></i><a href="../courses/courses.html">Catalogue</a></li>
+                  <li><i class="fas fa-chevron-right lead-icon"></i><a href="../blog.html">Blog</a></li>
+                  <li><i class="fas fa-chevron-right lead-icon"></i><a href="../sponsor.html">Sponsor</a></li>
+               </ul>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+               <h3>Support</h3>
+               <ul>
+                  <li><i class="fas fa-chevron-right lead-icon"></i><a href="../about.html">A propos</a></li>
+                  <li><i class="fas fa-chevron-right lead-icon"></i><a href="../faq.html">Questions frequentes</a></li>
+                  <li><i class="fas fa-chevron-right lead-icon"></i><a href="../contact.html">Contact &amp; support</a></li>
+               </ul>
+            </div>
+         </div>
+         <div class="simple-footer-bottom"><p>Copyright &copy; 2026 <a href="../index.html">Koffi Academy</a> - Tous droits reserves.</p></div>
+      </div>
+   </footer>
+</div>
+
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/js/custom.js"></script>
+<script src="../assets/js/course-lock.js"
+        data-course="terraform-aws-advanced"
+        data-price="99"
+        data-currency="EUR"
+        data-title="Terraform sur AWS - Niveau avance"></script>
+<script src="../assets/js/kontakt-popup.js"></script>
+<script src="../assets/js/announce.js"></script>
+<script src="../assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

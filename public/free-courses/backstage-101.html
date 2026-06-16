@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <link rel="stylesheet" href="../assets/css/style.css">
+   <link rel="stylesheet" href="../assets/css/responsive.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <link rel="stylesheet" href="../assets/css/modern.css">
+   <link rel="stylesheet" href="../assets/css/modern-header.css">
+   <link rel="shortcut icon" href="../assets/images/logo.png">
+   <title>Backstage Developer Portal | Koffi Academy</title>
+   <meta name="description" content="Vollstandiger Backstage-Kurs: Software Catalog, TechDocs, Scaffolder, Plugins und Betrieb in Produktion. DE/EN/FR.">
+   <meta name="theme-color" content="#09213d">
+   <style>
+      :root{--go-navy-950:#020c1a;--go-navy-900:#061a30;--go-navy-800:#09213d;--go-navy-700:#12304f;--go-navy-600:#16456f;--go-gold:#d6a02d;--go-gold-soft:#f9d77e;--go-coral:#ef7b4d;--go-blue:#2563eb;--go-green:#047857;--go-red:#b91c1c;--go-amber:#b45309;--go-slate-50:#f8fafc;--go-slate-100:#f1f5f9;--go-slate-200:#e2e8f0;--go-slate-300:#cbd5e1;--go-slate-500:#64748b;--go-slate-600:#475569;--go-slate-700:#334155;--go-slate-800:#1e293b}
+      *{box-sizing:border-box;letter-spacing:0}html{scroll-behavior:smooth}
+      body.go-page{margin:0;background:var(--go-slate-50);color:var(--go-slate-700);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+      .page-main{overflow-x:clip}
+      .go-shell{max-width:1180px;margin:0 auto;padding:0 24px}
+      .go-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:12px 18px;border-radius:8px;border:1px solid transparent;font-weight:800;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,color .18s ease}
+      .go-btn:hover{transform:translateY(-2px);text-decoration:none}
+      .go-btn-primary{background:linear-gradient(135deg,var(--go-gold-soft),var(--go-gold));color:#07294d;box-shadow:0 12px 28px rgba(214,160,45,.30)}
+      .go-btn-primary:hover{color:#07294d;box-shadow:0 16px 34px rgba(214,160,45,.42)}
+      .go-btn-ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.24);color:#fff}
+      .go-btn-ghost:hover{background:rgba(255,255,255,.14);color:#fff}
+      .go-hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#020c1a 0%,#09213d 45%,#12304f 74%,#16456f 100%);color:#fff;padding:86px 0 92px}
+      .go-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:44px 44px;opacity:.55}
+      .go-hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:52px;background:var(--go-slate-50);clip-path:polygon(0 42%,100% 0,100% 100%,0 100%)}
+      .go-hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);gap:42px;align-items:center}
+      .go-kicker{display:inline-flex;align-items:center;gap:9px;margin-bottom:18px;padding:8px 13px;border:1px solid rgba(214,160,45,.45);border-radius:8px;background:rgba(214,160,45,.13);color:#f9d77e;font-size:12px;font-weight:900;text-transform:uppercase}
+      .go-hero h1{font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;color:#fff;font-size:54px;line-height:1.08;font-weight:800;margin:0 0 20px}
+      .go-hero p{font-size:18px;line-height:1.75;color:rgba(255,255,255,.84);max-width:760px;margin:0 0 28px}
+      .go-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:26px}
+      .go-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:840px}
+      .go-meta span{display:flex;align-items:center;gap:9px;min-height:54px;padding:12px 13px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.08);color:#fff;font-size:13px;font-weight:700}
+      .go-meta i{color:var(--go-gold-soft)}
+      .go-visual{position:relative;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(2,12,26,.52);box-shadow:0 28px 70px rgba(0,0,0,.30);overflow:hidden}
+      .go-visual-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06)}
+      .go-dots{display:flex;gap:7px}
+      .go-dots span{width:10px;height:10px;border-radius:50%;background:#94a3b8}
+      .go-dots span:nth-child(1){background:#ef4444}.go-dots span:nth-child(2){background:#f59e0b}.go-dots span:nth-child(3){background:#10b981}
+      .go-visual-head strong{font-family:"JetBrains Mono",Consolas,monospace;color:#cbd5e1;font-size:12px}
+      .go-visual-body{padding:18px}
+      .go-flow{display:grid;grid-template-columns:1fr 28px 1fr;gap:10px;align-items:center;margin-bottom:16px}
+      .go-flow-card{min-height:118px;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:8px;background:rgba(255,255,255,.06)}
+      .go-flow-card i{display:block;color:var(--go-gold-soft);font-size:28px;margin-bottom:12px}
+      .go-flow-card strong{display:block;color:#fff;font-size:15px;margin-bottom:5px}
+      .go-flow-card small{display:block;color:#cbd5e1;line-height:1.45}
+      .go-arrow{display:flex;align-items:center;justify-content:center;color:var(--go-gold-soft);font-size:18px}
+      .go-state{display:grid;gap:10px}
+      .go-state-row{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:11px 12px;border:1px solid rgba(255,255,255,.10);border-radius:8px;background:rgba(255,255,255,.045)}
+      .go-state-row small{font-family:"JetBrains Mono",Consolas,monospace;color:#93c5fd;font-weight:700}
+      .go-state-row strong{color:#fff;font-size:14px}
+      .go-state-row i{color:#10b981}
+      .go-access{position:relative;z-index:2;margin-top:-38px}
+      .go-access-inner{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding:24px 26px;border:1px solid rgba(9,33,61,.08);border-radius:8px;background:#fff;box-shadow:0 18px 48px rgba(9,33,61,.12)}
+      .go-access h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:24px;font-weight:800;margin:0 0 6px}
+      .go-access p{margin:0;color:var(--go-slate-600);line-height:1.65}
+      .go-price-pill{display:inline-flex;align-items:center;gap:9px;padding:11px 14px;border-radius:8px;background:#fffbeb;color:#9a6510;font-weight:900;white-space:nowrap}
+      .go-section{padding:78px 0}.go-section.white{background:#fff}
+      .go-heading{max-width:840px;margin-bottom:34px}
+      .go-heading.center{text-align:center;margin-left:auto;margin-right:auto}
+      .go-heading .eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;color:#9a6510;font-size:12px;font-weight:900;text-transform:uppercase}
+      .go-heading h2{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:36px;font-weight:800;line-height:1.18;margin:0 0 12px}
+      .go-heading p{color:var(--go-slate-600);font-size:16px;line-height:1.75;margin:0}
+      .go-outcomes{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+      .go-card{height:100%;padding:24px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+      .go-card:hover{transform:translateY(-4px);border-color:rgba(214,160,45,.45);box-shadow:0 16px 42px rgba(9,33,61,.11)}
+      .go-icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin-bottom:16px;border-radius:8px;background:#fffbeb;color:#9a6510;font-size:18px}
+      .go-card h3{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:19px;font-weight:800;margin:0 0 9px}
+      .go-card p{color:var(--go-slate-600);line-height:1.7;margin:0}
+      .go-layout{display:grid;grid-template-columns:282px minmax(0,1fr);gap:28px;align-items:start}
+      .go-sidebar{position:sticky;top:86px;padding:20px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07)}
+      .go-sidebar h3{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-size:17px;font-weight:800;margin:0 0 14px}
+      .go-sidebar a{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--go-slate-100);color:var(--go-slate-600);font-size:14px;font-weight:700;text-decoration:none}
+      .go-sidebar a:last-child{border-bottom:0}
+      .go-sidebar a:hover{color:#9a6510}
+      .go-sidebar i{width:16px;color:var(--go-gold)}
+      .go-reader{padding:42px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;box-shadow:0 10px 30px rgba(9,33,61,.07)}
+      .go-reader section{scroll-margin-top:96px;margin-bottom:56px}
+      .go-reader section:last-child{margin-bottom:0}
+      .go-reader h2,.go-reader h3,.go-reader h4{font-family:"Plus Jakarta Sans",Inter,sans-serif;color:var(--go-navy-800);font-weight:800}
+      .go-reader h2{font-size:31px;line-height:1.2;margin:0 0 16px}
+      .go-reader h3{font-size:23px;margin:30px 0 12px}
+      .go-reader h4{font-size:18px;margin:22px 0 10px}
+      .go-reader p{font-size:16px;line-height:1.86;color:var(--go-slate-700);margin:0 0 16px}
+      .go-reader ul,.go-reader ol{padding:0;margin:0 0 18px}
+      .go-reader li{position:relative;list-style:none;padding-left:29px;margin-bottom:10px;line-height:1.78;color:var(--go-slate-700)}
+      .go-reader li::before{content:"";position:absolute;left:0;top:11px;width:8px;height:8px;border-radius:50%;background:var(--go-gold)}
+      .go-note,.go-warning,.go-rule{margin:24px 0;padding:20px 22px;border-radius:8px;border:1px solid var(--go-slate-200);background:var(--go-slate-50)}
+      .go-note{border-left:4px solid var(--go-blue)}
+      .go-warning{border-left:4px solid var(--go-amber);background:#fffbeb}
+      .go-rule{border-left:4px solid var(--go-green);background:#ecfdf5}
+      .go-note strong,.go-warning strong,.go-rule strong{color:var(--go-navy-800)}
+      .go-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:22px 0}
+      .go-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:22px 0}
+      .go-mini{padding:18px;border:1px solid var(--go-slate-200);border-radius:8px;background:var(--go-slate-50)}
+      .go-mini h4{margin:0 0 8px;font-size:17px}
+      .go-mini p{margin:0;color:var(--go-slate-600);font-size:15px;line-height:1.65}
+      .code-card{margin:20px 0;border-radius:8px;overflow:hidden;border:1px solid #1e293b;background:#0f172a}
+      .code-title{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:#111827;border-bottom:1px solid #1f2937;color:#cbd5e1;font-family:"JetBrains Mono",Consolas,monospace;font-size:12px;font-weight:700}
+      .copy-code{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.18);border-radius:6px;background:rgba(255,255,255,.08);color:#e5e7eb;padding:6px 10px;font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:800;cursor:pointer}
+      .copy-code:hover{background:rgba(255,255,255,.14)}
+      .code-card pre{margin:0;padding:18px;overflow:auto;color:#d1d5db;font-family:"JetBrains Mono",Consolas,monospace;font-size:13px;line-height:1.72}
+      .code-card code{font-family:inherit;color:inherit}
+      .go-inline-code{font-family:"JetBrains Mono",Consolas,monospace;background:var(--go-slate-100);border:1px solid var(--go-slate-200);border-radius:6px;padding:1px 6px;color:var(--go-navy-800)}
+      .go-table-wrap{overflow-x:auto;margin:22px 0;border:1px solid var(--go-slate-200);border-radius:8px}
+      .go-table{width:100%;border-collapse:collapse;background:#fff;min-width:720px}
+      .go-table th{background:#f8fafc;color:var(--go-navy-800);font-weight:900;text-align:left;padding:14px;border-bottom:1px solid var(--go-slate-200)}
+      .go-table td{padding:14px;border-bottom:1px solid var(--go-slate-200);vertical-align:top;line-height:1.65;color:var(--go-slate-700)}
+      .go-table tr:last-child td{border-bottom:0}
+      .go-lab{padding:22px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;margin:18px 0;box-shadow:0 8px 24px rgba(9,33,61,.06)}
+      .go-lab-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+      .go-lab h3{margin:0;font-size:21px}
+      .go-badge{display:inline-flex;align-items:center;gap:7px;border-radius:8px;background:#fffbeb;color:#9a6510;font-size:12px;font-weight:900;padding:7px 10px;white-space:nowrap}
+      .go-checklist{display:grid;gap:10px;margin-top:16px}
+      .go-check{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--go-slate-200);border-radius:8px;background:var(--go-slate-50)}
+      .go-check i{color:var(--go-green);margin-top:4px}
+      .go-check span{line-height:1.6}
+      .go-project{padding:28px;border-radius:8px;background:linear-gradient(135deg,#061a30,#12304f);color:#fff}
+      .go-project h3{color:#fff;margin-top:0}
+      .go-project p,.go-project li{color:rgba(255,255,255,.82)}
+      .go-project li::before{background:var(--go-gold-soft)}
+      .source-list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+      .source-list a{display:flex;align-items:flex-start;gap:10px;padding:16px;border:1px solid var(--go-slate-200);border-radius:8px;background:#fff;color:var(--go-navy-800);font-weight:800;text-decoration:none}
+      .source-list a:hover{border-color:rgba(214,160,45,.55);color:#9a6510}
+      .source-list i{color:var(--go-gold);margin-top:3px}
+      .go-icon-warn{color:#f59e0b;margin-right:7px}
+      .go-icon-ok{color:#10b981;margin-right:7px}
+      .go-state-warn{color:#f59e0b}
+      .kh__mark svg{width:62%;height:62%;display:block}
+      .simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0}
+      .simple-footer a{color:rgba(255,255,255,.82);text-decoration:none}
+      .simple-footer a:hover{color:#f9d77e}
+      .simple-footer h3{color:#fff;font-size:13px;font-weight:800;text-transform:uppercase;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(214,160,45,.30)}
+      .simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+      .simple-footer li{font-size:13.5px;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+      .simple-footer li::before{display:none}
+      .simple-footer li i.lead-icon{color:#f9d77e;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+      .sfooter-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding-bottom:36px}
+      .simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+      .simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42)}
+      @media (max-width:1080px){.go-hero-grid,.go-layout{grid-template-columns:1fr}.go-sidebar{position:relative;top:auto}.go-outcomes{grid-template-columns:repeat(2,1fr)}.go-grid-3{grid-template-columns:1fr}}
+      @media (max-width:760px){.go-shell{padding:0 18px}.go-hero{padding:70px 0 82px}.go-hero h1{font-size:38px}.go-hero p{font-size:16px}.go-meta{grid-template-columns:1fr}.go-access-inner{grid-template-columns:1fr}.go-section{padding:58px 0}.go-reader{padding:26px 18px}.go-reader h2{font-size:26px}.go-heading h2{font-size:29px}.go-outcomes,.go-grid-2,.source-list,.sfooter-cols{grid-template-columns:1fr}.go-flow{grid-template-columns:1fr}.go-arrow{transform:rotate(90deg)}.go-state-row{grid-template-columns:1fr}.go-lab-head{flex-direction:column}}
+      .kl-drop{position:relative;flex-shrink:0}
+      .kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+      .kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+      .kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+      .kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+      .kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+      .kl-drop.open .kl-caret{transform:rotate(180deg)}
+      .kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+      .kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+      .kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+      .kl-opt:hover{background:rgba(255,255,255,.08)}
+      .kl-opt.kl-on{background:rgba(255,198,0,.15)}
+      .kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+      .kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+      .kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+      .lang-sect{display:none}.lang-sect.active{display:block}
+   </style>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body class="go-page">
+<div class="page-main">
+   <header class="kh">
+      <div class="kh__in">
+         <a class="kh__brand" href="../index.html">
+            <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+            <span class="kh__name">Koffi Academy</span>
+         </a>
+         <nav class="kh__nav">
+            <a href="../index.html">Startseite</a>
+            <span class="kh__drop"><span class="kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="../laboratoire.html">Laboratoire</a><a href="../courses/courses.html" class="active">Kurskatalog</a></span></span>
+            <a href="../blog.html">Blog</a>
+            <a href="../culture.html">Culture</a>
+            <a href="../koffi-profile.html">&Uuml;ber mich</a>
+            <span class="kh__auth"><a class="kh__login" href="../login.html">Anmelden</a><a class="kh__btn" href="../register.html">Registrieren</a></span>
+         </nav>
+         <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Fran&ccedil;ais</span><span class="kl-opt-code">FR</span></button></div></div>
+      </div>
+   </header>
+
+   <main>
+      <!-- HERO -->
+      <section class="go-hero">
+         <div class="go-shell">
+            <div class="go-hero-grid">
+               <div>
+                  <span class="go-kicker"><i class="fa-solid fa-layer-group"></i> Developer Portal &amp; IDP</span>
+                  <h1 data-i18n="heroTitle">Backstage Developer Portal</h1>
+                  <p data-i18n="heroSubtitle">Lernen Sie, wie Spotifys offene Developer-Portal-Plattform interne Tools, Services und Dokumentation unter einem Dach vereint. Von der Installation bis zum Produktionsbetrieb mit Custom Plugins.</p>
+                  <div class="go-actions">
+                     <a class="go-btn go-btn-primary" href="#kursbuch"><i class="fa-solid fa-play"></i> <span data-i18n="startBtn">Kurs starten</span></a>
+                     <a class="go-btn go-btn-ghost" href="#labs"><i class="fa-solid fa-flask"></i> <span data-i18n="labsBtn">Praktische Labs</span></a>
+                  </div>
+                  <div class="go-meta">
+                     <span><i class="fa-regular fa-clock"></i> <span data-i18n="duration">2 Wochen</span></span>
+                     <span><i class="fa-solid fa-layer-group"></i> <span data-i18n="modules">7 Module</span></span>
+                     <span><i class="fa-solid fa-terminal"></i> <span data-i18n="labs">5 Labs</span></span>
+                     <span><i class="fa-solid fa-signal"></i> <span data-i18n="level">Mittelstufe</span></span>
+                  </div>
+               </div>
+               <div class="go-visual">
+                  <div class="go-visual-head"><div class="go-dots"><span></span><span></span><span></span></div><strong>backstage-catalog</strong></div>
+                  <div class="go-visual-body">
+                     <div class="go-flow">
+                        <div class="go-flow-card"><i class="fa-solid fa-database"></i><strong>Software Catalog</strong><small>Zentrales Register aller Services, APIs, Libraries und Teams.</small></div>
+                        <div class="go-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="go-flow-card"><i class="fa-solid fa-plug"></i><strong>Plugin System</strong><small>Erweiterbar: CI/CD, Security, Docs, Cost — alles in einem Portal.</small></div>
+                     </div>
+                     <div class="go-state">
+                        <div class="go-state-row"><small>catalog</small><strong>342 Components, 47 APIs</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>techdocs</small><strong>Auto-generierte Doku live</strong><i class="fa-solid fa-check"></i></div>
+                        <div class="go-state-row"><small>scaffolder</small><strong>12 Templates verfugbar</strong><i class="fa-solid fa-check"></i></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <!-- ACCESS BAR -->
+      <section class="go-access">
+         <div class="go-shell">
+            <div class="go-access-inner">
+               <div>
+                  <h2 data-i18n="accessTitle">Plattform-Engineering mit offenem Standard</h2>
+                  <p data-i18n="accessDesc">Backstage ist das meistgenutzte Open-Source-Developer-Portal der Welt — mit uber 1.100 Unternehmen im Produktionseinsatz und CNCF Incubating-Status.</p>
+               </div>
+               <span class="go-price-pill"><i class="fa-solid fa-certificate"></i> <span data-i18n="certLabel">Abschlussprojekt inklusive</span></span>
+            </div>
+         </div>
+      </section>
+
+      <!-- GOALS -->
+      <section class="go-section white" id="ziele">
+         <div class="go-shell">
+            <div class="go-heading center">
+               <span class="eyebrow"><i class="fa-solid fa-bullseye"></i> <span data-i18n="eyebrowGoals">Lernziele</span></span>
+               <h2 data-i18n="goalsTitle">Was Sie nach diesem Kurs beherrschen</h2>
+               <p data-i18n="goalsDesc">Sie installieren Backstage, modellieren Ihren Software Catalog, automatisieren Service-Erstellung mit dem Scaffolder und erstellen eigene Plugins.</p>
+            </div>
+            <div class="go-outcomes">
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-database"></i></span><h3 data-i18n="goal1Title">Software Catalog</h3><p data-i18n="goal1Desc">Alle Services, APIs und Teams zentral erfassen und mit Ownership verknupfen.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-file-code"></i></span><h3 data-i18n="goal2Title">TechDocs</h3><p data-i18n="goal2Desc">Docs-as-Code mit MkDocs: Dokumentation direkt aus dem Repository generieren.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span><h3 data-i18n="goal3Title">Scaffolder Templates</h3><p data-i18n="goal3Desc">Standardisierte Service-Erstellung per Formular: Repository, CI/CD und Catalog in einem Schritt.</p></article>
+               <article class="go-card"><span class="go-icon"><i class="fa-solid fa-puzzle-piece"></i></span><h3 data-i18n="goal4Title">Custom Plugins</h3><p data-i18n="goal4Desc">React-basierte Frontend-Plugins und Node.js-Backend-Plugins entwickeln und integrieren.</p></article>
+            </div>
+         </div>
+      </section>
+
+      <!-- COURSE CONTENT -->
+      <section class="go-section" id="kursbuch">
+         <div class="go-shell">
+            <div class="go-layout">
+               <aside class="go-sidebar">
+                  <h3 data-i18n="tocTitle">Kursinhalt</h3>
+                  <a href="#intro"><i class="fa-solid fa-circle-info"></i> <span data-i18n="toc0">Was ist Backstage?</span></a>
+                  <a href="#modul1"><i class="fa-solid fa-rocket"></i> <span data-i18n="toc1">Modul 1 — Installation</span></a>
+                  <a href="#modul2"><i class="fa-solid fa-database"></i> <span data-i18n="toc2">Modul 2 — Catalog</span></a>
+                  <a href="#modul3"><i class="fa-solid fa-file-code"></i> <span data-i18n="toc3">Modul 3 — TechDocs</span></a>
+                  <a href="#modul4"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="toc4">Modul 4 — Scaffolder</span></a>
+                  <a href="#modul5"><i class="fa-solid fa-puzzle-piece"></i> <span data-i18n="toc5">Modul 5 — Plugins</span></a>
+                  <a href="#modul6"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="toc6">Modul 6 — Auth &amp; RBAC</span></a>
+                  <a href="#modul7"><i class="fa-solid fa-server"></i> <span data-i18n="toc7">Modul 7 — Produktion</span></a>
+                  <a href="#labs"><i class="fa-solid fa-flask"></i> <span data-i18n="tocLabs">Praktische Labs</span></a>
+               </aside>
+
+               <div class="go-reader">
+
+                  <!-- INTRO -->
+                  <section id="intro">
+                     <div class="lang-sect active" data-lang="de">
+                        <h2>Was ist Backstage?</h2>
+                        <p>Backstage ist eine <strong>offene Developer-Portal-Plattform</strong>, ursprunglich von Spotify entwickelt und 2020 als Open-Source unter CNCF-Schirmherrschaft veroffentlicht. Im Jahr 2023 erhielt es den CNCF Incubating-Status — ein Zeichen fur Reife, Akzeptanz und eine aktive Gemeinschaft.</p>
+                        <p>Die Kernidee: In wachsenden Engineering-Organisationen verlieren Entwickler den Uberblick uber interne Tools, Services, APIs, Dokumentation und Deployment-Pipelines. Jedes Team nutzt andere Werkzeuge und schreibt Dokumentation an anderen Orten. Backstage lost dieses Problem, indem es alles unter einer einheitlichen Oberflache zusammenfuhrt — einem sogenannten <strong>Internal Developer Portal (IDP)</strong>.</p>
+                        <div class="go-rule"><strong>CNCF-Status 2023 (Incubating):</strong> Backstage ist das meistgenutzte Open-Source-Developer-Portal. Uber 1.100 Unternehmen — darunter American Airlines, Spotify, IKEA und Zalando — betreiben es in Produktion.</div>
+                        <h3>Das Problem: Developer-Portal-Chaos in wachsenden Teams</h3>
+                        <div class="go-grid-2">
+                           <div class="go-mini"><h4><i class="go-icon-warn"></i>Ohne Backstage</h4><p>Services uber Dutzende Wikis, Confluence-Seiten und README-Dateien verteilt. Niemand weiss, wer fur welchen Service verantwortlich ist. Neue Entwickler brauchen Wochen. Dokumentation ist veraltet.</p></div>
+                           <div class="go-mini"><h4><i class="go-icon-ok"></i>Mit Backstage</h4><p>Zentrales Portal: alle Services, Ownership, Docs, CI/CD-Status und API-Specs an einem Ort. Onboarding in Stunden statt Wochen. Dokumentation automatisch generiert und immer aktuell.</p></div>
+                        </div>
+                        <h3>Die vier Kernkomponenten von Backstage</h3>
+                        <div class="go-grid-2">
+                           <div class="go-mini"><h4><i class="fa-solid fa-database go-icon-ok"></i>Software Catalog</h4><p>Das Herzstuck: ein zentrales Register aller Komponenten, APIs, Ressourcen, Systeme und Gruppen. Jeder Eintrag ist eine <code>catalog-info.yaml</code>-Datei im Repository.</p></div>
+                           <div class="go-mini"><h4><i class="fa-solid fa-file-code go-icon-ok"></i>TechDocs</h4><p>Docs-as-Code: Dokumentation wird aus Markdown im Repository mit MkDocs gerendert und direkt im Portal angezeigt. Immer synchron mit dem Code.</p></div>
+                           <div class="go-mini"><h4><i class="fa-solid fa-wand-magic-sparkles go-icon-warn"></i>Scaffolder</h4><p>Software-Templates: Entwickler erstellen neue Services uber ein Formular. Im Hintergrund wird ein Repository angelegt, CI/CD konfiguriert und der Catalog-Eintrag registriert.</p></div>
+                           <div class="go-mini"><h4><i class="fa-solid fa-puzzle-piece go-icon-warn"></i>Plugin-System</h4><p>Uber 200 Community-Plugins (GitHub Actions, PagerDuty, Kubernetes, Grafana, SonarQube) machen Backstage zum universellen Hub.</p></div>
+                        </div>
+                        <h3>Backstage-Architektur</h3>
+                        <div class="go-table-wrap"><table class="go-table"><thead><tr><th>Schicht</th><th>Technologie</th><th>Aufgabe</th></tr></thead><tbody>
+                           <tr><td><strong>Frontend</strong></td><td>React, TypeScript, Material-UI</td><td>Single-Page-Application mit Plugin-System; jeder Tab ist ein Frontend-Plugin</td></tr>
+                           <tr><td><strong>Backend</strong></td><td>Node.js, Express, TypeScript</td><td>REST-APIs, Datenbankzugriff, Authentifizierung, Plugin-Backend-Registrierung</td></tr>
+                           <tr><td><strong>Catalog DB</strong></td><td>PostgreSQL (Prod) / SQLite (Dev)</td><td>Speichert alle Catalog-Entitaten und deren Relationen</td></tr>
+                           <tr><td><strong>Search</strong></td><td>Lunr.js / Elasticsearch</td><td>Volltextsuche uber alle Catalog-Entitaten und Docs</td></tr>
+                           <tr><td><strong>Auth</strong></td><td>OAuth2 / SAML / LDAP</td><td>Pluggable Authentifizierung: GitHub, Google, Okta, Azure AD, GitLab</td></tr>
+                        </tbody></table></div>
+                        <h3>Backstage vs. Alternativen</h3>
+                        <div class="go-table-wrap"><table class="go-table"><thead><tr><th>Merkmal</th><th>Backstage</th><th>Port</th><th>Cortex</th><th>OpsLevel</th></tr></thead><tbody>
+                           <tr><td>Lizenz</td><td>Open Source (Apache 2.0)</td><td>SaaS / kommerziell</td><td>SaaS / kommerziell</td><td>SaaS / kommerziell</td></tr>
+                           <tr><td>Hosting</td><td>Self-Hosted</td><td>Cloud + Self-Hosted</td><td>Cloud</td><td>Cloud</td></tr>
+                           <tr><td>Anpassbarkeit</td><td>Sehr hoch (Plugins)</td><td>Mittel</td><td>Mittel</td><td>Mittel</td></tr>
+                           <tr><td>Plugin-Okosystem</td><td>200+ Community-Plugins</td><td>Proprietar</td><td>Proprietar</td><td>Proprietar</td></tr>
+                           <tr><td>Betriebsaufwand</td><td>Hoch (selbst gehosted)</td><td>Niedrig</td><td>Niedrig</td><td>Niedrig</td></tr>
+                           <tr><td>CNCF</td><td>Incubating 2023</td><td>—</td><td>—</td><td>—</td></tr>
+                        </tbody></table></div>
+                        <div class="go-rule"><strong>Empfehlung:</strong> Fur Organisationen mit 50+ Engineers und DevOps-Kenntnissen ist Backstage die flexibelste Wahl. Fur kleinere Teams ohne Wartungs-Bandbreite konnen SaaS-Alternativen schneller Mehrwert liefern.</div>
+                        <h3>Wer nutzt Backstage?</h3>
+                        <div class="go-grid-3">
+                           <div class="go-mini"><h4>Spotify &amp; American Airlines</h4><p>Spotify hat Backstage entwickelt und 2020 open-sourcet. Es wird mit Tausenden von Komponenten im Catalog betrieben.</p></div>
+                           <div class="go-mini"><h4>IKEA &amp; Zalando</h4><p>Beide Unternehmen betreiben grosse Engineering-Plattformen auf Backstage-Basis mit Hunderten interner Teams.</p></div>
+                           <div class="go-mini"><h4>Red Hat &amp; VMware</h4><p>Red Hat Developer Hub ist eine kommerziell supportete Backstage-Distribution. VMware Tanzu nutzt Backstage als IDP-Fundament.</p></div>
+                        </div>
+                        <h3>Warum Sie Backstage beherrschen sollten</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Karriererelevanz:</strong> Platform Engineering ist einer der am schnellsten wachsenden Bereiche. Backstage-Kenntnisse sind auf uber 40% der Senior-Platform-Engineer-Stellen gefragt.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>CNCF-Okosystem:</strong> Als CNCF-Incubating-Projekt ist Backstage Teil des Standard-Technologie-Stacks fur moderne Cloud-Native-Plattformen.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Developer Experience (DX):</strong> Unternehmen berichten von 40-70% Reduktion der Onboarding-Zeit fur neue Entwickler.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Standardisierung:</strong> Backstage erzwingt uber den Scaffolder Konventionen bei der Service-Erstellung — kritisch fur grosse Teams.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Open Source:</strong> Das Plugin-System erlaubt volle Integration aller internen Tools — von JIRA uber PagerDuty bis hin zu unternehmensinternen CI-Systemen.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Kursansatz:</strong> Wir bauen Backstage von Grund auf — erst lokale Installation, dann Catalog-Modellierung, TechDocs, Scaffolder, eigene Plugins und schliesslich Produktionsbetrieb. Jedes Modul endet mit einem lauffehigen Lab.</div>
+                     </div>
+                     <div class="lang-sect" data-lang="en">
+                        <h2>What is Backstage?</h2>
+                        <p>Backstage is an <strong>open developer portal platform</strong> originally created by Spotify and open-sourced in 2020 under CNCF incubation. It received CNCF Incubating status in 2023 — signaling maturity and broad industry adoption with over 1,100 production deployments worldwide.</p>
+                        <p>The core idea: as engineering organizations grow, developers lose track of internal tools, services, APIs, documentation, and pipelines. Each team uses different tools and writes docs in different places. Backstage consolidates everything under one unified interface — an <strong>Internal Developer Portal (IDP)</strong>.</p>
+                        <div class="go-rule"><strong>CNCF Incubating (2023):</strong> Over 1,100 companies including American Airlines, Spotify, IKEA, and Zalando run Backstage in production.</div>
+                        <h3>The Four Core Components</h3>
+                        <div class="go-grid-2">
+                           <div class="go-mini"><h4><i class="go-icon-ok fa-solid fa-database"></i>Software Catalog</h4><p>Central registry of all components, APIs, resources, systems, and groups. Each entry is a <code>catalog-info.yaml</code> file in the repository.</p></div>
+                           <div class="go-mini"><h4><i class="go-icon-ok fa-solid fa-file-code"></i>TechDocs</h4><p>Docs-as-Code: documentation is rendered from Markdown using MkDocs and displayed directly in the portal. Always in sync with the code.</p></div>
+                           <div class="go-mini"><h4><i class="go-icon-warn fa-solid fa-wand-magic-sparkles"></i>Scaffolder</h4><p>Software templates: developers create new services via a form. Behind the scenes, a repository is created, CI/CD configured, and the catalog entry registered.</p></div>
+                           <div class="go-mini"><h4><i class="go-icon-warn fa-solid fa-puzzle-piece"></i>Plugin System</h4><p>Over 200 community plugins (GitHub Actions, PagerDuty, Kubernetes, Grafana, SonarQube) make Backstage a universal engineering hub.</p></div>
+                        </div>
+                        <h3>Why You Should Master Backstage</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Career relevance:</strong> Platform Engineering is one of the fastest-growing fields. Backstage skills appear in 40%+ of Senior Platform Engineer job postings.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Developer Experience:</strong> Companies adopting Backstage report 40-70% reduction in onboarding time for new engineers.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Open standard:</strong> CNCF Incubating project — part of the standard cloud-native platform stack.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Extensibility:</strong> The plugin system allows full integration of all internal tools — from JIRA to PagerDuty to custom CI systems.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Course approach:</strong> Build Backstage from scratch — local install, catalog modeling, TechDocs, Scaffolder, custom plugins, and production deployment. Every module ends with a working lab.</div>
+                     </div>
+                     <div class="lang-sect" data-lang="fr">
+                        <h2>Qu'est-ce que Backstage ?</h2>
+                        <p>Backstage est une <strong>plateforme de portail developpeur open source</strong> creee par Spotify et publiee en open source en 2020 sous l'egide de la CNCF. Statut CNCF Incubating obtenu en 2023, avec plus de 1 100 entreprises en production.</p>
+                        <p>L'idee centrale : dans les organisations d'ingenierie en croissance, les developpeurs perdent la vue d'ensemble sur les outils internes, services, APIs et pipelines. Backstage centralise tout sous une interface unifiee — un <strong>Internal Developer Portal (IDP)</strong>.</p>
+                        <div class="go-rule"><strong>CNCF Incubating (2023) :</strong> Plus de 1 100 entreprises — dont American Airlines, Spotify, IKEA et Zalando — utilisent Backstage en production.</div>
+                        <h3>Pourquoi maitriser Backstage ?</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Pertinence carriere :</strong> Platform Engineering est l'un des domaines a la croissance la plus rapide. Backstage figure dans plus de 40% des offres Senior Platform Engineer.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Experience developpeur :</strong> Les entreprises rapportent une reduction de 40-70% du temps d'onboarding des nouveaux developpeurs.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Standard ouvert :</strong> Projet CNCF Incubating — part du stack technologique standard pour les plateformes cloud-native.</span></div>
+                        </div>
+                        <div class="go-note"><strong>Approche pedagogique :</strong> Construction de Backstage from scratch — installation locale, modlisation du catalog, TechDocs, Scaffolder, plugins personnalises et deploiement en production.</div>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 1 -->
+                  <section id="modul1">
+                     <h2>Modul 1 — Installation &amp; Grundkonfiguration</h2>
+                     <p>Backstage wird mit dem offiziellen CLI-Tool <code class="go-inline-code">@backstage/create-app</code> erstellt. Es generiert eine vollstandige Monorepo-Struktur mit Frontend, Backend und Konfigurationsdateien.</p>
+                     <h3>Voraussetzungen</h3>
+                     <ul>
+                        <li>Node.js 18 LTS oder 20 LTS</li>
+                        <li>Yarn 1.x (Classic) — Backstage nutzt Yarn Workspaces</li>
+                        <li>Git, Docker (fur TechDocs-Build)</li>
+                        <li>PostgreSQL 13+ (Produktion); SQLite reicht fur lokale Entwicklung</li>
+                     </ul>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Backstage App erstellen</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Backstage App erstellen
+npx @backstage/create-app@latest
+
+# Prompted: App name? meine-backstage-app
+# Das CLI generiert die Struktur und installiert Abhangigkeiten
+
+cd meine-backstage-app
+
+# Verzeichnisstruktur:
+# packages/
+#   app/          Frontend (React)
+#   backend/      Backend (Node.js)
+# app-config.yaml Hauptkonfiguration
+# app-config.local.yaml (gitignored) lokale Overrides</code></pre>
+                     </div>
+                     <h3>app-config.yaml verstehen</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>app-config.yaml — Grundkonfiguration</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>app:
+  title: Meine Backstage App
+  baseUrl: http://localhost:3000
+
+organization:
+  name: Meine Firma
+
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+    # Produktion:
+    # client: pg
+    # connection:
+    #   host: ${POSTGRES_HOST}
+    #   port: ${POSTGRES_PORT}
+    #   user: ${POSTGRES_USER}
+    #   password: ${POSTGRES_PASSWORD}
+
+catalog:
+  rules:
+    - allow: [Component, System, API, Resource, Location, Group, User]
+  locations:
+    - type: file
+      target: ../../catalog-info.yaml</code></pre>
+                     </div>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Entwicklungsserver starten</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>yarn dev
+# Startet Frontend (Port 3000) und Backend (Port 7007)
+# Hot-Reload aktiv</code></pre>
+                     </div>
+                     <div class="go-lab" id="labs">
+                        <div class="go-lab-head"><h3>Lab 1.1 — Erste Backstage-Installation</h3><span class="go-badge"><i class="fa-solid fa-flask"></i> Hands-On</span></div>
+                        <p>Installieren Sie Backstage lokal, starten Sie den Entwicklungsserver und erkunden Sie die Standard-UI.</p>
+                        <ul>
+                           <li>Backstage mit <code class="go-inline-code">create-app</code> erstellen</li>
+                           <li>Entwicklungsserver starten, UI auf Port 3000 erkunden</li>
+                           <li>Standard-Beispielkomponenten im Catalog ansehen</li>
+                           <li>Erste <code class="go-inline-code">catalog-info.yaml</code> fur eigenen Service schreiben</li>
+                        </ul>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 2 -->
+                  <section id="modul2">
+                     <h2>Modul 2 — Software Catalog</h2>
+                     <p>Der Software Catalog ist das Kernelement von Backstage. Er ist ein zentrales Verzeichnis aller Software-Entitaten — Services, APIs, Libraries, Websites und mehr. Jede Entitat wird durch eine <code class="go-inline-code">catalog-info.yaml</code>-Datei im jeweiligen Repository definiert.</p>
+                     <h3>Entity-Typen</h3>
+                     <div class="go-table-wrap"><table class="go-table"><thead><tr><th>Kind</th><th>Beschreibung</th><th>Beispiel</th></tr></thead><tbody>
+                        <tr><td><strong>Component</strong></td><td>Eine Software-Einheit: Service, Library, Website, Backend</td><td>payment-service, auth-lib</td></tr>
+                        <tr><td><strong>API</strong></td><td>Eine definierte Schnittstelle (OpenAPI, gRPC, GraphQL, Async)</td><td>payments-v2-api</td></tr>
+                        <tr><td><strong>Resource</strong></td><td>Infrastruktur-Ressource (Datenbank, S3, Message Queue)</td><td>orders-postgres</td></tr>
+                        <tr><td><strong>System</strong></td><td>Gruppe zusammengehoriger Komponenten</td><td>payment-system</td></tr>
+                        <tr><td><strong>Domain</strong></td><td>Fachlicher Kontext (DDD-Domain)</td><td>commerce, identity</td></tr>
+                        <tr><td><strong>Group</strong></td><td>Team oder Organisationseinheit</td><td>team-payments</td></tr>
+                        <tr><td><strong>User</strong></td><td>Individuelle Personen (oft aus LDAP/GitHub synchronisiert)</td><td>alice, bob</td></tr>
+                     </tbody></table></div>
+                     <h3>catalog-info.yaml — Vollstandiges Beispiel</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>catalog-info.yaml</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: payment-service
+  title: Payment Service
+  description: Verarbeitet Zahlungen via Stripe und PayPal
+  annotations:
+    github.com/project-slug: meine-org/payment-service
+    backstage.io/techdocs-ref: dir:.
+    pagerduty.com/service-id: P12345
+  tags:
+    - java
+    - payments
+    - critical
+  links:
+    - url: https://grafana.intern/d/payments
+      title: Grafana Dashboard
+      icon: dashboard
+spec:
+  type: service
+  lifecycle: production
+  owner: team-payments
+  system: payment-system
+  dependsOn:
+    - resource:default/orders-postgres
+    - component:default/auth-service
+  providesApis:
+    - payments-v2-api</code></pre>
+                     </div>
+                     <h3>GitHub Discovery konfigurieren</h3>
+                     <div class="code-card">
+                        <div class="code-title"><span>app-config.yaml — GitHub Discovery</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>catalog:
+  providers:
+    github:
+      myOrg:
+        organization: 'meine-github-org'
+        catalogPath: '/catalog-info.yaml'
+        filters:
+          branch: 'main'
+          repository: '.*'
+        schedule:
+          frequency: { minutes: 30 }
+          timeout: { minutes: 3 }
+
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}</code></pre>
+                     </div>
+                     <div class="go-note"><strong>Best Practice:</strong> Jedes Team tragt die Verantwortung fur die <code>catalog-info.yaml</code> in seinem Repository. Backstage zieht diese Datei automatisch ein — kein zentrales Maintenance-Team notig.</div>
+                  </section>
+
+                  <!-- MODULE 3 -->
+                  <section id="modul3">
+                     <h2>Modul 3 — TechDocs</h2>
+                     <p>TechDocs ist Backstages Docs-as-Code-Losung. Dokumentation wird als Markdown direkt neben dem Code gehalten, mit MkDocs zu statischem HTML gerendert und im Portal angezeigt.</p>
+                     <h3>TechDocs-Workflow</h3>
+                     <div class="go-grid-2">
+                        <div class="go-mini"><h4>1. Dokumentation schreiben</h4><p>Markdown-Dateien im <code>docs/</code>-Verzeichnis. <code>mkdocs.yml</code> definiert die Struktur. Standard MkDocs-Features: Navigation, Tabs, Admonitions, Codeblocke.</p></div>
+                        <div class="go-mini"><h4>2. Backstage zeigt an</h4><p>Backstage baut die Docs automatisch und zeigt sie im Portal an — gleiche Navigation, volltext-durchsuchbar. Kein manueller Deploy notig.</p></div>
+                     </div>
+                     <div class="code-card">
+                        <div class="code-title"><span>mkdocs.yml</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>site_name: Payment Service Dokumentation
+nav:
+  - Einleitung: index.md
+  - Architektur: architecture.md
+  - API-Referenz: api.md
+  - Deployment: deployment.md
+plugins:
+  - techdocs-core</code></pre>
+                     </div>
+                     <div class="go-rule"><strong>Produktion:</strong> In Produktion TechDocs mit externem Speicher (AWS S3, GCS, Azure Blob) konfigurieren. Docs im CI/CD-Build rendern und hochladen — nicht beim Request.</div>
+                  </section>
+
+                  <!-- MODULE 4 -->
+                  <section id="modul4">
+                     <h2>Modul 4 — Scaffolder &amp; Software Templates</h2>
+                     <p>Der Backstage Scaffolder automatisiert die Erstellung neuer Services nach Unternehmensstandards. Ein Entwickler fullt ein Formular aus — im Hintergrund wird ein Repository angelegt, CI/CD konfiguriert und der Catalog-Eintrag registriert.</p>
+                     <div class="code-card">
+                        <div class="code-title"><span>template.yaml — vollstandiges Beispiel</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: springboot-service
+  title: Spring Boot Microservice
+  description: Erstellt neuen Spring Boot Service mit CI/CD und Catalog-Eintrag
+  tags: [java, spring-boot]
+spec:
+  owner: platform-engineering
+  type: service
+  parameters:
+    - title: Service-Details
+      required: [serviceName, teamName]
+      properties:
+        serviceName:
+          title: Service-Name
+          type: string
+          pattern: '^[a-z][a-z0-9-]{2,30}$'
+        teamName:
+          title: Team
+          type: string
+          ui:field: OwnerPicker
+  steps:
+    - id: fetch
+      name: Template herunterladen
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          serviceName: ${{ parameters.serviceName }}
+          teamName: ${{ parameters.teamName }}
+    - id: publish
+      name: GitHub Repository erstellen
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: github.com?owner=meine-org&amp;repo=${{ parameters.serviceName }}
+        defaultBranch: main
+    - id: register
+      name: Im Catalog registrieren
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}</code></pre>
+                     </div>
+                     <div class="go-warning"><strong>Sicherheitshinweis:</strong> Scaffolder-Steps laufen mit konfigurierten GitHub-Tokens. Schranken Sie die Sichtbarkeit von Templates mit RBAC ein.</div>
+                  </section>
+
+                  <!-- MODULE 5 -->
+                  <section id="modul5">
+                     <h2>Modul 5 — Custom Plugins entwickeln</h2>
+                     <p>Das Plugin-System macht Backstage zum echten Developer-Hub. Jede Seite in Backstage ist ein Plugin. Die Architektur trennt Frontend- und Backend-Plugins klar voneinander.</p>
+                     <div class="go-grid-2">
+                        <div class="go-mini"><h4>Frontend-Plugin</h4><p>React-Komponenten die eine neue Seite oder Tab-Ansicht hinzufugen. Registrierung in <code>packages/app/src/App.tsx</code>.</p></div>
+                        <div class="go-mini"><h4>Backend-Plugin</h4><p>Node.js/Express-Module fur REST-APIs. Registrierung in <code>packages/backend/src/index.ts</code>.</p></div>
+                     </div>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — neues Plugin erstellen</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Frontend-Plugin
+yarn new --select plugin
+# Prompted: Plugin-ID mein-cost-dashboard
+
+# Backend-Plugin
+yarn new --select backend-plugin
+# Prompted: Plugin-ID mein-cost-backend
+
+# Erzeugt:
+# plugins/mein-cost-dashboard/
+# plugins/mein-cost-backend/</code></pre>
+                     </div>
+                     <div class="code-card">
+                        <div class="code-title"><span>plugins/mein-cost-dashboard/src/plugin.ts</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>import { createPlugin, createRoutableExtension } from '@backstage/core-plugin-api';
+import { rootRouteRef } from './routes';
+
+export const meinCostDashboardPlugin = createPlugin({
+  id: 'mein-cost-dashboard',
+  routes: { root: rootRouteRef },
+});
+
+export const MeinCostDashboardPage = meinCostDashboardPlugin.provide(
+  createRoutableExtension({
+    name: 'MeinCostDashboardPage',
+    component: () =>
+      import('./components/DashboardPage').then(m => m.DashboardPage),
+    mountPoint: rootRouteRef,
+  }),
+);</code></pre>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 6 -->
+                  <section id="modul6">
+                     <h2>Modul 6 — Authentifizierung &amp; RBAC</h2>
+                     <p>Backstage unterstutzt mehrere Authentifizierungsanbieter: GitHub OAuth, Google, Microsoft Azure AD, Okta, GitLab und SAML.</p>
+                     <div class="code-card">
+                        <div class="code-title"><span>app-config.yaml — GitHub Auth</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>auth:
+  environment: development
+  providers:
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUserEntityName
+
+signInPage: github</code></pre>
+                     </div>
+                     <h3>Permission Framework (RBAC)</h3>
+                     <p>Das Backstage Permission Framework ermoglicht feingranulare Zugriffssteuerung. Permissions werden pro Plugin definiert und zentral ausgewertet.</p>
+                     <div class="code-card">
+                        <div class="code-title"><span>packages/backend/src/plugins/permission.ts</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>import { createBackendModule } from '@backstage/backend-plugin-api';
+import { policyExtensionPoint } from '@backstage/plugin-permission-node/alpha';
+import { isPermission, AuthorizeResult } from '@backstage/plugin-permission-common';
+import { catalogEntityDeletePermission } from '@backstage/plugin-catalog-common/alpha';
+
+export default createBackendModule({
+  pluginId: 'permission',
+  moduleId: 'allow-rules',
+  register(reg) {
+    reg.registerInit({
+      deps: { policy: policyExtensionPoint },
+      async init({ policy }) {
+        policy.setPolicy({
+          async handle({ permission, credentials }) {
+            if (isPermission(permission, catalogEntityDeletePermission)) {
+              const groups = credentials.principal?.ownershipEntityRefs ?? [];
+              if (groups.includes('group:default/platform-engineering')) {
+                return { result: AuthorizeResult.ALLOW };
+              }
+              return { result: AuthorizeResult.DENY };
+            }
+            return { result: AuthorizeResult.ALLOW };
+          },
+        });
+      },
+    });
+  },
+});</code></pre>
+                     </div>
+                  </section>
+
+                  <!-- MODULE 7 -->
+                  <section id="modul7">
+                     <h2>Modul 7 — Produktionsbetrieb &amp; Kubernetes-Deployment</h2>
+                     <p>Fur den Produktionsbetrieb empfiehlt sich Containerisierung und Deployment auf Kubernetes. Das offizielle Backstage-Repository enthalt ein optimiertes Multi-Stage Dockerfile.</p>
+                     <div class="code-card">
+                        <div class="code-title"><span>Terminal — Production Build &amp; Docker</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code># Production Build
+yarn build:backend --config app-config.yaml --config app-config.production.yaml
+
+# Docker-Image bauen
+docker build \
+  --file packages/backend/Dockerfile \
+  --tag backstage:1.0.0 \
+  .
+
+# Testen
+docker run -it -p 7007:7007 \
+  -e POSTGRES_HOST=localhost \
+  -e POSTGRES_USER=backstage \
+  -e POSTGRES_PASSWORD=secret \
+  backstage:1.0.0</code></pre>
+                     </div>
+                     <div class="code-card">
+                        <div class="code-title"><span>k8s/deployment.yaml</span><button type="button" class="copy-code" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').textContent)"><i class="fa-regular fa-copy"></i> Kopieren</button></div>
+                        <pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backstage
+  namespace: backstage
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backstage
+  template:
+    metadata:
+      labels:
+        app: backstage
+    spec:
+      containers:
+        - name: backstage
+          image: registry.meine-firma.de/backstage:1.0.0
+          ports:
+            - containerPort: 7007
+          envFrom:
+            - secretRef:
+                name: backstage-secrets
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 7007
+            initialDelaySeconds: 10
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi</code></pre>
+                     </div>
+                     <div class="go-rule"><strong>Produktions-Checkliste:</strong> PostgreSQL statt SQLite, externe TechDocs-Speicherung (S3/GCS), Auth-Provider konfiguriert, Ingress mit TLS, Secret-Management (Vault), Monitoring (Prometheus unter <code>/metrics</code>), regelmasige Backstage-Updates.</div>
+                     <div class="go-project">
+                        <h3>Abschlussprojekt — Internes Developer Portal</h3>
+                        <p>Bauen Sie ein vollstandiges internes Developer Portal mit mindestens 10 Catalog-Eintragen, 3 TechDocs-aktivierten Services, 1 Scaffolder-Template und 1 Custom Plugin.</p>
+                        <ul>
+                           <li>Backstage auf Kubernetes deployen (Minikube/Kind)</li>
+                           <li>GitHub OAuth Authentifizierung einrichten</li>
+                           <li>Mindestens 10 <code class="go-inline-code">catalog-info.yaml</code>-Dateien schreiben</li>
+                           <li>TechDocs fur mindestens 3 Services aktivieren</li>
+                           <li>Ein Scaffolder-Template erstellen, das ein GitHub-Repo anlegt</li>
+                           <li>Ein einfaches Frontend-Plugin entwickeln</li>
+                        </ul>
+                     </div>
+                  </section>
+
+                  <!-- SOURCES -->
+                  <section id="quellen">
+                     <h2 data-i18n="sourcesTitle">Quellen &amp; Weiterfuhrende Ressourcen</h2>
+                     <div class="source-list">
+                        <a href="https://backstage.io/docs" target="_blank" rel="noopener"><i class="fa-solid fa-book"></i> Offizielle Backstage-Dokumentation</a>
+                        <a href="https://github.com/backstage/backstage" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub — backstage/backstage</a>
+                        <a href="https://backstage.io/plugins" target="_blank" rel="noopener"><i class="fa-solid fa-puzzle-piece"></i> Plugin-Verzeichnis (200+ Plugins)</a>
+                        <a href="https://roadie.io/backstage/plugins/" target="_blank" rel="noopener"><i class="fa-solid fa-map"></i> Roadie Plugin-Ubersicht</a>
+                     </div>
+                  </section>
+
+               </div><!-- /go-reader -->
+            </div><!-- /go-layout -->
+         </div><!-- /go-shell -->
+      </section>
+   </main>
+
+   <footer class="simple-footer">
+      <div class="go-shell">
+         <div class="sfooter-cols">
+            <div>
+               <h3>Koffi Academy</h3>
+               <ul>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>Cloud-Native &amp; DevOps Kurse</li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>Praxisorientiertes Lernen</li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i>CNCF Zertifizierungen</li>
+               </ul>
+            </div>
+            <div>
+               <h3>Kurse</h3>
+               <ul>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="../gitops-argocd.html">GitOps mit ArgoCD</a></li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="terraform-beginners.html">Terraform Grundlagen</a></li>
+                  <li><i class="fa-solid fa-chevron-right lead-icon"></i><a href="vault-101-legacy.html">HashiCorp Vault 101</a></li>
+               </ul>
+            </div>
+            <div>
+               <h3>Kontakt</h3>
+               <ul>
+                  <li><i class="fa-solid fa-envelope lead-icon"></i><a href="mailto:info@koffi.academy">info@koffi.academy</a></li>
+                  <li><i class="fa-brands fa-github lead-icon"></i><a href="https://github.com/koffi-academy" target="_blank" rel="noopener">GitHub</a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <div class="go-shell"><p>&copy; 2025 Koffi Academy &mdash; Backstage Developer Portal Kurs</p></div>
+      </div>
+   </footer>
+</div>
+
+<script>
+var i18n={
+  de:{heroTitle:"Backstage Developer Portal",heroSubtitle:"Lernen Sie, wie Spotifys offene Developer-Portal-Plattform interne Tools, Services und Dokumentation unter einem Dach vereint.",startBtn:"Kurs starten",labsBtn:"Praktische Labs",duration:"2 Wochen",modules:"7 Module",labs:"5 Labs",level:"Mittelstufe",accessTitle:"Plattform-Engineering mit offenem Standard",accessDesc:"Backstage ist das meistgenutzte Open-Source-Developer-Portal der Welt mit uber 1.100 Unternehmen im Produktionseinsatz.",certLabel:"Abschlussprojekt inklusive",eyebrowGoals:"Lernziele",goalsTitle:"Was Sie nach diesem Kurs beherrschen",goalsDesc:"Sie installieren Backstage, modellieren Ihren Software Catalog, automatisieren Service-Erstellung und erstellen eigene Plugins.",goal1Title:"Software Catalog",goal1Desc:"Alle Services, APIs und Teams zentral erfassen und mit Ownership verknupfen.",goal2Title:"TechDocs",goal2Desc:"Docs-as-Code mit MkDocs: Dokumentation aus dem Repository generieren.",goal3Title:"Scaffolder Templates",goal3Desc:"Standardisierte Service-Erstellung per Formular.",goal4Title:"Custom Plugins",goal4Desc:"React Frontend- und Node.js Backend-Plugins entwickeln.",tocTitle:"Kursinhalt",toc0:"Was ist Backstage?",toc1:"Modul 1 — Installation",toc2:"Modul 2 — Catalog",toc3:"Modul 3 — TechDocs",toc4:"Modul 4 — Scaffolder",toc5:"Modul 5 — Plugins",toc6:"Modul 6 — Auth & RBAC",toc7:"Modul 7 — Produktion",tocLabs:"Praktische Labs",sourcesTitle:"Quellen & Weiterfuhrende Ressourcen"},
+  en:{heroTitle:"Backstage Developer Portal",heroSubtitle:"Learn how Spotify's open developer portal platform brings internal tools, services and documentation together under one roof.",startBtn:"Start Course",labsBtn:"Hands-On Labs",duration:"2 weeks",modules:"7 Modules",labs:"5 Labs",level:"Intermediate",accessTitle:"Platform Engineering with Open Standard",accessDesc:"Backstage is the world's most widely adopted open-source developer portal with over 1,100 companies in production.",certLabel:"Final project included",eyebrowGoals:"Learning Objectives",goalsTitle:"What You'll Master After This Course",goalsDesc:"Install Backstage, model your Software Catalog, automate service creation, and build custom plugins.",goal1Title:"Software Catalog",goal1Desc:"Centrally capture all services, APIs and teams with ownership.",goal2Title:"TechDocs",goal2Desc:"Docs-as-Code with MkDocs: generate documentation from the repository.",goal3Title:"Scaffolder Templates",goal3Desc:"Standardized service creation via form.",goal4Title:"Custom Plugins",goal4Desc:"Build React frontend and Node.js backend plugins.",tocTitle:"Course Content",toc0:"What is Backstage?",toc1:"Module 1 — Installation",toc2:"Module 2 — Catalog",toc3:"Module 3 — TechDocs",toc4:"Module 4 — Scaffolder",toc5:"Module 5 — Plugins",toc6:"Module 6 — Auth & RBAC",toc7:"Module 7 — Production",tocLabs:"Hands-On Labs",sourcesTitle:"Sources & Further Resources"},
+  fr:{heroTitle:"Backstage Developer Portal",heroSubtitle:"Apprenez comment la plateforme de portail developpeur open source de Spotify regroupe les outils internes, services et documentation sous un meme toit.",startBtn:"Demarrer le cours",labsBtn:"Labs pratiques",duration:"2 semaines",modules:"7 Modules",labs:"5 Labs",level:"Intermediaire",accessTitle:"Platform Engineering avec standard ouvert",accessDesc:"Backstage est le portail developpeur open source le plus adopte avec plus de 1 100 entreprises en production.",certLabel:"Projet final inclus",eyebrowGoals:"Objectifs",goalsTitle:"Ce que vous maittriserez apres ce cours",goalsDesc:"Installez Backstage, modelisez votre Software Catalog, automatisez la creation de services et creez des plugins.",goal1Title:"Software Catalog",goal1Desc:"Centraliser tous les services, APIs et equipes avec ownership.",goal2Title:"TechDocs",goal2Desc:"Docs-as-Code avec MkDocs: generer la documentation depuis le depot.",goal3Title:"Templates Scaffolder",goal3Desc:"Creation standardisee de services via formulaire.",goal4Title:"Plugins personnalises",goal4Desc:"Developper des plugins frontend React et backend Node.js.",tocTitle:"Contenu du cours",toc0:"Qu'est-ce que Backstage ?",toc1:"Module 1 — Installation",toc2:"Module 2 — Catalog",toc3:"Module 3 — TechDocs",toc4:"Module 4 — Scaffolder",toc5:"Module 5 — Plugins",toc6:"Module 6 — Auth & RBAC",toc7:"Module 7 — Production",tocLabs:"Labs pratiques",sourcesTitle:"Sources & Ressources"}
+};
+var flagMap={de:'fi-de',en:'fi-gb',fr:'fi-fr'};
+var codeMap={de:'DE',en:'EN',fr:'FR'};
+function setLanguage(lang){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(i18n[lang]&&i18n[lang][k])el.textContent=i18n[lang][k];});
+  document.querySelectorAll('.lang-sect').forEach(function(s){s.classList.toggle('active',s.getAttribute('data-lang')===lang);});
+  document.documentElement.lang=lang;
+  localStorage.setItem('preferred-lang',lang);
+  klSync(lang);
+}
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',o);}
+function klClose(){document.getElementById('klDrop').classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}
+function klSync(lang){var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+flagMap[lang];if(c)c.textContent=codeMap[lang];document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.getAttribute('data-kl')===lang);});}
+function klPick(lang){setLanguage(lang);klClose();}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&!d.contains(e.target))klClose();});
+(function(){setLanguage(localStorage.getItem('preferred-lang')||'de');})();
+</script>
+<script src="../assets/js/mobile-nav.js"></script>
+</body>
+</html>

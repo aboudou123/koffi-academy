@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koffitse Aboudou, Platform Engineer &amp; Cloud Specialist</title>
+<meta name="description" content="Koffitse Aboudou, Plattform-Ingenieur, Cloud-Infrastruktur-Spezialist. Erfahrung bei BMW, Exotec und KUKA.">
+<meta name="theme-color" content="#061f3c">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="shortcut icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+<style>
+/* ── Reset & Base ────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter','Plus Jakarta Sans',system-ui,sans-serif;background:#f0f4f8;color:#1e293b;line-height:1.6;overflow-x:hidden}
+html{overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+:root{
+  --navy:#061f3c;
+  --navy-mid:#0b2b3f;
+  --navy-light:#143d5e;
+  --gold:#ffc600;
+  --gold-dim:rgba(255,198,0,.15);
+  --text:#1e293b;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --white:#fff;
+  --bg:#f0f4f8;
+  --radius:16px;
+}
+
+/* ── Container ───────────────────────────────── */
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+
+/* ── Top bar ─────────────────────────────────── */
+.top-bar{background:var(--navy);padding:9px 0}
+.top-bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.top-bar-msg{font-size:12.5px;color:rgba(255,255,255,.55);letter-spacing:.2px}
+.top-bar-msg i{color:var(--gold);margin-right:6px}
+.top-bar-right{display:flex;align-items:center;gap:16px}
+.soc-links{display:flex;gap:14px}
+.soc-links a{color:rgba(255,255,255,.5);font-size:13px;transition:.18s}
+.soc-links a:hover{color:var(--gold)}
+.lang-sw{display:flex;gap:3px;background:rgba(255,255,255,.07);border-radius:7px;padding:3px}
+.lang-btn{border:none;background:transparent;border-radius:5px;padding:4px 9px;font-size:11px;font-weight:700;cursor:pointer;color:rgba(255,255,255,.55);letter-spacing:.5px;transition:.18s}
+.lang-btn.active{background:var(--gold);color:var(--navy)}
+.lang-btn:hover:not(.active){background:rgba(255,255,255,.12);color:#fff}
+
+/* ── Navbar ──────────────────────────────────── */
+.navbar{background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.navbar .wrap{display:flex;align-items:center;justify-content:space-between;height:56px;gap:18px}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.nav-logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#f89035,#f7b733);display:flex;align-items:center;justify-content:center;color:#07294d;font-size:14px;box-shadow:0 3px 10px rgba(248,144,53,.32)}
+.nav-logo-name{font-size:18px;font-weight:800;letter-spacing:-.4px;color:var(--navy);white-space:nowrap}
+.nav-menu{display:flex;gap:3px;align-items:center}
+.nav-menu a{font-size:13.5px;font-weight:600;color:var(--navy);padding:7px 11px;border-radius:8px;transition:.18s;white-space:nowrap}
+.nav-menu a:hover,.nav-menu a.active{color:#fff;background:var(--navy)}
+.nav-menu a.active{font-weight:700}
+.nav-menu .nm-drop > a{color:var(--navy)}
+.nav-cta{background:var(--navy);color:#fff !important;padding:8px 18px !important;border-radius:20px !important;font-weight:600 !important;font-size:13px !important;transition:.18s !important;white-space:nowrap}
+.nav-cta:hover{background:var(--gold) !important;color:var(--navy) !important}
+/* ── Language Picker ─────────────────────────── */
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:#f0f4f8;border:1.5px solid #e2e8f0;border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.14);border-color:rgba(255,198,0,.55)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:var(--navy)}
+.kl-caret{font-size:9px;color:#94a3b8;transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:0 14px 42px rgba(7,41,77,.18);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:#f8fafc}
+.kl-opt.kl-on{background:rgba(255,198,0,.13)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.16);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:var(--navy);text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:.5px}
+
+/* ── HERO ────────────────────────────────────── */
+.hero{background:linear-gradient(130deg,#051624 0%,#0b2b3f 45%,#143d5e 100%);overflow:hidden;position:relative;padding:72px 0 80px}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 80% 40%,rgba(255,198,0,.06) 0%,transparent 70%)}
+.hero::after{content:'';position:absolute;top:-120px;right:-80px;width:420px;height:420px;border-radius:50%;background:rgba(255,198,0,.04);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:auto 1fr;gap:52px;align-items:center;position:relative;z-index:1}
+.hero-avatar{
+  width:156px;
+  height:156px;
+  border-radius:50%;
+  background:rgba(255,255,255,.04);
+  border:3px solid rgba(255,255,255,.18);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:
+    0 0 0 6px rgba(255,198,0,.07),
+    0 16px 42px rgba(0,0,0,.36);
+  flex-shrink:0;
+  overflow:hidden;
+  box-sizing:border-box;
+}
+.hero-avatar i{font-size:72px;color:rgba(255,255,255,.75)}
+.hero-content h1{font-size:clamp(1.55rem,7vw,3rem);font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1.1;margin-bottom:10px;word-break:break-word}
+.hero-content h1 span{color:var(--gold)}
+.hero-role{font-size:1.15rem;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.hero-role::before{content:'';display:inline-block;width:28px;height:2px;background:var(--gold)}
+.hero-badges{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:28px}
+.hero-badge{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.82);padding:6px 14px;border-radius:999px;font-size:12.5px;font-weight:500}
+.hero-contact{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:28px}
+.hero-contact-item{display:flex;align-items:center;gap:8px;font-size:13.5px;color:rgba(255,255,255,.65)}
+.hero-contact-item i{color:var(--gold);width:16px;font-size:13px}
+.hero-contact-item a{color:inherit;text-decoration:none}
+.hero-contact-item a:hover{color:var(--gold)}
+.hero-stats{display:flex;gap:40px;margin-top:8px}
+.stat-item{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;color:var(--gold);line-height:1}
+.stat-label{font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.btn-gold{background:var(--gold);color:var(--navy);font-weight:700;font-size:14px;padding:11px 26px;border-radius:999px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s;box-shadow:0 8px 24px rgba(255,198,0,.3)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,198,0,.4)}
+.btn-ghost{background:rgba(255,255,255,.1);color:#fff;font-weight:600;font-size:14px;padding:11px 26px;border-radius:999px;border:1px solid rgba(255,255,255,.2);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+.btn-ghost:hover{background:rgba(255,255,255,.18)}
+
+/* ── SECTIONS ────────────────────────────────── */
+.section{padding:68px 0}
+.section.alt{background:#fff}
+.section-kicker{display:inline-flex;align-items:center;gap:8px;background:var(--gold-dim);color:#7a5800;border:1px solid rgba(255,198,0,.35);padding:5px 14px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.section-kicker i{color:var(--gold);font-size:12px}
+.section-title{font-size:2rem;font-weight:800;color:var(--navy);letter-spacing:-.04em;margin-bottom:10px}
+.section-sub{font-size:16px;color:var(--muted);max-width:620px;line-height:1.7}
+
+/* ── About grid ──────────────────────────────── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:44px}
+.about-bio{background:var(--white);border-radius:var(--radius);padding:36px;box-shadow:0 4px 20px rgba(0,0,0,.05);border:1px solid var(--border)}
+.about-bio h3{font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.about-bio h3 i{color:var(--gold);font-size:18px}
+.about-bio p{font-size:15px;color:#334155;line-height:1.8;margin-bottom:16px}
+.about-bio p:last-child{margin-bottom:0}
+.about-skills{display:flex;flex-direction:column;gap:16px}
+.skill-card{background:var(--white);border-radius:var(--radius);padding:26px;box-shadow:0 4px 20px rgba(0,0,0,.05);border:1px solid var(--border)}
+.skill-card h3{font-size:13px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.skill-card h3 i{color:var(--gold)}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{background:#f1f5f9;color:#334155;font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:999px;border:1px solid var(--border);transition:.18s}
+.tag:hover{background:var(--gold-dim);border-color:rgba(255,198,0,.4);color:var(--navy)}
+.edu-block{background:#fefce8;border-left:3px solid var(--gold);padding:16px 18px;border-radius:0 10px 10px 0;margin-top:4px}
+.edu-block h4{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.edu-block p{font-size:13px;color:#556}
+.edu-block+.edu-block{margin-top:12px}
+
+/* ── Academic background (premium) ───────────── */
+.edu-premium{position:relative;overflow:hidden;background:linear-gradient(155deg,#07294d 0%,#0b3460 55%,#143d5e 100%);border-radius:18px;padding:24px 22px;box-shadow:0 20px 48px rgba(6,31,60,.32),inset 0 1px 0 rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)}
+.edu-premium__glow{position:absolute;top:-70px;right:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,198,0,.22),transparent 66%);pointer-events:none}
+.edu-premium__head{position:relative;display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.edu-premium__ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ffc600,#ffb300);color:var(--navy);font-size:16px;box-shadow:0 5px 14px rgba(255,198,0,.4)}
+.edu-premium__label{font-size:12.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#fff}
+.edu-deg{position:relative;display:flex;align-items:center;gap:15px;padding:16px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);transition:transform .22s cubic-bezier(.4,0,.2,1),background .22s,border-color .22s}
+.edu-deg+.edu-deg{margin-top:13px}
+.edu-deg:hover{background:rgba(255,255,255,.1);border-color:rgba(255,198,0,.5);transform:translateX(4px)}
+.edu-deg__badge{flex-shrink:0;display:flex;align-items:center;justify-content:center;min-width:62px;height:48px;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2px;color:var(--navy);background:linear-gradient(135deg,#ffc600,#ffb300);border-radius:11px;box-shadow:0 6px 16px rgba(255,198,0,.32)}
+.edu-deg__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:700;color:#fff;margin:0 0 4px;letter-spacing:-.01em}
+.edu-deg__field{font-size:13px;line-height:1.5;color:rgba(255,255,255,.74);margin:0}
+
+/* ── Expertise cards ─────────────────────────── */
+.exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
+.exp-card{background:var(--white);border-radius:var(--radius);padding:28px;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.04);transition:.22s;position:relative;overflow:hidden}
+.exp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),rgba(255,198,0,.3))}
+.exp-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,.10);border-color:rgba(255,198,0,.3)}
+.exp-icon{width:50px;height:50px;background:var(--gold-dim);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.exp-icon i{color:var(--navy);font-size:20px}
+.exp-card h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.exp-card p{font-size:13.5px;color:var(--muted);line-height:1.65}
+
+/* ── Timeline (Berufserfahrung) ──────────────── */
+.timeline{position:relative;margin-top:44px;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:0;top:8px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),rgba(255,198,0,.2))}
+.tl-item{position:relative;margin-bottom:36px;padding-bottom:36px;border-bottom:1px solid var(--border)}
+.tl-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.tl-dot{position:absolute;left:-39px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--gold);border:3px solid var(--white);box-shadow:0 0 0 3px rgba(255,198,0,.25)}
+.tl-company{display:flex;align-items:center;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.tl-logo{width:44px;height:44px;border-radius:10px;background:#f1f5f9;border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.tl-logo i{font-size:18px;color:var(--navy-light)}
+.tl-name{font-size:18px;font-weight:700;color:var(--navy)}
+.tl-role{font-size:13px;color:var(--muted);margin-top:2px}
+.tl-period{display:inline-flex;align-items:center;gap:6px;background:var(--gold-dim);color:#7a5800;font-size:12px;font-weight:600;padding:4px 12px;border-radius:999px;margin-left:auto}
+.tl-body{font-size:14.5px;color:#334155;line-height:1.75}
+.tl-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.tl-tag{background:#f8fafc;border:1px solid var(--border);color:#475569;font-size:12px;font-weight:500;padding:4px 11px;border-radius:999px}
+
+/* ── CTA Banner ──────────────────────────────── */
+.cta-banner{background:linear-gradient(130deg,var(--navy) 0%,var(--navy-light) 100%);padding:56px 0;position:relative;overflow:hidden}
+.cta-banner::after{content:'';position:absolute;right:-60px;bottom:-60px;width:260px;height:260px;border-radius:50%;background:rgba(255,198,0,.06)}
+.cta-inner{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;position:relative;z-index:1}
+.cta-text h2{font-size:2rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.03em}
+.cta-text p{color:rgba(255,255,255,.65);font-size:15px;max-width:500px}
+
+/* ── Footer ──────────────────────────────────── */
+.site-footer{background:var(--navy);padding:52px 0 0}
+.footer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;padding-bottom:40px}
+.footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:10px;display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:rgba(255,255,255,.6);line-height:1.5}
+.footer-col ul li i{color:var(--gold);font-size:11px;margin-top:3px;flex-shrink:0;width:13px}
+.footer-col ul li a{color:rgba(255,255,255,.7);transition:.18s}
+.footer-col ul li a:hover{color:var(--gold)}
+.footer-bar{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.footer-bar p{font-size:12px;color:rgba(255,255,255,.4);margin:0}
+.footer-bar a{color:rgba(255,255,255,.6)}
+.footer-bar a:hover{color:var(--gold)}
+
+.hero-pin{margin-right:5px;color:#ffc600}
+.cta-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ── Badge diamant ───────────────────────────── */
+.hero-badge-diamond{
+  color:#fff !important;
+  font-weight:700;
+}
+.hero-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+  object-position:52% 4%;
+  filter:brightness(1.05) contrast(1.04) saturate(1.06);
+  display:block;
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;text-align:center;gap:28px}
+  .hero-avatar{margin:0 auto}
+  .hero-role::before{display:none}
+  .hero-role{justify-content:center}
+  .hero-badges,.hero-contact,.hero-actions,.hero-stats{justify-content:center}
+  .hero-stats{flex-wrap:wrap;gap:20px}
+  .stat-item{min-width:70px}
+  .about-grid{grid-template-columns:1fr}
+  .exp-grid{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .cta-inner{flex-direction:column;text-align:center}
+  .tl-company{flex-wrap:wrap}
+  .tl-period{margin-left:0}
+}
+@media(max-width:768px){
+  .hero-badge{white-space:normal;word-break:break-word;max-width:100%;text-align:center;border-radius:14px;line-height:1.5}
+  .hero-badges{flex-direction:column;align-items:center;width:100%}
+  .hero-role{flex-wrap:wrap;justify-content:center;text-align:center;line-height:1.5}
+  .top-bar-msg{font-size:11px;max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+@media(max-width:600px){
+  .hero{padding:44px 0 52px}
+  .hero-avatar{width:140px;height:140px}
+  .section-title{font-size:1.5rem}
+  .exp-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .hero-stats{gap:12px;row-gap:18px}
+  .stat-item{flex:0 0 calc(50% - 6px)}
+  .stat-num{font-size:1.65rem}
+  .stat-label{font-size:10px}
+  .hero-role{font-size:.95rem}
+  .hero-badge{font-size:11.5px;padding:5px 10px}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .btn-gold,.btn-ghost{width:100%;justify-content:center}
+  .section{padding:44px 0}
+  .hero-contact{flex-direction:column;gap:8px;align-items:center}
+}
+@media(max-width:400px){
+  .wrap{padding:0 14px}
+  .hero{padding:32px 0 40px}
+  .hero-avatar{width:118px;height:118px}
+  .hero-stats{gap:10px}
+  .stat-num{font-size:1.45rem}
+  .cta-text h2{font-size:1.5rem}
+}
+.nm-drop{position:relative;display:inline-flex;align-items:center;gap:5px}.nm-drop>i{font-size:11px;cursor:pointer;color:inherit;opacity:.55}.nm-drop:hover>i{opacity:1}.nm-menu{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(8px);min-width:172px;background:#fff;border:1px solid #e2e8f0;border-top:3px solid #f89035;border-radius:0 0 10px 10px;box-shadow:0 16px 38px rgba(7,41,77,.16);padding:6px;opacity:0;visibility:hidden;transition:all .2s cubic-bezier(.4,0,.2,1);z-index:80}.nm-drop:hover .nm-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}.nm-menu a{display:block;padding:9px 13px;border-radius:7px;font-size:14px;font-weight:600;color:#07294d;white-space:nowrap}.nm-menu a:hover{background:rgba(248,144,53,.14);color:#f89035}
+
+/*txt-safe*/h1,h2,h3,h4,h5,h6,p,li,figcaption,dt,dd,blockquote{overflow-wrap:break-word;word-wrap:break-word}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ─────────────────────────────────────── -->
+<div class="top-bar">
+  <div class="wrap">
+    <div class="top-bar-msg"><i class="fas fa-chalkboard-user"></i> <span data-i18n="topbar.msg">Platform Engineering · Cloud Infrastructure · E-Learning</span></div>
+    <div class="top-bar-right">
+      <div class="soc-links">
+        <a href="https://www.linkedin.com/" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com/" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.facebook.com/" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAVBAR ───────────────────────────────────────── -->
+<header class="navbar">
+  <div class="wrap">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+      <span class="nav-logo-name">Koffi Academy</span>
+    </a>
+    <nav class="nav-menu">
+      <a href="index.html" data-i18n="nav.home">Startseite</a>
+      <span class="nm-drop"><a href="courses/courses.html" data-i18n="nav.courses">Kurse</a><i class="fas fa-angle-down"></i><span class="nm-menu"><a href="laboratoire.html" data-i18n="nav.lab">Laboratoire</a><a href="courses/courses.html" data-i18n="nav.catalog">Kurskatalog</a></span></span>
+      <a href="event.html" data-i18n="nav.events">Veranstaltungen</a>
+      <a href="blog.html" data-i18n="nav.blog">Blog</a>
+      <a href="culture.html">Culture</a>
+      <a href="koffi-profile.html" class="active" data-i18n="nav.about">Über mich</a>
+      <a href="#" onclick="openContactMail(event)" class="nav-cta" data-i18n="nav.contact">Kontakt</a>
+    </nav>
+    <div class="kl-drop" id="klDrop">
+      <button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="listbox" aria-expanded="false" aria-label="Sprache wählen">
+        <span class="fi fi-de" id="klFlag"></span>
+        <span class="kl-code" id="klCode">DE</span>
+        <i class="fas fa-chevron-down kl-caret"></i>
+      </button>
+      <div class="kl-panel" role="menu">
+        <button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')">
+          <span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span>
+        </button>
+        <button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')">
+          <span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span>
+        </button>
+        <button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')">
+          <span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ─────────────────────────────────────────── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-avatar">
+        <img src="assets/images/Koffit.png" alt="Koffitse Aboudou">
+      </div>
+      <div class="hero-content">
+        <h1>Koffitse <span>Aboudou</span></h1>
+        <div class="hero-role" data-i18n="hero.role">Platform Engineer &amp; Cloud Infrastructure Specialist</div>
+        <div class="hero-badges">
+          <span class="hero-badge"><i class="fas fa-map-marker-alt hero-pin"></i><span data-i18n="hero.badge.location">DE</span></span>
+          <span class="hero-badge"><i class="fas fa-graduation-cap hero-pin"></i><span data-i18n="hero.badge.degrees">Höchste Abschlüsse</span></span>
+          <span class="hero-badge hero-badge-diamond" data-i18n="hero.badge.msc">Master of Science (M.Sc.) in Wirtschaftsinformatik</span>
+          <span class="hero-badge hero-badge-diamond" data-i18n="hero.badge.beng">Bachelor of Engineering (B.Eng.), Angewandte Informatik (IoT)</span>
+        </div>
+        <div class="hero-contact">
+          <div class="hero-contact-item"><i class="fas fa-envelope"></i> info@lingenieur.de</div>
+          <div class="hero-contact-item"><i class="fas fa-phone-alt"></i> +491775061655</div>
+          <div class="hero-contact-item"><i class="fab fa-linkedin"></i> <a href="https://www.linkedin.com/in/koffitse/" target="_blank" rel="noopener">LinkedIn</a></div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">3+</div>
+            <div class="stat-label" data-i18n="hero.stat.companies">Unternehmen</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">2</div>
+            <div class="stat-label" data-i18n="hero.stat.degrees">Abschlüsse</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">8+</div>
+            <div class="stat-label" data-i18n="hero.stat.skills">Kernkompetenzen</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">&#8734;</div>
+            <div class="stat-label" data-i18n="hero.stat.passion">Passion</div>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <a href="#" onclick="openContactMail(event)" class="btn-gold"><i class="fas fa-paper-plane"></i> <span data-i18n="hero.btn.contact">Kontakt aufnehmen</span></a>
+          <a href="courses/courses.html" class="btn-ghost"><i class="fas fa-graduation-cap"></i> <span data-i18n="hero.btn.courses">Kurse entdecken</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BIOGRAFIE & SKILLS ────────────────────────────── -->
+<section class="section alt">
+  <div class="wrap">
+    <div class="section-kicker"><i class="fas fa-user-circle"></i> <span data-i18n="about.kicker">Über mich</span></div>
+    <h2 class="section-title" data-i18n="about.title">Wer ist Koffitse Aboudou?</h2>
+    <p class="section-sub" data-i18n="about.sub">Plattform-Ingenieur mit akademischer Tiefe und industrieller Erfahrung, an der Schnittstelle von Technologie und Geschäftsprozessen.</p>
+
+    <div class="about-grid">
+      <div class="about-bio">
+        <h3><i class="fas fa-file-alt"></i> <span data-i18n="about.bio.title">Biografie</span></h3>
+        <p data-i18n-html="about.bio.p1">An der Schnittstelle von Softwareentwicklung, Automatisierung, Cloud-Technologien und industriellen Systemen gestalte ich technische Lösungen für komplexe digitale Umgebungen. Mit einem <strong>Bachelor of Engineering in Angewandter Informatik</strong> (Schwerpunkt IoT) sowie einem <strong>Master of Science in Wirtschaftsinformatik</strong> mit Fokus auf Business, Technologie und Prozessanalyse verbinde ich fundierte technische Expertise mit einem ganzheitlichen Verständnis von Geschäfts- und Entwicklungsprozessen.</p>
+        <p data-i18n-html="about.bio.p2">Meine berufliche Erfahrung umfasst Softwareentwicklung, Testautomatisierung, Robotik, industrielle Automatisierung, DevOps, Cloud-Infrastrukturen und Data Engineering. Dabei arbeite ich an der Entwicklung, Integration und Optimierung komplexer Systeme, von Embedded- und IoT-Anwendungen über automatisierte Testverfahren bis hin zu modernen Cloud- und Plattformlösungen. Mein Fokus liegt darauf, Technologien effizient zusammenzuführen, Prozesse zu automatisieren und nachhaltige Lösungen für anspruchsvolle technische Herausforderungen zu schaffen.</p>
+      </div>
+      <div class="about-skills">
+        <div class="skill-card">
+          <h3><i class="fas fa-cogs"></i> <span data-i18n="about.skills.title">Schlüsselkompetenzen</span></h3>
+          <div class="tags">
+            <span class="tag">Platform Engineering</span>
+            <span class="tag" data-i18n="tag.iiot">Industrial IoT / Industrie 4.0 Engineer (OT-IT)</span>
+            <span class="tag" data-i18n="tag.cloud">Cloud-Infrastruktur</span>
+            <span class="tag" data-i18n="tag.cicd">CI/CD &amp; Automatisierung</span>
+            <span class="tag" data-i18n="tag.bpa">Geschäftsprozessanalyse</span>
+            <span class="tag" data-i18n="tag.test">Testautomatisierung</span>
+            <span class="tag" data-i18n="tag.monitoring">Monitoring &amp; Troubleshooting</span>
+          </div>
+        </div>
+        <div class="edu-premium">
+          <div class="edu-premium__glow" aria-hidden="true"></div>
+          <div class="edu-premium__head">
+            <span class="edu-premium__ico"><i class="fas fa-graduation-cap"></i></span>
+            <span class="edu-premium__label" data-i18n="about.edu.title">Akademischer Hintergrund</span>
+          </div>
+          <div class="edu-deg">
+            <span class="edu-deg__badge">B.Eng.</span>
+            <div class="edu-deg__main">
+              <h4 class="edu-deg__title">Bachelor of Engineering</h4>
+              <p class="edu-deg__field" data-i18n="edu.beng.p">Angewandte Informatik, Schwerpunkt IoT</p>
+            </div>
+          </div>
+          <div class="edu-deg">
+            <span class="edu-deg__badge">M.Sc.</span>
+            <div class="edu-deg__main">
+              <h4 class="edu-deg__title">Master of Science</h4>
+              <p class="edu-deg__field" data-i18n="edu.msc.p">Wirtschaftsinformatik, Business &amp; Technologie, Prozessanalyse</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FACHGEBIETE ──────────────────────────────────── -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-kicker"><i class="fas fa-microchip"></i> <span data-i18n="exp.kicker">Fachgebiete</span></div>
+    <h2 class="section-title" data-i18n="exp.title">Technische Schwerpunkte</h2>
+    <p class="section-sub" data-i18n="exp.sub">Von Platform Engineering über Cloud-Automatisierung bis hin zu datengetriebenen IT-Lösungen, präzise und praxisnah.</p>
+    <div class="exp-grid">
+      <div class="exp-card">
+        <div class="exp-icon"><i class="fas fa-layer-group"></i></div>
+        <h3 data-i18n="exp.card1.title">Platform Engineering</h3>
+        <p data-i18n="exp.card1.desc">Design und Betrieb von Internal Developer Platforms (IDP), Golden Paths, Self-Service-Infrastruktur und Developer Experience.</p>
+      </div>
+      <div class="exp-card">
+        <div class="exp-icon"><i class="fas fa-cloud"></i></div>
+        <h3 data-i18n="exp.card2.title">Cloud-Infrastruktur &amp; CI/CD</h3>
+        <p data-i18n="exp.card2.desc">Automatisierung von Build-, Test- und Deployment-Pipelines. Infrastruktur-Standards für stabile, reproducible Umgebungen.</p>
+      </div>
+      <div class="exp-card">
+        <div class="exp-icon"><i class="fas fa-chart-bar"></i></div>
+        <h3 data-i18n="exp.card3.title">Geschäftsprozessanalyse</h3>
+        <p data-i18n="exp.card3.desc">Datenbasierte Optimierung von IT-Systemen an der Schnittstelle Business, Technologie (Wirtschaftsinformatik).</p>
+      </div>
+      <div class="exp-card">
+        <div class="exp-icon"><i class="fas fa-vial"></i></div>
+        <h3 data-i18n="exp.card4.title">Testautomatisierung &amp; QM</h3>
+        <p data-i18n="exp.card4.desc">Konzeption und Umsetzung automatisierter Teststrategien. Qualitätsmanagement in produktionsnahen Umgebungen.</p>
+      </div>
+      <div class="exp-card">
+        <div class="exp-icon"><i class="fas fa-gauge-high"></i></div>
+        <h3 data-i18n="exp.card5.title">Monitoring &amp; Troubleshooting</h3>
+        <p data-i18n="exp.card5.desc">Systemstabilisierung, strukturierte Fehleranalyse, APM-Integration und Observability in komplexen Systemlandschaften.</p>
+      </div>
+      <div class="exp-card">
+        <div class="exp-icon"><i class="fas fa-microchip"></i></div>
+        <h3 data-i18n="exp.card6.title">IoT-nahe Softwareentwicklung</h3>
+        <p data-i18n="exp.card6.desc">Integration von IoT-Systemen in Software-Ökosysteme, Edge-Computing-Szenarien und industrielle Automatisierung.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BERUFSERFAHRUNG ──────────────────────────────── -->
+<section class="section alt">
+  <div class="wrap">
+    <div class="section-kicker"><i class="fas fa-briefcase"></i> <span data-i18n="career.kicker">Karriere</span></div>
+    <h2 class="section-title" data-i18n="career.title">Berufserfahrung</h2>
+    <p class="section-sub" data-i18n="career.sub">Internationale Industrieprojekte mit Verantwortung für Engineering-Plattformen, Systemstabilität und Automatisierung.</p>
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-company">
+          <div class="tl-logo"><i class="fas fa-industry"></i></div>
+          <div>
+            <div class="tl-name">KUKA AG</div>
+            <div class="tl-role" data-i18n="kuka.role">Platform Engineer, Plattform-Engineering &amp; Standardisierung</div>
+          </div>
+          <div class="tl-period"><i class="far fa-calendar-alt"></i> <span data-i18n="kuka.period">Erfahrung</span></div>
+        </div>
+        <div class="tl-body" data-i18n="kuka.body">Platform Engineering und Standardisierung zur Entlastung von Entwicklungsteams: klare Engineering-Prozesse, Automatisierung und zuverlässige Deployments in einer komplexen Robotik-Industrieumgebung. Im Center of Excellence DevOps habe ich zudem, im Rahmen meiner Masterarbeit, eine Backstage-basierte Internal Developer Platform (IDP) konzipiert und implementiert, die Self-Service, Golden Paths und einen zentralen Service-Katalog vereint und die Developer Experience messbar verbessert.</div>
+        <div class="tl-tags">
+          <span class="tl-tag" data-i18n="kuka.tag1">Platform Engineering</span>
+          <span class="tl-tag" data-i18n="kuka.tag5">Backstage / IDP</span>
+          <span class="tl-tag" data-i18n="kuka.tag2">CI/CD</span>
+          <span class="tl-tag" data-i18n="kuka.tag3">Standardisierung</span>
+          <span class="tl-tag" data-i18n="kuka.tag4">Developer Experience</span>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-company">
+          <div class="tl-logo"><i class="fas fa-robot"></i></div>
+          <div>
+            <div class="tl-name">Exotec</div>
+            <div class="tl-role" data-i18n="exotec.role">Software &amp; Systems Engineer, Automatisierung &amp; Stabilität</div>
+          </div>
+          <div class="tl-period"><i class="far fa-calendar-alt"></i> <span data-i18n="exotec.period">Erfahrung</span></div>
+        </div>
+        <div class="tl-body" data-i18n="exotec.body">Absicherung und Weiterentwicklung komplexer Automatisierungssysteme. Strukturierte Fehleranalyse und Entwicklung stabiler Engineering-Prozesse in produktionsnahen Umgebungen mit hochdynamischen Anforderungen.</div>
+        <div class="tl-tags">
+          <span class="tl-tag" data-i18n="exotec.tag1">Automatisierung</span>
+          <span class="tl-tag" data-i18n="exotec.tag2">Fehleranalyse</span>
+          <span class="tl-tag" data-i18n="exotec.tag3">Systemstabilität</span>
+          <span class="tl-tag" data-i18n="exotec.tag4">Monitoring</span>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-company">
+          <div class="tl-logo"><i class="fas fa-car"></i></div>
+          <div>
+            <div class="tl-name">BMW Group</div>
+            <div class="tl-role" data-i18n="bmw.role">Software Engineer, Testautomatisierung &amp; Fahrzeugintegration</div>
+          </div>
+          <div class="tl-period"><i class="far fa-calendar-alt"></i> <span data-i18n="bmw.period">Erfahrung</span></div>
+        </div>
+        <div class="tl-body" data-i18n="bmw.body">Entwicklung und Durchführung automatisierter Softwaretests für Steuergeräte im Infotainment-Umfeld. Analyse und Validierung von Funktionen wie Android Auto und Apple CarPlay, Durchführung von Software-Flashings sowie Fehlerdiagnose auf ECU-Ebene. Dokumentation und Nachverfolgung von Softwarefehlern in enger Zusammenarbeit mit Entwicklungs-, Test- und Lieferantenteams.</div>
+        <div class="tl-tags">
+          <span class="tl-tag" data-i18n="bmw.tag1">Testautomatisierung</span>
+          <span class="tl-tag" data-i18n="bmw.tag2">Fahrzeugintegration</span>
+          <span class="tl-tag" data-i18n="bmw.tag3">Infotainment</span>
+          <span class="tl-tag" data-i18n="bmw.tag4">ECU-Diagnose</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ──────────────────────────────────────────── -->
+<section class="cta-banner">
+  <div class="wrap">
+    <div class="cta-inner">
+      <div class="cta-text">
+        <h2 data-i18n="cta.title">Interessiert an meinen Kursen?</h2>
+        <p data-i18n="cta.desc">Entdecken Sie praxisnahe E-Learning-Inhalte zu Platform Engineering, Cloud-Infrastruktur und modernem Software-Engineering.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="courses/courses.html" class="btn-gold"><i class="fas fa-graduation-cap"></i> <span data-i18n="cta.btn.courses">Kurse entdecken</span></a>
+        <a href="#" onclick="openContactMail(event)" class="btn-ghost"><i class="fas fa-envelope"></i> <span data-i18n="cta.btn.contact">Kontakt</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ───────────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4 data-i18n="footer.col1">Kontakt</h4>
+        <ul>
+          <li><i class="fas fa-map-marker-alt"></i> Deutschland</li>
+          <li><i class="fas fa-phone-alt"></i> +491775061655</li>
+          <li><i class="fas fa-envelope"></i> info@lingenieur.de</li>
+          <li><i class="fab fa-linkedin"></i> <a href="https://www.linkedin.com/in/koffitse/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.col2">Navigation</h4>
+        <ul>
+          <li><i class="fas fa-chevron-right"></i><a href="index.html" data-i18n="footer.nav.home">Startseite</a></li>
+          <li><i class="fas fa-chevron-right"></i><a href="courses/courses.html" data-i18n="footer.nav.courses">Kurse</a></li>
+          <li><i class="fas fa-chevron-right"></i><a href="blog.html" data-i18n="footer.nav.blog">Blog</a></li>
+          <li><i class="fas fa-chevron-right"></i><a href="event.html" data-i18n="footer.nav.events">Veranstaltungen</a></li>
+          <li><i class="fas fa-chevron-right"></i><a href="sponsor.html" data-i18n="footer.nav.pricing">Sponsor</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.col3">Support</h4>
+        <ul>
+          <li><i class="fas fa-chevron-right"></i><a href="about.html" data-i18n="footer.sup.about">Über uns</a></li>
+          <li><i class="fas fa-chevron-right"></i><a href="faq.html" data-i18n="footer.sup.faq">Häufige Fragen</a></li>
+          <li><i class="fas fa-chevron-right"></i><a href="contact.html" data-i18n="footer.sup.contact">Kontakt &amp; Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <p>Copyright &copy; 2026 <a href="index.html">Koffi Academy</a>, <span data-i18n="footer.copy">Alle Rechte vorbehalten.</span></p>
+  </div>
+</footer>
+
+<script>
+var i18n = {
+  de: {
+    'topbar.msg': 'Platform Engineering · Cloud Infrastructure · E-Learning',
+    'nav.role': 'Platform Engineering',
+    'nav.home': 'Startseite',
+    'nav.courses': 'Kurse',
+    'nav.blog': 'Blog',
+    'nav.events': 'Veranstaltungen',
+    'nav.about': 'Über mich',
+    'nav.lab': 'Laboratoire', 'nav.catalog': 'Kurskatalog', 'nav.pricing': 'Sponsor', 'nav.contact': 'Kontakt',
+    'hero.role': 'Platform Engineer & Cloud Infrastructure Specialist',
+    'hero.badge.location': 'DE',
+    'hero.badge.degrees': 'Höchste Abschlüsse',
+    'hero.badge.beng': 'Bachelor of Engineering (B.Eng.), Angewandte Informatik (IoT)',
+    'hero.badge.msc': 'Master of Science (M.Sc.) in Wirtschaftsinformatik',
+    'hero.stat.companies': 'Unternehmen',
+    'hero.stat.degrees': 'Abschlüsse',
+    'hero.stat.skills': 'Kernkompetenzen',
+    'hero.stat.passion': 'Passion',
+    'hero.btn.contact': 'Kontakt aufnehmen',
+    'hero.btn.courses': 'Kurse entdecken',
+    'about.kicker': 'Über mich',
+    'about.title': 'Wer ist Koffitse Aboudou?',
+    'about.sub': 'Plattform-Ingenieur mit akademischer Tiefe und industrieller Erfahrung, an der Schnittstelle von Technologie und Geschäftsprozessen.',
+    'about.bio.title': 'Biografie',
+    'about.bio.p1': 'An der Schnittstelle von Softwareentwicklung, Automatisierung, Cloud-Technologien und industriellen Systemen gestalte ich technische Lösungen für komplexe digitale Umgebungen. Mit einem <strong>Bachelor of Engineering in Angewandter Informatik</strong> (Schwerpunkt IoT) sowie einem <strong>Master of Science in Wirtschaftsinformatik</strong> mit Fokus auf Business, Technologie und Prozessanalyse verbinde ich fundierte technische Expertise mit einem ganzheitlichen Verständnis von Geschäfts- und Entwicklungsprozessen.',
+    'about.bio.p2': 'Meine berufliche Erfahrung umfasst Softwareentwicklung, Testautomatisierung, Robotik, industrielle Automatisierung, DevOps, Cloud-Infrastrukturen und Data Engineering. Dabei arbeite ich an der Entwicklung, Integration und Optimierung komplexer Systeme, von Embedded- und IoT-Anwendungen über automatisierte Testverfahren bis hin zu modernen Cloud- und Plattformlösungen. Mein Fokus liegt darauf, Technologien effizient zusammenzuführen, Prozesse zu automatisieren und nachhaltige Lösungen für anspruchsvolle technische Herausforderungen zu schaffen.',
+    'about.skills.title': 'Schlüsselkompetenzen',
+    'tag.cloud': 'Cloud-Infrastruktur',
+    'tag.iiot': 'Industrial IoT / Industrie 4.0 Engineer (OT-IT)',
+    'tag.cicd': 'CI/CD & Automatisierung',
+    'tag.bpa': 'Geschäftsprozessanalyse',
+    'tag.ddo': 'Datenbasierte Optimierung',
+    'tag.test': 'Testautomatisierung',
+    'tag.monitoring': 'Monitoring & Troubleshooting',
+    'tag.iot': 'IoT-Integration',
+    'about.edu.title': 'Akademischer Hintergrund',
+    'edu.beng.p': 'Angewandte Informatik, Schwerpunkt IoT',
+    'edu.msc.p': 'Wirtschaftsinformatik, Business & Technologie, Prozessanalyse',
+    'exp.kicker': 'Fachgebiete',
+    'exp.title': 'Technische Schwerpunkte',
+    'exp.sub': 'Von Platform Engineering über Cloud-Automatisierung bis hin zu datengetriebenen IT-Lösungen, präzise und praxisnah.',
+    'exp.card1.title': 'Platform Engineering',
+    'exp.card1.desc': 'Design und Betrieb von Internal Developer Platforms (IDP), Golden Paths, Self-Service-Infrastruktur und Developer Experience.',
+    'exp.card2.title': 'Cloud-Infrastruktur & CI/CD',
+    'exp.card2.desc': 'Automatisierung von Build-, Test- und Deployment-Pipelines. Infrastruktur-Standards für stabile, reproducible Umgebungen.',
+    'exp.card3.title': 'Geschäftsprozessanalyse',
+    'exp.card3.desc': 'Datenbasierte Optimierung von IT-Systemen an der Schnittstelle Business, Technologie (Wirtschaftsinformatik).',
+    'exp.card4.title': 'Testautomatisierung & QM',
+    'exp.card4.desc': 'Konzeption und Umsetzung automatisierter Teststrategien. Qualitätsmanagement in produktionsnahen Umgebungen.',
+    'exp.card5.title': 'Monitoring & Troubleshooting',
+    'exp.card5.desc': 'Systemstabilisierung, strukturierte Fehleranalyse, APM-Integration und Observability in komplexen Systemlandschaften.',
+    'exp.card6.title': 'IoT-nahe Softwareentwicklung',
+    'exp.card6.desc': 'Integration von IoT-Systemen in Software-Ökosysteme, Edge-Computing-Szenarien und industrielle Automatisierung.',
+    'career.kicker': 'Karriere',
+    'career.title': 'Berufserfahrung',
+    'career.sub': 'Internationale Industrieprojekte mit Verantwortung für Engineering-Plattformen, Systemstabilität und Automatisierung.',
+    'kuka.role': 'Platform Engineer, Plattform-Engineering & Standardisierung',
+    'kuka.period': 'Erfahrung',
+    'kuka.body': 'Platform Engineering und Standardisierung zur Entlastung von Entwicklungsteams: klare Engineering-Prozesse, Automatisierung und zuverlässige Deployments in einer komplexen Robotik-Industrieumgebung. Im Center of Excellence DevOps habe ich zudem, im Rahmen meiner Masterarbeit, eine Backstage-basierte Internal Developer Platform (IDP) konzipiert und implementiert, die Self-Service, Golden Paths und einen zentralen Service-Katalog vereint und die Developer Experience messbar verbessert.',
+    'kuka.tag5': 'Backstage / IDP',
+    'kuka.tag1': 'Platform Engineering',
+    'kuka.tag2': 'CI/CD',
+    'kuka.tag3': 'Standardisierung',
+    'kuka.tag4': 'Developer Experience',
+    'exotec.role': 'Software & Systems Engineer, Automatisierung & Stabilität',
+    'exotec.period': 'Erfahrung',
+    'exotec.body': 'Absicherung und Weiterentwicklung komplexer Automatisierungssysteme. Strukturierte Fehleranalyse und Entwicklung stabiler Engineering-Prozesse in produktionsnahen Umgebungen mit hochdynamischen Anforderungen.',
+    'exotec.tag1': 'Automatisierung',
+    'exotec.tag2': 'Fehleranalyse',
+    'exotec.tag3': 'Systemstabilität',
+    'exotec.tag4': 'Monitoring',
+    'bmw.role': 'Software Engineer, Testautomatisierung & Fahrzeugintegration',
+    'bmw.period': 'Erfahrung',
+    'bmw.body': 'Entwicklung und Durchführung automatisierter Softwaretests für Steuergeräte im Infotainment-Umfeld. Analyse und Validierung von Funktionen wie Android Auto und Apple CarPlay, Durchführung von Software-Flashings sowie Fehlerdiagnose auf ECU-Ebene. Dokumentation und Nachverfolgung von Softwarefehlern in enger Zusammenarbeit mit Entwicklungs-, Test- und Lieferantenteams.',
+    'bmw.tag1': 'Testautomatisierung',
+    'bmw.tag2': 'Fahrzeugintegration',
+    'bmw.tag3': 'Infotainment',
+    'bmw.tag4': 'ECU-Diagnose',
+    'cta.title': 'Interessiert an meinen Kursen?',
+    'cta.desc': 'Entdecken Sie praxisnahe E-Learning-Inhalte zu Platform Engineering, Cloud-Infrastruktur und modernem Software-Engineering.',
+    'cta.btn.courses': 'Kurse entdecken',
+    'cta.btn.contact': 'Kontakt',
+    'footer.col1': 'Kontakt',
+    'footer.col2': 'Navigation',
+    'footer.nav.home': 'Startseite',
+    'footer.nav.courses': 'Kurse',
+    'footer.nav.blog': 'Blog',
+    'footer.nav.events': 'Veranstaltungen',
+    'footer.nav.pricing': 'Sponsor',
+    'footer.col3': 'Support',
+    'footer.sup.about': 'Über uns',
+    'footer.sup.faq': 'Häufige Fragen',
+    'footer.sup.contact': 'Kontakt & Support',
+    'footer.copy': 'Alle Rechte vorbehalten.'
+  },
+  en: {
+    'topbar.msg': 'Platform Engineering · Cloud Infrastructure · E-Learning',
+    'nav.role': 'Platform Engineering',
+    'nav.home': 'Home',
+    'nav.courses': 'Courses',
+    'nav.blog': 'Blog',
+    'nav.events': 'Events',
+    'nav.about': 'About Me',
+    'nav.lab': 'Laboratoire', 'nav.catalog': 'Course catalog', 'nav.pricing': 'Sponsor', 'nav.contact': 'Contact',
+    'hero.role': 'Platform Engineer & Cloud Infrastructure Specialist',
+    'hero.badge.location': 'DE',
+    'hero.badge.degrees': 'Top Degrees',
+    'hero.badge.beng': 'Bachelor of Engineering (B.Eng.), Applied Computer Science (IoT)',
+    'hero.badge.msc': 'Master of Science (M.Sc.) in Information Systems',
+    'hero.stat.companies': 'Companies',
+    'hero.stat.degrees': 'Degrees',
+    'hero.stat.skills': 'Core Skills',
+    'hero.stat.passion': 'Passion',
+    'hero.btn.contact': 'Get in Touch',
+    'hero.btn.courses': 'Explore Courses',
+    'about.kicker': 'About Me',
+    'about.title': 'Who is Koffitse Aboudou?',
+    'about.sub': 'Platform Engineer with academic depth and industrial experience, at the intersection of technology and business processes.',
+    'about.bio.title': 'Biography',
+    'about.bio.p1': 'At the intersection of software development, automation, cloud technologies and industrial systems, I design technical solutions for complex digital environments. With a <strong>Bachelor of Engineering in Applied Computer Science</strong> (focus on IoT) and a <strong>Master of Science in Information Systems</strong> focused on business, technology and process analysis, I combine solid technical expertise with a holistic understanding of business and development processes.',
+    'about.bio.p2': 'My professional experience spans software development, test automation, robotics, industrial automation, DevOps, cloud infrastructure and data engineering. I work on the development, integration and optimization of complex systems, from embedded and IoT applications through automated testing to modern cloud and platform solutions. My focus is on bringing technologies together efficiently, automating processes and creating sustainable solutions for demanding technical challenges.',
+    'about.skills.title': 'Key Competencies',
+    'tag.cloud': 'Cloud Infrastructure',
+    'tag.iiot': 'Industrial IoT / Industrie 4.0 Engineer (OT-IT)',
+    'tag.cicd': 'CI/CD & Automation',
+    'tag.bpa': 'Business Process Analysis',
+    'tag.ddo': 'Data-Driven Optimization',
+    'tag.test': 'Test Automation',
+    'tag.monitoring': 'Monitoring & Troubleshooting',
+    'tag.iot': 'IoT Integration',
+    'about.edu.title': 'Academic Background',
+    'edu.beng.p': 'Applied Computer Science, Focus on IoT',
+    'edu.msc.p': 'Information Systems, Business & Technology, Process Analysis',
+    'exp.kicker': 'Areas of Expertise',
+    'exp.title': 'Technical Focus Areas',
+    'exp.sub': 'From Platform Engineering to Cloud Automation and data-driven IT solutions, precise and practice-oriented.',
+    'exp.card1.title': 'Platform Engineering',
+    'exp.card1.desc': 'Design and operation of Internal Developer Platforms (IDP), Golden Paths, Self-Service Infrastructure and Developer Experience.',
+    'exp.card2.title': 'Cloud Infrastructure & CI/CD',
+    'exp.card2.desc': 'Automation of build, test and deployment pipelines. Infrastructure standards for stable, reproducible environments.',
+    'exp.card3.title': 'Business Process Analysis',
+    'exp.card3.desc': 'Data-driven optimization of IT systems at the Business, Technology interface (Information Systems).',
+    'exp.card4.title': 'Test Automation & QM',
+    'exp.card4.desc': 'Design and implementation of automated testing strategies. Quality management in production-adjacent environments.',
+    'exp.card5.title': 'Monitoring & Troubleshooting',
+    'exp.card5.desc': 'System stabilization, structured error analysis, APM integration and Observability in complex system landscapes.',
+    'exp.card6.title': 'IoT-adjacent Software Development',
+    'exp.card6.desc': 'Integration of IoT systems into software ecosystems, Edge Computing scenarios and industrial automation.',
+    'career.kicker': 'Career',
+    'career.title': 'Professional Experience',
+    'career.sub': 'International industrial projects with responsibility for engineering platforms, system stability and automation.',
+    'kuka.role': 'Platform Engineer, Platform Engineering & Standardization',
+    'kuka.period': 'Experience',
+    'kuka.body': 'Platform Engineering and standardization to relieve development teams: clear engineering processes, automation and reliable deployments in a complex robotics industrial environment. Within the Center of Excellence DevOps, I also designed and implemented, as part of my Master\'s thesis, a Backstage-based Internal Developer Platform (IDP) that unifies self-service, golden paths and a central service catalog and measurably improves the developer experience.',
+    'kuka.tag5': 'Backstage / IDP',
+    'kuka.tag1': 'Platform Engineering',
+    'kuka.tag2': 'CI/CD',
+    'kuka.tag3': 'Standardization',
+    'kuka.tag4': 'Developer Experience',
+    'exotec.role': 'Software & Systems Engineer, Automation & Stability',
+    'exotec.period': 'Experience',
+    'exotec.body': 'Securing and advancing complex automation systems. Structured error analysis and development of stable engineering processes in production-adjacent environments with highly dynamic requirements.',
+    'exotec.tag1': 'Automation',
+    'exotec.tag2': 'Error Analysis',
+    'exotec.tag3': 'System Stability',
+    'exotec.tag4': 'Monitoring',
+    'bmw.role': 'Software Engineer, Test Automation & Vehicle Integration',
+    'bmw.period': 'Experience',
+    'bmw.body': 'Development and execution of automated software tests for electronic control units (ECUs) in the infotainment domain. Analysis and validation of functions such as Android Auto and Apple CarPlay, performing software flashing as well as fault diagnosis at ECU level. Documentation and tracking of software defects in close collaboration with development, test and supplier teams.',
+    'bmw.tag1': 'Test Automation',
+    'bmw.tag2': 'Vehicle Integration',
+    'bmw.tag3': 'Infotainment',
+    'bmw.tag4': 'ECU Diagnostics',
+    'cta.title': 'Interested in my Courses?',
+    'cta.desc': 'Discover practice-oriented E-Learning content on Platform Engineering, Cloud Infrastructure and modern Software Engineering.',
+    'cta.btn.courses': 'Explore Courses',
+    'cta.btn.contact': 'Contact',
+    'footer.col1': 'Contact',
+    'footer.col2': 'Navigation',
+    'footer.nav.home': 'Home',
+    'footer.nav.courses': 'Courses',
+    'footer.nav.blog': 'Blog',
+    'footer.nav.events': 'Events',
+    'footer.nav.pricing': 'Sponsor',
+    'footer.col3': 'Support',
+    'footer.sup.about': 'About Us',
+    'footer.sup.faq': 'FAQ',
+    'footer.sup.contact': 'Contact & Support',
+    'footer.copy': 'All rights reserved.'
+  },
+  fr: {
+    'topbar.msg': 'Ingénierie Plateforme · Infrastructure Cloud · E-Learning',
+    'nav.role': 'Ingénierie Plateforme',
+    'nav.home': 'Accueil',
+    'nav.courses': 'Cours',
+    'nav.blog': 'Blog',
+    'nav.events': 'Événements',
+    'nav.about': 'À propos',
+    'nav.lab': 'Laboratoire', 'nav.catalog': 'Catalogue de cours', 'nav.pricing': 'Sponsor', 'nav.contact': 'Contact',
+    'hero.role': 'Ingénieur Plateforme & Spécialiste Infrastructure Cloud',
+    'hero.badge.location': 'DE',
+    'hero.badge.degrees': 'Diplômes d\'Excellence',
+    'hero.badge.beng': 'Bachelor of Engineering (B.Eng.), Informatique Appliquée (IoT)',
+    'hero.badge.msc': 'Master of Science (M.Sc.) en Informatique de Gestion',
+    'hero.stat.companies': 'Entreprises',
+    'hero.stat.degrees': 'Diplômes',
+    'hero.stat.skills': 'Compétences Clés',
+    'hero.stat.passion': 'Passion',
+    'hero.btn.contact': 'Prendre contact',
+    'hero.btn.courses': 'Découvrir les cours',
+    'about.kicker': 'À propos',
+    'about.title': 'Qui est Koffitse Aboudou ?',
+    'about.sub': 'Ingénieur plateforme avec une profondeur académique et une expérience industrielle, à l\'intersection de la technologie et des processus métier.',
+    'about.bio.title': 'Biographie',
+    'about.bio.p1': 'À l\'intersection du développement logiciel, de l\'automatisation, des technologies cloud et des systèmes industriels, je conçois des solutions techniques pour des environnements numériques complexes. Avec un <strong>Bachelor of Engineering en Informatique Appliquée</strong> (spécialité IoT) et un <strong>Master of Science en Informatique de Gestion</strong> axé sur le business, la technologie et l\'analyse des processus, j\'allie une expertise technique solide à une compréhension globale des processus métier et de développement.',
+    'about.bio.p2': 'Mon expérience professionnelle couvre le développement logiciel, l\'automatisation des tests, la robotique, l\'automatisation industrielle, le DevOps, les infrastructures cloud et le data engineering. Je travaille au développement, à l\'intégration et à l\'optimisation de systèmes complexes, des applications embarquées et IoT aux tests automatisés jusqu\'aux solutions cloud et plateformes modernes. Mon objectif est de réunir efficacement les technologies, d\'automatiser les processus et de créer des solutions durables face à des défis techniques exigeants.',
+    'about.skills.title': 'Compétences Clés',
+    'tag.cloud': 'Infrastructure Cloud',
+    'tag.iiot': 'Industrial IoT / Industrie 4.0 Engineer (OT-IT)',
+    'tag.cicd': 'CI/CD & Automatisation',
+    'tag.bpa': 'Analyse des Processus Métier',
+    'tag.ddo': 'Optimisation Basée sur les Données',
+    'tag.test': 'Automatisation des Tests',
+    'tag.monitoring': 'Monitoring & Dépannage',
+    'tag.iot': 'Intégration IoT',
+    'about.edu.title': 'Parcours Académique',
+    'edu.beng.p': 'Informatique Appliquée, Spécialité IoT',
+    'edu.msc.p': 'Informatique de Gestion, Business & Technologie, Analyse des Processus',
+    'exp.kicker': 'Domaines d\'Expertise',
+    'exp.title': 'Domaines Techniques',
+    'exp.sub': 'Du Platform Engineering à l\'automatisation Cloud et aux solutions IT orientées données, précis et orienté pratique.',
+    'exp.card1.title': 'Platform Engineering',
+    'exp.card1.desc': 'Conception et exploitation de plateformes développeurs internes (IDP), Golden Paths, infrastructure en libre-service et Developer Experience.',
+    'exp.card2.title': 'Infrastructure Cloud & CI/CD',
+    'exp.card2.desc': 'Automatisation des pipelines de build, test et déploiement. Standards d\'infrastructure pour des environnements stables et reproductibles.',
+    'exp.card3.title': 'Analyse des Processus Métier',
+    'exp.card3.desc': 'Optimisation basée sur les données des systèmes IT à l\'interface Business, Technologie (Informatique de Gestion).',
+    'exp.card4.title': 'Automatisation des Tests & QM',
+    'exp.card4.desc': 'Conception et mise en œuvre de stratégies de tests automatisés. Gestion de la qualité dans des environnements proches de la production.',
+    'exp.card5.title': 'Monitoring & Dépannage',
+    'exp.card5.desc': 'Stabilisation des systèmes, analyse structurée des erreurs, intégration APM et Observabilité dans des paysages systèmes complexes.',
+    'exp.card6.title': 'Développement Logiciel IoT',
+    'exp.card6.desc': 'Intégration de systèmes IoT dans des écosystèmes logiciels, scénarios Edge Computing et automatisation industrielle.',
+    'career.kicker': 'Carrière',
+    'career.title': 'Expérience Professionnelle',
+    'career.sub': 'Projets industriels internationaux avec responsabilité pour les plateformes d\'ingénierie, la stabilité des systèmes et l\'automatisation.',
+    'kuka.role': 'Ingénieur Plateforme, Ingénierie Plateforme & Standardisation',
+    'kuka.period': 'Expérience',
+    'kuka.body': 'Platform Engineering et standardisation pour décharger les équipes de développement : processus d\'ingénierie clairs, automatisation et déploiements fiables dans un environnement industriel de robotique complexe. Au sein du Center of Excellence DevOps, j\'ai également conçu et implémenté, dans le cadre de mon mémoire de master, une Internal Developer Platform (IDP) basée sur Backstage, réunissant self-service, golden paths et catalogue de services centralisé, qui améliore mesurablement l\'expérience développeur.',
+    'kuka.tag5': 'Backstage / IDP',
+    'kuka.tag1': 'Platform Engineering',
+    'kuka.tag2': 'CI/CD',
+    'kuka.tag3': 'Standardisation',
+    'kuka.tag4': 'Developer Experience',
+    'exotec.role': 'Ingénieur Logiciel & Systèmes, Automatisation & Stabilité',
+    'exotec.period': 'Expérience',
+    'exotec.body': 'Sécurisation et développement de systèmes d\'automatisation complexes. Analyse structurée des erreurs et développement de processus d\'ingénierie stables dans des environnements proches de la production avec des exigences très dynamiques.',
+    'exotec.tag1': 'Automatisation',
+    'exotec.tag2': 'Analyse d\'Erreurs',
+    'exotec.tag3': 'Stabilité Système',
+    'exotec.tag4': 'Monitoring',
+    'bmw.role': 'Ingénieur Logiciel, Automatisation des Tests & Intégration Véhicule',
+    'bmw.period': 'Expérience',
+    'bmw.body': 'Développement et exécution de tests logiciels automatisés pour les calculateurs (ECU) dans le domaine de l\'infodivertissement. Analyse et validation de fonctions telles qu\'Android Auto et Apple CarPlay, réalisation de flashages logiciels ainsi que diagnostic des défauts au niveau ECU. Documentation et suivi des anomalies logicielles en étroite collaboration avec les équipes de développement, de test et les fournisseurs.',
+    'bmw.tag1': 'Automatisation des Tests',
+    'bmw.tag2': 'Intégration Véhicule',
+    'bmw.tag3': 'Infotainment',
+    'bmw.tag4': 'Diagnostic ECU',
+    'cta.title': 'Intéressé par mes cours ?',
+    'cta.desc': 'Découvrez des contenus E-Learning pratiques sur le Platform Engineering, l\'infrastructure Cloud et le Software Engineering moderne.',
+    'cta.btn.courses': 'Découvrir les cours',
+    'cta.btn.contact': 'Contact',
+    'footer.col1': 'Contact',
+    'footer.col2': 'Navigation',
+    'footer.nav.home': 'Accueil',
+    'footer.nav.courses': 'Cours',
+    'footer.nav.blog': 'Blog',
+    'footer.nav.events': 'Événements',
+    'footer.nav.pricing': 'Sponsor',
+    'footer.col3': 'Support',
+    'footer.sup.about': 'À propos',
+    'footer.sup.faq': 'Questions fréquentes',
+    'footer.sup.contact': 'Contact & Support',
+    'footer.copy': 'Tous droits réservés.'
+  }
+};
+
+var contactMailto = {
+  de: {
+    subject: 'Kontaktanfrage',
+    body: 'Bonjour,\n\nIch interessiere mich für Ihre Inhalte und möchte Sie kontaktieren.\n\nMeine Telefonnummer:\n\nMit freundlichen Grüßen'
+  },
+  fr: {
+    subject: "Prise de contact",
+    body: "Bonjour,\n\nJe m’intéresse à vos contenus et j’aimerais vous contacter.\n\nMon numéro :\n\nCordialement"
+  },
+  en: {
+    subject: 'Contact Request',
+    body: 'Hello,\n\nI am interested in your content and would like to contact you.\n\nMy phone number:\n\nBest regards'
+  }
+};
+
+function openContactMail(e) {
+  if (e) e.preventDefault();
+  var lang = document.documentElement.lang || 'de';
+  var t = contactMailto[lang] || contactMailto['de'];
+  window.location.href = 'mailto:info@lingenieur.de'
+    + '?subject=' + encodeURIComponent(t.subject)
+    + '&body=' + encodeURIComponent(t.body);
+}
+
+function applyTranslations(t) {
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-html');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+}
+
+var klMeta = {de:{code:'DE',flag:'fi-de'}, en:{code:'EN',flag:'fi-gb'}, fr:{code:'FR',flag:'fi-fr'}};
+
+function klToggle() {
+  var d = document.getElementById('klDrop');
+  var open = d.classList.toggle('open');
+  document.getElementById('klBtn').setAttribute('aria-expanded', String(open));
+}
+function klClose() {
+  var d = document.getElementById('klDrop');
+  if (d) { d.classList.remove('open'); document.getElementById('klBtn').setAttribute('aria-expanded','false'); }
+}
+function klPick(lang) { setLanguage(lang); klClose(); }
+
+document.addEventListener('click', function(e) {
+  var d = document.getElementById('klDrop');
+  if (d && d.classList.contains('open') && !d.contains(e.target)) klClose();
+});
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.documentElement.lang = lang;
+  applyTranslations(i18n[lang]);
+  try { localStorage.setItem('preferred-lang', lang); } catch(e) {}
+  var m = klMeta[lang];
+  if (m) {
+    var f = document.getElementById('klFlag');
+    var c = document.getElementById('klCode');
+    if (f) f.className = 'fi ' + m.flag;
+    if (c) c.textContent = m.code;
+    document.querySelectorAll('.kl-opt').forEach(function(o) { o.classList.toggle('kl-on', o.dataset.kl === lang); });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = 'de';
+  try { saved = localStorage.getItem('preferred-lang') || 'de'; } catch(e) {}
+  setLanguage(saved);
+});
+</script>
+<script src="assets/js/kontakt-popup.js"></script>
+<script src="assets/js/mobile-nav.js"></script>
+</body>
+</html>

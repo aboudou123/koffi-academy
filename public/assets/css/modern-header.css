@@ -1,0 +1,129 @@
+/*
+ * modern-header.css — Koffi Academy
+ * En-tête moderne ".kh" (barre bleu nuit, blanc et or) extrait de la page d'accueil
+ * et des pages laboratoire, packagé en feuille autonome pour remplacer
+ * l'ancien en-tête legacy ".header-main" sur toutes les pages.
+ *
+ * Charger CETTE feuille EN DERNIER dans <head> (après style.css / modern.css).
+ * Le menu hamburger mobile est fourni par assets/js/mobile-nav.js.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+/* Laisser fonctionner le header sticky malgré .page-main{overflow-x:hidden} */
+.page-main { overflow-x: clip; }
+
+.kh {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: linear-gradient(180deg, rgba(18, 48, 79, .98), rgba(9, 33, 61, .98));
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(214, 160, 45, .42);
+  box-shadow: 0 14px 36px rgba(2, 12, 26, .24);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+.kh *, .kh *::before, .kh *::after { box-sizing: border-box; }
+
+.kh__in {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 13px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.kh__brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+.kh__mark {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #f9d77e 0%, #d6a02d 55%, #b97911 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: #07294d; font-size: 15px;
+  box-shadow: 0 8px 22px rgba(214, 160, 45, .34);
+  flex-shrink: 0;
+}
+.kh__name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700; font-size: 17px;
+  letter-spacing: -.01em; color: #fff;
+  white-space: nowrap;
+}
+
+.kh__nav { display: flex; align-items: center; gap: 4px; }
+.kh__nav > a {
+  font-size: 14.5px; font-weight: 600;
+  color: rgba(255, 255, 255, .78);
+  text-decoration: none;
+  padding: 8px 13px; border-radius: 8px;
+  transition: all .18s; white-space: nowrap;
+}
+.kh__nav > a:hover { color: #fff; background: rgba(255, 255, 255, .08); }
+.kh__nav > a.active { color: #f9d77e; background: rgba(214, 160, 45, .15); }
+
+/* Dropdown "Kurse" */
+.kh__drop { position: relative; display: inline-flex; align-items: center; }
+.kh__droplabel {
+  font-size: 14.5px; font-weight: 600;
+  color: rgba(255, 255, 255, .78);
+  padding: 8px 4px 8px 13px; cursor: default; white-space: nowrap;
+}
+.kh__drop:hover .kh__droplabel { color: #fff; }
+.kh__droplabel.active { color: #f9d77e; }
+.kh__drop > i { color: rgba(255, 255, 255, .58); font-size: 11px; cursor: pointer; padding: 8px 10px 8px 2px; }
+.kh__drop:hover > i { color: #f9d77e; }
+.kh__menu {
+  position: absolute; top: calc(100% + 2px); left: 0;
+  min-width: 178px;
+  background: #fff;
+  border: 1px solid rgba(214, 160, 45, .28);
+  border-top: 3px solid #d6a02d;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 18px 38px rgba(7, 41, 77, .14);
+  padding: 6px;
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: all .2s cubic-bezier(.4, 0, .2, 1);
+  z-index: 70;
+}
+.kh__drop:hover .kh__menu { opacity: 1; visibility: visible; transform: none; }
+.kh__menu a {
+  display: block; padding: 9px 12px; border-radius: 7px;
+  font-size: 14px; font-weight: 600;
+  color: rgba(7, 41, 77, .76); text-decoration: none;
+}
+.kh__menu a:hover { background: rgba(214, 160, 45, .12); color: #9a6510; }
+.kh__menu a.active { color: #9a6510; }
+
+/* Auth (Anmelden / Registrieren) */
+.kh__auth { display: inline-flex; align-items: center; gap: 9px; margin-left: 8px; }
+.kh__login {
+  font-size: 14px; font-weight: 600; color: #fff;
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, .58);
+  padding: 7px 15px; border-radius: 8px;
+  text-decoration: none; transition: all .18s; white-space: nowrap;
+}
+.kh__login:hover { background: #fff; color: #07294d; border-color: #fff; }
+.kh__btn {
+  font-size: 14px; font-weight: 700; color: #07294d;
+  background: linear-gradient(135deg, #f9d77e 0%, #d6a02d 58%, #b97911 100%);
+  padding: 8px 16px; border-radius: 8px;
+  text-decoration: none; white-space: nowrap;
+  box-shadow: 0 8px 22px rgba(214, 160, 45, .30);
+  transition: all .18s;
+}
+.kh__btn:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(214, 160, 45, .42); color: #07294d; }
+
+/* Resserrage léger tablette/laptop (au-dessus du seuil hamburger 860px). */
+@media (min-width: 861px) and (max-width: 1024px) {
+  .kh__nav { gap: 3px; }
+  .kh__nav > a { padding: 8px 11px; }
+  .kh__btn { padding: 8px 14px; }
+}
+
+@media (max-width: 600px) {
+  .kh__name { font-size: 15.5px; }
+}

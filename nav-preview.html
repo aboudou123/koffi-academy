@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navigation — Vorschau (Kurse ▸ Laboratoire)</title>
+<link rel="stylesheet" href="public/assets/css/modern.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+  body { margin:0; font-family:'Inter',Arial,sans-serif; background:#f1f4f8; color:#07294d; }
+  .demo-note { max-width:1100px; margin:0 auto; padding:28px 24px 8px; }
+  .demo-note h1 { font-size:20px; margin:0 0 6px; letter-spacing:-.01em; }
+  .demo-note p { margin:0; color:#5a6a8a; font-size:14px; }
+  .demo-note .tags { margin-top:14px; display:flex; gap:8px; flex-wrap:wrap; }
+  .demo-note .tags span {
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+    background:#fff; border:1px solid #e2e8f0; color:#07294d; padding:5px 10px; border-radius:999px;
+  }
+  .bar-wrap { max-width:1100px; margin:18px auto 120px; }
+  .bar {
+    background:linear-gradient(130deg,#041a32,#07294d 55%,#0e3d72 90%,#1a5fa0);
+    border-radius:14px; box-shadow:0 10px 30px rgba(7,41,77,.18);
+    padding:0 28px; position:relative;
+  }
+  .bar .header-nav-menu-area > ul { list-style:none; padding:0; margin:0; }
+  .bar .header-nav-menu-area > ul:after { content:""; display:block; clear:both; }
+
+  /* --- structural slice mirrored from style.css (scoped to the demo bar) --- */
+  .bar .header-nav-menu-area ul > li { float:left; margin-right:30px; position:relative; list-style:none; }
+  .bar .header-nav-menu-area ul > li:last-child { margin-right:0; }
+  .bar .header-nav-menu-area ul > li > a { display:block; padding:22px 0; font-size:16px; font-weight:600; text-transform:uppercase; text-decoration:none; color:rgba(255,255,255,.82); }
+  .bar .header-nav-menu-area ul > li > a.active,
+  .bar .header-nav-menu-area ul > li > a:hover { color:#f89035; }
+  .bar .header-nav-menu-area ul > li > i.fa-angle-down { font-size:18px; position:relative; top:2px; margin-left:2px; color:rgba(255,255,255,.82); cursor:pointer; transition:color .22s; }
+  .bar .header-nav-menu-area ul > li:hover > i.fa-angle-down { color:#f89035; }
+  .bar .header-nav-menu-area ul > li .theme-dropdown {
+    width:240px; position:absolute; top:62px; left:0; z-index:99; background:#fff;
+    border:1px solid rgba(7,41,77,.08); border-top:5px solid #f89035; border-radius:0 0 12px 12px;
+    box-shadow:0 18px 40px rgba(7,41,77,.18); transition:all .35s cubic-bezier(.4,0,.2,1);
+    transform:translateY(15px); opacity:0; visibility:hidden;
+  }
+  .bar .header-nav-menu-area ul > li:hover .theme-dropdown { transform:none; opacity:1; visibility:visible; }
+  .bar .header-nav-menu-area ul > li .theme-dropdown > ul { margin:0; padding:0; }
+  .bar .header-nav-menu-area ul > li .theme-dropdown > ul > li { float:none; margin:0; list-style:none; border-bottom:1px solid #eee; }
+  .bar .header-nav-menu-area ul > li .theme-dropdown > ul > li > a { display:block; padding:12px 15px; font-size:14px; font-weight:500; text-decoration:none; color:#07294d; transition:all .22s; }
+  .bar .header-nav-menu-area ul > li .theme-dropdown > ul > li > a:hover { background:linear-gradient(130deg,#07294d,#0e3d72); color:#f89035; padding-left:20px; }
+
+  .open-panel { position:absolute; left:160px; top:66px; width:240px; background:#fff; border:1px solid rgba(7,41,77,.08); border-top:5px solid #f89035; border-radius:0 0 12px 12px; box-shadow:0 18px 40px rgba(7,41,77,.18); z-index:50; }
+  .open-panel ul { margin:0; padding:0; list-style:none; }
+  .open-panel li { border-bottom:1px solid #eee; }
+  .open-panel a { display:block; padding:12px 15px; font-size:14px; font-weight:500; text-decoration:none; color:#07294d; transition:all .22s; }
+  .open-panel a:hover { background:linear-gradient(130deg,#07294d,#0e3d72); color:#f89035; padding-left:20px; }
+
+  .hint { max-width:1100px; margin:-90px auto 60px; padding:0 24px; color:#5a6a8a; font-size:13px; }
+  .hint code { background:#fff; border:1px solid #e2e8f0; padding:1px 6px; border-radius:6px; color:#07294d; }
+</style>
+</head>
+<body>
+  <div class="demo-note">
+    <h1>Hauptnavigation — „Seiten“ entfernt, „Kurse“ mit Dropdown</h1>
+    <p>Bewegen Sie den Mauszeiger über <strong>Kurse</strong> (oder tippen Sie auf das Chevron). Das Dropdown zeigt nun ausschließlich <strong>Laboratoire</strong> — gleiche Breite, Rahmen, Farben, Übergänge und Hover-Effekte wie das frühere „Seiten“-Menü.</p>
+    <div class="tags">
+      <span>Seiten · entfernt</span>
+      <span>Kurse · Dropdown</span>
+      <span>Laboratoire</span>
+      <span>Hover · Desktop</span>
+      <span>Tap-Chevron · Mobile</span>
+    </div>
+  </div>
+
+  <div class="bar-wrap">
+    <div class="bar">
+      <div class="header-nav-area">
+        <div class="header-nav-menu-area">
+          <ul>
+            <li><a class="active" href="#">Startseite</a></li>
+            <li><a href="#">Kurse</a> <i class="fas fa-angle-down"></i><div class="theme-dropdown"><ul><li><a href="#">Laboratoire</a></li></ul></div></li>
+            <li><a href="#">Veranstaltungen</a></li>
+            <li><a href="#">Über mich</a></li>
+            <li><a href="#">Preise</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Kontakt</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-note" style="padding-top:8px;">
+    <p style="font-weight:600;color:#07294d;">Geöffneter Zustand (Hover / Tap auf „Kurse“):</p>
+  </div>
+  <div class="bar-wrap" style="margin-bottom:48px;position:relative;">
+    <div class="bar" style="overflow:visible;">
+      <div class="header-nav-area">
+        <div class="header-nav-menu-area">
+          <ul>
+            <li><a class="active" href="#">Startseite</a></li>
+            <li><a href="#" style="color:#f89035;">Kurse</a> <i class="fas fa-angle-down" style="color:#f89035;"></i></li>
+            <li><a href="#">Veranstaltungen</a></li>
+            <li><a href="#">Über mich</a></li>
+            <li><a href="#">Preise</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Kontakt</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- open dropdown rendered in normal flow so it is always painted -->
+    <div class="open-panel">
+      <ul><li><a href="#">Laboratoire</a></li></ul>
+    </div>
+  </div>
+
+  <p class="hint" style="margin-top:0;">
+    Verhalten: Desktop öffnet per <code>:hover</code> über dem gesamten „Kurse“-Eintrag; Mobile öffnet per Tap auf das Chevron, während der Text „Kurse“ weiterhin zu <code>/courses/courses.html</code> verlinkt — identisch zur bisherigen Dropdown-Mechanik.
+  </p>
+</body>
+</html>

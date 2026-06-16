@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zahlung erfolgreich – Koffi Academy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;background:linear-gradient(135deg,#07294d,#0d3d73);font-family:Inter,system-ui,sans-serif;display:grid;place-items:center;padding:24px}
+    .card{background:#fff;border-radius:20px;padding:48px 40px;max-width:460px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+    .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+    .logo{font-size:20px;font-weight:900;color:#07294d}.logo span{color:#f89035}
+    .lang-switcher{display:inline-flex;gap:4px;background:#f0f4f8;border-radius:8px;padding:3px}
+    .lang-btn{border:none;background:transparent;border-radius:5px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;color:#5a6a8a;transition:.15s}
+    .lang-btn.active,.lang-btn:hover{background:#07294d;color:#fff}
+    .icon-circle{width:80px;height:80px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:36px;color:#10b981}
+    h1{font-size:26px;font-weight:800;color:#07294d;margin-bottom:10px}
+    .sub{color:#6b7280;font-size:15px;line-height:1.6;margin-bottom:32px}
+    .course-pill{display:inline-flex;align-items:center;gap:8px;background:#f0f4f8;border-radius:8px;padding:10px 18px;font-weight:700;color:#07294d;font-size:14px;margin-bottom:32px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 28px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:.18s;text-decoration:none}
+    .btn-primary{background:#07294d;color:#fff}.btn-primary:hover{background:#0d3a6e}
+    .btn-ghost{background:#f0f4f8;color:#07294d;margin-top:12px;width:100%}
+    .btn-ghost:hover{background:#e5e7eb}
+    .divider{height:1px;background:#e5e7eb;margin:24px 0}
+    .confetti{font-size:40px;margin-bottom:8px}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="card-top">
+    <div class="logo">Koffi <span>Academy</span></div>
+    <div class="lang-switcher" role="group">
+      <button type="button" class="lang-btn active" data-lang="de" onclick="setLanguage('de')">DE</button>
+      <button type="button" class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+      <button type="button" class="lang-btn" data-lang="fr" onclick="setLanguage('fr')">FR</button>
+    </div>
+  </div>
+
+  <div class="confetti" aria-hidden="true">🎉</div>
+  <div class="icon-circle"><i class="fas fa-check"></i></div>
+  <h1 data-i18n="heading">Zahlung erfolgreich!</h1>
+  <p class="sub" data-i18n="sub">Ihr Kurs ist jetzt freigeschaltet. Sie erhalten in Kürze eine Bestätigungs-E-Mail.</p>
+
+  <div class="course-pill" id="course-pill" style="display:none">
+    <i class="fas fa-graduation-cap"></i>
+    <span id="course-name"></span>
+  </div>
+
+  <a href="#" id="btn-course" class="btn btn-primary" style="display:none">
+    <i class="fas fa-play-circle"></i> <span data-i18n="btn-course">Kurs starten</span>
+  </a>
+
+  <div class="divider"></div>
+  <a href="../courses/courses.html" class="btn btn-ghost">
+    <i class="fas fa-th-large"></i> <span data-i18n="btn-courses">Alle Kurse</span>
+  </a>
+</div>
+
+<script>
+var i18n = {
+  de: {
+    'page-title': 'Zahlung erfolgreich – Koffi Academy',
+    'heading':    'Zahlung erfolgreich!',
+    'sub':        'Ihr Kurs ist jetzt freigeschaltet. Sie erhalten in Kürze eine Bestätigungs-E-Mail.',
+    'btn-course': 'Kurs starten',
+    'btn-courses':'Alle Kurse'
+  },
+  en: {
+    'page-title': 'Payment successful – Koffi Academy',
+    'heading':    'Payment successful!',
+    'sub':        'Your course is now unlocked. You will receive a confirmation email shortly.',
+    'btn-course': 'Start course',
+    'btn-courses':'All courses'
+  },
+  fr: {
+    'page-title': 'Paiement réussi – Koffi Academy',
+    'heading':    'Paiement réussi !',
+    'sub':        'Votre cours est maintenant débloqué. Vous recevrez un email de confirmation.',
+    'btn-course': 'Accéder au cours',
+    'btn-courses':'Tous les cours'
+  }
+};
+
+var COURSE_PATHS = {
+  'vault-security':          '/paid-courses/vault-security.html',
+  'terraform-aws-advanced':  '/paid-courses/terraform-aws-advanced.html',
+  'devops-platform-overview':'/paid-courses/devops-platform-overview.html'
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+  if (i18n[lang]['page-title']) document.title = i18n[lang]['page-title'];
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var params  = new URLSearchParams(location.search);
+  var course  = params.get('course');
+  var langParam = params.get('lang');
+  var saved   = langParam || localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+
+  if (course && COURSE_PATHS[course]) {
+    var pill = document.getElementById('course-pill');
+    var btn  = document.getElementById('btn-course');
+    document.getElementById('course-name').textContent = course.replace(/-/g, ' ');
+    pill.style.display = 'inline-flex';
+    btn.href = COURSE_PATHS[course];
+    btn.style.display = 'inline-flex';
+  }
+});
+</script>
+</body>
+</html>

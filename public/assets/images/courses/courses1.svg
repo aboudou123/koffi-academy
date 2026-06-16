@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="bgc1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#07294d"/>
+      <stop offset="100%" stop-color="#0e4a7a"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bgc1)"/>
+  <!-- Grid dots -->
+  <pattern id="dotsC1" x="0" y="0" width="25" height="25" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.05)"/>
+  </pattern>
+  <rect width="600" height="400" fill="url(#dotsC1)"/>
+  <circle cx="480" cy="80" r="160" fill="rgba(255,198,0,0.06)"/>
+
+  <!-- Graduation cap icon (simplified) -->
+  <polygon points="300,130 380,170 300,210 220,170" fill="none" stroke="#ffc600" stroke-width="3" stroke-linejoin="round" opacity="0.8"/>
+  <polygon points="380,170 380,210 300,240 220,210 220,170" fill="rgba(255,198,0,0.15)" stroke="#ffc600" stroke-width="1.5" stroke-linejoin="round" opacity="0.6"/>
+  <line x1="380" y1="170" x2="410" y2="155" stroke="#ffc600" stroke-width="2" opacity="0.6"/>
+  <line x1="410" y1="155" x2="410" y2="200" stroke="#ffc600" stroke-width="2" opacity="0.6"/>
+
+  <text x="300" y="290" text-anchor="middle" font-family="'Inter',Arial,sans-serif" font-size="16" font-weight="700" fill="rgba(255,255,255,0.6)" letter-spacing="2">KURSE &amp; ZERTIFIKATE</text>
+  <text x="300" y="315" text-anchor="middle" font-family="'Inter',Arial,sans-serif" font-size="12" fill="rgba(255,198,0,0.5)">Koffi Academy</text>
+</svg>
