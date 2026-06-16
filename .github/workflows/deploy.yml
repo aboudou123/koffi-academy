@@ -16,11 +16,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Installe lftp (client SFTP/FTP robuste, dispo sur Ubuntu)
+      # 2. Installe lftp
       - name: Install lftp
         run: sudo apt-get install -y lftp
 
-      # 3. Déploie le contenu de public/ vers le serveur one.com
+      # 3. Vérifie que les secrets sont configurés
+      - name: Check secrets
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USER: ${{ secrets.SFTP_USER }}
+          SFTP_PASS: ${{ secrets.SFTP_PASS }}
+        run: |
+          if [ -z "$SFTP_HOST" ] || [ -z "$SFTP_USER" ] || [ -z "$SFTP_PASS" ]; then
+            echo "ERREUR : un ou plusieurs secrets SFTP manquent dans GitHub."
+            echo "Va dans : Settings → Secrets and variables → Actions"
+            echo "Ajoute : SFTP_HOST, SFTP_USER, SFTP_PASS, SFTP_REMOTE_PATH"
+            exit 1
+          fi
+          echo "Secrets OK — hôte : $SFTP_HOST"
+
+      # 4. Déploie le contenu de public/ vers le serveur one.com
       - name: Deploy via SFTP
         env:
           SFTP_HOST: ${{ secrets.SFTP_HOST }}
@@ -28,25 +43,28 @@ jobs:
           SFTP_PASS: ${{ secrets.SFTP_PASS }}
           SFTP_REMOTE: ${{ secrets.SFTP_REMOTE_PATH }}
         run: |
-          lftp -c "
-            set sftp:auto-confirm yes;
-            set net:timeout 30;
-            set net:max-retries 3;
-            set net:reconnect-interval-base 5;
-            open sftp://$SFTP_USER:$SFTP_PASS@$SFTP_HOST:22;
-            mirror \
-              --reverse \
-              --delete \
-              --verbose \
-              --exclude=.htaccess \
-              ./public/ $SFTP_REMOTE;
-            bye
-          "
+          # Écrire le script lftp dans un fichier temporaire
+          # → évite les problèmes de caractères spéciaux dans le mot de passe
+          REMOTE="${SFTP_REMOTE:-/www/}"
 
-      # 4. Résumé dans les logs GitHub
+          cat > /tmp/deploy.lftp << LFTP_SCRIPT
+          set sftp:auto-confirm yes
+          set net:timeout 30
+          set net:max-retries 3
+          set net:reconnect-interval-base 5
+          open sftp://${SFTP_HOST}:22
+          user ${SFTP_USER} ${SFTP_PASS}
+          mirror --reverse --delete --verbose ./public/ ${REMOTE}
+          bye
+          LFTP_SCRIPT
+
+          lftp -f /tmp/deploy.lftp
+
+      # 5. Résumé dans les logs GitHub
       - name: Deployment summary
+        if: success()
         run: |
-          echo "✓ Déploiement terminé"
-          echo "  Site : https://lingenieur.de"
+          echo "Déploiement terminé avec succès"
+          echo "  Site   : https://lingenieur.de"
           echo "  Commit : ${{ github.sha }}"
           echo "  Heure  : $(date -u '+%Y-%m-%d %H:%M UTC')"
