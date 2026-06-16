@@ -15,7 +15,7 @@ fi
 # ── Chemin distant ────────────────────────────────────────────────────────────
 # Sur one.com le home SFTP EST la racine du webspace.
 # On retire le slash initial s'il y en a un (/www/ → www/)
-RAW="${SFTP_REMOTE_PATH:-webroots/}"
+RAW="${SFTP_REMOTE_PATH:-webroots/lingenieur.de_/}"
 REMOTE="${RAW#/}"          # supprime le '/' de début si présent
 REMOTE="${REMOTE%/}/"      # garantit un slash de fin
 
