@@ -71,6 +71,7 @@
       courses: "Kurse",
       labs: "Labore",
       catalog: "Kurskatalog",
+      devPortal: "Dev Portal",
       blog: "Blog",
       culture: "Kultur",
       profile: "Profil",
@@ -86,6 +87,7 @@
       courses: "Courses",
       labs: "Labs",
       catalog: "Course catalog",
+      devPortal: "Dev Portal",
       blog: "Blog",
       culture: "Culture",
       profile: "Profile",
@@ -101,6 +103,7 @@
       courses: "Cours",
       labs: "Laboratoires",
       catalog: "Catalogue de cours",
+      devPortal: "Dev Portal",
       blog: "Blog",
       culture: "Culture",
       profile: "Profil",
@@ -157,6 +160,7 @@
       if (/(^|\/)index\.html$/.test(href)) return text(a, l.home, ["Startseite", "Home", "Accueil"]);
       if (/(^|\/)laboratoire\.html$/.test(href)) return text(a, l.labs, ["Laboratoire", "Laboratoires", "Labore", "Labs"]);
       if (/(^|\/)courses\/courses\.html$/.test(href)) return text(a, l.catalog, ["Kurskatalog", "Course catalog", "Course Catalog", "Catalogue de cours"]);
+      if (/(^|\/)idp-demo\.html$/.test(href)) return text(a, l.devPortal, ["Dev Portal"]);
       if (/(^|\/)blog\.html$/.test(href)) return text(a, l.blog, ["Blog"]);
       if (/(^|\/)culture\.html$/.test(href)) return text(a, l.culture, ["Culture", "Kultur"]);
       if (/(^|\/)koffi-profile\.html$/.test(href)) return text(a, a.closest("footer") ? l.profile : l.aboutMe, ["Profil", "Profile", "Über mich", "About me", "About Me", "À propos de moi"]);
