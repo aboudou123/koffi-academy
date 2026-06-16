@@ -3,7 +3,7 @@
 # Appelé par .github/workflows/deploy.yml — ne pas exécuter directement.
 set -euo pipefail
 
-REMOTE="${SFTP_REMOTE_PATH:-/www/}"
+REMOTE="${SFTP_REMOTE_PATH:-www/}"
 
 # Vérification des secrets requis
 missing=()
