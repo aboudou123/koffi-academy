@@ -1,32 +1,38 @@
-# Dependencies
+# ── Dépendances ──────────────────────────────────────────────────────────────
 node_modules/
 .npm
 
-# Firebase
+# ── Firebase ──────────────────────────────────────────────────────────────────
 .firebase/
 firebase-debug.log
 .firebaserc
 
-# Environment
+# ── Secrets / variables d'environnement ──────────────────────────────────────
 .env
 .env.local
 .env.*.local
+*.env
 
-# OS
+# ── Serveur Node (IDP backend — ne PAS déployer sur one.com) ─────────────────
+server.js
+data/
+artifacts/
+
+# ── Fichiers de travail locaux ────────────────────────────────────────────────
+nav-preview.html
+uploads/
+screenshots/
+_ds/
+scripts/
+
+# ── OS / éditeur ─────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# Editor
 .vscode/settings.json
 *.suo
 *.user
 
-# Logs
+# ── Logs ─────────────────────────────────────────────────────────────────────
 *.log
 npm-debug.log*
-
-# Uploads / temp
-uploads/
-screenshots/
-_ds/

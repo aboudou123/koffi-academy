@@ -1,0 +1,52 @@
+name: Deploy → lingenieur.de (one.com)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:       # déclenchement manuel depuis GitHub UI
+
+jobs:
+  deploy:
+    name: Upload public/ via SFTP
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # 1. Récupère le code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Installe lftp (client SFTP/FTP robuste, dispo sur Ubuntu)
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
+      # 3. Déploie le contenu de public/ vers le serveur one.com
+      - name: Deploy via SFTP
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USER: ${{ secrets.SFTP_USER }}
+          SFTP_PASS: ${{ secrets.SFTP_PASS }}
+          SFTP_REMOTE: ${{ secrets.SFTP_REMOTE_PATH }}
+        run: |
+          lftp -c "
+            set sftp:auto-confirm yes;
+            set net:timeout 30;
+            set net:max-retries 3;
+            set net:reconnect-interval-base 5;
+            open sftp://$SFTP_USER:$SFTP_PASS@$SFTP_HOST:22;
+            mirror \
+              --reverse \
+              --delete \
+              --verbose \
+              --exclude=.htaccess \
+              ./public/ $SFTP_REMOTE;
+            bye
+          "
+
+      # 4. Résumé dans les logs GitHub
+      - name: Deployment summary
+        run: |
+          echo "✓ Déploiement terminé"
+          echo "  Site : https://lingenieur.de"
+          echo "  Commit : ${{ github.sha }}"
+          echo "  Heure  : $(date -u '+%Y-%m-%d %H:%M UTC')"
