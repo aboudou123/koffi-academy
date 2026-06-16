@@ -23,7 +23,7 @@ nav-preview.html
 uploads/
 screenshots/
 _ds/
-scripts/
+/scripts/
 
 # ── OS / éditeur ─────────────────────────────────────────────────────────────
 .DS_Store
