@@ -498,7 +498,7 @@ input,select{font:inherit;color:inherit}
 <script>
 /* ═══ DATA ══════════════════════════════════════════════════════════════════ */
 var SERVICES=[
-  {id:'s1', name:'payment-service', icon:'💳', iconBg:'#EFF6FF', iconColor:'#2563EB',
+  {id:'s1', name:'payment-service', icon:'fa-solid fa-credit-card', iconBg:'#EFF6FF', iconColor:'#2563EB',
    type:'Backend API', team:'Payments', teamColor:'#6366F1',
    stack:['Node.js','TypeScript','PostgreSQL'], tier:1, health:'healthy', healthPct:99.97,
    score:96, grade:'A', deploy:'vor 2 Std', deployBy:'k.adeyemi',
@@ -512,7 +512,7 @@ var SERVICES=[
      {action:'Rollback v2.13.9',env:'production',time:'vor 1 Tag',status:'warning'},
      {action:'Deploy v2.14.0',env:'dev',time:'vor 2 Tagen',status:'success'},
    ]},
-  {id:'s2', name:'auth-gateway', icon:'🔐', iconBg:'#F0FDF4', iconColor:'#15803D',
+  {id:'s2', name:'auth-gateway', icon:'fa-solid fa-shield-halved', iconBg:'#F0FDF4', iconColor:'#15803D',
    type:'API Gateway', team:'Security', teamColor:'#10B981',
    stack:['Go','Redis','JWT'], tier:1, health:'healthy', healthPct:99.99,
    score:91, grade:'A-', deploy:'vor 1 Tag', deployBy:'a.kouassi',
@@ -524,7 +524,7 @@ var SERVICES=[
      {action:'Deploy v3.2.0',env:'production',time:'vor 1 Tag',status:'success'},
      {action:'Security patch v3.1.9',env:'production',time:'vor 3 Tagen',status:'success'},
    ]},
-  {id:'s3', name:'user-profile', icon:'👤', iconBg:'#EDE9FE', iconColor:'#7C3AED',
+  {id:'s3', name:'user-profile', icon:'fa-solid fa-circle-user', iconBg:'#EDE9FE', iconColor:'#7C3AED',
    type:'Backend API', team:'Core', teamColor:'#8B5CF6',
    stack:['Python','FastAPI','MongoDB'], tier:2, health:'healthy', healthPct:99.82,
    score:88, grade:'B+', deploy:'vor 3 Std', deployBy:'m.diallo',
@@ -536,7 +536,7 @@ var SERVICES=[
      {action:'Deploy v1.8.3',env:'production',time:'vor 3 Std',status:'success'},
      {action:'Deploy v1.8.2',env:'staging',time:'vor 8 Std',status:'success'},
    ]},
-  {id:'s4', name:'notification-worker', icon:'🔔', iconBg:'#FFF7ED', iconColor:'#C2410C',
+  {id:'s4', name:'notification-worker', icon:'fa-solid fa-bell', iconBg:'#FFF7ED', iconColor:'#C2410C',
    type:'Worker', team:'Platform', teamColor:'#F97316',
    stack:['Node.js','RabbitMQ','SendGrid'], tier:2, health:'degraded', healthPct:94.3,
    score:74, grade:'C+', deploy:'vor 5 Std', deployBy:'r.mensah',
@@ -548,7 +548,7 @@ var SERVICES=[
      {action:'Deploy v0.9.7',env:'production',time:'vor 5 Std',status:'warning'},
      {action:'Deploy v0.9.6',env:'production',time:'vor 2 Tagen',status:'success'},
    ]},
-  {id:'s5', name:'product-catalog', icon:'📦', iconBg:'#FFF1F2', iconColor:'#BE123C',
+  {id:'s5', name:'product-catalog', icon:'fa-solid fa-box-open', iconBg:'#FFF1F2', iconColor:'#BE123C',
    type:'Backend API', team:'Commerce', teamColor:'#E11D48',
    stack:['Java','Spring Boot','Elasticsearch'], tier:1, health:'healthy', healthPct:99.94,
    score:93, grade:'A', deploy:'vor 4 Std', deployBy:'f.osei',
@@ -560,7 +560,7 @@ var SERVICES=[
      {action:'Deploy v4.1.2',env:'production',time:'vor 4 Std',status:'success'},
      {action:'Deploy v4.1.1',env:'staging',time:'vor 10 Std',status:'success'},
    ]},
-  {id:'s6', name:'recommendation-ml', icon:'🤖', iconBg:'#ECFDF5', iconColor:'#059669',
+  {id:'s6', name:'recommendation-ml', icon:'fa-solid fa-brain', iconBg:'#ECFDF5', iconColor:'#059669',
    type:'ML Model', team:'Data', teamColor:'#10B981',
    stack:['Python','PyTorch','FastAPI','Redis'], tier:2, health:'healthy', healthPct:98.1,
    score:82, grade:'B', deploy:'vor 2 Tagen', deployBy:'n.okonkwo',
@@ -571,7 +571,7 @@ var SERVICES=[
    deploys:[
      {action:'Model v2.3.0',env:'production',time:'vor 2 Tagen',status:'success'},
    ]},
-  {id:'s7', name:'frontend-web', icon:'🌐', iconBg:'#EFF6FF', iconColor:'#1D4ED8',
+  {id:'s7', name:'frontend-web', icon:'fa-solid fa-display', iconBg:'#EFF6FF', iconColor:'#1D4ED8',
    type:'Frontend', team:'Web', teamColor:'#3B82F6',
    stack:['React','TypeScript','Vite','Tailwind'], tier:1, health:'healthy', healthPct:99.91,
    score:95, grade:'A', deploy:'vor 1 Std', deployBy:'a.kwame',
@@ -583,7 +583,7 @@ var SERVICES=[
      {action:'Deploy v5.0.3',env:'production',time:'vor 1 Std',status:'success'},
      {action:'Deploy v5.0.2',env:'staging',time:'vor 4 Std',status:'success'},
    ]},
-  {id:'s8', name:'mobile-bff', icon:'📱', iconBg:'#F0F9FF', iconColor:'#0284C7',
+  {id:'s8', name:'mobile-bff', icon:'fa-solid fa-mobile-screen', iconBg:'#F0F9FF', iconColor:'#0284C7',
    type:'BFF', team:'Mobile', teamColor:'#0EA5E9',
    stack:['Node.js','GraphQL','TypeScript'], tier:2, health:'degraded', healthPct:91.4,
    score:67, grade:'D+', deploy:'vor 3 Tagen', deployBy:'e.asante',
@@ -594,7 +594,7 @@ var SERVICES=[
    deploys:[
      {action:'Deploy v1.2.1',env:'production',time:'vor 3 Tagen',status:'warning'},
    ]},
-  {id:'s9', name:'data-pipeline-etl', icon:'⚙️', iconBg:'#F8FAFC', iconColor:'#475569',
+  {id:'s9', name:'data-pipeline-etl', icon:'fa-solid fa-gears', iconBg:'#F8FAFC', iconColor:'#475569',
    type:'Data Pipeline', team:'Data', teamColor:'#64748B',
    stack:['Python','Apache Airflow','Spark','S3'], tier:3, health:'healthy', healthPct:97.8,
    score:79, grade:'B-', deploy:'vor 6 Std', deployBy:'n.okonkwo',
@@ -605,7 +605,7 @@ var SERVICES=[
    deploys:[
      {action:'DAG update v3.1',env:'production',time:'vor 6 Std',status:'success'},
    ]},
-  {id:'s10', name:'infra-monitoring', icon:'📊', iconBg:'#ECFDF5', iconColor:'#15803D',
+  {id:'s10', name:'infra-monitoring', icon:'fa-solid fa-chart-line', iconBg:'#ECFDF5', iconColor:'#15803D',
    type:'Backend API', team:'Platform', teamColor:'#10B981',
    stack:['Go','Prometheus','Grafana','AlertManager'], tier:1, health:'healthy', healthPct:100,
    score:97, grade:'A+', deploy:'vor 12 Std', deployBy:'r.mensah',
@@ -616,7 +616,7 @@ var SERVICES=[
    deploys:[
      {action:'Deploy v2.8.0',env:'production',time:'vor 12 Std',status:'success'},
    ]},
-  {id:'s11', name:'order-service', icon:'🛒', iconBg:'#FFF7ED', iconColor:'#B45309',
+  {id:'s11', name:'order-service', icon:'fa-solid fa-cart-shopping', iconBg:'#FFF7ED', iconColor:'#B45309',
    type:'Backend API', team:'Commerce', teamColor:'#F59E0B',
    stack:['Java','Kafka','PostgreSQL','Redis'], tier:1, health:'healthy', healthPct:99.88,
    score:89, grade:'B+', deploy:'vor 8 Std', deployBy:'f.osei',
@@ -627,7 +627,7 @@ var SERVICES=[
    deploys:[
      {action:'Deploy v3.5.0',env:'production',time:'vor 8 Std',status:'success'},
    ]},
-  {id:'s12', name:'inventory-service', icon:'🏭', iconBg:'#FDF4FF', iconColor:'#9333EA',
+  {id:'s12', name:'inventory-service', icon:'fa-solid fa-warehouse', iconBg:'#FDF4FF', iconColor:'#9333EA',
    type:'Backend API', team:'Commerce', teamColor:'#A855F7',
    stack:['Python','FastAPI','PostgreSQL'], tier:2, health:'healthy', healthPct:99.65,
    score:86, grade:'B+', deploy:'vor 1 Tag', deployBy:'f.osei',
@@ -713,7 +713,7 @@ function renderTable(list){
     var stacks=s.stack.map(function(st){return'<span class="stack-pill">'+st+'</span>';}).join('');
     var incBadge=s.incidents>0?'<span style="margin-left:6px;background:#FEE2E2;color:#DC2626;font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px">'+s.incidents+' INC</span>':'';
     return '<tr onclick="openDrawer(\''+s.id+'\')" title="'+s.name+' öffnen">'+
-      '<td><div class="svc-name-cell"><div class="svc-icon" style="background:'+s.iconBg+';font-size:16px">'+s.icon+'</div><div><div class="svc-name">'+s.name+incBadge+'</div><div class="svc-desc">'+s.desc+'</div></div></div></td>'+
+      '<td><div class="svc-name-cell"><div class="svc-icon" style="background:'+s.iconBg+';color:'+s.iconColor+'"><i class="'+s.icon+' fa-fw"></i></div><div><div class="svc-name">'+s.name+incBadge+'</div><div class="svc-desc">'+s.desc+'</div></div></div></td>'+
       '<td>'+typeBadge(s.type)+'</td>'+
       '<td><div class="team-cell"><div class="team-dot" style="background:'+s.teamColor+'"></div><div class="team-name">'+s.team+'</div></div></td>'+
       '<td><div class="stack-pills">'+stacks+'</div></td>'+
@@ -741,7 +741,7 @@ function renderCards(list){
       '<div class="card-top"></div>'+
       '<div class="card-body">'+
         '<div class="card-header">'+
-          '<div class="card-icon" style="background:'+s.iconBg+'">'+s.icon+'</div>'+
+          '<div class="card-icon" style="background:'+s.iconBg+';color:'+s.iconColor+'"><i class="'+s.icon+' fa-fw"></i></div>'+
           '<div style="flex:1;min-width:0">'+
             '<div class="card-name">'+s.name+'</div>'+
             '<div class="card-type">'+s.type+' · <span style="color:'+s.teamColor+'">'+s.team+'</span></div>'+
@@ -819,7 +819,7 @@ function openDrawer(id){
   if(!activeService)return;
   var s=activeService;
   document.getElementById('dName').textContent=s.name;
-  document.getElementById('dIcon').innerHTML='<div style="width:44px;height:44px;border-radius:11px;background:'+s.iconBg+';display:flex;align-items:center;justify-content:center;font-size:22px">'+s.icon+'</div>';
+  document.getElementById('dIcon').innerHTML='<div style="width:44px;height:44px;border-radius:11px;background:'+s.iconBg+';color:'+s.iconColor+';display:flex;align-items:center;justify-content:center;font-size:20px"><i class="'+s.icon+' fa-fw"></i></div>';
   document.getElementById('dSub').innerHTML=typeBadge(s.type)+' '+tierBadge(s.tier)+'<span style="font-size:11px;color:var(--text-muted);margin-left:4px"><i class="fa-solid fa-users" style="margin-right:3px"></i>'+s.team+'</span>'+gradeBadge(s.grade,26);
   activeDrawerTab='tab-overview';
   document.querySelectorAll('.dtab').forEach(function(t,i){t.classList.toggle('active',i===0);});
@@ -931,7 +931,7 @@ function renderDeps(s){
     var hc=HEALTH_CFG[dep.health];
     var hColor=dep.health==='healthy'?'#10B981':dep.health==='degraded'?'#F59E0B':'#EF4444';
     return'<div class="dep-row" onclick="openDrawer(\''+dep.id+'\')" style="cursor:pointer" title="'+dep.name+' öffnen">'+
-      '<div class="dep-icon" style="background:'+dep.iconBg+'">'+dep.icon+'</div>'+
+      '<div class="dep-icon" style="background:'+dep.iconBg+';color:'+dep.iconColor+'"><i class="'+dep.icon+' fa-fw"></i></div>'+
       '<div><div class="dep-name">'+dep.name+'</div><div class="dep-type">'+dep.type+' · '+dep.team+'</div></div>'+
       gradeBadge(dep.grade,24)+
       '<div class="dep-status" style="background:'+hColor+';box-shadow:0 0 0 3px '+hColor+'33"></div>'+
