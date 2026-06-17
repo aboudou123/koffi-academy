@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Was ist vLLM? | Koffi Academy</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="stylesheet" href="/assets/css/modern.css">
+    <link rel="shortcut icon" href="/assets/images/logo.png">
+    <meta name="description" content="vLLM – Virtual Large Language Model für effiziente KI-Inferenz. Lernen Sie PagedAttention, KV-Cache und die Vorteile kennen.">
+    <meta name="theme-color" content="#07294d">
+    <style>
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        .goog-te-gadget { font-family: 'Poppins', sans-serif !important; color: #666 !important; }
+        .goog-te-gadget img { display: none !important; }
+        .goog-te-gadget .goog-te-combo { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; background: white; }
+        
+        .article-content h1 { font-size: 2.2rem; color: #07294d; margin-bottom: 15px; font-family: 'Rubik', sans-serif; }
+        .article-content h2 { font-size: 1.6rem; margin-top: 30px; margin-bottom: 15px; color: #2c3e50; font-family: 'Rubik', sans-serif; border-left: 4px solid #ffc600; padding-left: 15px; }
+        .article-content h3 { font-size: 1.3rem; margin-top: 20px; margin-bottom: 10px; color: #34495e; }
+        .article-content p { font-size: 16px; line-height: 1.8; color: #444; margin-bottom: 20px; }
+        .article-content .meta-info { color: #666; font-size: 0.85rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .article-content .meta-info i { margin-right: 5px; }
+        .article-content ul, .article-content ol { margin: 15px 0 20px 25px; }
+        .article-content li { font-size: 16px; color: #444; margin-bottom: 8px; line-height: 1.6; }
+        .article-content .highlight-box { background: #f8f9fa; border-left: 4px solid #ffc600; padding: 20px; margin: 25px 0; border-radius: 8px; }
+        .article-content .info-box { background: #e8f4fd; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .article-content .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 25px 0; }
+        .article-content .stat-card { background: #f0f4f8; padding: 20px; border-radius: 12px; text-align: center; }
+        .article-content .stat-number { font-size: 28px; font-weight: 700; color: #07294d; }
+        @media (max-width: 768px) {
+            .article-content h1 { font-size: 1.8rem; }
+            .article-content h2 { font-size: 1.4rem; }
+        }
+    .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+<style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style>
+<style>
+/* ── Article Hero ───────────────────────────── */
+.article-hero{background:linear-gradient(135deg,#07294d 0%,#0d3a6e 55%,#1a5276 100%);padding:52px 0 46px;position:relative;overflow:hidden}
+.article-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 85% 50%,rgba(255,198,0,.07),transparent 70%);pointer-events:none}
+.art-hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,198,0,.15);border:1px solid rgba(255,198,0,.3);color:#ffc600;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px}
+.art-breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px;flex-wrap:wrap}
+.art-breadcrumb a{color:rgba(255,255,255,.6);text-decoration:none;transition:.18s}
+.art-breadcrumb a:hover{color:#ffc600}
+.art-breadcrumb i{font-size:9px;color:rgba(255,255,255,.25)}
+.art-breadcrumb span{color:rgba(255,255,255,.9);font-weight:600}
+.art-hero-title{font-size:2.2rem;font-weight:800;color:#fff;line-height:1.22;letter-spacing:-.03em;margin-bottom:20px;max-width:800px}
+.art-hero-meta{display:flex;flex-wrap:wrap;gap:20px}
+.art-hero-meta span{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,.6)}
+.art-hero-meta i{color:#ffc600;font-size:11px}
+/* ── Reading progress ────────────────────────── */
+#rpb{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,#ffc600,#ff8c00);z-index:10000;transition:width .08s linear}
+/* ── Article layout ─────────────────────────── */
+.blog-single-area.page-paddings{background:#f0f4f8;padding:40px 0 60px}
+.blog-post{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 6px 32px rgba(7,41,77,.09);margin-bottom:24px}
+.blog-post-images img{width:100%;height:220px;object-fit:cover;display:block}
+.post-content-text.article-content{padding:36px 40px}
+.article-content .news-tag,.article-content h1,.article-content #articleTitle,.article-content .meta-info,.article-content #articleMeta{display:none}
+.article-content h2{font-size:1.38rem;font-weight:700;color:#07294d;margin:32px 0 13px;padding-left:14px;border-left:4px solid #ffc600;line-height:1.3}
+.article-content h3{font-size:1.12rem;font-weight:700;color:#1e3a5f;margin:20px 0 9px}
+.article-content p{font-size:15.5px;line-height:1.85;color:#374151;margin-bottom:17px}
+.article-content .highlight-box{background:#fffbeb;border-left:4px solid #ffc600;padding:18px 22px;border-radius:0 12px 12px 0;margin:20px 0;box-shadow:0 2px 10px rgba(255,198,0,.1)}
+.article-content .info-box{background:#eff6ff;border:1px solid #bfdbfe;padding:18px 22px;border-radius:12px;margin:18px 0}
+.article-content ul,.article-content ol{margin:12px 0 16px 22px}
+.article-content li{font-size:15.5px;line-height:1.75;color:#374151;margin-bottom:6px}
+.article-content .tool-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.article-content .tool-tag{background:#eef2ff;color:#3730a3;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:600}
+.blog-sidebar .widget{background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 20px rgba(7,41,77,.08);margin-bottom:22px}
+.blog-news-title h2{font-size:13px;font-weight:700;color:#07294d;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #ffc600}
+@media(max-width:768px){.art-hero-title{font-size:1.6rem}.post-content-text.article-content{padding:20px}}
+/* ── Related Articles ──────────────────────── */
+.related-articles{background:#f0f4f8;padding:56px 0 64px;border-top:1px solid #e2e8f0}
+.related-header{margin-bottom:36px}
+.related-kicker{display:inline-flex;align-items:center;gap:7px;background:rgba(255,198,0,.15);color:#7a5800;border:1px solid rgba(255,198,0,.4);font-size:11px;font-weight:700;padding:4px 14px;border-radius:999px;text-transform:uppercase;letter-spacing:.9px;margin-bottom:12px}
+.related-kicker i{color:#ffc600;font-size:10px}
+.related-header h2{font-size:1.6rem;font-weight:800;color:#07294d;letter-spacing:-.03em;margin:0}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.related-card{background:#fff;border-radius:16px;padding:24px;border:1px solid #e2e8f0;box-shadow:0 4px 18px rgba(7,41,77,.06);text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:12px;transition:all .22s;position:relative;overflow:hidden}
+.related-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ffc600,rgba(255,198,0,.3))}
+.related-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(7,41,77,.13);border-color:rgba(255,198,0,.4)}
+.related-card-icon{width:46px;height:46px;background:rgba(255,198,0,.12);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.related-card-icon i{color:#07294d;font-size:18px}
+.related-card-tag{font-size:11px;font-weight:700;color:#ffc600;text-transform:uppercase;letter-spacing:.7px}
+.related-card h3{font-size:14.5px;font-weight:700;color:#07294d;line-height:1.38;margin:0}
+.related-card p{font-size:13px;color:#64748b;line-height:1.65;margin:0;flex:1}
+.related-card-arrow{display:flex;align-items:center;justify-content:flex-end;color:#ffc600;font-size:13px;font-weight:700;gap:6px;margin-top:auto}
+.related-card-arrow span{font-size:12px;color:#94a3b8;transition:.18s}
+.related-card:hover .related-card-arrow span{color:#07294d}
+@media(max-width:900px){.related-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:576px){.related-grid{grid-template-columns:1fr}}
+</style><link rel="stylesheet" href="/assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body>
+    <div class="page-main">
+        <!-- HEADER -->
+        <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="/index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="/index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses.html" data-i18n="footCatalog">Kurskatalog</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+<a href="/blog">Blog</a>
+<a href="/culture.html">Culture</a>
+<a href="/koffi-profile">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="/login.html">Anmelden</a><a class="kh__btn" href="/register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+
+        <!-- ARTICLE HERO -->
+        <section class="article-hero">
+          <div class="container">
+            <div class="art-hero-badge"><i class="fas fa-microchip"></i> <span data-i18n="heroBadge">KI &amp; LLM</span></div>
+            <nav class="art-breadcrumb">
+              <a href="/index.html">Startseite</a><i class="fas fa-chevron-right"></i>
+              <a href="/blog">Blog</a><i class="fas fa-chevron-right"></i>
+              <span>vLLM</span>
+            </nav>
+            <h1 class="art-hero-title" data-i18n="heroTitle">Was ist vLLM? Virtual Large Language Model erklärt</h1>
+            <div class="art-hero-meta">
+              <span><i class="far fa-calendar-alt"></i> <span data-i18n="heroDate">28. Januar 2026</span></span>
+              <span><i class="far fa-clock"></i> <span data-i18n="heroRead">6 Min. Lesezeit</span></span>
+              <span><i class="fas fa-user-pen"></i> K.A.</span>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Article Content -->
+        <section class="blog-single-area page-paddings">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12">
+                        <div class="blog-post">
+                            <div class="blog-post-images">
+                                <img src="/assets/images/blog/blog1.svg" alt="vLLM AI Inference">
+                            </div>
+                            <div class="post-content-text article-content">
+<div class="lang-sect" data-lang="de">
+                                <div class="news-tag"><a href="#">KI</a> <a href="#">LLM</a> <a href="#">vLLM</a></div>
+                                
+                                <h1 id="articleTitle">Was ist vLLM?</h1>
+                                <div class="meta-info" id="articleMeta">
+                                    <i class="far fa-calendar-alt"></i> 28. Januar 2026 &nbsp;|&nbsp;
+                                    <i class="far fa-clock"></i> 6 Minuten Lesezeit
+                                </div>
+                                
+                                <div id="articleContent">
+                                    <p><strong>vLLM</strong> steht für <strong>Virtual Large Language Model</strong> und ist eine Open-Source-Bibliothek, die von der vLLM Community verwaltet wird. Das Modell unterstützt Large Language Models (LLMs) dabei, Berechnungen effizienter und in großem Umfang durchzuführen.</p>
+                                    
+                                    <p>vLLM umfasst sowohl einen <strong>Inferenzserver</strong> (für die Verwaltung des Netzwerkverkehrs) als auch eine <strong>Inferenz-Engine</strong> (zur Maximierung der Rechengeschwindigkeit). Der <strong>PagedAttention-Algorithmus</strong> von vLLM sorgt für eine bessere Nutzung des GPU-Speichers und beschleunigt dadurch die Ausgabe generativer KI-Anwendungen.</p>
+                                    
+                                    <p>Das allgemeine Ziel von vLLM ist, den <strong>Durchsatz</strong> (verarbeitete Tokens pro Sekunde) zu maximieren und so viele Nutzende gleichzeitig zu bedienen.</p>
+                                    
+                                    <div class="highlight-box">
+                                        <p>🔍 <strong>Mehr über KI erfahren</strong> – Besuchen Sie unsere KI-Kurse und Weiterbildungen.</p>
+                                    </div>
+                                    
+                                    <h2>Funktionsweise von vLLM</h2>
+                                    <p>Die Vorteile von vLLM lassen sich nur verstehen, wenn die Funktion eines Inferenzservers und die grundlegenden Mechanismen der Funktionalität eines LLM bekannt sind. So lässt sich besser nachvollziehen, wie vLLM die Performance vorhandener Sprachmodelle optimieren kann.</p>
+                                    
+                                    <h3>Was ist ein Inferenzserver?</h3>
+                                    <p>Ein Inferenzserver ist eine Software, mit deren Hilfe ein KI-Modell auf der Basis des vorangegangenen Trainings neue Rückschlüsse ziehen kann. Inferenzserver leiten die Eingabeanfragen durch ein ML-Modell (Machine Learning) und generieren eine entsprechende Ausgabe.</p>
+                                    
+                                    <p><strong>Inferieren</strong> bedeutet, Rückschlüsse zu ziehen, die auf Evidenz basieren. Beispielsweise sehen Sie vielleicht, dass im Wohnzimmer eines Freundes das Licht brennt, aber Sie sehen ihn nicht. Sie können zwar darauf schließen, dass Ihr Freund zuhause ist, aber Sie haben keine eindeutigen Beweise dafür.</p>
+                                    
+                                    <p>Ein Sprachmodell verfügt auch nicht über eindeutige Beweise für die Bedeutung eines Wortes oder Satzes (es handelt sich um eine Software), daher verwendet es sein Training als Beweis. Das Modell generiert mithilfe einer Reihe datengestützter Berechnungen einen Rückschluss.</p>
+                                    
+                                    <h3>LLMs verwenden Mathematik für Schlussfolgerungen</h3>
+                                    <p>Beim Training lernt ein LLM durch mathematische Berechnungen. Wenn ein LLM eine Antwort (Inferenz) generiert, werden dabei mehrere Wahrscheinlichkeitsberechnungen (mehr Mathematik) durchgeführt.</p>
+                                    <p>Damit ein LLM Ihre Anfrage verstehen kann, muss das Modell den Zusammenhang zwischen Wörtern erkennen und wissen, wie man Assoziationen zwischen Wörtern herstellt. Statt wie Menschen über Semantik und Argumentation mittels Worten zu lernen, „argumentieren“ LLMs mit Mathematik.</p>
+                                    
+                                    <div class="info-box">
+                                        <p>🎯 <strong>vLLM nutzt PagedAttention für effizientere Rechenleistung</strong> – In der bahnbrechenden Studie "Efficient Memory Management for Large Language Model Serving with PagedAttention" wurde nachgewiesen, dass bestehende LLM-Speichermanagementsysteme Berechnungen nicht auf die effizienteste Weise durchführen.</p>
+                                    </div>
+                                    
+                                    <h3>Was ist ein KV-Cache?</h3>
+                                    <p>KV steht für <strong>Key Value</strong> (Schlüsselwert). Der Begriff "Schlüsselwert" bezieht sich auf die Art und Weise, wie ein LLM eine Bedeutung für ein Wort oder einen Satz formuliert. Cache bezeichnet einen Kurzzeitspeicher. Denken Sie an Ihren Computer: Wenn er langsam läuft, wird üblicherweise der Cache geleert, um Platz für eine bessere und schnellere Rechenleistung zu schaffen.</p>
+                                    
+                                    <h3>Was ist kontinuierliches Batching?</h3>
+                                    <p>Kontinuierliches Batching ist eine Technik zur gleichzeitigen Bearbeitung mehrerer Abfragen mit dem Ziel, die Verarbeitungseffizienz insgesamt zu verbessern.</p>
+                                    <p>Mit vLLM kann der Chatbot Token-Zeichenfolgen in einem Kurzzeitspeicher (KV-Cache) speichern und eine einzige "Übersetzungsanfrage" anstelle von mehreren separaten Anfragen senden. Die Batch-Verarbeitung von Berechnungen ähnlicher Abfragen verbessert den Durchsatz und optimiert die Speicherzuweisung.</p>
+                                    
+                                    <h2>Wie kann vLLM Ihr Unternehmen unterstützen?</h2>
+                                    <p>Mit vLLM können Unternehmen auf einem Markt, auf dem die Hardware, die für LLM-basierte Anwendungen benötigt wird, einen hohen Preis hat, <strong>mit weniger mehr erreichen</strong>.</p>
+                                    
+                                    <h3>Vorteile von vLLM</h3>
+                                    <ul>
+                                        <li><strong>🚀 Schnellere Reaktionszeit:</strong> Einigen Berechnungen zufolge erreicht vLLM einen bis zu 24-mal höheren Durchsatz im Vergleich zu Hugging Face Transformers.</li>
+                                        <li><strong>💰 Niedrigere Hardwarekosten:</strong> Eine effizientere Nutzung der Ressourcen bedeutet, dass weniger GPUs für die Verarbeitung von LLMs benötigt werden.</li>
+                                        <li><strong>📈 Skalierbarkeit:</strong> vLLMs organisieren den virtuellen Speicher so, dass die GPU mehr gleichzeitige Anfragen von Nutzenden bearbeiten kann.</li>
+                                        <li><strong>🔒 Datenschutz:</strong> Wenn Sie ein LLM mit vLLM selbst hosten, haben Sie mehr Kontrolle über den Datenschutz und die Nutzung.</li>
+                                        <li><strong>🌍 Open Source-Innovation:</strong> Die Beteiligung der Community an der Verwaltung und Weiterentwicklung von vLLM ermöglicht eine kontinuierliche Code-Optimierung.</li>
+                                    </ul>
+                                    
+                                    <h2>Warum vLLM zu einem Standard für verbesserte LLM-Performance wird</h2>
+                                    <p>Mit vLLM können Entwickler das Leistungspotenzial ihrer Server komplett ausschöpfen und zuverlässige, skalierbare Anwendungen bereitstellen. vLLM bietet Teams auf dem Weg zur Produktion in großem Umfang die notwendige Basis, um die entsprechenden LLMs zuverlässig und effizient zu bedienen.</p>
+                                    
+                                    <div class="stat-grid">
+                                        <div class="stat-card"><div class="stat-number">500.000+</div><div>GPUs im Einsatz</div></div>
+                                        <div class="stat-card"><div class="stat-number">200+</div><div>Beschleunigertypen</div></div>
+                                        <div class="stat-card"><div class="stat-number">500+</div><div>Modellarchitekturen</div></div>
+                                        <div class="stat-card"><div class="stat-number">2.200+</div><div>Mitwirkende</div></div>
+                                    </div>
+                                    
+                                    <h3>vLLM und llm-d</h3>
+                                    <p><strong>llm-d</strong> ist ein Open-Source-Framework, in das die Leistungsfähigkeit von vLLM integriert ist. vLLM unterstützt die Geschwindigkeit und llm-d die Koordination. vLLM und llm-d arbeiten zusammen, um den Datenverkehr auf intelligente Weise durch das Modell zu leiten und so für eine möglichst schnelle und effiziente Verarbeitung zu sorgen.</p>
+                                    
+                                    <h2>KI-Management mit Open Source</h2>
+                                    <p><strong>Koffi Academy</strong> nutzt Open-Source-Innovationen, um den Herausforderungen einer umfassenden Unternehmens-KI zu begegnen. Dabei stellt vLLM ein wichtiges Tool in unserem Toolkit dar.</p>
+                                    
+                                    <div class="highlight-box">
+                                        <p><strong>📌 Fazit:</strong> vLLM und PagedAttention zielen darauf ab, die Kernprobleme im Zusammenhang mit einer effizienten GPU-Nutzung zu lösen und niedrigere Kosten pro Token sowie eine stabile Latenz in großem Umfang zu erzielen – mit einem offenen, portierbaren Deployment-Ansatz.</p>
+                                    </div>
+                                    
+                                    <div class="blog-single-tag">
+                                        <a href="#">vLLM</a>
+                                        <a href="#">LLM</a>
+                                        <a href="#">KI</a>
+                                        <a href="#">PagedAttention</a>
+                                        <a href="#">Machine Learning</a>
+                                        <a href="#">GPU</a>
+                                    </div>
+                                </div>
+                            </div>
+<div class="lang-sect" data-lang="en" style="display:none">
+<div class="news-tag"><a href="#">vLLM</a> <a href="#">LLM</a> <a href="#">Machine Learning</a></div>
+<h1 id="articleTitle">What Is vLLM?</h1>
+<div class="meta-info" id="articleMeta">
+    <i class="far fa-calendar-alt"></i> January 28, 2026 &nbsp;|&nbsp;
+    <i class="far fa-clock"></i> 6 minutes read
+</div>
+<div id="articleContent">
+    <p><strong>vLLM</strong> stands for <strong>Virtual Large Language Model</strong> and is an open-source library maintained by the vLLM community. The framework helps Large Language Models (LLMs) perform computations more efficiently and at scale.</p>
+    <p>vLLM includes both an <strong>inference server</strong> (for managing network traffic) and an <strong>inference engine</strong> (to maximize computational speed). vLLM's <strong>PagedAttention algorithm</strong> ensures better use of GPU memory, thereby accelerating the output of generative AI applications.</p>
+    <p>The overall goal of vLLM is to maximize <strong>throughput</strong> (tokens processed per second) and serve as many users simultaneously as possible.</p>
+    <div class="highlight-box"><p>🔍 <strong>Learn more about AI</strong> – Visit our AI courses and training programs.</p></div>
+    <h2>How vLLM Works</h2>
+    <p>The benefits of vLLM can only be understood by knowing the role of an inference server and the fundamental mechanisms behind LLM functionality — making it easier to understand how vLLM can optimize the performance of existing language models.</p>
+    <h3>What Is an Inference Server?</h3>
+    <p>An inference server is software that allows an AI model to draw new conclusions based on prior training. Inference servers route input requests through a machine learning (ML) model and generate a corresponding output.</p>
+    <p><strong>To infer</strong> means to draw conclusions based on evidence. For example, you might see that the light is on in a friend's living room but not see them. You can infer that your friend is home, but you don't have definitive proof.</p>
+    <p>A language model also lacks definitive proof of the meaning of a word or sentence (it is software), so it uses its training as evidence. The model generates an inference through a series of data-driven computations.</p>
+    <h3>LLMs Use Mathematics for Reasoning</h3>
+    <p>During training, an LLM learns through mathematical computations. When an LLM generates a response (inference), it performs multiple probability calculations.</p>
+    <p>For an LLM to understand your query, the model must recognize the relationship between words and know how to create associations between them. Rather than learning semantics and reasoning through words like humans, LLMs "reason" with mathematics.</p>
+    <div class="info-box"><p>🎯 <strong>vLLM uses PagedAttention for more efficient computation</strong> – The landmark paper "Efficient Memory Management for Large Language Model Serving with PagedAttention" demonstrated that existing LLM memory management systems do not perform computations in the most efficient way.</p></div>
+    <h3>What Is a KV Cache?</h3>
+    <p>KV stands for <strong>Key Value</strong>. The term "key value" refers to how an LLM formulates meaning for a word or phrase. Cache refers to short-term memory. Think of your computer: when it runs slow, clearing the cache frees up space for better, faster performance.</p>
+    <h3>What Is Continuous Batching?</h3>
+    <p>Continuous batching is a technique for processing multiple queries simultaneously with the goal of improving overall processing efficiency.</p>
+    <p>With vLLM, a chatbot can store token sequences in short-term memory (KV cache) and send a single "processing request" instead of multiple separate requests. Batching similar computations together improves throughput and optimizes memory allocation.</p>
+    <h2>How Can vLLM Help Your Organization?</h2>
+    <p>With vLLM, companies can <strong>do more with less</strong> in a market where the hardware required for LLM-based applications comes at a high cost.</p>
+    <h3>Benefits of vLLM</h3>
+    <ul>
+        <li><strong>🚀 Faster Response Times:</strong> Some benchmarks show vLLM achieves up to 24× higher throughput compared to Hugging Face Transformers.</li>
+        <li><strong>💰 Lower Hardware Costs:</strong> More efficient resource utilization means fewer GPUs needed to run LLMs.</li>
+        <li><strong>📈 Scalability:</strong> vLLM organizes virtual memory so GPUs can handle more concurrent user requests.</li>
+        <li><strong>🔒 Data Privacy:</strong> Self-hosting an LLM with vLLM gives you greater control over privacy and data usage.</li>
+        <li><strong>🌍 Open Source Innovation:</strong> Community involvement in managing and evolving vLLM enables continuous code optimization.</li>
+    </ul>
+    <h2>Why vLLM Is Becoming a Standard for Improved LLM Performance</h2>
+    <p>With vLLM, developers can fully exploit the performance potential of their servers and deliver reliable, scalable applications. vLLM provides the foundation teams need to reliably and efficiently serve their LLMs at production scale.</p>
+    <div class="stat-grid">
+        <div class="stat-card"><div class="stat-number">500,000+</div><div>GPUs deployed</div></div>
+        <div class="stat-card"><div class="stat-number">200+</div><div>Accelerator types</div></div>
+        <div class="stat-card"><div class="stat-number">500+</div><div>Model architectures</div></div>
+        <div class="stat-card"><div class="stat-number">2,200+</div><div>Contributors</div></div>
+    </div>
+    <h3>vLLM and llm-d</h3>
+    <p><strong>llm-d</strong> is an open-source framework that integrates the power of vLLM. vLLM provides the speed and llm-d provides the coordination. Together, they intelligently route traffic through the model for the fastest and most efficient processing possible.</p>
+    <h2>AI Management with Open Source</h2>
+    <p><strong>Koffi Academy</strong> leverages open-source innovations to address the challenges of enterprise-scale AI. vLLM is an important tool in our toolkit.</p>
+    <div class="highlight-box"><p><strong>📌 Conclusion:</strong> vLLM and PagedAttention aim to solve the core problems surrounding efficient GPU utilization, achieving lower cost per token and stable latency at scale — with an open, portable deployment approach.</p></div>
+    <div class="blog-single-tag">
+        <a href="#">vLLM</a><a href="#">LLM</a><a href="#">AI</a>
+        <a href="#">PagedAttention</a><a href="#">Machine Learning</a><a href="#">GPU</a>
+    </div>
+</div>
+</div>
+<div class="lang-sect" data-lang="fr" style="display:none">
+<div class="news-tag"><a href="#">vLLM</a> <a href="#">LLM</a> <a href="#">Machine Learning</a></div>
+<h1 id="articleTitle">Qu'est-ce que vLLM&nbsp;?</h1>
+<div class="meta-info" id="articleMeta">
+    <i class="far fa-calendar-alt"></i> 28 janvier 2026 &nbsp;|&nbsp;
+    <i class="far fa-clock"></i> 6 minutes de lecture
+</div>
+<div id="articleContent">
+    <p><strong>vLLM</strong> (Virtual Large Language Model) est une bibliothèque open-source gérée par la communauté vLLM. Ce framework aide les grands modèles de langage (LLM) à effectuer des calculs plus efficacement et à grande échelle.</p>
+    <p>vLLM comprend à la fois un <strong>serveur d'inférence</strong> (pour la gestion du trafic réseau) et un <strong>moteur d'inférence</strong> (pour maximiser la vitesse de calcul). L'<strong>algorithme PagedAttention</strong> de vLLM assure une meilleure utilisation de la mémoire GPU, accélérant ainsi les sorties des applications d'IA générative.</p>
+    <p>L'objectif général de vLLM est de maximiser le <strong>débit</strong> (tokens traités par seconde) et de servir le plus grand nombre d'utilisateurs simultanément possible.</p>
+    <div class="highlight-box"><p>🔍 <strong>En savoir plus sur l'IA</strong> – Découvrez nos cours et formations en intelligence artificielle.</p></div>
+    <h2>Fonctionnement de vLLM</h2>
+    <p>Les avantages de vLLM ne peuvent être pleinement compris qu'en connaissant le rôle d'un serveur d'inférence et les mécanismes fondamentaux du fonctionnement d'un LLM — ce qui permet de mieux saisir comment vLLM optimise les performances des modèles de langage existants.</p>
+    <h3>Qu'est-ce qu'un serveur d'inférence&nbsp;?</h3>
+    <p>Un serveur d'inférence est un logiciel qui permet à un modèle d'IA de tirer de nouvelles conclusions à partir d'un entraînement préalable. Il achemine les requêtes d'entrée à travers un modèle d'apprentissage automatique (ML) et génère une sortie correspondante.</p>
+    <p><strong>Inférer</strong> signifie tirer des conclusions à partir de preuves. Par exemple, vous voyez la lumière allumée dans le salon d'un ami sans le voir. Vous pouvez en déduire qu'il est chez lui, sans en avoir la certitude absolue.</p>
+    <p>Un modèle de langage ne dispose pas non plus de preuves directes sur la signification d'un mot ou d'une phrase — il utilise donc son entraînement comme base de raisonnement pour générer une inférence à travers une série de calculs basés sur les données.</p>
+    <h3>Les LLM raisonnent avec les mathématiques</h3>
+    <p>Durant l'entraînement, un LLM apprend par des calculs mathématiques. Lorsqu'il génère une réponse (inférence), il effectue de nombreux calculs de probabilité.</p>
+    <p>Pour qu'un LLM comprenne votre requête, le modèle doit reconnaître les relations entre les mots et créer des associations entre eux. Contrairement aux humains qui apprennent la sémantique par les mots, les LLM « raisonnent » par les mathématiques.</p>
+    <div class="info-box"><p>🎯 <strong>vLLM utilise PagedAttention pour un calcul plus efficace</strong> – L'article fondateur « Efficient Memory Management for Large Language Model Serving with PagedAttention » a démontré que les systèmes de gestion mémoire des LLM existants n'effectuent pas leurs calculs de la manière la plus efficace.</p></div>
+    <h3>Qu'est-ce qu'un cache KV&nbsp;?</h3>
+    <p>KV signifie <strong>Key Value</strong> (paire clé-valeur). Ce terme désigne la façon dont un LLM formule une signification pour un mot ou une phrase. Le cache désigne une mémoire à court terme. Pensez à votre ordinateur : quand il est lent, vider le cache libère de l'espace et améliore les performances.</p>
+    <h3>Qu'est-ce que le traitement par lots continu&nbsp;?</h3>
+    <p>Le traitement par lots continu (<em>continuous batching</em>) est une technique permettant de traiter plusieurs requêtes simultanément pour améliorer l'efficacité globale du traitement.</p>
+    <p>Avec vLLM, un chatbot peut stocker des séquences de tokens dans une mémoire à court terme (cache KV) et envoyer une seule requête groupée au lieu de plusieurs requêtes séparées. Le regroupement de calculs similaires améliore le débit et optimise l'allocation de mémoire.</p>
+    <h2>Comment vLLM peut-il soutenir votre organisation&nbsp;?</h2>
+    <p>Avec vLLM, les entreprises peuvent <strong>faire plus avec moins</strong> dans un marché où le matériel requis pour les applications LLM est coûteux.</p>
+    <h3>Avantages de vLLM</h3>
+    <ul>
+        <li><strong>🚀 Temps de réponse plus rapides :</strong> Certains benchmarks montrent que vLLM atteint un débit jusqu'à 24 fois supérieur à Hugging Face Transformers.</li>
+        <li><strong>💰 Coûts matériels réduits :</strong> Une utilisation plus efficace des ressources implique moins de GPU nécessaires.</li>
+        <li><strong>📈 Scalabilité :</strong> vLLM organise la mémoire virtuelle pour que les GPU traitent davantage de requêtes simultanées.</li>
+        <li><strong>🔒 Protection des données :</strong> L'auto-hébergement d'un LLM avec vLLM vous offre un meilleur contrôle sur la confidentialité.</li>
+        <li><strong>🌍 Innovation open source :</strong> La participation de la communauté permet une optimisation continue du code.</li>
+    </ul>
+    <h2>Pourquoi vLLM devient-il un standard pour les LLM&nbsp;?</h2>
+    <p>Avec vLLM, les développeurs peuvent exploiter pleinement le potentiel de leurs serveurs et déployer des applications fiables et évolutives. vLLM fournit la base nécessaire pour servir les LLM de manière fiable et efficace à grande échelle.</p>
+    <div class="stat-grid">
+        <div class="stat-card"><div class="stat-number">500 000+</div><div>GPU déployés</div></div>
+        <div class="stat-card"><div class="stat-number">200+</div><div>Types d'accélérateurs</div></div>
+        <div class="stat-card"><div class="stat-number">500+</div><div>Architectures de modèles</div></div>
+        <div class="stat-card"><div class="stat-number">2 200+</div><div>Contributeurs</div></div>
+    </div>
+    <h3>vLLM et llm-d</h3>
+    <p><strong>llm-d</strong> est un framework open-source qui intègre la puissance de vLLM. vLLM apporte la vitesse, llm-d apporte la coordination. Ensemble, ils acheminent intelligemment le trafic à travers le modèle pour un traitement optimal.</p>
+    <h2>Gestion de l'IA avec l'open source</h2>
+    <p><strong>Koffi Academy</strong> s'appuie sur les innovations open-source pour relever les défis de l'IA d'entreprise à grande échelle. vLLM constitue un outil essentiel dans notre arsenal.</p>
+    <div class="highlight-box"><p><strong>📌 Conclusion :</strong> vLLM et PagedAttention visent à résoudre les problèmes fondamentaux liés à l'utilisation efficace du GPU — en atteignant un coût par token plus faible et une latence stable à grande échelle, avec une approche de déploiement ouverte et portable.</p></div>
+    <div class="blog-single-tag">
+        <a href="#">vLLM</a><a href="#">LLM</a><a href="#">IA</a>
+        <a href="#">PagedAttention</a><a href="#">Machine Learning</a><a href="#">GPU</a>
+    </div>
+</div>
+</div>
+</div>
+                        </div>
+
+                        
+                        
+                    </div>
+                    
+                    <!-- Sidebar -->
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
+                        <div class="sidebar">
+                            <div class="widget-box">
+                                <div class="widget">
+                                    <div class="blog-news-title"><h2 data-i18n="sidebarRelated">Ähnliche Artikel</h2></div>
+                                    <div class="feature-box-main">
+                                        <ul class="feature-box">
+                                            <li><div class="post-item"><div class="post-img"><img src="/assets/images/blog/blog2.svg" alt="LLM"></div><div class="post-info"><h4><a href="#">Large Language Models (LLMs) erklärt</a></h4><span class="post-time"><i class="far fa-calendar-alt"></i> 15. Januar 2026</span></div></div></li>
+                                            <li><div class="post-item"><div class="post-img"><img src="/assets/images/blog/blog3.svg" alt="KI"></div><div class="post-info"><h4><a href="#">KI-Infrastruktur für Unternehmen</a></h4><span class="post-time"><i class="far fa-calendar-alt"></i> 10. Januar 2026</span></div></div></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="widget">
+                                    <div class="blog-news-title"><h2 data-i18n="sidebarTopics">Themen</h2></div>
+                                    <ul class="widget-tag">
+                                        <li><a href="#"><i class="fas fa-chevron-right"></i> vLLM</a></li>
+                                        <li><a href="#"><i class="fas fa-chevron-right"></i> LLM</a></li>
+                                        <li><a href="#"><i class="fas fa-chevron-right"></i> KI</a></li>
+                                        <li><a href="#"><i class="fas fa-chevron-right"></i> Machine Learning</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ARTICLES CONNEXES -->
+        <section class="related-articles">
+          <div class="container">
+            <div class="related-header">
+              <div class="related-kicker"><i class="fas fa-bookmark"></i> <span data-i18n="relatedKicker">Weiterlesen</span></div>
+              <h2 data-i18n="relatedTitle">Diese Artikel könnten Sie auch interessieren</h2>
+            </div>
+            <div class="related-grid">
+              <a href="/free-courses/what-is-ci-cd" class="related-card">
+                <div class="related-card-icon"><i class="fas fa-code-branch"></i></div>
+                <div class="related-card-tag">CI/CD &amp; DevOps</div>
+                <h3 data-i18n="relCard_cicd_title">Was ist CI/CD?</h3>
+                <p data-i18n="relCard_cicd_desc">Continuous Integration und Deployment – Automatisierung des gesamten Software-Release-Zyklus.</p>
+                <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+              </a>
+              <a href="/free-courses/what-is-sre" class="related-card">
+                <div class="related-card-icon"><i class="fas fa-server"></i></div>
+                <div class="related-card-tag">SRE &amp; Platform</div>
+                <h3 data-i18n="relCard_sre_title">Was ist SRE?</h3>
+                <p data-i18n="relCard_sre_desc">Site Reliability Engineering – Software-Methoden für zuverlässigen IT-Betrieb und Automatisierung.</p>
+                <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+              </a>
+              <a href="/free-courses/what-is-alm" class="related-card">
+                <div class="related-card-icon"><i class="fas fa-layer-group"></i></div>
+                <div class="related-card-tag">ALM &amp; DevOps</div>
+                <h3 data-i18n="relCard_alm_title">Was ist ALM?</h3>
+                <p data-i18n="relCard_alm_desc">Application Lifecycle Management – vom Konzept bis zur Abkündigung einer Anwendung.</p>
+                <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+              </a>
+              <a href="/free-courses/what-is-performance-engineering" class="related-card">
+                <div class="related-card-icon"><i class="fas fa-gauge-high"></i></div>
+                <div class="related-card-tag">Performance</div>
+                <h3 data-i18n="relCard_pe_title">Was ist Performance Engineering?</h3>
+                <p data-i18n="relCard_pe_desc">Proaktives Testen und Überwachen der Anwendungsleistung in jeder Entwicklungsphase.</p>
+                <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footContact">Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footNav">Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/index.html" data-i18n="footHome">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses.html" data-i18n="footCatalog">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/blog" data-i18n="footBlog">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/event.html" data-i18n="footEvents">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footSupport">Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about" data-i18n="footAbout">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq" data-i18n="footFaq">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact.html" data-i18n="footContactLink">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p data-i18n-html="footCopyright">Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+    </div>
+    
+        <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/wow.min.js"></script>
+    <script>new WOW().init();</script>
+<!-- i18n Language Switcher -->
+<script>
+var i18n = {
+  de: {
+    'sidebarRelated': 'Ähnliche Artikel',
+    'sidebarTopics': 'Themen',
+    'sidebarTools': 'Tools',
+    'relatedKicker': 'Weiterlesen',
+    'readMore': 'Artikel lesen',
+    'relatedTitle': 'Diese Artikel könnten Sie auch interessieren',
+    'footContact': 'Kontakt',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Startseite',
+    'footBlog': 'Blog',
+    'footCatalog': 'Kurskatalog',
+    'footEvents': 'Veranstaltungen',
+    'footAbout': 'Ueber uns',
+    'footFaq': 'Haeufige Fragen',
+    'footContactLink': 'Kontakt &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.',
+    'relCard_cicd_title': 'Was ist CI/CD?',
+    'relCard_cicd_desc': 'Continuous Integration und Deployment – Automatisierung des gesamten Software-Release-Zyklus.',
+    'relCard_sre_title': 'Was ist SRE?',
+    'relCard_sre_desc': 'Site Reliability Engineering – Software-Methoden für zuverlässigen IT-Betrieb und Automatisierung.',
+    'relCard_alm_title': 'Was ist ALM?',
+    'relCard_alm_desc': 'Application Lifecycle Management – vom Konzept bis zur Abkündigung einer Anwendung.',
+    'relCard_pe_title': 'Was ist Performance Engineering?',
+    'relCard_pe_desc': 'Proaktives Testen und Überwachen der Anwendungsleistung in jeder Entwicklungsphase.',
+    'relCard_vllm_title': 'Was ist vLLM?',
+    'relCard_vllm_desc': 'Wie vLLM mit PagedAttention die LLM-Inferenz beschleunigt und skalierbar macht.',
+    'header-msg': 'Willkommen bei der Koffi Academy — Ihre Cloud- & DevOps-Reise beginnt hier.',
+    'nav-home': 'Startseite',
+    'nav-courses': 'Kurse',
+    'nav-events': 'Veranstaltungen',
+    'nav-about-me': 'Über mich',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Kontakt',
+    'nav-about': 'Über uns',
+    'nav-support': 'Support',
+    'nav-login': 'Anmelden / Registrieren',
+    'heroBadge': 'KI &amp; LLM',
+    'heroTitle': 'Was ist vLLM? Virtual Large Language Model erklärt',
+    'heroDate': '28. Januar 2026',
+    'heroRead': '6 Min. Lesezeit',
+  },
+  en: {
+    'sidebarRelated': 'Related Articles',
+    'sidebarTopics': 'Topics',
+    'sidebarTools': 'Tools',
+    'relatedKicker': 'Read More',
+    'readMore': 'Read article',
+    'relatedTitle': 'You might also be interested in',
+    'footContact': 'Contact',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Home',
+    'footBlog': 'Blog',
+    'footCatalog': 'Course Catalog',
+    'footEvents': 'Events',
+    'footAbout': 'About Us',
+    'footFaq': 'FAQ',
+    'footContactLink': 'Contact &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; All rights reserved.',
+    'relCard_cicd_title': 'What Is CI/CD?',
+    'relCard_cicd_desc': 'Continuous Integration and Deployment – automating the entire software release cycle.',
+    'relCard_sre_title': 'What Is SRE?',
+    'relCard_sre_desc': 'Site Reliability Engineering – software approaches for reliable IT operations and automation.',
+    'relCard_alm_title': 'What Is ALM?',
+    'relCard_alm_desc': 'Application Lifecycle Management – from concept to application retirement.',
+    'relCard_pe_title': 'What Is Performance Engineering?',
+    'relCard_pe_desc': 'Proactive testing and monitoring of application performance in every development phase.',
+    'relCard_vllm_title': 'What Is vLLM?',
+    'relCard_vllm_desc': 'How vLLM uses PagedAttention to accelerate and scale LLM inference.',
+    'header-msg': 'Online Courses — Millions of people are learning!',
+    'nav-home': 'Home',
+    'nav-courses': 'Courses',
+    'nav-events': 'Events',
+    'nav-about-me': 'About Me',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Contact',
+    'nav-about': 'About Us',
+    'nav-support': 'Support',
+    'nav-login': 'Login / Register',
+    'heroBadge': 'AI &amp; LLM',
+    'heroTitle': 'What Is vLLM? Virtual Large Language Model Explained',
+    'heroDate': 'January 28, 2026',
+    'heroRead': '6 min read',
+  },
+  fr: {
+    'sidebarRelated': 'Articles similaires',
+    'sidebarTopics': 'Thèmes',
+    'sidebarTools': 'Outils',
+    'relatedKicker': 'Lire la suite',
+    'readMore': 'Lire l\'article',
+    'relatedTitle': 'Ces articles pourraient vous intéresser',
+    'footContact': 'Contact',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Accueil',
+    'footBlog': 'Blog',
+    'footCatalog': 'Catalogue de cours',
+    'footEvents': 'Événements',
+    'footAbout': 'À propos',
+    'footFaq': 'FAQ',
+    'footContactLink': 'Contact &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Tous droits réservés.',
+    'relCard_cicd_title': 'Qu\'est-ce que CI/CD ?',
+    'relCard_cicd_desc': 'Intégration et déploiement continus – automatisation de l\'ensemble du cycle de release logiciel.',
+    'relCard_sre_title': 'Qu\'est-ce que SRE ?',
+    'relCard_sre_desc': 'Site Reliability Engineering – approches logicielles pour des opérations IT fiables et automatisées.',
+    'relCard_alm_title': 'Qu\'est-ce que l\'ALM ?',
+    'relCard_alm_desc': 'Application Lifecycle Management – de la conception jusqu\'à la mise hors service de l\'application.',
+    'relCard_pe_title': 'Qu\'est-ce que le Performance Engineering ?',
+    'relCard_pe_desc': 'Tests et surveillance proactifs des performances applicatives à chaque phase de développement.',
+    'relCard_vllm_title': 'Qu\'est-ce que vLLM ?',
+    'relCard_vllm_desc': 'Comment vLLM utilise PagedAttention pour accélérer et mettre à l\'échelle l\'inférence LLM.',
+    'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
+    'nav-home': 'Accueil',
+    'nav-courses': 'Cours',
+    'nav-events': 'Événements',
+    'nav-about-me': 'À propos de moi',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Contact',
+    'nav-about': 'À propos',
+    'nav-support': 'Support',
+    'nav-login': 'Se connecter / S\'inscrire',
+    'heroBadge': 'IA &amp; LLM',
+    'heroTitle': 'Qu\'est-ce que vLLM ? Le Virtual Large Language Model expliqué',
+    'heroDate': '28 janvier 2026',
+    'heroRead': '6 min de lecture',
+  },
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-html');
+    if (i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
+  });
+  document.querySelectorAll('.lang-sect[data-lang]').forEach(function(el) {
+    el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+});
+</script>
+<!-- end i18n -->
+<script>
+(function(){
+  var b=document.createElement('div');b.id='rpb';document.body.prepend(b);
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    b.style.width=(h>0?(window.scrollY/h*100):0)+'%';
+  },{passive:true});
+})();
+</script>
+<script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/announce.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

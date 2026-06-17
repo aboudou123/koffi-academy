@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="/assets/css/style.css">
+      <link rel="stylesheet" href="/assets/css/responsive.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="stylesheet" href="/assets/css/modern.css">
+      <link rel="shortcut icon" href="/assets/images/logo.png">
+      <title>Was ist CI/CD? Continuous Integration und Deployment erklärt | Koffi Academy</title>
+      <meta name="description" content="CI/CD erklärt: Continuous Integration, Continuous Delivery und Continuous Deployment. Lernen Sie die Vorteile, Tools und Best Practices kennen.">
+      <meta name="theme-color" content="#07294d">
+      
+      <style>
+         .goog-te-banner-frame.skiptranslate { display: none !important; }
+         body { top: 0px !important; }
+         .goog-te-gadget { font-family: 'Poppins', sans-serif !important; color: #666 !important; }
+         .goog-te-gadget img { display: none !important; }
+         .goog-te-gadget .goog-te-combo { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; background: white; }
+         
+         .article-content h1 { font-size: 2.2rem; color: #07294d; margin-bottom: 15px; font-family: 'Rubik', sans-serif; }
+         .article-content h2 { font-size: 1.6rem; margin-top: 30px; margin-bottom: 15px; color: #2c3e50; font-family: 'Rubik', sans-serif; border-left: 4px solid #ffc600; padding-left: 15px; }
+         .article-content h3 { font-size: 1.3rem; margin-top: 20px; margin-bottom: 10px; color: #34495e; }
+         .article-content p { font-size: 16px; line-height: 1.8; color: #444; margin-bottom: 20px; }
+         .article-content .meta-info { color: #666; font-size: 0.85rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+         .article-content .meta-info i { margin-right: 5px; }
+         .article-content ul, .article-content ol { margin: 15px 0 20px 25px; }
+         .article-content li { font-size: 16px; color: #444; margin-bottom: 8px; line-height: 1.6; }
+         .article-content .highlight-box { background: #f8f9fa; border-left: 4px solid #ffc600; padding: 20px; margin: 25px 0; border-radius: 8px; }
+         .article-content .info-box { background: #e8f4fd; padding: 20px; border-radius: 8px; margin: 20px 0; }
+         .article-content .tool-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; }
+         .article-content .tool-tag { background: #f0f4f8; padding: 6px 15px; border-radius: 30px; font-size: 14px; color: #07294d; }
+         @media (max-width: 768px) {
+            .article-content h1 { font-size: 1.8rem; }
+            .article-content h2 { font-size: 1.4rem; }
+         }
+      .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+   <style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style>
+<style>
+/* ── Article Hero ───────────────────────────── */
+.article-hero{background:linear-gradient(135deg,#07294d 0%,#0d3a6e 55%,#1a5276 100%);padding:52px 0 46px;position:relative;overflow:hidden}
+.article-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 85% 50%,rgba(255,198,0,.07),transparent 70%);pointer-events:none}
+.art-hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,198,0,.15);border:1px solid rgba(255,198,0,.3);color:#ffc600;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px}
+.art-breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px;flex-wrap:wrap}
+.art-breadcrumb a{color:rgba(255,255,255,.6);text-decoration:none;transition:.18s}
+.art-breadcrumb a:hover{color:#ffc600}
+.art-breadcrumb i{font-size:9px;color:rgba(255,255,255,.25)}
+.art-breadcrumb span{color:rgba(255,255,255,.9);font-weight:600}
+.art-hero-title{font-size:2.2rem;font-weight:800;color:#fff;line-height:1.22;letter-spacing:-.03em;margin-bottom:20px;max-width:800px}
+.art-hero-meta{display:flex;flex-wrap:wrap;gap:20px}
+.art-hero-meta span{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,.6)}
+.art-hero-meta i{color:#ffc600;font-size:11px}
+/* ── Reading progress ────────────────────────── */
+#rpb{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,#ffc600,#ff8c00);z-index:10000;transition:width .08s linear}
+/* ── Article layout ─────────────────────────── */
+.blog-single-area.page-paddings{background:#f0f4f8;padding:40px 0 60px}
+.blog-post{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 6px 32px rgba(7,41,77,.09);margin-bottom:24px}
+.blog-post-images img{width:100%;height:220px;object-fit:cover;display:block}
+.post-content-text.article-content{padding:36px 40px}
+.article-content .news-tag,.article-content h1,.article-content #articleTitle,.article-content .meta-info,.article-content #articleMeta{display:none}
+.article-content h2{font-size:1.38rem;font-weight:700;color:#07294d;margin:32px 0 13px;padding-left:14px;border-left:4px solid #ffc600;line-height:1.3}
+.article-content h3{font-size:1.12rem;font-weight:700;color:#1e3a5f;margin:20px 0 9px}
+.article-content p{font-size:15.5px;line-height:1.85;color:#374151;margin-bottom:17px}
+.article-content .highlight-box{background:#fffbeb;border-left:4px solid #ffc600;padding:18px 22px;border-radius:0 12px 12px 0;margin:20px 0;box-shadow:0 2px 10px rgba(255,198,0,.1)}
+.article-content .info-box{background:#eff6ff;border:1px solid #bfdbfe;padding:18px 22px;border-radius:12px;margin:18px 0}
+.article-content ul,.article-content ol{margin:12px 0 16px 22px}
+.article-content li{font-size:15.5px;line-height:1.75;color:#374151;margin-bottom:6px}
+.article-content .tool-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.article-content .tool-tag{background:#eef2ff;color:#3730a3;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:600}
+.blog-sidebar .widget{background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 20px rgba(7,41,77,.08);margin-bottom:22px}
+.blog-news-title h2{font-size:13px;font-weight:700;color:#07294d;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #ffc600}
+@media(max-width:768px){.art-hero-title{font-size:1.6rem}.post-content-text.article-content{padding:20px}}
+/* ── Related Articles ──────────────────────── */
+.related-articles{background:#f0f4f8;padding:56px 0 64px;border-top:1px solid #e2e8f0}
+.related-header{margin-bottom:36px}
+.related-kicker{display:inline-flex;align-items:center;gap:7px;background:rgba(255,198,0,.15);color:#7a5800;border:1px solid rgba(255,198,0,.4);font-size:11px;font-weight:700;padding:4px 14px;border-radius:999px;text-transform:uppercase;letter-spacing:.9px;margin-bottom:12px}
+.related-kicker i{color:#ffc600;font-size:10px}
+.related-header h2{font-size:1.6rem;font-weight:800;color:#07294d;letter-spacing:-.03em;margin:0}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.related-card{background:#fff;border-radius:16px;padding:24px;border:1px solid #e2e8f0;box-shadow:0 4px 18px rgba(7,41,77,.06);text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:12px;transition:all .22s;position:relative;overflow:hidden}
+.related-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ffc600,rgba(255,198,0,.3))}
+.related-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(7,41,77,.13);border-color:rgba(255,198,0,.4)}
+.related-card-icon{width:46px;height:46px;background:rgba(255,198,0,.12);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.related-card-icon i{color:#07294d;font-size:18px}
+.related-card-tag{font-size:11px;font-weight:700;color:#ffc600;text-transform:uppercase;letter-spacing:.7px}
+.related-card h3{font-size:14.5px;font-weight:700;color:#07294d;line-height:1.38;margin:0}
+.related-card p{font-size:13px;color:#64748b;line-height:1.65;margin:0;flex:1}
+.related-card-arrow{display:flex;align-items:center;justify-content:flex-end;color:#ffc600;font-size:13px;font-weight:700;gap:6px;margin-top:auto}
+.related-card-arrow span{font-size:12px;color:#94a3b8;transition:.18s}
+.related-card:hover .related-card-arrow span{color:#07294d}
+@media(max-width:900px){.related-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:576px){.related-grid{grid-template-columns:1fr}}
+</style><link rel="stylesheet" href="/assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+   <body>
+      <div class="page-main">
+         <!-- HEADER -->
+         <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="/index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="/index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses.html" data-i18n="footCatalog">Kurskatalog</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+<a href="/blog">Blog</a>
+<a href="/culture.html">Culture</a>
+<a href="/koffi-profile">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="/login.html">Anmelden</a><a class="kh__btn" href="/register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+
+         <!-- ARTICLE HERO -->
+         <section class="article-hero">
+           <div class="container">
+             <div class="art-hero-badge"><i class="fas fa-code-branch"></i> <span data-i18n="heroBadge">CI/CD &amp; DevOps</span></div>
+             <nav class="art-breadcrumb">
+               <a href="/index.html">Startseite</a><i class="fas fa-chevron-right"></i>
+               <a href="/blog">Blog</a><i class="fas fa-chevron-right"></i>
+               <span>CI/CD</span>
+             </nav>
+             <h1 class="art-hero-title" data-i18n="heroTitle">Was ist CI/CD? Continuous Integration und Deployment erklärt</h1>
+             <div class="art-hero-meta">
+               <span><i class="far fa-calendar-alt"></i> <span data-i18n="heroDate">30. April 2026</span></span>
+               <span><i class="far fa-clock"></i> <span data-i18n="heroRead">7 Min. Lesezeit</span></span>
+               <span><i class="fas fa-user-pen"></i> K.A.</span>
+             </div>
+           </div>
+         </section>
+         
+         <!-- Article Content -->
+         <section class="blog-single-area page-paddings">
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12">
+                     <div class="blog-post">
+                        <div class="blog-post-images">
+                           <img src="/assets/images/blog/blog1.svg" alt="CI/CD Pipeline">
+                        </div>
+                        <div class="post-content-text article-content">
+<div class="lang-sect" data-lang="de">
+                           <div class="news-tag"><a href="/free-courses/what-is-ci-cd">CI/CD</a> <a href="/free-courses/devops">DevOps</a> <a href="/free-courses/what-is-ci-cd">Automation</a></div>
+                           
+                           <h1>Was ist CI/CD? Continuous Integration und Deployment erklärt</h1>
+                           <div class="meta-info">
+                              <i class="far fa-calendar-alt"></i> 30. April 2026 &nbsp;|&nbsp;
+                              <i class="far fa-clock"></i> 7 Minuten Lesezeit
+                           </div>
+                           
+                           <p><strong>CI/CD</strong> – kurz für <strong>Continuous Integration</strong> und <strong>Continuous Delivery/Deployment</strong> – ist eine Methode zur Optimierung und Beschleunigung des gesamten Softwareentwicklungszyklus. Ziel ist es, Codeänderungen schneller, sicherer und zuverlässiger in Produktion zu bringen.</p>
+                           
+                           <div class="highlight-box">
+                              <p><strong>📌 Kernaussage:</strong> CI/CD automatisiert die manuellen Schritte, die traditionell erforderlich sind, um neuen Code vom Commit bis zur Produktion zu bringen. Dadurch werden Ausfallzeiten minimiert und Releases können häufiger stattfinden.</p>
+                           </div>
+                           
+                           <h2>Überblick</h2>
+                           <p><strong>Continuous Integration (CI)</strong> bezeichnet die Praxis, Codeänderungen automatisch und regelmäßig in ein gemeinsames Quellcode-Repository zu integrieren. <strong>Continuous Delivery</strong> und <strong>Continuous Deployment (CD)</strong> sind zweiteilige Prozesse, die Integration, Test und Bereitstellung der Codeänderungen umfassen. Der Hauptunterschied: Continuous Delivery beinhaltet kein automatisches Produktiv-Deployment, während bei Continuous Deployment Updates automatisch in die Produktion ausgerollt werden.</p>
+                           
+                           <p>Diese zusammenhängenden Praktiken werden oft als <strong>„CI/CD-Pipeline“</strong> bezeichnet. Sie werden von Entwicklungs- und Operations-Teams unterstützt, die agil mit DevOps- oder SRE-Ansätzen zusammenarbeiten.</p>
+                           
+                           <h2>Warum ist CI/CD wichtig?</h2>
+                           <p>Mit CI/CD können Unternehmen einen kontinuierlichen Entwicklungs- und Updatezyklus aufrechterhalten und gleichzeitig Bugs und Codefehler vermeiden. Wenn Anwendungen zunehmend größer und komplexer werden, helfen CI/CD-Praktiken dabei, die Komplexität zu reduzieren, die Effizienz zu verbessern und Workflows zu optimieren.</p>
+                           
+                           <p>Da sich Updates und Codeänderungen schneller integrieren lassen, kann Feedback von Nutzern regelmäßiger und effizienter umgesetzt werden. Das führt zu positiven Ergebnissen für Endbenutzer und insgesamt zu einer höheren Kundenzufriedenheit.</p>
+                           
+                           <div class="info-box">
+                              <p><strong>📖 Verwandter Artikel:</strong> <a href="/free-courses/platform-engineering-vs-devops" style="color:#07294d; font-weight:bold;">Platform Engineering im Vergleich zu DevOps</a> – Lesen Sie mehr über die Unterschiede und Gemeinsamkeiten.</p>
+                           </div>
+                           
+                           <h2>Was ist Continuous Integration?</h2>
+                           <p>Das <strong>„CI“</strong> in CI/CD steht für <strong>Continuous Integration</strong> – einen Automatisierungsprozess, der es Entwicklungsteams ermöglicht, Codeänderungen häufiger in einen gemeinsamen Codezweig (Trunk) zusammenzuführen. Im Zuge dieser Updates werden automatisierte Testschritte ausgelöst, die für die Zuverlässigkeit der zusammengeführten Codeänderungen sorgen.</p>
+                           
+                           <p>Bei der modernen Anwendungsentwicklung arbeiten mehrere Entwickler gleichzeitig an unterschiedlichen Features. Die gemeinsame Zusammenführung aller Codezweige an einem einzigen Tag („Merge Day“) kann einen hohen Arbeits- und Zeitaufwand bedeuten. CI löst dieses Problem, indem Codeänderungen kontinuierlich und automatisch integriert werden.</p>
+                           
+                           <p>Bei einer erfolgreichen CI werden die vorgenommenen Codeänderungen nach der Zusammenführung validiert – durch automatisierte Builds und verschiedene Teststufen (Unit- und Integrationstests). So wird sichergestellt, dass die Anwendung nach den Änderungen weiterhin funktioniert. Ein großer Vorteil: Falls automatisierte Tests einen Konflikt zwischen neuem und bestehendem Code entdecken, lassen sich diese Fehler einfach und regelmäßig beheben.</p>
+                           
+                           <h2>Was ist das „CD“ in CI/CD?</h2>
+                           <p><strong>„CD“</strong> bezieht sich auf <strong>Continuous Delivery</strong> und/oder <strong>Continuous Deployment</strong> – verwandte Konzepte, die oft synonym verwendet werden. Bei beiden geht es um die Automatisierung weiterer Phasen der Pipeline. Die Wahl zwischen Continuous Delivery und Continuous Deployment hängt von der Risikotoleranz und den spezifischen Anforderungen des Teams ab.</p>
+                           
+                           <h3>Continuous Delivery</h3>
+                           <p>Continuous Delivery automatisiert das Release von validiertem Code in ein Repository, nachdem in der CI-Phase die Builds und Tests durchgeführt wurden. Sämtliche Phasen – vom Zusammenführen der Codeänderungen bis zur Lieferung der produktionsfertigen Builds – umfassen Test- und Release-Automatisierungen. Am Ende dieses Prozesses kann das Operations-Team die Anwendung schnell für die Produktion bereitstellen.</p>
+                           
+                           <p>Continuous Delivery bedeutet, dass Codeänderungen automatisch getestet und in ein Repository (wie GitHub oder eine Container Registry) hochgeladen werden, von wo aus sie vom Operations-Team in einer Live-Umgebung bereitgestellt werden können. Das Ziel: eine Codebasis, die stets bereit für das Deployment in der Produktion ist.</p>
+                           
+                           <h3>Continuous Deployment</h3>
+                           <p>Continuous Deployment ist eine Erweiterung der Continuous Delivery. Hier werden Entwickleränderungen automatisch vom Repository direkt in die Produktion freigegeben, wo sie sofort von den Nutzern verwendet werden können. Mit CD werden Operations-Teams von manuellen Prozessen entlastet, die die Anwendungsbereitstellung verlangsamen.</p>
+                           
+                           <p>In der Praxis bedeutet Continuous Deployment, dass Codeänderungen binnen weniger Minuten nach ihrer Erstellung live gehen können – vorausgesetzt, sie bestehen alle automatisierten Tests. Da es in der Pipeline vor dem Übergang in die Produktion kein manuelles Gate gibt, ist Continuous Deployment stark von einer gut konzipierten Test-Automatisierung abhängig.</p>
+                           
+                           <h2>CI/CD, DevOps und Platform Engineering</h2>
+                           <p>CI/CD ist ein wesentlicher Bestandteil von <strong>DevOps</strong>-Methoden. Sowohl CI/CD als auch DevOps legen den Fokus auf Automatisierung und Zusammenarbeit zwischen Entwicklungs- und Operations-Teams.</p>
+                           
+                           <p>Beim DevOps-Ansatz wird Sicherheit zur gemeinsamen Verantwortung, die von Anfang an in den Ablauf integriert ist – dieses Prinzip wird auch <strong>DevSecOps</strong> genannt.</p>
+                           
+                           <p><strong>Platform Engineering</strong> baut auf DevOps auf und bietet bessere Möglichkeiten, die Anwendungsbereitstellung zu automatisieren, Zusammenarbeit zu verbessern, Fehler zu reduzieren, Sicherheit und Compliance zu erhöhen sowie die Effizienz zu steigern.</p>
+                           
+                           <h2>Was ist CI/CD-Sicherheit?</h2>
+                           <p>CI/CD-Sicherheit dient dem Schutz von Code-Pipelines durch automatisierte Prüfungen und Tests, um Schwachstellen bei der Softwarebereitstellung zu vermeiden. Durch die Integration von Sicherheit in die Pipeline – z.B. durch <strong>Shift Left</strong> und <strong>Shift Right</strong> – können Sie Code besser vor Angriffen schützen, Datenlecks vermeiden, Compliance sicherstellen und für Qualität sorgen.</p>
+                           
+                           <p>Typische Risiken ohne angemessene Sicherheitsvorkehrungen sind:</p>
+                           <ul>
+                              <li>Offenlegen sensibler Daten gegenüber externen Quellen</li>
+                              <li>Verwenden von unsicherem Code oder Drittanbieter-Komponenten</li>
+                              <li>Unbefugter Zugriff auf Quellcode-Repositories oder Build-Tools</li>
+                           </ul>
+                           
+                           <h2>Welche gängigen CI/CD-Tools gibt es?</h2>
+                           <p>CI/CD-Tools helfen Teams bei der Automatisierung von Entwicklung, Deployment und Tests. Hier sind einige bekannte Open-Source-Tools:</p>
+                           
+                           <div class="tool-list">
+                              <span class="tool-tag">Jenkins</span>
+                              <span class="tool-tag">Tekton Pipelines</span>
+                              <span class="tool-tag">Spinnaker</span>
+                              <span class="tool-tag">GoCD</span>
+                              <span class="tool-tag">Concourse</span>
+                              <span class="tool-tag">Screwdriver</span>
+                              <span class="tool-tag">GitLab CI</span>
+                              <span class="tool-tag">CircleCI</span>
+                              <span class="tool-tag">Travis CI</span>
+                              <span class="tool-tag">Atlassian Bamboo</span>
+                           </div>
+                           
+                           <p>Darüber hinaus sind Tools für Konfigurationsautomatisierung (wie <strong>Ansible</strong>), Container-Runtimes (<strong>Docker</strong>) und Container-Orchestrierung (<strong>Kubernetes</strong>) oft Teil von CI/CD-Workflows.</p>
+                           
+                           <h2>Wie Koffi Academy helfen kann</h2>
+                           <p>Unsere Expertinnen und Experten unterstützen Ihre Organisation beim Aufbau der erforderlichen Praktiken, Tools und Kultur, um Ihre bestehenden Anwendungen effizient zu modernisieren und den Einstieg in die cloudnative Entwicklung zu beschleunigen.</p>
+                           
+                           <p><strong>Koffi Academy</strong> bietet Beratung und Schulungen zu:</p>
+                           <ul>
+                              <li>CI/CD-Pipeline-Design und -Implementierung</li>
+                              <li>DevOps-Transformation und Kulturwandel</li>
+                              <li>Platform Engineering und Internal Developer Platforms (IDPs)</li>
+                              <li>Containerisierung mit Docker und Kubernetes</li>
+                              <li>Automatisierung mit Ansible, Terraform und anderen Tools</li>
+                           </ul>
+                           
+                           <div class="highlight-box">
+                              <p><strong>📌 Fazit:</strong> CI/CD ist ein grundlegender Baustein moderner Softwareentwicklung. Mit Continuous Integration, Continuous Delivery und Continuous Deployment können Teams schneller, sicherer und zuverlässiger liefern. In Kombination mit DevOps-Kultur und Platform Engineering entsteht eine leistungsfähige Grundlage für unternehmenskritische Anwendungen.</p>
+                           </div>
+                           
+                           <div class="blog-single-tag">
+                              <a href="/free-courses/what-is-ci-cd">CI/CD</a>
+                              <a href="/free-courses/devops">DevOps</a>
+                              <a href="/free-courses/what-is-ci-cd">Continuous Integration</a>
+                              <a href="/free-courses/what-is-ci-cd">Continuous Delivery</a>
+                              <a href="/free-courses/what-is-ci-cd">Jenkins</a>
+                              <a href="/free-courses/what-is-ci-cd">Tekton</a>
+                           </div>
+                        </div>
+<div class="lang-sect" data-lang="en" style="display:none">
+<div class="news-tag"><a href="/free-courses/what-is-ci-cd">CI/CD</a> <a href="/free-courses/devops">DevOps</a> <a href="/free-courses/what-is-ci-cd">Automation</a></div>
+<h1>What Is CI/CD? Continuous Integration and Deployment Explained</h1>
+<div class="meta-info">
+    <i class="far fa-calendar-alt"></i> April 30, 2026 &nbsp;|&nbsp;
+    <i class="far fa-clock"></i> 7 minutes read
+</div>
+<p><strong>CI/CD</strong> – short for <strong>Continuous Integration</strong> and <strong>Continuous Delivery/Deployment</strong> – is a method for optimizing and accelerating the entire software development lifecycle. The goal is to bring code changes into production faster, more safely, and more reliably.</p>
+<div class="highlight-box"><p><strong>📌 Key insight:</strong> CI/CD automates the manual steps traditionally required to move new code from commit to production. This minimizes downtime and enables more frequent releases.</p></div>
+<h2>Overview</h2>
+<p><strong>Continuous Integration (CI)</strong> is the practice of automatically and regularly integrating code changes into a shared source code repository. <strong>Continuous Delivery</strong> and <strong>Continuous Deployment (CD)</strong> are two-part processes that cover the integration, testing, and delivery of code changes. The key difference: Continuous Delivery does not include automatic production deployment, while Continuous Deployment automatically rolls out updates to production.</p>
+<p>These interconnected practices are often referred to as the <strong>"CI/CD pipeline"</strong>. They are supported by development and operations teams that work together using DevOps or SRE approaches.</p>
+<h2>Why Is CI/CD Important?</h2>
+<p>With CI/CD, organizations can maintain a continuous development and update cycle while avoiding bugs and code errors. As applications grow larger and more complex, CI/CD practices help reduce complexity, improve efficiency, and optimize workflows.</p>
+<p>Since updates and code changes can be integrated more quickly, user feedback can be implemented more regularly and efficiently — leading to positive outcomes for end users and higher overall customer satisfaction.</p>
+<div class="info-box"><p><strong>📖 Related article:</strong> <a href="/free-courses/platform-engineering-vs-devops" style="color:#07294d; font-weight:bold;">Platform Engineering vs. DevOps</a> – Read more about the differences and similarities.</p></div>
+<h2>What Is Continuous Integration?</h2>
+<p>The <strong>"CI"</strong> in CI/CD stands for <strong>Continuous Integration</strong> – an automation process that allows development teams to merge code changes more frequently into a shared code branch (trunk). During these updates, automated test steps are triggered to ensure the reliability of the merged code changes.</p>
+<p>In modern application development, multiple developers work simultaneously on different features. Merging all branches on a single day ("Merge Day") can involve significant effort and time. CI solves this problem by continuously and automatically integrating code changes.</p>
+<p>With successful CI, code changes are validated after merging — through automated builds and various test stages (unit and integration tests). This ensures the application continues to work after changes. A key benefit: if automated tests discover a conflict between new and existing code, these errors can be fixed easily and regularly.</p>
+<h2>What Is the "CD" in CI/CD?</h2>
+<p><strong>"CD"</strong> refers to <strong>Continuous Delivery</strong> and/or <strong>Continuous Deployment</strong> – related concepts often used interchangeably. Both involve automating further stages of the pipeline. The choice between Continuous Delivery and Continuous Deployment depends on a team's risk tolerance and specific requirements.</p>
+<h3>Continuous Delivery</h3>
+<p>Continuous Delivery automates the release of validated code to a repository after builds and tests have been completed in the CI phase. All phases — from merging code changes to delivering production-ready builds — involve test and release automation. At the end of this process, the operations team can quickly deploy the application to production.</p>
+<p>Continuous Delivery means code changes are automatically tested and uploaded to a repository (such as GitHub or a container registry), from where they can be deployed in a live environment by the operations team. The goal: a codebase that is always ready for production deployment.</p>
+<h3>Continuous Deployment</h3>
+<p>Continuous Deployment is an extension of Continuous Delivery. Here, developer changes are automatically released from the repository directly to production, where they can be used immediately by users. With CD, operations teams are relieved of manual processes that slow down application delivery.</p>
+<p>In practice, Continuous Deployment means code changes can go live within minutes of being created — provided they pass all automated tests. Since there is no manual gate in the pipeline before going to production, Continuous Deployment relies heavily on well-designed test automation.</p>
+<h2>CI/CD, DevOps, and Platform Engineering</h2>
+<p>CI/CD is an essential component of <strong>DevOps</strong> methodologies. Both CI/CD and DevOps emphasize automation and collaboration between development and operations teams.</p>
+<p>In the DevOps approach, security becomes a shared responsibility integrated from the start — this principle is also called <strong>DevSecOps</strong>.</p>
+<p><strong>Platform Engineering</strong> builds on DevOps and provides better capabilities for automating application delivery, improving collaboration, reducing errors, increasing security and compliance, and boosting efficiency.</p>
+<h2>What Is CI/CD Security?</h2>
+<p>CI/CD security protects code pipelines through automated checks and tests to prevent vulnerabilities in software delivery. By integrating security into the pipeline — e.g., through <strong>Shift Left</strong> and <strong>Shift Right</strong> — you can better protect code from attacks, prevent data leaks, ensure compliance, and maintain quality.</p>
+<p>Typical risks without adequate security measures include:</p>
+<ul>
+    <li>Exposing sensitive data to external sources</li>
+    <li>Using insecure code or third-party components</li>
+    <li>Unauthorized access to source code repositories or build tools</li>
+</ul>
+<h2>Common CI/CD Tools</h2>
+<p>CI/CD tools help teams automate development, deployment, and testing. Here are some well-known open-source tools:</p>
+<div class="tool-list">
+    <span class="tool-tag">Jenkins</span><span class="tool-tag">Tekton Pipelines</span>
+    <span class="tool-tag">Spinnaker</span><span class="tool-tag">GoCD</span>
+    <span class="tool-tag">Concourse</span><span class="tool-tag">Screwdriver</span>
+    <span class="tool-tag">GitLab CI</span><span class="tool-tag">CircleCI</span>
+    <span class="tool-tag">Travis CI</span><span class="tool-tag">Atlassian Bamboo</span>
+</div>
+<p>In addition, tools for configuration automation (such as <strong>Ansible</strong>), container runtimes (<strong>Docker</strong>), and container orchestration (<strong>Kubernetes</strong>) are often part of CI/CD workflows.</p>
+<h2>How Koffi Academy Can Help</h2>
+<p>Our experts support your organization in building the required practices, tools, and culture to efficiently modernize your existing applications and accelerate your entry into cloud-native development.</p>
+<p><strong>Koffi Academy</strong> offers consulting and training on:</p>
+<ul>
+    <li>CI/CD pipeline design and implementation</li>
+    <li>DevOps transformation and cultural change</li>
+    <li>Platform Engineering and Internal Developer Platforms (IDPs)</li>
+    <li>Containerization with Docker and Kubernetes</li>
+    <li>Automation with Ansible, Terraform, and other tools</li>
+</ul>
+<div class="highlight-box"><p><strong>📌 Conclusion:</strong> CI/CD is a fundamental building block of modern software development. With Continuous Integration, Continuous Delivery, and Continuous Deployment, teams can deliver faster, more securely, and more reliably. Combined with DevOps culture and Platform Engineering, it creates a powerful foundation for business-critical applications.</p></div>
+<div class="blog-single-tag">
+    <a href="/free-courses/what-is-ci-cd">CI/CD</a>
+    <a href="/free-courses/devops">DevOps</a>
+    <a href="/free-courses/what-is-ci-cd">Continuous Integration</a>
+    <a href="/free-courses/what-is-ci-cd">Continuous Delivery</a>
+    <a href="/free-courses/what-is-ci-cd">Jenkins</a>
+    <a href="/free-courses/what-is-ci-cd">Tekton</a>
+</div>
+</div>
+<div class="lang-sect" data-lang="fr" style="display:none">
+<div class="news-tag"><a href="/free-courses/what-is-ci-cd">CI/CD</a> <a href="/free-courses/devops">DevOps</a> <a href="/free-courses/what-is-ci-cd">Automation</a></div>
+<h1>Qu'est-ce que CI/CD&nbsp;? Intégration et déploiement continus expliqués</h1>
+<div class="meta-info">
+    <i class="far fa-calendar-alt"></i> 30 avril 2026 &nbsp;|&nbsp;
+    <i class="far fa-clock"></i> 7 minutes de lecture
+</div>
+<p><strong>CI/CD</strong> – abréviation de <strong>Continuous Integration</strong> (intégration continue) et <strong>Continuous Delivery/Deployment</strong> (livraison/déploiement continu) – est une méthode d'optimisation et d'accélération de l'ensemble du cycle de développement logiciel. L'objectif est de mettre les modifications de code en production plus rapidement, plus sûrement et de manière plus fiable.</p>
+<div class="highlight-box"><p><strong>📌 Concept clé :</strong> CI/CD automatise les étapes manuelles traditionnellement nécessaires pour acheminer le nouveau code du commit vers la production. Cela minimise les temps d'arrêt et permet des releases plus fréquentes.</p></div>
+<h2>Vue d'ensemble</h2>
+<p>La <strong>Continuous Integration (CI)</strong> désigne la pratique consistant à intégrer automatiquement et régulièrement les modifications de code dans un dépôt de code source commun. La <strong>Continuous Delivery</strong> et le <strong>Continuous Deployment (CD)</strong> sont des processus en deux parties couvrant l'intégration, les tests et la livraison des modifications de code. La différence principale : la Continuous Delivery n'inclut pas le déploiement automatique en production, tandis que le Continuous Deployment déploie automatiquement les mises à jour en production.</p>
+<p>Ces pratiques interconnectées sont souvent désignées sous le terme de <strong>« pipeline CI/CD »</strong>. Elles sont soutenues par des équipes de développement et d'exploitation qui collaborent selon des approches DevOps ou SRE.</p>
+<h2>Pourquoi CI/CD est-il important&nbsp;?</h2>
+<p>Avec CI/CD, les organisations peuvent maintenir un cycle de développement et de mise à jour continu tout en évitant les bugs et les erreurs de code. À mesure que les applications grandissent et se complexifient, les pratiques CI/CD aident à réduire la complexité, à améliorer l'efficacité et à optimiser les workflows.</p>
+<p>Les modifications de code étant intégrables plus rapidement, les retours utilisateurs peuvent être pris en compte plus régulièrement et efficacement — conduisant à des résultats positifs pour les utilisateurs finaux et à une satisfaction client globalement plus élevée.</p>
+<div class="info-box"><p><strong>📖 Article connexe :</strong> <a href="/free-courses/platform-engineering-vs-devops" style="color:#07294d; font-weight:bold;">Platform Engineering vs. DevOps</a> – En savoir plus sur les différences et points communs.</p></div>
+<h2>Qu'est-ce que la Continuous Integration&nbsp;?</h2>
+<p>Le <strong>« CI »</strong> dans CI/CD signifie <strong>Continuous Integration</strong> – un processus d'automatisation qui permet aux équipes de développement de fusionner plus fréquemment les modifications de code dans une branche commune (trunk). Lors de ces mises à jour, des étapes de test automatisées sont déclenchées pour garantir la fiabilité des modifications fusionnées.</p>
+<p>Dans le développement d'applications modernes, plusieurs développeurs travaillent simultanément sur des fonctionnalités différentes. Fusionner toutes les branches un même jour (« Merge Day ») peut représenter un effort et un temps considérables. La CI résout ce problème en intégrant continuellement et automatiquement les modifications de code.</p>
+<p>Avec une CI réussie, les modifications de code sont validées après la fusion — via des builds automatisés et différentes phases de tests (tests unitaires et d'intégration). Cela garantit que l'application continue de fonctionner après les modifications. Si des tests automatisés détectent un conflit entre le nouveau code et le code existant, ces erreurs peuvent être corrigées facilement et régulièrement.</p>
+<h2>Qu'est-ce que le « CD » dans CI/CD&nbsp;?</h2>
+<p>Le <strong>« CD »</strong> fait référence à la <strong>Continuous Delivery</strong> et/ou au <strong>Continuous Deployment</strong> – des concepts liés souvent utilisés de manière interchangeable. Les deux impliquent l'automatisation d'étapes supplémentaires de la pipeline. Le choix entre Continuous Delivery et Continuous Deployment dépend de la tolérance au risque et des exigences spécifiques de l'équipe.</p>
+<h3>Continuous Delivery</h3>
+<p>La Continuous Delivery automatise la mise en production du code validé dans un dépôt, après que les builds et tests ont été réalisés dans la phase CI. Toutes les phases — de la fusion des modifications de code à la livraison des builds prêts pour la production — impliquent une automatisation des tests et des releases. À la fin de ce processus, l'équipe d'exploitation peut rapidement déployer l'application en production.</p>
+<p>La Continuous Delivery signifie que les modifications de code sont automatiquement testées et téléversées vers un dépôt (comme GitHub ou un registry de conteneurs), depuis lequel elles peuvent être déployées dans un environnement live par l'équipe d'exploitation. L'objectif : une base de code toujours prête pour le déploiement en production.</p>
+<h3>Continuous Deployment</h3>
+<p>Le Continuous Deployment est une extension de la Continuous Delivery. Ici, les modifications des développeurs sont automatiquement mises en production depuis le dépôt, où elles peuvent être utilisées immédiatement par les utilisateurs. Avec le CD, les équipes d'exploitation sont libérées des processus manuels qui ralentissent la livraison des applications.</p>
+<p>En pratique, le Continuous Deployment signifie que les modifications de code peuvent être mises en ligne quelques minutes après leur création — à condition qu'elles passent tous les tests automatisés. Puisqu'il n'y a pas de validation manuelle dans la pipeline avant la mise en production, le Continuous Deployment repose fortement sur une automatisation des tests bien conçue.</p>
+<h2>CI/CD, DevOps et Platform Engineering</h2>
+<p>CI/CD est un composant essentiel des méthodologies <strong>DevOps</strong>. CI/CD et DevOps mettent tous deux l'accent sur l'automatisation et la collaboration entre les équipes de développement et d'exploitation.</p>
+<p>Dans l'approche DevOps, la sécurité devient une responsabilité partagée intégrée dès le départ — ce principe est également appelé <strong>DevSecOps</strong>.</p>
+<p>Le <strong>Platform Engineering</strong> s'appuie sur DevOps et offre de meilleures capacités pour automatiser la livraison d'applications, améliorer la collaboration, réduire les erreurs, renforcer la sécurité et la conformité, et augmenter l'efficacité.</p>
+<h2>Qu'est-ce que la sécurité CI/CD&nbsp;?</h2>
+<p>La sécurité CI/CD protège les pipelines de code via des vérifications et des tests automatisés pour éviter les vulnérabilités dans la livraison de logiciels. En intégrant la sécurité dans la pipeline — par exemple via le <strong>Shift Left</strong> et le <strong>Shift Right</strong> — vous pouvez mieux protéger le code contre les attaques, prévenir les fuites de données, garantir la conformité et maintenir la qualité.</p>
+<p>Les risques typiques sans mesures de sécurité adéquates sont :</p>
+<ul>
+    <li>Exposition de données sensibles à des sources externes</li>
+    <li>Utilisation de code non sécurisé ou de composants tiers vulnérables</li>
+    <li>Accès non autorisé aux dépôts de code source ou aux outils de build</li>
+</ul>
+<h2>Outils CI/CD courants</h2>
+<p>Les outils CI/CD aident les équipes à automatiser le développement, le déploiement et les tests. Voici quelques outils open-source bien connus :</p>
+<div class="tool-list">
+    <span class="tool-tag">Jenkins</span><span class="tool-tag">Tekton Pipelines</span>
+    <span class="tool-tag">Spinnaker</span><span class="tool-tag">GoCD</span>
+    <span class="tool-tag">Concourse</span><span class="tool-tag">Screwdriver</span>
+    <span class="tool-tag">GitLab CI</span><span class="tool-tag">CircleCI</span>
+    <span class="tool-tag">Travis CI</span><span class="tool-tag">Atlassian Bamboo</span>
+</div>
+<p>De plus, les outils d'automatisation de configuration (comme <strong>Ansible</strong>), les runtimes de conteneurs (<strong>Docker</strong>) et l'orchestration de conteneurs (<strong>Kubernetes</strong>) font souvent partie des workflows CI/CD.</p>
+<h2>Comment Koffi Academy peut vous aider</h2>
+<p>Nos experts accompagnent votre organisation dans la mise en place des pratiques, outils et culture nécessaires pour moderniser efficacement vos applications existantes et accélérer votre entrée dans le développement cloud-native.</p>
+<p><strong>Koffi Academy</strong> propose des conseils et formations sur :</p>
+<ul>
+    <li>Conception et implémentation de pipelines CI/CD</li>
+    <li>Transformation DevOps et changement culturel</li>
+    <li>Platform Engineering et Internal Developer Platforms (IDP)</li>
+    <li>Containerisation avec Docker et Kubernetes</li>
+    <li>Automatisation avec Ansible, Terraform et d'autres outils</li>
+</ul>
+<div class="highlight-box"><p><strong>📌 Conclusion :</strong> CI/CD est un pilier fondamental du développement logiciel moderne. Avec l'intégration continue, la livraison continue et le déploiement continu, les équipes peuvent livrer plus rapidement, plus sûrement et de manière plus fiable. En combinaison avec la culture DevOps et le Platform Engineering, cela crée une base puissante pour les applications critiques.</p></div>
+<div class="blog-single-tag">
+    <a href="/free-courses/what-is-ci-cd">CI/CD</a>
+    <a href="/free-courses/devops">DevOps</a>
+    <a href="/free-courses/what-is-ci-cd">Intégration continue</a>
+    <a href="/free-courses/what-is-ci-cd">Livraison continue</a>
+    <a href="/free-courses/what-is-ci-cd">Jenkins</a>
+    <a href="/free-courses/what-is-ci-cd">Tekton</a>
+</div>
+</div>
+</div>
+                     </div>
+
+
+                  </div>
+                  
+                  <!-- Sidebar -->
+                  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
+                     <div class="sidebar">
+                        <div class="widget-box">
+                           <div class="widget">
+                              <div class="blog-news-title"><h2 data-i18n="sidebarRelated">Ähnliche Artikel</h2></div>
+                              <div class="feature-box-main">
+                                 <ul class="feature-box">
+                                    <li><div class="post-item"><div class="post-img"><img src="/assets/images/blog/blog2.svg" alt="DevOps"></div><div class="post-info"><h4><a href="/free-courses/platform-engineering-vs-devops">Platform Engineering vs. DevOps</a></h4><span class="post-time"><i class="far fa-calendar-alt"></i> 30. April 2026</span></div></div></li>
+                                    <li><div class="post-item"><div class="post-img"><img src="/assets/images/blog/blog3.svg" alt="IDP"></div><div class="post-info"><h4><a href="/blog-detail.html">Internal Developer Platforms (IDP)</a></h4><span class="post-time"><i class="far fa-calendar-alt"></i> 30. April 2026</span></div></div></li>
+                                 </ul>
+                              </div>
+                           </div>
+                           <div class="widget">
+                              <div class="blog-news-title"><h2 data-i18n="sidebarTopics">Themen</h2></div>
+                              <ul class="widget-tag">
+                                 <li><a href="/free-courses/what-is-ci-cd"><i class="fas fa-chevron-right"></i> CI/CD</a></li>
+                                 <li><a href="/free-courses/devops"><i class="fas fa-chevron-right"></i> DevOps</a></li>
+                                 <li><a href="/free-courses/what-is-ci-cd"><i class="fas fa-chevron-right"></i> Continuous Integration</a></li>
+                                 <li><a href="/free-courses/what-is-ci-cd"><i class="fas fa-chevron-right"></i> Continuous Delivery</a></li>
+                              </ul>
+                           </div>
+                           <div class="widget">
+                              <div class="blog-news-title"><h2 data-i18n="sidebarTools">Tools</h2></div>
+                              <ul class="widget-tag">
+                                 <li><a href="/free-courses/what-is-ci-cd">Jenkins</a></li>
+                                 <li><a href="/free-courses/what-is-ci-cd">Tekton</a></li>
+                                 <li><a href="/free-courses/what-is-ci-cd">GitLab CI</a></li>
+                                 <li><a href="/free-courses/github-actions">GitHub Actions</a></li>
+                              </ul>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         
+         <!-- ARTICLES CONNEXES -->
+         <section class="related-articles">
+           <div class="container">
+             <div class="related-header">
+               <div class="related-kicker"><i class="fas fa-bookmark"></i> <span data-i18n="relatedKicker">Weiterlesen</span></div>
+               <h2 data-i18n="relatedTitle">Diese Artikel könnten Sie auch interessieren</h2>
+             </div>
+             <div class="related-grid">
+               <a href="/free-courses/what-is-sre" class="related-card">
+                 <div class="related-card-icon"><i class="fas fa-server"></i></div>
+                 <div class="related-card-tag">SRE &amp; Platform</div>
+                 <h3 data-i18n="relCard_sre_title">Was ist SRE?</h3>
+                 <p data-i18n="relCard_sre_desc">Site Reliability Engineering – Software-Methoden für zuverlässigen IT-Betrieb und Automatisierung.</p>
+                 <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+               </a>
+               <a href="/free-courses/what-is-alm" class="related-card">
+                 <div class="related-card-icon"><i class="fas fa-layer-group"></i></div>
+                 <div class="related-card-tag">ALM &amp; DevOps</div>
+                 <h3 data-i18n="relCard_alm_title">Was ist ALM?</h3>
+                 <p data-i18n="relCard_alm_desc">Application Lifecycle Management – vom Konzept bis zur Abkündigung einer Anwendung.</p>
+                 <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+               </a>
+               <a href="/free-courses/what-is-performance-engineering" class="related-card">
+                 <div class="related-card-icon"><i class="fas fa-gauge-high"></i></div>
+                 <div class="related-card-tag">Performance</div>
+                 <h3 data-i18n="relCard_pe_title">Was ist Performance Engineering?</h3>
+                 <p data-i18n="relCard_pe_desc">Proaktives Testen und Überwachen der Anwendungsleistung in jeder Entwicklungsphase.</p>
+                 <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+               </a>
+               <a href="/free-courses/virtual-llm" class="related-card">
+                 <div class="related-card-icon"><i class="fas fa-microchip"></i></div>
+                 <div class="related-card-tag">KI &amp; LLM</div>
+                 <h3 data-i18n="relCard_vllm_title">Was ist vLLM?</h3>
+                 <p data-i18n="relCard_vllm_desc">Wie vLLM mit PagedAttention die LLM-Inferenz beschleunigt und skalierbar macht.</p>
+                 <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+               </a>
+             </div>
+           </div>
+         </section>
+
+         <!-- FOOTER -->
+         <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footContact">Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footNav">Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/index.html" data-i18n="footHome">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses.html" data-i18n="footCatalog">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/blog" data-i18n="footBlog">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/event.html" data-i18n="footEvents">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footSupport">Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about" data-i18n="footAbout">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq" data-i18n="footFaq">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact.html" data-i18n="footContactLink">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p data-i18n-html="footCopyright">Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+      </div>
+      
+            <script src="/assets/js/jquery.min.js"></script>
+      <script src="/assets/js/bootstrap.min.js"></script>
+      <script src="/assets/js/wow.min.js"></script>
+      <script>new WOW().init();</script>
+   <!-- i18n Language Switcher -->
+<script>
+var i18n = {
+  de: {
+    'sidebarRelated': 'Ähnliche Artikel',
+    'sidebarTopics': 'Themen',
+    'sidebarTools': 'Tools',
+    'relatedKicker': 'Weiterlesen',
+    'readMore': 'Artikel lesen',
+    'relatedTitle': 'Diese Artikel könnten Sie auch interessieren',
+    'footContact': 'Kontakt',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Startseite',
+    'footBlog': 'Blog',
+    'footCatalog': 'Kurskatalog',
+    'footEvents': 'Veranstaltungen',
+    'footAbout': 'Ueber uns',
+    'footFaq': 'Haeufige Fragen',
+    'footContactLink': 'Kontakt &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.',
+    'relCard_cicd_title': 'Was ist CI/CD?',
+    'relCard_cicd_desc': 'Continuous Integration und Deployment – Automatisierung des gesamten Software-Release-Zyklus.',
+    'relCard_sre_title': 'Was ist SRE?',
+    'relCard_sre_desc': 'Site Reliability Engineering – Software-Methoden für zuverlässigen IT-Betrieb und Automatisierung.',
+    'relCard_alm_title': 'Was ist ALM?',
+    'relCard_alm_desc': 'Application Lifecycle Management – vom Konzept bis zur Abkündigung einer Anwendung.',
+    'relCard_pe_title': 'Was ist Performance Engineering?',
+    'relCard_pe_desc': 'Proaktives Testen und Überwachen der Anwendungsleistung in jeder Entwicklungsphase.',
+    'relCard_vllm_title': 'Was ist vLLM?',
+    'relCard_vllm_desc': 'Wie vLLM mit PagedAttention die LLM-Inferenz beschleunigt und skalierbar macht.',
+    'header-msg': 'Willkommen bei der Koffi Academy — Ihre Cloud- & DevOps-Reise beginnt hier.',
+    'nav-home': 'Startseite',
+    'nav-courses': 'Kurse',
+    'nav-events': 'Veranstaltungen',
+    'nav-about-me': 'Über mich',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Kontakt',
+    'nav-about': 'Über uns',
+    'nav-support': 'Support',
+    'nav-login': 'Anmelden / Registrieren',
+    'heroBadge': 'CI/CD &amp; DevOps',
+    'heroTitle': 'Was ist CI/CD? Continuous Integration und Deployment erklärt',
+    'heroDate': '30. April 2026',
+    'heroRead': '7 Min. Lesezeit',
+  },
+  en: {
+    'sidebarRelated': 'Related Articles',
+    'sidebarTopics': 'Topics',
+    'sidebarTools': 'Tools',
+    'relatedKicker': 'Read More',
+    'readMore': 'Read article',
+    'relatedTitle': 'You might also be interested in',
+    'footContact': 'Contact',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Home',
+    'footBlog': 'Blog',
+    'footCatalog': 'Course Catalog',
+    'footEvents': 'Events',
+    'footAbout': 'About Us',
+    'footFaq': 'FAQ',
+    'footContactLink': 'Contact &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; All rights reserved.',
+    'relCard_cicd_title': 'What Is CI/CD?',
+    'relCard_cicd_desc': 'Continuous Integration and Deployment – automating the entire software release cycle.',
+    'relCard_sre_title': 'What Is SRE?',
+    'relCard_sre_desc': 'Site Reliability Engineering – software approaches for reliable IT operations and automation.',
+    'relCard_alm_title': 'What Is ALM?',
+    'relCard_alm_desc': 'Application Lifecycle Management – from concept to application retirement.',
+    'relCard_pe_title': 'What Is Performance Engineering?',
+    'relCard_pe_desc': 'Proactive testing and monitoring of application performance in every development phase.',
+    'relCard_vllm_title': 'What Is vLLM?',
+    'relCard_vllm_desc': 'How vLLM uses PagedAttention to accelerate and scale LLM inference.',
+    'header-msg': 'Online Courses — Millions of people are learning!',
+    'nav-home': 'Home',
+    'nav-courses': 'Courses',
+    'nav-events': 'Events',
+    'nav-about-me': 'About Me',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Contact',
+    'nav-about': 'About Us',
+    'nav-support': 'Support',
+    'nav-login': 'Login / Register',
+    'heroBadge': 'CI/CD &amp; DevOps',
+    'heroTitle': 'What Is CI/CD? Continuous Integration and Deployment Explained',
+    'heroDate': 'April 30, 2026',
+    'heroRead': '7 min read',
+  },
+  fr: {
+    'sidebarRelated': 'Articles similaires',
+    'sidebarTopics': 'Thèmes',
+    'sidebarTools': 'Outils',
+    'relatedKicker': 'Lire la suite',
+    'readMore': 'Lire l\'article',
+    'relatedTitle': 'Ces articles pourraient vous intéresser',
+    'footContact': 'Contact',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Accueil',
+    'footBlog': 'Blog',
+    'footCatalog': 'Catalogue de cours',
+    'footEvents': 'Événements',
+    'footAbout': 'À propos',
+    'footFaq': 'FAQ',
+    'footContactLink': 'Contact &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Tous droits réservés.',
+    'relCard_cicd_title': 'Qu\'est-ce que CI/CD ?',
+    'relCard_cicd_desc': 'Intégration et déploiement continus – automatisation de l\'ensemble du cycle de release logiciel.',
+    'relCard_sre_title': 'Qu\'est-ce que SRE ?',
+    'relCard_sre_desc': 'Site Reliability Engineering – approches logicielles pour des opérations IT fiables et automatisées.',
+    'relCard_alm_title': 'Qu\'est-ce que l\'ALM ?',
+    'relCard_alm_desc': 'Application Lifecycle Management – de la conception jusqu\'à la mise hors service de l\'application.',
+    'relCard_pe_title': 'Qu\'est-ce que le Performance Engineering ?',
+    'relCard_pe_desc': 'Tests et surveillance proactifs des performances applicatives à chaque phase de développement.',
+    'relCard_vllm_title': 'Qu\'est-ce que vLLM ?',
+    'relCard_vllm_desc': 'Comment vLLM utilise PagedAttention pour accélérer et mettre à l\'échelle l\'inférence LLM.',
+    'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
+    'nav-home': 'Accueil',
+    'nav-courses': 'Cours',
+    'nav-events': 'Événements',
+    'nav-about-me': 'À propos de moi',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Contact',
+    'nav-about': 'À propos',
+    'nav-support': 'Support',
+    'nav-login': 'Se connecter / S\'inscrire',
+    'heroBadge': 'CI/CD &amp; DevOps',
+    'heroTitle': 'Qu\'est-ce que CI/CD ? Intégration et déploiement continus expliqués',
+    'heroDate': '30 avril 2026',
+    'heroRead': '7 min de lecture',
+  },
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-html');
+    if (i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
+  });
+  document.querySelectorAll('.lang-sect[data-lang]').forEach(function(el) {
+    el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+});
+</script>
+<!-- end i18n -->
+<script>
+(function(){
+  var b=document.createElement('div');b.id='rpb';document.body.prepend(b);
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    b.style.width=(h>0?(window.scrollY/h*100):0)+'%';
+  },{passive:true});
+})();
+</script>
+<script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/announce.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

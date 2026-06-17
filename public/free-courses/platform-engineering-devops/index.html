@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="/assets/css/style.css">
+      <link rel="stylesheet" href="/assets/css/responsive.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="stylesheet" href="/assets/css/modern.css">
+      <link rel="shortcut icon" href="/assets/images/logo.png">
+      <title>Platform Engineering & DevOps | Koffi Academy</title>
+      <meta name="description" content="DevOps, GitOps und Platform Engineering im Vergleich: Ist DevOps tot, was ist Platform Engineering und wie hängen die Ansätze zusammen?">
+      <meta name="theme-color" content="#07294d">
+      
+      <style>
+         .goog-te-banner-frame.skiptranslate { display: none !important; }
+         body { top: 0px !important; }
+         .goog-te-gadget { font-family: 'Poppins', sans-serif !important; color: #666 !important; }
+         .goog-te-gadget img { display: none !important; }
+         .goog-te-gadget .goog-te-combo { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; background: white; }
+         .article-content h1 { font-size: 2.2rem; color: #07294d; margin-bottom: 15px; font-family: 'Rubik', sans-serif; }
+         .article-content h2 { font-size: 28px; color: #07294d; margin: 30px 0 15px; font-family: 'Rubik', sans-serif; border-left: 4px solid #ffc600; padding-left: 15px; }
+         .article-content h3 { font-size: 22px; color: #07294d; margin: 25px 0 10px; font-family: 'Rubik', sans-serif; }
+         .article-content p { font-size: 16px; color: #444; line-height: 1.8; margin-bottom: 20px; }
+         .article-content .meta-info { color: #666; font-size: 0.85rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+         .article-content .meta-info i { margin-right: 5px; }
+         .article-content ul, .article-content ol { margin: 15px 0 20px 25px; }
+         .article-content li { font-size: 16px; color: #444; margin-bottom: 8px; line-height: 1.6; }
+         .article-content .highlight-box { background: #f8f9fa; border-left: 4px solid #ffc600; padding: 20px; margin: 25px 0; border-radius: 8px; }
+         .article-content .highlight-box p { margin-bottom: 0; }
+         .pe-course-brief {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr);
+            gap: 22px;
+            align-items: stretch;
+            margin: 26px 0 32px;
+         }
+         .pe-brief-card,
+         .pe-visual,
+         .pe-practice-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 12px 32px rgba(7, 41, 77, .08);
+         }
+         .pe-brief-card { padding: 24px; }
+         .pe-brief-card h2 {
+            margin-top: 0;
+            border-left: 0;
+            padding-left: 0;
+            font-size: 23px;
+         }
+         .pe-brief-card ul { margin-left: 0; padding-left: 0; }
+         .pe-brief-card li {
+            display: flex;
+            gap: 10px;
+            list-style: none;
+            margin-bottom: 12px;
+         }
+         .pe-brief-card li i { color: #d6a02d; margin-top: 5px; }
+         .pe-hero-figure {
+            position: relative;
+            min-height: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #061a30, #12304f);
+            color: #fff;
+            padding: 22px;
+         }
+         .pe-hero-figure::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+            background-size: 34px 34px;
+         }
+         .pe-hero-figure > * { position: relative; z-index: 1; }
+         .pe-logo-cloud {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+         }
+         .pe-logo-tile {
+            min-height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,.14);
+            border-radius: 8px;
+            background: rgba(255,255,255,.08);
+            padding: 14px;
+         }
+         .pe-logo-tile img { width: 44px; height: 44px; object-fit: contain; }
+         .pe-hero-figure strong { display: block; color: #fff; font-size: 18px; margin-bottom: 8px; }
+         .pe-hero-figure p { color: rgba(255,255,255,.78); margin-bottom: 0; font-size: 14px; line-height: 1.6; }
+         .pe-visual {
+            margin: 28px 0;
+            overflow: hidden;
+         }
+         .pe-visual-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px 18px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+         }
+         .pe-visual-head strong {
+            color: #07294d;
+            font-size: 14px;
+            text-transform: uppercase;
+         }
+         .pe-visual-head span { color: #64748b; font-size: 13px; }
+         .pe-flow {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            padding: 20px;
+            background: #fff;
+         }
+         .pe-flow-step {
+            min-height: 126px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+            padding: 14px 10px;
+         }
+         .pe-flow-step img { width: 38px; height: 38px; object-fit: contain; }
+         .pe-flow-step i { color: #d6a02d; font-size: 26px; }
+         .pe-flow-step strong { color: #07294d; font-size: 13.5px; line-height: 1.25; }
+         .pe-flow-step small { color: #64748b; line-height: 1.35; }
+         .pe-visual figcaption {
+            padding: 0 20px 18px;
+            color: #64748b;
+            font-size: 13.5px;
+            line-height: 1.6;
+         }
+         .pe-split-visual {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin: 26px 0;
+         }
+         .pe-compare-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #fff;
+            padding: 20px;
+         }
+         .pe-compare-card .pe-card-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: #fffbeb;
+            margin-bottom: 14px;
+         }
+         .pe-compare-card .pe-card-icon img { width: 34px; height: 34px; object-fit: contain; }
+         .pe-compare-card h3 { margin-top: 0; }
+         .pe-practice-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+         }
+         .pe-practice-card { padding: 20px; }
+         .pe-practice-card i { color: #d6a02d; font-size: 22px; margin-bottom: 12px; }
+         .pe-practice-card h3 { margin-top: 0; font-size: 18px; }
+         .pe-practice-card p { font-size: 14.5px; line-height: 1.65; margin-bottom: 0; }
+         @media (max-width: 768px) {
+            .article-content h1 { font-size: 1.8rem; }
+            .article-content h2 { font-size: 1.4rem; }
+            .pe-course-brief,
+            .pe-split-visual,
+            .pe-practice-grid { grid-template-columns: 1fr; }
+            .pe-flow { grid-template-columns: 1fr; }
+         }
+      .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+   <style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style><link rel="stylesheet" href="/assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+   <body>
+      <div class="page-main">
+         <!-- HEADER -->
+         <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="/index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="/index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses.html">Kurskatalog</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+<a href="/blog">Blog</a>
+<a href="/culture.html">Culture</a>
+<a href="/koffi-profile">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="/login.html">Anmelden</a><a class="kh__btn" href="/register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+         <!-- HEADER ENDE -->
+
+         <!-- breadcrumb -->
+         <section class="breadcrumb-area">
+            <div class="breadcrumb-shape">
+               <img src="/assets/images/slider-bottom-pattern.png" alt="Form">
+            </div>
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                     <div class="breadcrumb-box">
+                        <h2 data-i18n="pe-breadcrumb">Platform Engineering &amp; DevOps</h2>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <!-- breadcrumb -->
+         
+         <!-- Blog Content -->
+         <section class="blog-single-area page-paddings">
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                     <div class="blog-post">
+                        <div class="blog-post-images">
+                           <img src="/assets/images/blog/blog1.svg" alt="Platform Engineering & DevOps">
+                        </div>
+                        <div class="post-content-text article-content">
+                           
+                           <div class="news-tag"><a href="/free-courses/devops">DevOps</a> <a href="/free-courses/platform-engineering-vs-devops">Platform Engineering</a> <a href="/blog">GitOps</a></div>
+                           
+                           
+                           <h1>Platform Engineering & DevOps</h1>
+                           <div class="meta-info">
+                              <i class="far fa-calendar-alt"></i> 30.04.2026 &nbsp;|&nbsp;
+                              <i class="far fa-clock"></i> 35 Minuten Lernzeit
+                           </div>
+                           
+                           <p>In diesem Kurs werden DevOps, GitOps und Platform Engineering sauber eingeordnet. Ziel ist nicht, Buzzwords gegeneinander auszuspielen, sondern die Rollen klar zu verstehen: DevOps als Arbeits- und Kulturmodell, GitOps als deklaratives Betriebsmodell und Platform Engineering als Produktansatz für interne Entwicklerplattformen.</p>
+
+                           <div class="pe-course-brief">
+                              <div class="pe-brief-card">
+                                 <h2>Lernziele dieses Kurses</h2>
+                                 <ul>
+                                    <li><i class="fa-solid fa-circle-check"></i><span>Sie können DevOps, GitOps und Platform Engineering fachlich sauber voneinander abgrenzen.</span></li>
+                                    <li><i class="fa-solid fa-circle-check"></i><span>Sie verstehen, warum Platform Engineering DevOps nicht ersetzt, sondern operativ unterstützt.</span></li>
+                                    <li><i class="fa-solid fa-circle-check"></i><span>Sie können erklären, wann ein Internal Developer Portal, Golden Paths und Self-Service sinnvoll sind.</span></li>
+                                    <li><i class="fa-solid fa-circle-check"></i><span>Sie bekommen ein konkretes Denkmodell für den Aufbau einer modernen Plattformorganisation.</span></li>
+                                 </ul>
+                              </div>
+                              <figure class="pe-hero-figure">
+                                 <div class="pe-logo-cloud">
+                                    <span class="pe-logo-tile"><img src="https://cdn.simpleicons.org/kubernetes/326CE5" alt="Kubernetes"></span>
+                                    <span class="pe-logo-tile"><img src="https://cdn.simpleicons.org/terraform/7B42BC" alt="Terraform"></span>
+                                    <span class="pe-logo-tile"><img src="https://cdn.simpleicons.org/argo/EF7B4D" alt="Argo CD"></span>
+                                    <span class="pe-logo-tile"><img src="https://cdn.simpleicons.org/backstage/9BF0E1" alt="Backstage"></span>
+                                    <span class="pe-logo-tile"><img src="https://cdn.simpleicons.org/githubactions/2088FF" alt="GitHub Actions"></span>
+                                    <span class="pe-logo-tile"><img src="https://www.vectorlogo.zone/logos/amazon_aws/amazon_aws-icon.svg" alt="AWS"></span>
+                                 </div>
+                                 <strong>Moderne Plattformen verbinden Kultur, Automatisierung und Self-Service.</strong>
+                                 <p>Die Werkzeuge sind wichtig, aber der eigentliche Wert entsteht erst durch klare Ownership, wiederholbare Standards und gut gestaltete Developer Experience.</p>
+                              </figure>
+                           </div>
+                           
+                           <h2>DevOps</h2>
+                           <p>DevOps ist keine Technologie. Das ist ein kurzer Satz, den es sich dennoch zu merken gilt. Es ist viel mehr ein Kulturwandel, der darauf abzielt, die verschiedenen Lager von IT-Teams miteinander zu verknüpfen und die Zusammenarbeit zu verbessern.</p>
+                           <p>Klassischerweise sind diese Lager in "Entwicklung" und "Betrieb" unterteilt. Gemäß des DevOps-Ansatzes sollen die Barrieren zwischen den Lagern abgebaut, voneinander gelernt und zusammengearbeitet werden. Wenn jede Person das Gefühl bekommt, aktiv an den Projekten mitzuwirken, wird ein gemeinsames Verantwortungsbewusstsein etabliert, welches sich positiv auf den Gesamterfolg, die Zufriedenheit und Velocity auswirkt.</p>
+                           <p>Daraus resultierend haben sich im DevOps-Umfeld eine Reihe von Praktiken wie Continuous Integration, Continuous Delivery, Testautomatisierung, Infrastrukturautomatisierung, Monitoring (uvm.) etabliert. Das heißt nicht, dass es nicht vorher bereits Infrastrukturautomatisierung oder Monitoring-Lösungen gab. Darum geht es nicht. Viel wichtiger ist die effiziente Bereitstellung und reibungslose Zusammenarbeit der verschiedenen Expertinnen und Experten. Das Ganze eventuell sogar innerhalb eines Teams.</p>
+                           <p>Durch die Etablierung dieser (und weiterer) Praktiken und den "Mindshift" der Organisation und aller Beteiligten wird es Teams ermöglicht, Software schneller und zuverlässiger zu entwickeln, zu testen und bereitzustellen. Wenn etwas aus diesem Abschnitt mitzunehmen ist, dann Folgendes: Der DevOps-Ansatz versucht die zunehmende Komplexität von Systemen insbesondere durch einen kulturellen Wandel zu lösen. Natürlich spielen Technologien als ausführendes Hilfsmittel eine zentrale Rolle in der Umsetzung.</p>
+
+                           <figure class="pe-visual">
+                              <div class="pe-visual-head"><strong>DevOps Flow</strong><span>Von Commit bis Betrieb</span></div>
+                              <div class="pe-flow">
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/git/F05032" alt="Git"><strong>Code</strong><small>Änderungen versionieren</small></div>
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/githubactions/2088FF" alt="GitHub Actions"><strong>CI</strong><small>Testen und bauen</small></div>
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/docker/2496ED" alt="Docker"><strong>Artefakt</strong><small>Image veröffentlichen</small></div>
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/kubernetes/326CE5" alt="Kubernetes"><strong>Deploy</strong><small>Workload ausrollen</small></div>
+                                 <div class="pe-flow-step"><i class="fa-solid fa-chart-line"></i><strong>Operate</strong><small>Messen und lernen</small></div>
+                              </div>
+                              <figcaption>DevOps ist kein einzelnes Tool. Es ist ein Kreislauf aus Zusammenarbeit, Feedback und kontinuierlicher Verbesserung.</figcaption>
+                           </figure>
+                           
+                           <h2>GitOps</h2>
+                           <p>GitOps ist ein Ansatz zur Bereitstellung und Verwaltung von Software und Infrastruktur. Das wohl offensichtlichste Merkmal ist, dass ein Git-Repository als "single source of truth" für die automatisierte Bereitstellung der Software und Infrastruktur (CI/CD) dient. Im Wesentlichen werden alle Applikationen und Infrastrukturkomponenten, die für das jeweilige Projekt notwendig sind, inklusive ihrer Versionen (und ggf. weiterer Angaben) aufgeschrieben. Bei Änderungen an dieser "Bestandsliste" sorgen Pipelines (oder ähnliche Mechanismen) dafür, dass die Änderungen angewandt werden. Klingt eigentlich einfach, oder?</p>
+
+                           <figure class="pe-visual">
+                              <div class="pe-visual-head"><strong>GitOps Betriebsmodell</strong><span>Git beschreibt den gewünschten Zustand</span></div>
+                              <div class="pe-flow">
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/github/181717" alt="GitHub"><strong>Repository</strong><small>Manifeste und Reviews</small></div>
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/argo/EF7B4D" alt="Argo CD"><strong>Controller</strong><small>Vergleicht Desired und Live State</small></div>
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/kubernetes/326CE5" alt="Kubernetes"><strong>Cluster</strong><small>Wendet Ressourcen an</small></div>
+                                 <div class="pe-flow-step"><i class="fa-solid fa-triangle-exclamation"></i><strong>Drift</strong><small>Abweichungen erkennen</small></div>
+                                 <div class="pe-flow-step"><i class="fa-solid fa-rotate"></i><strong>Sync</strong><small>Zustand korrigieren</small></div>
+                              </div>
+                              <figcaption>GitOps macht Deployments nachvollziehbar: Ein Rollout ist nicht nur ein Klick, sondern eine überprüfbare Änderung im Repository.</figcaption>
+                           </figure>
+                           
+                           <p>Für Außenstehende sind die Vorteile vielleicht nicht sofort ersichtlich, daher eine kleine (opinionated) Zusammenstellung:</p>
+                           <ul>
+                              <li>Die Wahrheit steht im Repository - jeder weiß, wo er oder sie hinschauen muss</li>
+                              <li>Mehr als das, was im Repository steht, benötigt die Applikation nicht, um lauffähig zu sein</li>
+                              <li>Nicht nur die Software, sondern auch die benötigte Infrastruktur ist beschrieben</li>
+                              <li>… daraus resultiert, dass plötzlich die Entwicklung und der Betrieb eine gemeinsame Plattform verwenden</li>
+                              <li>Ein Deployment ist ein Commit (+ Push). Das heißt zwangsläufig, dass ersichtlich ist, wer wann was auf welche Umgebung ausgerollt hat</li>
+                              <li>Auch Security-Themen finden Anwendung. Es lässt sich nun leicht über das Repository ermitteln, ob Teams ggf. veraltete Templates einsetzen oder Infrastrukturkomponenten einsetzen, die sie nicht mehr verwenden sollten</li>
+                              <li>Migrationen können deutlich schneller durchgeführt werden, wenn Konfigurationen an einer zentralen Stelle abgelegt sind</li>
+                           </ul>
+                           <p>Die Liste lässt sich noch um viele Punkte ergänzen und spiegeln vermutlich die Erfahrungen des Autors wider. Andere hätten möglicherweise mit "Time-to-Market" oder "Kostenreduktion durch höhere Velocity der Gesamtorganisation" argumentiert.</p>
+                           <p>Um an den ersten Teil dieses Blogs anzuknüpfen: Ein Argument für den GitOps Ansatz ist die erleichterte Zusammenarbeit über Teamgrenzen hinweg. Irgendwo haben wir das bereits gelesen… ah ja! Das war doch eines der Hauptziele des DevOps Ansatzes!</p>
+                           
+                           <h2>Platform Engineering</h2>
+                           <p>Für die Ungeduldigen unter uns beantworten wir im ersten Satz zwei Fragen, die wir gelegentlich gestellt bekommen:</p>
+                           <ul>
+                              <li><strong>Ist DevOps das gleiche wie Platform Engineering?</strong> Nein</li>
+                              <li><strong>Ist DevOps tot?</strong> Nein</li>
+                           </ul>
+                           <p>Aber es gibt etwas, das beide Ansätze eint: Der Bedarf durch die steigende Anzahl an Komponenten und Komplexität in Systemen.</p>
+                           <p>Während DevOps versucht, das Problem der Zusammenarbeit und sinkender Velocity während der Softwareentwicklung aus einer kulturellen Perspektive zu lösen, versucht Platform Engineering das Problem aus einem anderen Blickwinkel anzugehen: dem Self-Service.</p>
+
+                           <div class="pe-split-visual">
+                              <div class="pe-compare-card">
+                                 <span class="pe-card-icon"><img src="https://cdn.simpleicons.org/azuredevops/0078D7" alt="Azure DevOps"></span>
+                                 <h3>DevOps</h3>
+                                 <p>Fokus auf Zusammenarbeit, gemeinsame Verantwortung, Automatisierung und schnelles Feedback zwischen Entwicklung und Betrieb.</p>
+                              </div>
+                              <div class="pe-compare-card">
+                                 <span class="pe-card-icon"><img src="https://cdn.simpleicons.org/backstage/9BF0E1" alt="Backstage"></span>
+                                 <h3>Platform Engineering</h3>
+                                 <p>Fokus auf interne Plattformprodukte, Self-Service, Golden Paths und wiederverwendbare Standards für Entwicklerteams.</p>
+                              </div>
+                           </div>
+                           
+                           <div class="highlight-box">
+                              <h3 style="margin-top:0;">Beispiel zur Verdeutlichung</h3>
+                              <p>Es soll eine Applikation umgesetzt werden, welche Daten aus einem Kafka-Topic konsumiert, verarbeitet und das Ergebnis in einer Datenbank ablegt. Die Kafka Ressourcen werden mittels Strimzi (ein Kubernetes Operator), während die Datenbank in AWS RDS provisioniert werden soll. Leider gibt es einen Haken: Die Person, welche für die Umsetzung auserkoren wurde, kennt sich weder mit Strimzi noch mit AWS RDS aus. Steigende Komplexität heisst zwangsläufig, dass nicht jede Person alles wissen kann.</p>
+                              <p><strong>Der DevOps-Ansatz:</strong> Es wird entweder ein Teammitglied konsultiert oder ein Mitglied eines "cross-functional" Teams unterstützt bei der Verfassung der Terraform/CloudFormation/CDK/... und Helm/Kustomize/Scaffold-Templates, welche dann in einem Git-Repository abgelegt und angewandt werden.</p>
+                              <p><strong>Der Platform-Engineering-Ansatz:</strong> Es existiert ein "Internal Developer Portal" (IDP) im Unternehmen, bei welchem die jeweilige Entwicklerin oder der jeweilige Entwickler über einen Self-Service sowohl die Datenbank als auch die Kafka-Ressourcen anfragen kann, welche daraufhin erstellt werden.</p>
+                              <p>Das ist ein sehr vereinfachter Anwendungsfall des Ansatzes, spiegelt aber die Idee ausreichend gut wider.</p>
+                           </div>
+                           
+                           <p>Kurz gesagt beinhaltet Platform Engineering das Entwerfen und Konstruieren eines integrierten Produkts (dem IDP), das Toolchains und Abläufe umfasst, um die betrieblichen Anforderungen des gesamten Softwareentwicklungszyklus zu erfüllen. Dieser Self-Service-Ansatz ermöglicht es Entwicklerinnen und Entwicklern, nach den aktuellen Best Practices ein qualitativ hohes Level in sehr geringer Zeit bei der Umsetzung zu erreichen. Das IDP muss zwangsläufig gut gepflegt werden und verspricht im Gegenzug der ganzen Organisation einen potenziell hohen Geschwindigkeitszuwachs in der Softwareentwicklung.</p>
+                           <p>Wichtig bei diesem Ansatz ist, dass nicht jeder Use Case abgedeckt werden kann und sollte. Es gibt immer Randfälle oder Entwicklerinnen und Entwickler, welche ein außergewöhnlich hohes Maß an Know-how in den jeweiligen Bereichen mitbringen. Das IDP stellt den Golden Path nach aktuellem Stand bereit - es ist kein Golden Cage.</p>
+                           
+                           <h3>Exemplarische Anwendungsfälle für ein Internal Developer Portal:</h3>
+                           <ul>
+                              <li>Übersicht über verfügbare Services und Verantwortlichkeiten (Service Catalog)</li>
+                              <li>Provisionieren von Cloud Ressourcen</li>
+                              <li>Provisionieren von Kubernetes Ressourcen</li>
+                              <li>Bootstrappen von Projekten anhand von Templates (bspw. mittels Cookiecutter)</li>
+                              <li>Automatisiertes Beantragen von Ressourcen durch einen hinterlegten Workflow</li>
+                              <li>Bereitstellen von Pipeline-Beschreibungen beim Anlegen neuer Projekte</li>
+                              <li>Upgraden bestehender Projekte bei Änderungen am Golden Path</li>
+                           </ul>
+
+                           <figure class="pe-visual">
+                              <div class="pe-visual-head"><strong>Internal Developer Platform</strong><span>Golden Path statt manuellem Ticket-Pingpong</span></div>
+                              <div class="pe-flow">
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/backstage/9BF0E1" alt="Backstage"><strong>Portal</strong><small>Service Catalog und Templates</small></div>
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/terraform/7B42BC" alt="Terraform"><strong>IaC</strong><small>Cloud-Ressourcen provisionieren</small></div>
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/kubernetes/326CE5" alt="Kubernetes"><strong>Kubernetes</strong><small>Runtime standardisieren</small></div>
+                                 <div class="pe-flow-step"><img src="https://cdn.simpleicons.org/prometheus/E6522C" alt="Prometheus"><strong>Observability</strong><small>SLI, SLO und Alerts</small></div>
+                                 <div class="pe-flow-step"><i class="fa-solid fa-shield-halved"></i><strong>Governance</strong><small>Policies und Guardrails</small></div>
+                              </div>
+                              <figcaption>Eine Plattform ist ein Produkt für interne Teams. Sie muss dokumentiert, gepflegt und anhand echter Entwicklerbedürfnisse verbessert werden.</figcaption>
+                           </figure>
+
+                           <h2>Praxisaufgaben</h2>
+                           <p>Nutzen Sie die folgenden Aufgaben, um den Kurs nicht nur zu lesen, sondern aktiv auf Ihre eigene Organisation zu übertragen.</p>
+                           <div class="pe-practice-grid">
+                              <div class="pe-practice-card">
+                                 <i class="fa-solid fa-clipboard-list"></i>
+                                 <h3>1. Reifegrad erfassen</h3>
+                                 <p>Notieren Sie, welche Deployments heute manuell passieren und welche davon durch CI, GitOps oder Self-Service ersetzt werden könnten.</p>
+                              </div>
+                              <div class="pe-practice-card">
+                                 <i class="fa-solid fa-route"></i>
+                                 <h3>2. Golden Path definieren</h3>
+                                 <p>Beschreiben Sie den Standardweg für einen neuen Service: Repository, Pipeline, Container, Kubernetes, Monitoring und Ownership.</p>
+                              </div>
+                              <div class="pe-practice-card">
+                                 <i class="fa-solid fa-users-gear"></i>
+                                 <h3>3. Plattform als Produkt denken</h3>
+                                 <p>Definieren Sie Nutzer, Supportmodell, Service-Level und Feedbackkanäle für Ihre interne Plattform.</p>
+                              </div>
+                           </div>
+                           
+                           <div class="highlight-box">
+                              <h3 style="margin-top:0;">Fazit</h3>
+                              <p>DevOps ist nicht tot. Platform Engineering ist nicht einfach ein Re-Branding. Beide Ansätze ergänzen sich hervorragend. Während DevOps den kulturellen Wandel und die Zusammenarbeit fördert, bietet Platform Engineering die technische Plattform (das IDP), die es Entwicklerteams ermöglicht, schnell und nach Best Practices zu arbeiten. GitOps wiederum ist ein hervorragendes Konzept, um sowohl die Software als auch die Infrastruktur deklarativ zu verwalten. Die Zukunft liegt in der Kombination aller drei Ansätze!</p>
+                           </div>
+                           
+                           <div class="blog-single-tag">
+                              <a href="/free-courses/devops">DevOps</a>
+                              <a href="/free-courses/platform-engineering-vs-devops">Platform Engineering</a>
+                              <a href="/blog">GitOps</a>
+                              <a href="/blog">IDP</a>
+                              <a href="/blog">Internal Developer Platform</a>
+                              <a href="/free-courses/kubernetes">Kubernetes</a>
+                           </div>
+                           
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <!-- Blog Content Ende -->
+         
+         <!-- FOOTER -->
+         <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/index.html">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses.html">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/blog">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/event.html">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact.html">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p>Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+         <!-- FOOTER ENDE -->
+      </div>
+      
+            <!-- JAVASCRIPTS -->
+      <script src="/assets/js/jquery.min.js"></script>
+      <script src="/assets/js/bootstrap.min.js"></script>
+      <script src="/assets/js/wow.min.js"></script>
+      <script>
+          if (window.WOW) {
+              new WOW().init();
+          }
+      </script>
+   <!-- i18n Language Switcher -->
+<script>
+var i18n = {
+  de: {
+    'header-msg': 'Willkommen bei der Koffi Academy — Ihre Cloud- & DevOps-Reise beginnt hier.',
+    'nav-home': 'Startseite', 'nav-courses': 'Kurse', 'nav-lab': 'Laboratoire',
+    'nav-events': 'Veranstaltungen', 'nav-about-me': 'Über mich',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Kontakt',
+    'nav-about': 'Über uns', 'nav-faq': 'Häufige Fragen', 'nav-support': 'Support', 'nav-login': 'Anmelden / Registrieren',
+    'pe-breadcrumb': 'Platform Engineering & DevOps',
+    'footer-contact': 'Kontakt',
+    'pe-article': null
+  },
+  fr: {
+    'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
+    'nav-home': 'Accueil', 'nav-courses': 'Cours', 'nav-lab': 'Laboratoire',
+    'nav-events': 'Événements', 'nav-about-me': 'À propos de moi',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+    'nav-about': 'À propos', 'nav-faq': 'FAQ', 'nav-support': 'Support', 'nav-login': "Se connecter / S'inscrire",
+    'pe-breadcrumb': 'Platform Engineering & DevOps',
+    'footer-contact': 'Contact',
+    'pe-article':
+      '<div class="news-tag"><a href="/free-courses/devops">DevOps</a> <a href="/free-courses/platform-engineering-vs-devops">Platform Engineering</a> <a href="/blog">GitOps</a></div>' +
+      '<h1>Platform Engineering & DevOps</h1>' +
+      '<div class="meta-info"><i class="far fa-calendar-alt"></i> 30.04.2026 &nbsp;|&nbsp; <i class="far fa-clock"></i> 5 minutes de lecture</div>' +
+      '<p>Dans ce blog, nous décrivons et comparons les concepts de DevOps, GitOps et Platform Engineering. DevOps est-il mort ? Platform Engineering est-il "the new kid on the block" ? Ou s\'agit-il d\'un simple re-branding ? Nous allons voir !</p>' +
+      '<h2>DevOps</h2>' +
+      '<p>DevOps n\'est pas une technologie. C\'est avant tout un changement culturel qui vise à relier les différents groupes d\'équipes IT et à améliorer la collaboration.</p>' +
+      '<p>Ces groupes sont classiquement divisés en "développement" et "exploitation". L\'approche DevOps vise à abattre les barrières entre ces groupes. Lorsque chaque personne se sent impliquée, une responsabilité partagée s\'établit, ce qui améliore le succès global, la satisfaction et la vélocité.</p>' +
+      '<p>Il en résulte une série de pratiques : Intégration Continue, Livraison Continue, automatisation des tests, de l\'infrastructure, supervision et bien plus encore.</p>' +
+      '<p>L\'approche DevOps tente de résoudre la complexité croissante des systèmes principalement par un changement culturel. Les technologies jouent bien sûr un rôle central dans la mise en œuvre.</p>' +
+      '<h2>GitOps</h2>' +
+      '<p>GitOps est une approche pour le déploiement et la gestion de logiciels et d\'infrastructure. Sa caractéristique principale est qu\'un référentiel Git sert de "source de vérité unique" pour le déploiement automatisé (CI/CD). Toutes les applications et composants d\'infrastructure sont documentés avec leurs versions. Les pipelines s\'assurent que les modifications sont appliquées.</p>' +
+      '<p>Pour les non-initiés, voici quelques avantages :</p>' +
+      '<ul>' +
+      '<li>La vérité est dans le référentiel — chacun sait où chercher</li>' +
+      '<li>L\'application n\'a besoin que de ce qui est dans le référentiel</li>' +
+      '<li>L\'infrastructure requise est également décrite</li>' +
+      '<li>Le développement et l\'exploitation utilisent une plateforme commune</li>' +
+      '<li>Un déploiement est un commit — traçabilité totale</li>' +
+      '<li>La sécurité est facilitée : vérification des templates obsolètes</li>' +
+      '<li>Les migrations sont plus rapides avec des configurations centralisées</li>' +
+      '</ul>' +
+      '<p>La liste peut être complétée par de nombreux autres points. D\'autres auraient peut-être argumenté avec "Time-to-Market" ou "réduction des coûts".</p>' +
+      '<p>GitOps facilite la collaboration inter-équipes — exactement l\'un des objectifs principaux de l\'approche DevOps !</p>' +
+      '<h2>Platform Engineering</h2>' +
+      '<p>Pour les impatients, deux réponses rapides :</p>' +
+      '<ul><li><strong>DevOps est-il la même chose que Platform Engineering ?</strong> Non</li><li><strong>DevOps est-il mort ?</strong> Non</li></ul>' +
+      '<p>Mais les deux approches sont unies par un même besoin : la complexité croissante des systèmes.</p>' +
+      '<p>Tandis que DevOps résout le problème depuis une perspective culturelle, Platform Engineering l\'aborde sous l\'angle du self-service.</p>' +
+      '<div class="highlight-box"><h3 style="margin-top:0;">Exemple pour illustrer</h3>' +
+      '<p>Une application doit consommer des données d\'un topic Kafka et stocker le résultat dans AWS RDS. La personne choisie ne connaît ni Strimzi ni AWS RDS. La complexité croissante implique que personne ne peut tout savoir.</p>' +
+      '<p><strong>L\'approche DevOps :</strong> Un membre de l\'équipe aide à rédiger les templates Terraform/Helm, qui sont ensuite stockés dans un référentiel Git.</p>' +
+      '<p><strong>L\'approche Platform Engineering :</strong> Un Internal Developer Portal (IDP) permet au développeur de demander la base de données et les ressources Kafka en self-service.</p>' +
+      '<p>C\'est un cas d\'usage simplifié, mais il illustre bien l\'idée.</p></div>' +
+      '<p>En résumé, Platform Engineering consiste à concevoir un produit intégré (l\'IDP) qui englobe des chaînes d\'outils pour répondre aux besoins de l\'ensemble du cycle de développement. Ce self-service permet aux développeurs d\'atteindre un niveau de qualité élevé très rapidement.</p>' +
+      '<p>Il est important que tous les cas d\'usage ne doivent pas être couverts. L\'IDP fournit le Golden Path — ce n\'est pas une Golden Cage.</p>' +
+      '<h3>Cas d\'usage exemplaires pour un Internal Developer Portal :</h3>' +
+      '<ul>' +
+      '<li>Vue d\'ensemble des services disponibles (Service Catalog)</li>' +
+      '<li>Provisionnement de ressources cloud</li>' +
+      '<li>Provisionnement de ressources Kubernetes</li>' +
+      '<li>Bootstrap de projets à partir de templates</li>' +
+      '<li>Demande automatisée de ressources via un workflow</li>' +
+      '<li>Mise à disposition de descriptions de pipelines</li>' +
+      '<li>Mise à jour de projets existants lors de changements sur le Golden Path</li>' +
+      '</ul>' +
+      '<div class="highlight-box"><h3 style="margin-top:0;">Conclusion</h3><p>DevOps n\'est pas mort. Platform Engineering n\'est pas un simple re-branding. Les deux approches se complètent. DevOps promeut le changement culturel, Platform Engineering fournit la plateforme technique (l\'IDP). GitOps gère de manière déclarative logiciel et infrastructure. L\'avenir réside dans la combinaison des trois approches !</p></div>' +
+      '<div class="blog-single-tag"><a href="/free-courses/devops">DevOps</a> <a href="/free-courses/platform-engineering-vs-devops">Platform Engineering</a> <a href="/blog">GitOps</a> <a href="/blog">IDP</a> <a href="/free-courses/kubernetes">Kubernetes</a></div>'
+  },
+  en: {
+    'header-msg': 'Online Courses — Millions of people are learning!',
+    'nav-home': 'Home', 'nav-courses': 'Courses', 'nav-lab': 'Laboratoire',
+    'nav-events': 'Events', 'nav-about-me': 'About Me',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+    'nav-about': 'About Us', 'nav-faq': 'FAQ', 'nav-support': 'Support', 'nav-login': 'Login / Register',
+    'pe-breadcrumb': 'Platform Engineering & DevOps',
+    'footer-contact': 'Contact',
+    'pe-article':
+      '<div class="news-tag"><a href="/free-courses/devops">DevOps</a> <a href="/free-courses/platform-engineering-vs-devops">Platform Engineering</a> <a href="/blog">GitOps</a></div>' +
+      '<h1>Platform Engineering & DevOps</h1>' +
+      '<div class="meta-info"><i class="far fa-calendar-alt"></i> 30.04.2026 &nbsp;|&nbsp; <i class="far fa-clock"></i> 5 min read</div>' +
+      '<p>This blog describes and compares DevOps, GitOps, and Platform Engineering. Is DevOps dead? Is Platform Engineering the "new kid on the block"? Or just another re-branding? We will see!</p>' +
+      '<h2>DevOps</h2>' +
+      '<p>DevOps is not a technology. It is a cultural shift aimed at connecting different IT team groups and improving collaboration.</p>' +
+      '<p>These groups are classically divided into "development" and "operations". DevOps aims to break down barriers between them. When everyone feels actively involved, shared ownership is established, positively affecting overall success, satisfaction, and velocity.</p>' +
+      '<p>This has led to a range of practices: Continuous Integration, Continuous Delivery, test automation, infrastructure automation, monitoring, and more.</p>' +
+      '<p>The DevOps approach attempts to solve growing system complexity primarily through cultural change. Technologies play a central role in its implementation.</p>' +
+      '<h2>GitOps</h2>' +
+      '<p>GitOps is an approach for deploying and managing software and infrastructure. Its most obvious feature is that a Git repository serves as the "single source of truth" for automated deployment (CI/CD). All applications and infrastructure components are documented with their versions, and pipelines ensure changes are applied.</p>' +
+      '<p>For outsiders, the benefits may not be immediately obvious. Here is a short (opinionated) compilation:</p>' +
+      '<ul>' +
+      '<li>The truth is in the repository — everyone knows where to look</li>' +
+      '<li>The application needs nothing more than what is in the repository to run</li>' +
+      '<li>Not only the software, but also the required infrastructure is described</li>' +
+      '<li>Development and operations suddenly share a common platform</li>' +
+      '<li>A deployment is a commit — full traceability of who deployed what and where</li>' +
+      '<li>Security topics apply — easily identify teams using outdated templates</li>' +
+      '<li>Migrations are much faster with centrally stored configurations</li>' +
+      '</ul>' +
+      '<p>The list can be extended with many more points. Others might have argued with "Time-to-Market" or "cost reduction through higher velocity".</p>' +
+      '<p>GitOps facilitates collaboration across team boundaries — exactly one of the main goals of the DevOps approach!</p>' +
+      '<h2>Platform Engineering</h2>' +
+      '<p>For the impatient, two quick answers:</p>' +
+      '<ul><li><strong>Is DevOps the same as Platform Engineering?</strong> No</li><li><strong>Is DevOps dead?</strong> No</li></ul>' +
+      '<p>But both approaches are united by the same need: the growing complexity of systems.</p>' +
+      '<p>While DevOps solves the collaboration problem from a cultural perspective, Platform Engineering approaches it from a different angle: self-service.</p>' +
+      '<div class="highlight-box"><h3 style="margin-top:0;">Example to illustrate</h3>' +
+      '<p>An application must consume data from a Kafka topic and store results in AWS RDS. The developer chosen for the task knows neither Strimzi nor AWS RDS. Growing complexity means no one can know everything.</p>' +
+      '<p><strong>The DevOps approach:</strong> A team member helps write the Terraform/Helm templates, which are then stored in a Git repository.</p>' +
+      '<p><strong>The Platform Engineering approach:</strong> An Internal Developer Portal (IDP) allows the developer to request the database and Kafka resources via self-service.</p>' +
+      '<p>This is a simplified use case, but it illustrates the idea well.</p></div>' +
+      '<p>In short, Platform Engineering involves designing an integrated product (the IDP) encompassing toolchains to meet the operational requirements of the entire software development lifecycle. This self-service approach enables developers to achieve high quality rapidly.</p>' +
+      '<p>Not every use case can or should be covered. The IDP provides the Golden Path — it is not a Golden Cage.</p>' +
+      '<h3>Exemplary use cases for an Internal Developer Portal:</h3>' +
+      '<ul>' +
+      '<li>Overview of available services and responsibilities (Service Catalog)</li>' +
+      '<li>Provisioning of cloud resources</li>' +
+      '<li>Provisioning of Kubernetes resources</li>' +
+      '<li>Bootstrapping projects from templates (e.g. Cookiecutter)</li>' +
+      '<li>Automated resource requests through a defined workflow</li>' +
+      '<li>Providing pipeline definitions when creating new projects</li>' +
+      '<li>Upgrading existing projects when the Golden Path changes</li>' +
+      '</ul>' +
+      '<div class="highlight-box"><h3 style="margin-top:0;">Conclusion</h3><p>DevOps is not dead. Platform Engineering is not just a re-branding. Both approaches complement each other. DevOps promotes cultural change, Platform Engineering provides the technical platform (the IDP). GitOps declaratively manages software and infrastructure. The future lies in combining all three approaches!</p></div>' +
+      '<div class="blog-single-tag"><a href="/free-courses/devops">DevOps</a> <a href="/free-courses/platform-engineering-vs-devops">Platform Engineering</a> <a href="/blog">GitOps</a> <a href="/blog">IDP</a> <a href="/free-courses/kubernetes">Kubernetes</a></div>'
+  }
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) { el.textContent = i18n[lang][key]; }
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-html');
+    if (i18n[lang][key]) { el.innerHTML = i18n[lang][key]; }
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+});
+</script>
+<!-- end i18n -->
+<script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/announce.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

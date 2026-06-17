@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Was ist Performance Engineering? | Koffi Academy</title>
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/responsive.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="shortcut icon" href="/assets/images/logo.png">
+<meta name="description" content="Performance Engineering – proaktives, kontinuierliches Testen und Überwachen der Anwendungsleistung. Unterschied zu klassischen Performance Tests.">
+<meta name="theme-color" content="#07294d">
+<style>
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box}
+
+/* ── Lang switcher in header ── */
+.lang-switcher{display:flex;gap:4px;align-items:center;margin-left:14px}
+.lang-btn{border:none;background:rgba(255,255,255,.15);border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;color:#fff;letter-spacing:.5px;transition:.18s}
+.lang-btn.active{background:#ffc600;color:#07294d}
+.lang-btn:hover:not(.active){background:rgba(255,255,255,.28)}
+
+/* ── Article hero ── */
+.pe-hero{background:linear-gradient(135deg,#031824 0%,#052a40 55%,#0a4d75 100%);padding:52px 0 46px;position:relative;overflow:hidden}
+.pe-hero::after{content:'';position:absolute;right:-60px;top:-60px;width:240px;height:240px;border-radius:50%;background:rgba(255,198,0,.10);pointer-events:none}
+.pe-kicker{display:inline-flex;align-items:center;gap:7px;background:rgba(255,198,0,.18);border:1px solid rgba(255,198,0,.38);color:#ffc600;padding:5px 14px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.pe-hero h1{color:#fff;font-size:34px;font-weight:800;line-height:1.18;margin:0 0 20px;max-width:780px;letter-spacing:-.3px}
+.pe-meta{display:flex;flex-wrap:wrap;gap:18px}
+.pe-meta span{color:rgba(255,255,255,.68);font-size:13px;display:flex;align-items:center;gap:6px}
+.pe-meta i{color:#ffc600;font-size:11px}
+.pe-back{display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.72);font-size:13px;font-weight:600;text-decoration:none;margin-bottom:20px;transition:.18s}
+.pe-back:hover{color:#ffc600}
+
+/* ── Article body ── */
+.pe-main{padding:56px 0 72px;background:#f8fafc}
+.pe-body{max-width:820px}
+
+/* Typography */
+.pe-body .art-lead{font-size:17.5px;line-height:1.82;color:#2d3f55;margin-bottom:38px;border-left:3px solid #0a4d75;padding-left:20px;font-weight:400}
+.pe-body h2{font-size:24px;font-weight:700;color:#052a40;margin:46px 0 14px;line-height:1.26;padding-left:16px;border-left:4px solid #ffc600}
+.pe-body h3{font-size:18px;font-weight:700;color:#1a3a58;margin:30px 0 10px}
+.pe-body p{font-size:15.5px;line-height:1.84;color:#3d4f64;margin-bottom:18px}
+.pe-body strong{color:#052a40}
+.pe-body ul{margin:0 0 20px 0;padding-left:0;list-style:none}
+.pe-body ul li{font-size:15.5px;line-height:1.78;color:#3d4f64;margin-bottom:8px;padding-left:22px;position:relative}
+.pe-body ul li::before{content:'›';position:absolute;left:6px;color:#ffc600;font-weight:700}
+
+/* Highlight / info boxes */
+.hl-box{background:#fff7e0;border-left:4px solid #ffc600;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0}
+.hl-box p{margin:0;font-size:15px;color:#3d4f64}
+.info-box{background:#e8f4fd;border-radius:10px;padding:20px 24px;margin:24px 0}
+.info-box p{margin:0;font-size:15px;color:#1a4a7a}
+
+/* Comparison table */
+.cmp-table-wrap{overflow-x:auto;margin:28px 0;border-radius:12px;box-shadow:0 4px 18px rgba(5,42,64,.08)}
+.cmp-table{width:100%;border-collapse:collapse;font-size:14.5px;background:#fff;border-radius:12px;overflow:hidden}
+.cmp-table th{background:#052a40;color:#fff;padding:13px 16px;text-align:left;font-weight:600;font-size:13px;letter-spacing:.2px}
+.cmp-table td{padding:12px 16px;border-bottom:1px solid #eef2f8;color:#3d4f64;vertical-align:top}
+.cmp-table tr:last-child td{border-bottom:none}
+.cmp-table tr:nth-child(even) td{background:#f8fafc}
+.cmp-table td:first-child{font-weight:600;color:#1a3a58;white-space:nowrap}
+
+/* Role grid */
+.role-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin:28px 0}
+.role-card{background:#fff;border:1.5px solid #e4ecf5;border-radius:12px;padding:22px;transition:.22s;box-shadow:0 2px 8px rgba(5,42,64,.05)}
+.role-card:hover{border-color:#0a4d75;box-shadow:0 6px 20px rgba(5,42,64,.10);transform:translateY(-2px)}
+.role-card h3{font-size:15.5px;font-weight:700;color:#052a40;margin:0 0 10px;display:flex;align-items:center;gap:9px}
+.role-card h3 i{color:#ffc600;font-size:16px}
+.role-card p{font-size:14.5px;color:#5a6a8a;line-height:1.7;margin:0}
+
+/* Callout */
+.art-callout{background:#052a40;border-radius:12px;padding:22px 26px;margin:32px 0;display:flex;gap:18px;align-items:flex-start}
+.art-callout i{color:#ffc600;font-size:20px;flex-shrink:0;margin-top:3px}
+.art-callout p{color:rgba(255,255,255,.88);font-size:15px;line-height:1.74;margin:0}
+
+/* Conclusion */
+.art-conclusion{background:linear-gradient(135deg,#e6f3fb,#d0e8f5);border-left:4px solid #052a40;border-radius:0 12px 12px 0;padding:26px 30px;margin:44px 0 0}
+.art-conclusion h2{margin-top:0;border:none;padding-left:0;color:#052a40}
+
+/* Tags */
+.art-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:36px;padding-top:28px;border-top:1px solid #e4ecf5}
+.art-tag{background:rgba(5,42,64,.07);color:#052a40;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;text-decoration:none;transition:.18s}
+.art-tag:hover{background:#052a40;color:#fff}
+
+/* Related articles */
+.pe-related{background:#fff;border-top:1px solid #e4ecf5;padding:44px 0 52px}
+.pe-related-label{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#8a9bb0;margin-bottom:8px}
+.pe-related h3{color:#07294d;font-size:20px;font-weight:700;margin:0 0 24px}
+.pe-related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.arc{display:flex;flex-direction:column;padding:20px 22px;border:1.5px solid #e0e8f2;border-radius:12px;transition:.22s;background:#f8fafc;text-decoration:none}
+.arc:hover{border-color:#052a40;box-shadow:0 6px 20px rgba(5,42,64,.09);transform:translateY(-2px)}
+.arc-tag{font-size:10px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:#052a40;background:rgba(10,77,117,.12);padding:3px 9px;border-radius:999px;margin-bottom:10px;display:inline-block;width:fit-content}
+.arc h4{color:#07294d;font-size:14.5px;font-weight:700;margin:0;line-height:1.38}
+.arc-blog{align-items:center;justify-content:center;text-align:center;background:#052a40;border-color:#052a40}
+.arc-blog i{color:#ffc600;font-size:22px;margin-bottom:10px}
+.arc-blog span{color:#fff;font-weight:700;font-size:14px}
+
+/* Utility classes (replaces inline styles) */
+.icon-info{color:#1a6aad;margin-right:8px}
+.hl-list{margin-top:10px}
+.accent{color:#ffc600}
+
+/* Responsive */
+@media(max-width:768px){
+  .pe-hero h1{font-size:24px}
+  .pe-hero{padding:38px 0 32px}
+  .pe-body h2{font-size:20px}
+  .pe-body .art-lead{font-size:16px}
+  .pe-related-grid{grid-template-columns:1fr}
+  .role-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .pe-hero h1{font-size:20px}
+  .cmp-table th,.cmp-table td{padding:10px 12px;font-size:13px}
+}
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+<style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+/* ── Related Articles ──────────────────────── */
+.related-articles{background:#f0f4f8;padding:56px 0 64px;border-top:1px solid #e2e8f0}
+.related-header{margin-bottom:36px}
+.related-kicker{display:inline-flex;align-items:center;gap:7px;background:rgba(255,198,0,.15);color:#7a5800;border:1px solid rgba(255,198,0,.4);font-size:11px;font-weight:700;padding:4px 14px;border-radius:999px;text-transform:uppercase;letter-spacing:.9px;margin-bottom:12px}
+.related-kicker i{color:#ffc600;font-size:10px}
+.related-header h2{font-size:1.6rem;font-weight:800;color:#07294d;letter-spacing:-.03em;margin:0}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.related-card{background:#fff;border-radius:16px;padding:24px;border:1px solid #e2e8f0;box-shadow:0 4px 18px rgba(7,41,77,.06);text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:12px;transition:all .22s;position:relative;overflow:hidden}
+.related-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ffc600,rgba(255,198,0,.3))}
+.related-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(7,41,77,.13);border-color:rgba(255,198,0,.4)}
+.related-card-icon{width:46px;height:46px;background:rgba(255,198,0,.12);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.related-card-icon i{color:#07294d;font-size:18px}
+.related-card-tag{font-size:11px;font-weight:700;color:#ffc600;text-transform:uppercase;letter-spacing:.7px}
+.related-card h3{font-size:14.5px;font-weight:700;color:#07294d;line-height:1.38;margin:0}
+.related-card p{font-size:13px;color:#64748b;line-height:1.65;margin:0;flex:1}
+.related-card-arrow{display:flex;align-items:center;justify-content:flex-end;color:#ffc600;font-size:13px;font-weight:700;gap:6px;margin-top:auto}
+.related-card-arrow span{font-size:12px;color:#94a3b8;transition:.18s}
+.related-card:hover .related-card-arrow span{color:#07294d}
+@media(max-width:900px){.related-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:576px){.related-grid{grid-template-columns:1fr}}
+</style><link rel="stylesheet" href="/assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body>
+<div class="page-main">
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="/index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="/index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses.html">Kurskatalog</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+<a href="/blog">Blog</a>
+<a href="/culture.html">Culture</a>
+<a href="/koffi-profile">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="/login.html">Anmelden</a><a class="kh__btn" href="/register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+<!-- ═══════════ /HEADER ═══════════ -->
+
+<!-- ═══════════ LANGUAGE CONTENT ═══════════ -->
+
+<!-- ════ DEUTSCH ════ -->
+<div class="lang-content" data-lang="de">
+  <div class="pe-hero">
+    <div class="container">
+      <a href="/blog" class="pe-back"><i class="fas fa-arrow-left"></i> Zurück zum Blog</a>
+      <div class="pe-kicker"><i class="fas fa-gauge-high"></i> IT · Performance · DevOps</div>
+      <h1>Was ist Performance Engineering?<br>Proaktive Zuverlässigkeit statt reaktiver Feuerwehr</h1>
+      <div class="pe-meta">
+        <span><i class="fas fa-calendar-alt"></i> 16 Mai 2026</span>
+        <span><i class="fas fa-clock"></i> 7 Min. Lesezeit</span>
+        <span><i class="fas fa-user"></i> Koffitse Aboudou</span>
+        <span><i class="fas fa-tag"></i> Performance Engineering · DevOps · CI/CD · APM</span>
+      </div>
+    </div>
+  </div>
+  <section class="pe-main">
+    <div class="container">
+      <div class="pe-body">
+
+        <p class="art-lead"><strong>Performance Engineering</strong> ist proaktives, kontinuierliches und durchgängiges Testen und Überwachen der Anwendungsleistung. Es ermöglicht eine nahtlose Zusammenarbeit zwischen Teams, Tools und Prozessen durch kontinuierliche Feedbackschleifen. Hier sind nicht nur Tester für die Qualitätssicherung verantwortlich, sondern auch Entwickler, Performance-Ingenieure, Product Owner und Business-Analysten.</p>
+
+        <div class="info-box">
+          <p><i class="fas fa-chart-line icon-info"></i> <strong>Kernprinzip:</strong> Performance ist kein Test am Ende der Pipeline — sie ist eine Eigenschaft, die von der ersten User-Story bis zum Monitoring in der Produktion durchgängig sichergestellt wird.</p>
+        </div>
+
+        <h2>Performance Testing vs. Performance Engineering</h2>
+        <p>Klassische Leistungstests sind ein Teilbereich des Performance Engineering. In der Regel handelt es sich um eine einmalige Belastungsprüfung als Teil des Qualitätssicherungszyklus nach der Entwicklung. Bei Leistungstests werden die <strong>Geschwindigkeit, Zuverlässigkeit, Skalierbarkeit, Stabilität, Reaktionszeit und Ressourcennutzung</strong> einer Anwendung unter der erwarteten Arbeitslast geprüft.</p>
+
+        <div class="hl-box">
+          <p><strong>❌ Probleme traditioneller Leistungstests:</strong></p>
+          <ul class="hl-list">
+            <li>Isolierte Betrachtung – als nachträglicher Gedanke behandelt</li>
+            <li>Arbeit in Silos – große Kommunikationslücken zwischen Teams</li>
+            <li>Späte Fehlererkennung – hohe Kosten für Behebungen kurz vor dem Release</li>
+            <li>Nicht für DevOps geeignet – zu langsam für CI/CD-Zyklen</li>
+          </ul>
+        </div>
+
+        <div class="cmp-table-wrap">
+          <table class="cmp-table">
+            <thead>
+              <tr><th>Aspekt</th><th>Performance Testing</th><th>Performance Engineering</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Zeitpunkt</td><td>Nach der Entwicklung (QS-Zyklus)</td><td>Von Anfang an, kontinuierlich</td></tr>
+              <tr><td>Verantwortliche</td><td>Nur QA-Team</td><td>Entwickler, Performance Engineers, QA, Business-Analysten</td></tr>
+              <tr><td>Ansatz</td><td>Reaktiv (einmalig)</td><td>Proaktiv (kontinuierlich)</td></tr>
+              <tr><td>Feedback</td><td>Zu spät für Früherkennung</td><td>Echtzeit-Feedbackschleifen</td></tr>
+              <tr><td>Integration</td><td>Nicht für DevOps geeignet</td><td>Vollständig in CI/CD integriert</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Leistungstechnische Kernkonzepte</h2>
+        <p>Durch die folgenden Konzepte liefern DevOps und Performance Engineering konsistente Ergebnisse bei der Produktionsleistung, sodass Teams Anwendungen effizienter und mit mehr Vertrauen bereitstellen können.</p>
+
+        <h3>End-to-End-Optimierung</h3>
+        <p>Das Performance Engineering bietet eine <strong>End-to-End-Systemoptimierung</strong> durch einen kontinuierlichen Test- und Überwachungsprozess. Dadurch werden Leistungs- und Lasttests in den Entwicklungsprozess verlagert. Nach der Freigabe verfolgt Performance Engineering die Anwendung in der Produktion über APM-Tools (Application Performance Monitoring) wie Datadog, New Relic oder Dynatrace.</p>
+
+        <h3>Funktionsübergreifendes Team</h3>
+        <p>Performance Engineering ermöglicht die Zusammenarbeit zwischen allen Projektbeteiligten – von Business-Analysten bis hin zu Entwicklern. Die Aufrechterhaltung eines hohen Leistungsniveaus macht jeden, nicht nur QA-Engineers, zu einem Hüter der Produktleistung.</p>
+
+        <h3>Testing Center of Excellence (CoE)</h3>
+        <p>Das Testing CoE dient als vertrauenswürdiger Berater für das Testen und als Hüter der Best Practices. Es unterstützt DevOps- und Agile-Methoden und empfiehlt bei Bedarf die richtigen Performance-Test-Tools — von k6 und Gatling bis zu JMeter und Locust.</p>
+
+        <div class="art-callout">
+          <i class="fas fa-bullseye"></i>
+          <p>Performance Engineering ohne <strong class="accent">SLIs und SLOs</strong> ist blindes Messen. Service Level Indicators definieren, was gemessen wird (Latenz p95, Fehlerrate, Durchsatz). Service Level Objectives definieren die Akzeptanzgrenzen. Erst wenn diese vertraglich verankert sind, wird Performance Engineering zur geteilten Verantwortung — nicht zur alleinigen Last des QA-Teams.</p>
+        </div>
+
+        <h2>Rollen im Performance Engineering</h2>
+
+        <div class="role-grid">
+          <div class="role-card">
+            <h3><i class="fas fa-gauge-high"></i> Performance Engineer</h3>
+            <p>Bietet eine ganzheitliche Sicht auf den gesamten Code, stellt Leistungskennzahlen und -szenarien bereit und wird früh in die Entwicklung einbezogen.</p>
+          </div>
+          <div class="role-card">
+            <h3><i class="fas fa-code"></i> Software-Entwickler</h3>
+            <p>Führt Leistungstests während des Schreibens durch. Gibt keinen Code frei, bevor er die definierten Performance-Akzeptanzkriterien erfüllt.</p>
+          </div>
+          <div class="role-card">
+            <h3><i class="fas fa-users-cog"></i> DevTester</h3>
+            <p>Verbindet Performance Engineering und Entwicklerteams. Solide Programmier- und Testfähigkeiten, flexibel in der Tool-Wahl.</p>
+          </div>
+          <div class="role-card">
+            <h3><i class="fas fa-briefcase"></i> Business-Analyst</h3>
+            <p>Stellt sicher, dass Unternehmensanforderungen in die Leistungskriterien einfließen und überwacht die Anwendung in der Produktion.</p>
+          </div>
+        </div>
+
+        <h2>Moderne Performance-Engineering-Lösungen</h2>
+        <p>Performance Engineering verändert die Softwareentwicklungslandschaft grundlegend. Da nun eine größere Anzahl von Rollen involviert ist, ist der Bedarf an geeigneten Werkzeugen größer als je zuvor.</p>
+
+        <div class="hl-box">
+          <p><strong>🔧 Vorteile moderner Performance-Engineering-Lösungen:</strong></p>
+          <ul class="hl-list">
+            <li>Kontinuierliche End-to-End-Messungen und Echtzeit-Fehleranalyse</li>
+            <li>Performance-Kriterien als Teil der Definition of Done</li>
+            <li>Echtzeit-Analysen für schnelles Entwickler-Feedback</li>
+            <li>Synthetisches Monitoring und Real-User-Monitoring in der Produktion</li>
+            <li>Stimmungsanalyse der Endbenutzer unter Leistungsgesichtspunkten</li>
+          </ul>
+        </div>
+
+        <div class="art-conclusion">
+          <h2>Fazit: Leistung ist ein Designprinzip</h2>
+          <p>Performance Engineering ist erfolgreich, wenn Leistung aufgehört hat, ein separates Test-Gate zu sein, und zur inhärenten Eigenschaft des gesamten Entwicklungsprozesses geworden ist. Das setzt voraus: Performance-Budgets in User Stories, Lasttests in der CI/CD-Pipeline, SLOs als geteilte Verantwortung und Observability als Standard — keine Sondermaßnahme für Incidents.</p>
+          <p>Wer Performance erst nach dem Launch misst, zahlt zehnfach für Fixes, die präventiv einen Bruchteil gekostet hätten.</p>
+        </div>
+
+        <div class="art-tags">
+          <a href="/blog" class="art-tag">Performance Engineering</a>
+          <a href="/blog" class="art-tag">Performance Testing</a>
+          <a href="/blog" class="art-tag">DevOps</a>
+          <a href="/blog" class="art-tag">CI/CD</a>
+          <a href="/blog" class="art-tag">APM</a>
+          <a href="/blog" class="art-tag">SLO / SLI</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div><!-- /de -->
+
+<!-- ════ ENGLISH ════ -->
+<div class="lang-content" data-lang="en" hidden>
+  <div class="pe-hero">
+    <div class="container">
+      <a href="/blog" class="pe-back"><i class="fas fa-arrow-left"></i> Back to Blog</a>
+      <div class="pe-kicker"><i class="fas fa-gauge-high"></i> IT · Performance · DevOps</div>
+      <h1>What Is Performance Engineering?<br>Proactive Reliability Instead of Reactive Fire-Fighting</h1>
+      <div class="pe-meta">
+        <span><i class="fas fa-calendar-alt"></i> 16 May 2026</span>
+        <span><i class="fas fa-clock"></i> 7 min read</span>
+        <span><i class="fas fa-user"></i> Koffitse Aboudou</span>
+        <span><i class="fas fa-tag"></i> Performance Engineering · DevOps · CI/CD · APM</span>
+      </div>
+    </div>
+  </div>
+  <section class="pe-main">
+    <div class="container">
+      <div class="pe-body">
+
+        <p class="art-lead"><strong>Performance Engineering</strong> is proactive, continuous, and end-to-end testing and monitoring of application performance. It enables seamless collaboration between teams, tools, and processes through continuous feedback loops — making every stakeholder, not just QA engineers, a guardian of product performance.</p>
+
+        <div class="info-box">
+          <p><i class="fas fa-chart-line icon-info"></i> <strong>Core principle:</strong> Performance is not a test at the end of the pipeline — it is a property guaranteed continuously from the first user story to production monitoring.</p>
+        </div>
+
+        <h2>Performance Testing vs. Performance Engineering</h2>
+        <p>Classic load testing is a subset of Performance Engineering. It is typically a one-time stress test as part of the quality assurance cycle after development. Load tests check <strong>speed, reliability, scalability, stability, response time, and resource utilization</strong> under expected workload.</p>
+
+        <div class="hl-box">
+          <p><strong>❌ Problems with traditional load testing:</strong></p>
+          <ul class="hl-list">
+            <li>Isolated view — treated as an afterthought at the end of development</li>
+            <li>Siloed work — large communication gaps between teams</li>
+            <li>Late defect detection — high cost to fix issues just before release</li>
+            <li>Not suited for DevOps — too slow for CI/CD cycles</li>
+          </ul>
+        </div>
+
+        <div class="cmp-table-wrap">
+          <table class="cmp-table">
+            <thead>
+              <tr><th>Aspect</th><th>Performance Testing</th><th>Performance Engineering</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Timing</td><td>After development (QA cycle)</td><td>From the start, continuously</td></tr>
+              <tr><td>Responsible</td><td>QA team only</td><td>Developers, Perf. Engineers, QA, Business Analysts</td></tr>
+              <tr><td>Approach</td><td>Reactive (one-time)</td><td>Proactive (continuous)</td></tr>
+              <tr><td>Feedback</td><td>Too late for early detection</td><td>Real-time feedback loops</td></tr>
+              <tr><td>Integration</td><td>Not suitable for DevOps</td><td>Fully integrated in CI/CD</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Core Concepts</h2>
+        <h3>End-to-End Optimization</h3>
+        <p>Performance Engineering provides <strong>end-to-end system optimization</strong> through continuous testing and monitoring. Load and performance tests are moved left into the development process. After release, it tracks the application in production via APM tools such as Datadog, New Relic, or Dynatrace.</p>
+
+        <h3>Cross-Functional Team</h3>
+        <p>Performance Engineering enables collaboration between all stakeholders — from business analysts to developers. Everyone, not just QA engineers, becomes a steward of product performance.</p>
+
+        <h3>Testing Center of Excellence</h3>
+        <p>The Testing CoE serves as a trusted advisor for testing and custodian of best practices. It recommends the right performance test tools — from k6 and Gatling to JMeter and Locust — based on team and context needs.</p>
+
+        <div class="art-callout">
+          <i class="fas fa-bullseye"></i>
+          <p>Performance Engineering without <strong class="accent">SLIs and SLOs</strong> is blind measurement. Service Level Indicators define what is measured (p95 latency, error rate, throughput). Service Level Objectives define acceptance thresholds. Only when these are contractually anchored does performance become a shared responsibility.</p>
+        </div>
+
+        <h2>Roles in Performance Engineering</h2>
+        <div class="role-grid">
+          <div class="role-card">
+            <h3><i class="fas fa-gauge-high"></i> Performance Engineer</h3>
+            <p>Provides a holistic view of the codebase, defines performance criteria and scenarios, and is involved early in development.</p>
+          </div>
+          <div class="role-card">
+            <h3><i class="fas fa-code"></i> Software Developer</h3>
+            <p>Runs performance tests while writing code. Does not release code until it passes defined performance acceptance criteria.</p>
+          </div>
+          <div class="role-card">
+            <h3><i class="fas fa-users-cog"></i> DevTester</h3>
+            <p>Bridges performance engineering and development teams. Combines strong coding and testing skills with flexibility in tool selection.</p>
+          </div>
+          <div class="role-card">
+            <h3><i class="fas fa-briefcase"></i> Business Analyst</h3>
+            <p>Ensures business requirements flow into performance criteria and monitors the application in production for top-tier performance.</p>
+          </div>
+        </div>
+
+        <div class="hl-box">
+          <p><strong>🔧 Benefits of modern Performance Engineering solutions:</strong></p>
+          <ul class="hl-list">
+            <li>Continuous end-to-end measurements and real-time error analysis</li>
+            <li>Performance criteria included in the Definition of Done</li>
+            <li>Real-time analytics for fast developer feedback</li>
+            <li>Synthetic monitoring and real-user monitoring in production</li>
+            <li>End-user sentiment analysis from a performance perspective</li>
+          </ul>
+        </div>
+
+        <div class="art-conclusion">
+          <h2>Conclusion: Performance Is a Design Principle</h2>
+          <p>Performance Engineering succeeds when performance has ceased to be a separate test gate and has become an inherent property of the entire development process. This requires performance budgets in user stories, load tests in the CI/CD pipeline, SLOs as shared responsibility, and observability as standard.</p>
+          <p>Those who measure performance only after launch pay tenfold for fixes that would have cost a fraction preventively.</p>
+        </div>
+
+        <div class="art-tags">
+          <a href="/blog" class="art-tag">Performance Engineering</a>
+          <a href="/blog" class="art-tag">Load Testing</a>
+          <a href="/blog" class="art-tag">DevOps</a>
+          <a href="/blog" class="art-tag">CI/CD</a>
+          <a href="/blog" class="art-tag">SLO / SLI</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div><!-- /en -->
+
+<!-- ════ FRANÇAIS ════ -->
+<div class="lang-content" data-lang="fr" hidden>
+  <div class="pe-hero">
+    <div class="container">
+      <a href="/blog" class="pe-back"><i class="fas fa-arrow-left"></i> Retour au Blog</a>
+      <div class="pe-kicker"><i class="fas fa-gauge-high"></i> IT · Performance · DevOps</div>
+      <h1>Qu'est-ce que le Performance Engineering ?<br>Fiabilité Proactive, Pas de la Pompière Réactive</h1>
+      <div class="pe-meta">
+        <span><i class="fas fa-calendar-alt"></i> 16 Mai 2026</span>
+        <span><i class="fas fa-clock"></i> 7 min de lecture</span>
+        <span><i class="fas fa-user"></i> Koffitse Aboudou</span>
+        <span><i class="fas fa-tag"></i> Performance Engineering · DevOps · CI/CD · APM</span>
+      </div>
+    </div>
+  </div>
+  <section class="pe-main">
+    <div class="container">
+      <div class="pe-body">
+
+        <p class="art-lead">Le <strong>Performance Engineering</strong> est le test et la surveillance proactifs, continus et de bout en bout des performances des applications. Il permet une collaboration fluide entre équipes, outils et processus grâce à des boucles de rétroaction continues — faisant de chaque partie prenante, pas seulement les ingénieurs QA, un gardien de la performance produit.</p>
+
+        <div class="info-box">
+          <p><i class="fas fa-chart-line icon-info"></i> <strong>Principe fondamental :</strong> La performance n'est pas un test en fin de pipeline — c'est une propriété garantie en continu, de la première user story au monitoring en production.</p>
+        </div>
+
+        <h2>Tests de Performance vs Performance Engineering</h2>
+        <p>Les tests de charge classiques sont un sous-ensemble du Performance Engineering. Il s'agit généralement d'un test de stress unique dans le cadre du cycle d'assurance qualité après développement. Les tests de performance vérifient la <strong>vitesse, la fiabilité, la scalabilité, la stabilité, le temps de réponse et l'utilisation des ressources</strong> sous la charge attendue.</p>
+
+        <div class="hl-box">
+          <p><strong>❌ Problèmes des tests de performance traditionnels :</strong></p>
+          <ul class="hl-list">
+            <li>Vue isolée — traités comme une réflexion après coup</li>
+            <li>Travail en silos — grandes lacunes de communication entre équipes</li>
+            <li>Détection tardive des défauts — coûts élevés pour corriger juste avant la mise en production</li>
+            <li>Non adapté au DevOps — trop lent pour les cycles CI/CD</li>
+          </ul>
+        </div>
+
+        <div class="cmp-table-wrap">
+          <table class="cmp-table">
+            <thead>
+              <tr><th>Aspect</th><th>Tests de Performance</th><th>Performance Engineering</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Moment</td><td>Après le développement (cycle QA)</td><td>Dès le début, en continu</td></tr>
+              <tr><td>Responsables</td><td>Équipe QA uniquement</td><td>Développeurs, Ingénieurs Perf., QA, Business Analysts</td></tr>
+              <tr><td>Approche</td><td>Réactive (ponctuelle)</td><td>Proactive (continue)</td></tr>
+              <tr><td>Retour d'information</td><td>Trop tard pour la détection précoce</td><td>Boucles de rétroaction en temps réel</td></tr>
+              <tr><td>Intégration</td><td>Non adapté au DevOps</td><td>Entièrement intégré dans CI/CD</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Concepts Fondamentaux</h2>
+        <h3>Optimisation de Bout en Bout</h3>
+        <p>Le Performance Engineering offre une <strong>optimisation système de bout en bout</strong> grâce à un processus continu de test et de surveillance. Les tests de charge et de performance sont déplacés à gauche dans le processus de développement. Après la mise en production, il suit l'application via des outils APM comme Datadog, New Relic ou Dynatrace.</p>
+
+        <h3>Équipe Transversale</h3>
+        <p>Le Performance Engineering permet la collaboration entre toutes les parties prenantes — des analystes métier aux développeurs. Chacun, pas seulement les ingénieurs QA, devient un gardien de la performance produit.</p>
+
+        <div class="art-callout">
+          <i class="fas fa-bullseye"></i>
+          <p>Le Performance Engineering sans <strong class="accent">SLI et SLO</strong> est une mesure à l'aveugle. Les Service Level Indicators définissent ce qui est mesuré (latence p95, taux d'erreur, débit). Les Service Level Objectives définissent les seuils d'acceptabilité. Ce n'est que lorsque ceux-ci sont contractuellement ancrés que la performance devient une responsabilité partagée.</p>
+        </div>
+
+        <h2>Rôles dans le Performance Engineering</h2>
+        <div class="role-grid">
+          <div class="role-card">
+            <h3><i class="fas fa-gauge-high"></i> Ingénieur Performance</h3>
+            <p>Fournit une vue holistique du code, définit les critères et scénarios de performance, et est impliqué tôt dans le développement.</p>
+          </div>
+          <div class="role-card">
+            <h3><i class="fas fa-code"></i> Développeur Logiciel</h3>
+            <p>Exécute des tests de performance pendant l'écriture du code. Ne livre pas de code avant qu'il n'ait passé les critères d'acceptation définis.</p>
+          </div>
+          <div class="role-card">
+            <h3><i class="fas fa-users-cog"></i> DevTester</h3>
+            <p>Fait le pont entre le Performance Engineering et les équipes de développement. Combine des compétences solides en développement et en test.</p>
+          </div>
+          <div class="role-card">
+            <h3><i class="fas fa-briefcase"></i> Analyste Métier</h3>
+            <p>S'assure que les exigences métier sont intégrées dans les critères de performance et surveille l'application en production.</p>
+          </div>
+        </div>
+
+        <div class="hl-box">
+          <p><strong>🔧 Avantages des solutions modernes de Performance Engineering :</strong></p>
+          <ul class="hl-list">
+            <li>Mesures continues de bout en bout et analyse des erreurs en temps réel</li>
+            <li>Critères de performance inclus dans la définition de « terminé »</li>
+            <li>Analyses en temps réel pour un retour rapide aux développeurs</li>
+            <li>Monitoring synthétique et monitoring des utilisateurs réels en production</li>
+          </ul>
+        </div>
+
+        <div class="art-conclusion">
+          <h2>Conclusion : La Performance est un Principe de Conception</h2>
+          <p>Le Performance Engineering réussit quand la performance a cessé d'être une étape de test séparée et est devenue une propriété inhérente de tout le processus de développement. Cela nécessite des budgets de performance dans les user stories, des tests de charge dans le pipeline CI/CD et des SLO comme responsabilité partagée.</p>
+          <p>Ceux qui mesurent la performance seulement après le lancement paient dix fois plus pour des correctifs qui auraient coûté une fraction à titre préventif.</p>
+        </div>
+
+        <div class="art-tags">
+          <a href="/blog" class="art-tag">Performance Engineering</a>
+          <a href="/blog" class="art-tag">Tests de Charge</a>
+          <a href="/blog" class="art-tag">DevOps</a>
+          <a href="/blog" class="art-tag">CI/CD</a>
+          <a href="/blog" class="art-tag">SLO / SLI</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div><!-- /fr -->
+
+<!-- ═══════════ RELATED ARTICLES ═══════════ -->
+<section class="pe-related">
+  <div class="container">
+    <p class="pe-related-label">Weitere Artikel</p>
+    <h3>Das könnte Sie auch interessieren</h3>
+    <div class="pe-related-grid">
+      <a href="/articles/performance-engineering" class="arc">
+        <span class="arc-tag">Performance · IT</span>
+        <h4>Performance Engineering: SLI/SLO, k6 und Observability</h4>
+      </a>
+      <a href="/articles/platform-engineering" class="arc">
+        <span class="arc-tag">Platform Engineering</span>
+        <h4>Platform Engineering: Internal Developer Platforms</h4>
+      </a>
+      <a href="/blog" class="arc arc-blog">
+        <i class="fas fa-th-large"></i>
+        <span>Alle Artikel</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES CONNEXES -->
+<section class="related-articles">
+  <div class="container">
+    <div class="related-header">
+      <div class="related-kicker"><i class="fas fa-bookmark"></i> Weiterlesen</div>
+      <h2>Diese Artikel könnten Sie auch interessieren</h2>
+    </div>
+    <div class="related-grid">
+      <a href="/free-courses/what-is-ci-cd" class="related-card">
+        <div class="related-card-icon"><i class="fas fa-code-branch"></i></div>
+        <div class="related-card-tag">CI/CD &amp; DevOps</div>
+        <h3>Was ist CI/CD?</h3>
+        <p>Continuous Integration und Deployment – Automatisierung des gesamten Software-Release-Zyklus.</p>
+        <div class="related-card-arrow"><span>Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+      </a>
+      <a href="/free-courses/what-is-sre" class="related-card">
+        <div class="related-card-icon"><i class="fas fa-server"></i></div>
+        <div class="related-card-tag">SRE &amp; Platform</div>
+        <h3>Was ist SRE?</h3>
+        <p>Site Reliability Engineering – Software-Methoden für zuverlässigen IT-Betrieb und Automatisierung.</p>
+        <div class="related-card-arrow"><span>Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+      </a>
+      <a href="/free-courses/what-is-alm" class="related-card">
+        <div class="related-card-icon"><i class="fas fa-layer-group"></i></div>
+        <div class="related-card-tag">ALM &amp; DevOps</div>
+        <h3>Was ist ALM?</h3>
+        <p>Application Lifecycle Management – vom Konzept bis zur Abkündigung einer Anwendung.</p>
+        <div class="related-card-arrow"><span>Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+      </a>
+      <a href="/free-courses/virtual-llm" class="related-card">
+        <div class="related-card-icon"><i class="fas fa-microchip"></i></div>
+        <div class="related-card-tag">KI &amp; LLM</div>
+        <h3>Was ist vLLM?</h3>
+        <p>Wie vLLM mit PagedAttention die LLM-Inferenz beschleunigt und skalierbar macht.</p>
+        <div class="related-card-arrow"><span>Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/index.html">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses.html">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/blog">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/event.html">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact.html">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p>Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+
+</div><!-- /page-main -->
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/wow.min.js"></script>
+<script src="/assets/js/custom.js"></script>
+<script>
+(function () {
+  'use strict';
+  function setLang(lang) {
+    document.querySelectorAll('.lang-content').forEach(function (el) {
+      el.hidden = el.dataset.lang !== lang;
+    });
+    document.querySelectorAll('.lang-btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    document.documentElement.lang = lang;
+    try { localStorage.setItem('pe-lang', lang); localStorage.setItem('preferred-lang', lang); } catch(e) {}
+  }
+  window.setLang = setLang;
+  var saved = 'de';
+  try { saved = localStorage.getItem('preferred-lang') || localStorage.getItem('pe-lang') || 'de'; } catch(e) {}
+  setLang(saved);
+  if (typeof WOW !== 'undefined') { new WOW().init(); }
+}());
+</script>
+<script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/announce.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';if(typeof setLang==='function')setLang(l);klSync(l);});
+</script>
+</body>
+</html>

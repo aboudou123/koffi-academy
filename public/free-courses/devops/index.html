@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="de">
+   <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="/assets/css/style.css">
+      <link rel="stylesheet" href="/assets/css/responsive.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="shortcut icon" href="/assets/images/logo.png">
+      <title>Enterprise Secret Management mit HashiCorp Vault - Integrationsmuster</title>
+      <meta name="Keywords" content="HashiCorp Vault, Secret Management, Kubernetes, Platform Engineering, DevPortal, PKI, Compliance, SOC2">
+      <meta name="Description" content="Master production-grade secret management durch Integration von HashiCorp Vault in Ihre DevPortal-Plattform. Lernen Sie automatisierte Secret-Injection, dynamische Datenbank-Anmeldeinformationen, PKI-Zertifikatsverwaltung und Kubernetes-Authentifizierungsmuster.">
+      <meta name="theme-color" content="#07294d">
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:description" content="Master production-grade secret management durch Integration von HashiCorp Vault in Ihre DevPortal-Plattform.">
+      <meta name="twitter:title" content="Enterprise Secret Management mit HashiCorp Vault - Integrationsmuster">
+      <meta name="twitter:image" content="assets/images/meta-banner.jpg">
+      <meta property="og:locale" content="de_DE">
+      <meta property="og:type" content="article">
+      <meta property="og:title" content="Enterprise Secret Management mit HashiCorp Vault - Integrationsmuster">
+      <meta property="og:description" content="Master production-grade secret management durch Integration von HashiCorp Vault in Ihre DevPortal-Plattform.">
+      <meta property="og:url" content="https://www.elearning.com/">
+      <meta property="og:site_name" content="E-Learning">
+      <meta property="og:image" content="assets/images/meta-banner.jpg">
+      <meta property="og:image:secure_url" content="assets/images/meta-banner.jpg">
+      <style>
+         .idp-content h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #1a1a1a; }
+         .idp-content h2 { font-size: 1.8rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem; }
+         .idp-content h3 { font-size: 1.4rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #34495e; }
+         .idp-content .meta { color: #666; font-size: 0.9rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
+         .idp-content .read-time { display: inline-block; background: #e8f4fd; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.85rem; margin-left: 1rem; }
+         .idp-content table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.95rem; }
+         .idp-content th { background: #2c3e50; color: white; padding: 1rem; text-align: left; }
+         .idp-content td { padding: 1rem; border: 1px solid #ddd; vertical-align: top; }
+         .idp-content tr:nth-child(even) { background: #f8f9fa; }
+         .idp-content .code-block { background: #2d2d2d; color: #f8f8f2; padding: 1rem; border-radius: 8px; font-family: 'Courier New', monospace; margin: 1rem 0; overflow-x: auto; font-size: 0.85rem; }
+         .idp-content .architecture-diagram { background: #f8f9fa; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; font-family: monospace; white-space: pre; overflow-x: auto; font-size: 0.75rem; line-height: 1.4; }
+         .idp-content .callout { background: #e8f4fd; border-left: 4px solid #3498db; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+         .idp-content .comparison-table th { background: #2c3e50; }
+         .idp-content .image-placeholder { background: #f0f0f0; border: 2px dashed #3498db; padding: 2rem; text-align: center; margin: 2rem 0; border-radius: 8px; color: #666; font-weight: bold; }
+         .idp-content ul, .idp-content ol { margin: 1rem 0; padding-left: 1.5rem; }
+         .idp-content li { margin-bottom: 0.5rem; }
+         .idp-content .policy-block { background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace; white-space: pre; overflow-x: auto; font-size: 0.8rem; }
+         .idp-content .key-points { background: #2c3e50; color: white; padding: 2rem; border-radius: 8px; margin: 2rem 0; }
+         .idp-content .key-points h3 { color: white; border-bottom: 1px solid #3498db; display: inline-block; }
+         .idp-content .key-points ul { color: #ddd; }
+         .idp-content .key-points li { margin-bottom: 0.5rem; }
+         @media (max-width: 768px) {
+            .idp-content h1 { font-size: 2rem; }
+            .idp-content h2 { font-size: 1.5rem; }
+            .idp-content .architecture-diagram { font-size: 0.6rem; }
+         }
+      .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+   <link rel="stylesheet" href="/assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+   <body>
+      <style type="text/css">
+         .why-choose-us-area {
+         padding: 60px 0px;
+         }
+      </style>
+      <div class="page-main">
+         <!-- header -->
+         <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="/index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="/index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses.html">Kurskatalog</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+<a href="/blog">Blog</a>
+<a href="/culture.html">Culture</a>
+<a href="/koffi-profile">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="/login.html">Anmelden</a><a class="kh__btn" href="/register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+         <!-- header -->
+         <!-- breadcrumb -->
+         <section class="breadcrumb-area">
+            <div class="breadcrumb-shape">
+               <img src="/assets/images/slider-bottom-pattern.png" alt="Form">
+            </div>
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                     <div class="breadcrumb-box">
+                        <h2>Blog Einzelansicht</h2>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <!-- breadcrumb -->
+         <!-- blog -->
+         <section class="blog-single-area page-paddings">
+               <div class="container">
+                  <div class="row">
+                     <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12">
+                        <div class="blog-post wow fadeInUp center" data-wow-delay="0.1s">
+                           <div class="blog-post-images">
+                              <img src="/assets/images/blog/blog1.svg" alt="HashiCorp Vault Secret Management">
+                           </div>
+                           <div class="post-content">
+                              <div class="post-social">
+                                 <span>Teilen</span>
+                                 <ul class="share-post">
+                                    <li><a href="https://www.facebook.com/" class="facebook"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="https://x.com/" class="twitter"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="https://www.pinterest.com/" class="pinterest"><i class="fab fa-pinterest"></i></a></li>
+                                 </ul>
+                              </div>
+                              <div class="post-content-text idp-content">
+                                 <div class="news-tag"><a href="/free-courses/platform-engineering-devops">Plattform-Engineering</a></div>
+                                 <h1>Enterprise Secret Management mit HashiCorp Vault Integrationsmuster</h1>
+                                 <p class="meta">Master production-grade secret management durch Integration von HashiCorp Vault in Ihre DevPortal-Plattform. Lernen Sie automatisierte Secret-Injection, dynamische Datenbank-Anmeldeinformationen, PKI-Zertifikatsverwaltung und Kubernetes-Authentifizierungsmuster, die von Netflix, Uber und Airbnb in ihren Produktionsplattformen verwendet werden.</p>
+                                 
+                                 <h2>Lektüre</h2>
+                                 <p>Willkommen zur letzten Woche Ihrer Platform Engineering Bootcamp-Reise! Sie haben 19 Wochen damit verbracht, umfassende Fähigkeiten in den Bereichen Container, Orchestrierung, Infrastructure as Code, Automatisierung, Observability und Service Mesh-Technologien aufzubauen. Letzte Woche haben Sie das Fundament Ihrer DevPortal-Plattform mit drei Kubernetes-Clustern, einem CLI-Tool, Anwendungsvorlagen und GitOps-Workflows erstellt.</p>
+                                 
+                                 <p>Diese Woche - Woche 20 - ist der Punkt, an dem alles zusammenkommt. Sie werden Ihre Plattform von einem funktionierenden Prototypen in eine produktionsreife, Enterprise-grade Internal Developer Platform verwandeln, die Sie stolz in Vorstellungsgesprächen und in Ihrem professionellen Portfolio präsentieren können.</p>
+                                 
+                                 <p>Wir beginnen mit dem vielleicht kritischsten Aspekt von Produktionsplattformen: <strong>Enterprise Secret Management</strong>.</p>
+                                 
+                                 <h2>Warum Vault-Integration für Produktionsplattformen wichtig ist</h2>
+                                 
+                                 <p>Denken Sie an die Plattformen, die bei Unternehmen laufen, die Sie bewundern:</p>
+                                 <ul>
+                                    <li><strong>Netflix</strong>: Verwaltet Millionen von Secrets über 100.000+ Microservices</li>
+                                    <li><strong>Uber</strong>: Rotiert Datenbank-Anmeldeinformationen automatisch alle 24 Stunden</li>
+                                    <li><strong>Airbnb</strong>: Verwendet dynamische PKI-Zertifikate für Service-to-Service-Authentifizierung</li>
+                                    <li><strong>Spotify</strong>: Injiziert Secrets zur Laufzeit, ohne sie in Git zu speichern</li>
+                                 </ul>
+                                 
+                                 <p>Diese Unternehmen verwenden Kubernetes Secrets nicht direkt in der Produktion. Sie verwenden <strong>HashiCorp Vault</strong>, das tief in ihre Plattformen integriert ist. Warum?</p>
+                                 
+                                 <div class="callout">
+                                    <strong>Warnung:</strong> Kubernetes Secrets sind Base64-kodiert, nicht verschlüsselt. Jeder mit Cluster-Zugriff kann sie dekodieren. Sie werden in etcd gespeichert und in GitOps-Workflows in Git-Repositories committet. Dies ist inakzeptabel für Produktionssysteme, die Kundendaten, Zahlungsinformationen oder regulierte Workloads verarbeiten.
+                                 </div>
+                                 
+                                 <p>HashiCorp Vault löst diese Probleme mit:</p>
+                                 <ul>
+                                    <li>Verschlüsselung im Ruhezustand und während der Übertragung</li>
+                                    <li>Dynamische Secrets, die bei Bedarf generiert werden und automatisch ablaufen</li>
+                                    <li>Audit-Logging für Compliance (SOC 2, HIPAA, PCI-DSS)</li>
+                                    <li>Zugriffskontrolle mit feingranularen Richtlinien</li>
+                                    <li>Secret-Rotation ohne Anwendungsausfall</li>
+                                 </ul>
+                                 
+                                 <p>In Woche 18 haben Sie die Vault-Grundlagen gelernt. Diese Woche werden Sie Vault-Produktionsmuster in Ihre DevPortal-Plattform integrieren.</p>
+                                 
+                                 <h2>Vault-Architektur für Plattform-Engineering</h2>
+                                 
+                                 <div class="architecture-diagram">
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                         HashiCorp Vault Cluster                                      │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐                   │
+│  │     Vault 1      │  │     Vault 2      │  │     Vault 3      │                   │
+│  │    (Aktiv)       │  │   (Standby)      │  │   (Standby)      │                   │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘                   │
+│           │                     │                     │                             │
+│           └─────────┬───────────┴─────────────────────┘                             │
+│                     │ Raft-Speicher-Backend                                          │
+│                     ▼                                                               │
+│         ┌─────────────────────────────────────┐                                     │
+│         │     Verschlüsselter Speicher         │                                     │
+│         │  - Statische Secrets (KV)           │                                     │
+│         │  - Datenbank-Anmeldeinformationen    │                                     │
+│         │  - PKI-Zertifikate                   │                                     │
+│         │  - Richtlinien & Authentifizierung   │                                     │
+│         └─────────────────────────────────────┘                                     │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                  ┌───────────────┬─────────────────┐
+                  │               │                 │
+                  ▼               ▼                 ▼
+      ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+      │   Dev-Cluster   │ │ Staging-Cluster │ │  Prod-Cluster   │
+      │                 │ │                 │ │                 │
+      │  Vault Agent    │ │  Vault Agent    │ │  Vault Agent    │
+      │  Injector       │ │  Injector       │ │  Injector       │
+      │                 │ │                 │ │                 │
+      │  ┌────────────┐ │ │  ┌────────────┐ │ │  ┌────────────┐ │
+      │  │   Pods     │ │ │  │   Pods     │ │ │  │   Pods     │ │
+      │  │ + Secrets  │ │ │  │ + Secrets  │ │ │  │ + Secrets  │ │
+      │  └────────────┘ │ │  └────────────┘ │ │  └────────────┘ │
+      └─────────────────┘ └─────────────────┘ └─────────────────┘
+                                 </div>
+                                 
+                                 <p>Diese Architektur bietet:</p>
+                                 <ul>
+                                    <li>Zentrale Secret-Speicherung über alle Umgebungen hinweg</li>
+                                    <li>Umgebungsisolierung durch separate Vault-Richtlinien</li>
+                                    <li>Automatische Secret-Injection über Vault Agent Injector</li>
+                                    <li>Hohe Verfügbarkeit mit Raft-Konsens</li>
+                                    <li>Audit-Trail für alle Secret-Zugriffe</li>
+                                 </ul>
+                                 
+                                 <h2>Integrationsmuster 1: Kubernetes-Authentifizierung</h2>
+                                 
+                                 <p>Die Grundlage der Vault-Integration ist die Möglichkeit für Kubernetes-Cluster, sich sicher bei Vault zu authentifizieren. Dies verwendet Kubernetes Service Account Tokens.</p>
+                                 
+                                 <p><strong>Wie es funktioniert:</strong></p>
+                                 <ul>
+                                    <li>Jeder Kubernetes-Cluster hat ein eindeutiges Service Account, das in Vault konfiguriert ist</li>
+                                    <li>Anwendungen verwenden das Service Account Token ihres Pods zur Authentifizierung</li>
+                                    <li>Vault validiert das Token mit dem Kubernetes-API-Server</li>
+                                    <li>Vault gewährt Zugriff basierend auf Richtlinien, die an das Service Account gebunden sind</li>
+                                 </ul>
+                                 
+                                 <div class="code-block">
+# Kubernetes-Authentifizierungsmethode für Dev-Cluster aktivieren
+vault auth enable -path=kubernetes-dev kubernetes
+
+# Vault für die Kommunikation mit dem Dev-Cluster konfigurieren
+vault write auth/kubernetes-dev/config \
+    kubernetes_host="https://dev-cluster-api:6443" \
+    kubernetes_ca_cert=@/path/to/dev-ca.crt \
+    token_reviewer_jwt=@/path/to/dev-token.jwt
+
+# Rolle für Anwendungen im Dev-Cluster erstellen
+vault write auth/kubernetes-dev/role/devportal-app \
+    bound_service_account_names=devportal-app \
+    bound_service_account_namespaces=default,apps \
+    policies=devportal-dev-policy \
+    ttl=1h
+                                 </div>
+                                 
+                                 <div class="callout">
+                                    <strong>Warum dies wichtig ist:</strong> Dieses Muster eliminiert die Notwendigkeit, Vault-Token in Kubernetes Secrets zu speichern. Anwendungen authentifizieren sich mit ihrer nativen Kubernetes-Identität.
+                                 </div>
+                                 
+                                 <p><strong>Beispiel aus der Praxis:</strong> Spotify verwendet dieses Muster für 1000+ Microservices in über 50 Kubernetes-Clustern. Jeder Service authentifiziert sich automatisch ohne manuelle Token-Verwaltung.</p>
+                                 
+                                 <h2>Integrationsmuster 2: Vault Agent Injector (Sidecar-Muster)</h2>
+                                 
+                                 <p>Der Vault Agent Injector ist ein mutierender Kubernetes-Validierungs-Webhook, der automatisch Vault Agent Sidecars in Pods injiziert. Dies ist das beliebteste Muster für die Secret-Injection.</p>
+                                 
+                                 <div class="architecture-diagram">
+Pod-Erstellungsablauf mit Vault Injector
+
+1. kubectl apply deployment.yaml
+           │
+           ▼
+2. API-Server empfängt Pod-Erstellung
+           │
+           ▼
+3. Mutierender Webhook (Vault Injector) fängt ab
+           │
+           ▼
+4. Injector fügt Init-Container + Sidecar-Container hinzu
+           │
+           ├─→ Init-Container:
+           │   - Authentifizierung bei Vault
+           │   - Abruf initialer Secrets
+           │   - Schreiben nach /vault/secrets/
+           │
+           └─→ Sidecar-Container:
+               - Secrets aktualisiert halten
+               - Verlängerungen handhaben
+               - Aktualisierung bei Ablauf
+           │
+           ▼
+5. Anwendungscontainer startet
+           │
+           ▼
+6. Anwendung liest Secrets aus /vault/secrets/
+           │
+           ▼
+7. Anwendung läuft mit aktuellen Secrets
+                                 </div>
+                                 
+                                 <div class="code-block">
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+spec:
+  template:
+    metadata:
+      annotations:
+        # Vault Agent Injector aktivieren
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "devportal-app"
+
+        # Datenbank-Anmeldeinformationen injizieren
+        vault.hashicorp.com/agent-inject-secret-db: "database/creds/web-app-role"
+        vault.hashicorp.com/agent-inject-template-db: |
+          {{- with secret "database/creds/web-app-role" -}}
+          export DB_USERNAME="{{ .Data.username }}"
+          export DB_PASSWORD="{{ .Data.password }}"
+          {{- end -}}
+
+        # API-Keys injizieren
+        vault.hashicorp.com/agent-inject-secret-api: "secret/data/web-app/api-keys"
+        vault.hashicorp.com/agent-inject-template-api: |
+          {{- with secret "secret/data/web-app/api-keys" -}}
+          export STRIPE_KEY="{{ .Data.data.stripe_key }}"
+          export SENDGRID_KEY="{{ .Data.data.sendgrid_key }}"
+          {{- end -}}
+    spec:
+      serviceAccountName: devportal-app
+      containers:
+      - name: web-app
+        image: devportal/web-app:v1.0
+        command: ["/bin/sh", "-c"]
+        args:
+          - source /vault/secrets/db && source /vault/secrets/api && ./start-app.sh
+                                 </div>
+                                 
+                                 <p><strong>Vorteile:</strong></p>
+                                 <ul>
+                                    <li>Keine Codeänderungen erforderlich - Anwendungen lesen einfach Dateien</li>
+                                    <li>Automatische Verlängerung - Sidecar kümmert sich um Token-Aktualisierung</li>
+                                    <li>Vorlagen-Flexibilität - Secrets können als Umgebungsvariablen, JSON, YAML formatiert werden</li>
+                                    <li>Secret-Lebenszyklus - Secrets verschwinden, wenn der Pod terminiert</li>
+                                 </ul>
+                                 
+                                 <p><strong>Beispiel aus der Praxis:</strong> Netflix verwendet dieses Muster in großem Umfang. Ihre Plattform injiziert täglich automatisch Datenbank-Anmeldeinformationen, API-Keys und TLS-Zertifikate in 100.000+ Container.</p>
+                                 
+                                 <h2>Integrationsmuster 3: Dynamische Datenbank-Anmeldeinformationen</h2>
+                                 
+                                 <p>Eine der leistungsstärksten Funktionen von Vault ist die Generierung von Datenbank-Anmeldeinformationen bei Bedarf. Anstatt ein Passwort über alle Anwendungsinstanzen hinweg zu teilen, erhält jeder Pod eindeutige Anmeldeinformationen.</p>
+                                 
+                                 <div class="comparison-table">
+                                    <table>
+                                       <thead>
+                                          <tr><th>Aspekt</th><th>Traditionelle statische Anmeldeinformationen</th><th>Vault Dynamische Anmeldeinformationen</th></tr>
+                                       </thead>
+                                       <tbody>
+                                           <tr><td><strong>Anmeldeinformationsbereich</strong></td><td>Gemeinsames Passwort über alle Instanzen</td><td>Eindeutige Anmeldeinformationen pro Pod</td></tr>
+                                           <tr><td><strong>Rotation</strong></td><td>Manuell, erfordert Anwendungsneustarts</td><td>Automatischer Ablauf und Rotation</td></tr>
+                                           <tr><td><strong>Prüfbarkeit</strong></td><td>Schwierig zu verfolgen, welche Instanz auf was zugegriffen hat</td><td>Vollständiger Audit-Trail des Datenbankzugriffs</td></tr>
+                                           <tr><td><strong>Auswirkungsbereich</strong></td><td>Kompromittierte Anmeldeinformationen betreffen alle Instanzen</td><td>Kompromittierung auf einzelne Pods isoliert</td></tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                                 
+                                 <div class="code-block">
+# Datenbank-Secrets-Engine aktivieren
+vault secrets enable database
+
+# PostgreSQL-Verbindung konfigurieren
+vault write database/config/postgres \
+    plugin_name=postgresql-database-plugin \
+    allowed_roles="web-app-role" \
+    connection_url="postgresql://{{username}}:{{password}}@postgres:5432/appdb" \
+    username="vault-admin" \
+    password="vault-admin-password"
+
+# Rolle für Webanwendung erstellen
+vault write database/roles/web-app-role \
+    db_name=postgres \
+    creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
+        GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+    default_ttl="1h" \
+    max_ttl="24h"
+                                 </div>
+                                 
+                                 <p><strong>Beispiel für generierte Anmeldeinformationen:</strong></p>
+                                 <div class="code-block">
+{
+  "username": "v-kubernetes-web-app-role-abc123xyz",
+  "password": "A1B2C3D4E5F6G7H8I9J0",
+  "ttl": 3600
+}
+                                 </div>
+                                 
+                                 <p><strong>Beispiel aus der Praxis:</strong> Uber rotiert Produktionsdatenbank-Anmeldeinformationen alle 24 Stunden über 8000+ Microservices hinweg. Dieses Muster reduzierte ihren Auswirkungsbereich für Anmeldeinformationskompromittierungen um 99%.</p>
+                                 
+                                 <h2>Integrationsmuster 4: PKI-Zertifikatsverwaltung</h2>
+                                 
+                                 <div class="architecture-diagram">
+Vault PKI-Hierarchie
+
+┌─────────────────────────────────────────┐
+│        Root CA (Offline)                │
+│   CN: DevPortal Root CA                 │
+│   Gültigkeit: 10 Jahre                  │
+│   Sicher offline gespeichert            │
+└─────────────┬───────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────┐
+│    Intermediate CA (In Vault)           │
+│   CN: DevPortal Platform CA             │
+│   Gültigkeit: 5 Jahre                   │
+│   Wird zum Ausstellen von Zertifikaten verwendet │
+└─────────────┬───────────────────────────┘
+              │
+    ┌─────────┼─────────┐
+    ▼         ▼         ▼
+┌───────┐ ┌───────┐ ┌───────┐
+│  Dev  │ │ Stage │ │ Prod  │
+│ Zert. │ │ Zert. │ │ Zert. │
+│ TTL:  │ │ TTL:  │ │ TTL:  │
+│ 30d   │ │ 90d   │ │ 90d   │
+└───────┘ └───────┘ └───────┘
+                                 </div>
+                                 
+                                 <div class="code-block">
+# PKI-Secrets-Engine für Intermediate CA aktivieren
+vault secrets enable -path=pki-intermediate pki
+
+# Intermediate CA generieren
+vault write pki-intermediate/intermediate/generate/internal \
+    common_name="DevPortal Platform CA" \
+    ttl=43800h
+
+# Mit Root CA signieren (offline durchgeführt)
+# Signiertes Zertifikat importieren
+vault write pki-intermediate/intermediate/set-signed certificate=@signed-cert.pem
+
+# Rolle für Dev-Umgebungszertifikate erstellen
+vault write pki-intermediate/roles/devportal-dev \
+    allowed_domains="dev.devportal.internal" \
+    allow_subdomains=true \
+    max_ttl=720h \
+    ttl=720h
+
+# Zertifikat ausstellen
+vault write pki-intermediate/issue/devportal-dev \
+    common_name="api.dev.devportal.internal" \
+    ttl=720h
+                                 </div>
+                                 
+                                 <p><strong>Beispiel aus der Praxis:</strong> Airbnb verwendet Vault, um täglich 50.000+ TLS-Zertifikate für ihre Microservices auszustellen. Zertifikate haben 24-Stunden-TTLs und werden automatisch erneuert, was starke Sicherheit mit null operativem Aufwand bietet.</p>
+                                 
+                                 <h2>Integrationsmuster 5: Richtlinienbasierte Zugriffskontrolle</h2>
+                                 
+                                 <p>Vault-Richtlinien steuern, welche Anwendungen auf welche Secrets zugreifen können. Für Ihre DevPortal-Plattform erstellen Sie Richtlinien pro Umgebung und Anwendung.</p>
+                                 
+                                 <div class="architecture-diagram">
+Vault-Richtlinienstruktur
+
+├── devportal-admin
+│   └── Vollständiger Zugriff auf alle Secrets und Vault-Konfiguration
+│
+├── devportal-dev-policy
+│   ├── Lesen: secret/data/dev/*
+│   ├── DB-Anmeldeinfo erstellen: database/creds/*-dev-role
+│   └── Verweigern: secret/data/stage/*, secret/data/prod/*
+│
+├── devportal-staging-policy
+│   ├── Lesen: secret/data/stage/*
+│   ├── DB-Anmeldeinfo erstellen: database/creds/*-stage-role
+│   └── Verweigern: secret/data/prod/*
+│
+└── devportal-prod-policy
+    ├── Lesen: secret/data/prod/*
+    ├── DB-Anmeldeinfo erstellen: database/creds/*-prod-role
+    └── Verweigern: secret/data/dev/*, secret/data/stage/*
+                                 </div>
+                                 
+                                 <div class="code-block">
+# Richtlinie für Dev-Umgebung-Web-App
+# Zweck: Dev-Web-App erlaubt Lesen von Secrets und Generieren von DB-Anmeldeinformationen
+
+# Lesen statischer Secrets erlauben
+path "secret/data/dev/web-app/*" {
+  capabilities = ["read"]
+}
+
+# Generierung von Datenbank-Anmeldeinformationen erlauben
+path "database/creds/web-app-dev-role" {
+  capabilities = ["read"]
+}
+
+# Ausstellung von PKI-Zertifikaten erlauben
+path "pki-intermediate/issue/devportal-dev" {
+  capabilities = ["create", "update"]
+}
+
+# Zugriff auf Produktions-Secrets verweigern
+path "secret/data/prod/*" {
+  capabilities = ["deny"]
+}
+
+# Zugriff auf Admin-Operationen verweigern
+path "sys/*" {
+  capabilities = ["deny"]
+}
+                                 </div>
+                                 
+                                 <p>Dies gewährleistet eine starke Isolation zwischen den Umgebungen. Ein kompromittierter Dev-Cluster kann nicht auf Produktions-Secrets zugreifen.</p>
+                                 
+                                 <h2>Integrationsmuster 6: Secret-Versionierung und Rollback</h2>
+                                 
+                                 <p>Die KV Version 2 Secrets Engine von Vault bietet Versionierungs- und Rollback-Fähigkeiten. Dies ist kritisch für Produktionsplattformen.</p>
+                                 
+                                 <div class="code-block">
+# KV v2 aktivieren
+vault secrets enable -version=2 -path=secret kv
+
+# Secrets mit Versionierung schreiben (Version 1)
+vault kv put secret/web-app/api-keys \
+    stripe_key="sk_test_abc123" \
+    sendgrid_key="SG.abc123"
+
+# Version 2 (aktualisiert)
+vault kv put secret/web-app/api-keys \
+    stripe_key="sk_live_xyz789" \
+    sendgrid_key="SG.xyz789"
+
+# Version 3 (aktualisiert)
+vault kv put
+<script src="/assets/js/mobile-nav.js"></script>
+<script src="/assets/js/kontakt-popup.js"></script>

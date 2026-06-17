@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="de">
+   <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="/assets/css/style.css">
+      <link rel="stylesheet" href="/assets/css/responsive.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="stylesheet" href="/assets/css/modern.css">
+      <link rel="shortcut icon" href="/assets/images/logo.png">
+      <title>Kubernetes für Einsteiger | E-Learning</title>
+      <meta name="Description" content="Lerne Kubernetes von Grund auf. Ein verständlicher Leitfaden für Container-Orchestrierung, Architektur und wichtige Ressourcen.">
+      <meta name="theme-color" content="#07294d">
+      
+      <!-- Google Translate Styles -->
+      <style>
+         .goog-te-banner-frame.skiptranslate { display: none !important; }
+         body { top: 0px !important; }
+         .goog-te-gadget { font-family: 'Poppins', sans-serif !important; color: #666 !important; }
+         .goog-te-gadget img { display: none !important; }
+         .goog-te-gadget .goog-te-combo { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; background: white; }
+         .article-content h2 { font-size: 28px; color: #07294d; margin: 30px 0 15px; font-family: 'Rubik', sans-serif; border-left: 4px solid #ffc600; padding-left: 15px; }
+         .article-content h3 { font-size: 22px; color: #07294d; margin: 25px 0 10px; font-family: 'Rubik', sans-serif; }
+         .article-content p { font-size: 16px; color: #444; line-height: 1.8; margin-bottom: 20px; }
+         .article-content ul, .article-content ol { margin: 15px 0 20px 25px; }
+         .article-content li { font-size: 16px; color: #444; margin-bottom: 8px; line-height: 1.6; }
+         .article-content .highlight-box { background: #f8f9fa; border-left: 4px solid #ffc600; padding: 20px; margin: 25px 0; border-radius: 8px; }
+         .article-content .highlight-box p { margin-bottom: 0; }
+         .kubernetes-logo { text-align: center; margin: 30px 0; }
+         .kubernetes-logo i { font-size: 60px; color: #326ce5; }
+         .architecture-img { background: #f0f4f8; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0; }
+         .architecture-img i { font-size: 80px; color: #07294d; }
+      .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+   <style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style><link rel="stylesheet" href="/assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+   <body>
+      <div class="page-main">
+         <!-- HEADER -->
+         <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="/index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="/index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses.html">Kurskatalog</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+<a href="/blog">Blog</a>
+<a href="/culture.html">Culture</a>
+<a href="/koffi-profile">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="/login.html">Anmelden</a><a class="kh__btn" href="/register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+         <!-- HEADER ENDE -->
+
+         <!-- breadcrumb -->
+         <section class="breadcrumb-area">
+            <div class="breadcrumb-shape">
+               <img src="/assets/images/slider-bottom-pattern.png" alt="Form">
+            </div>
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                     <div class="breadcrumb-box">
+                        <h2 data-i18n="k8s-breadcrumb">Kubernetes für Einsteiger</h2>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <!-- breadcrumb -->
+         
+         <!-- Blog Content -->
+         <section class="blog-single-area page-paddings">
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                     <div class="blog-post">
+                        <div class="blog-post-images">
+                           <img src="/assets/images/blog/blog1.svg" alt="Kubernetes">
+                        </div>
+                        <div class="post-content-text article-content" data-i18n-html="k8s-article">
+                           
+                           <div class="news-tag"><a href="/free-courses/devops">DevOps</a> <a href="/free-courses/kubernetes">Kubernetes</a> <a href="/free-courses/kubernetes">Container</a></div>
+                           <h1>Kubernetes für Einsteiger</h1>
+                           <p class="meta" style="color:#666; margin-bottom:20px;">In diesem Artikel geben wir Dir einen kurzen und verständlichen Einblick in die Funktionsweise von Kubernetes.</p>
+                           
+                           <div class="kubernetes-logo">
+                              <i class="fas fa-dharmachakra"></i>
+                              <p style="margin-top:10px;"><strong>Kubernetes</strong> - Der Steuermann für Ihre Container</p>
+                           </div>
+                           
+                           <p>Kubernetes hat die IT-Welt nahezu im Sturm erobert. Es gibt viele Gründe, warum IT Unternehmen und Entwicklungsteams ihre Applikationen und Infrastrukturen auf Container-Technologien und Kubernetes umstellen. Mit Containern und Kubernetes vereinfachen und beschleunigen viele Unternehmen bereits nach kurzer Zeit ihre gesamte IT. Gleichzeitig erhöhen sie die Stabilität und Verfügbarkeit von Workloads und Applikationen.</p>
+                           
+                           <h2>Was ist Kubernetes</h2>
+                           <p>Kubernetes ist eine Open-Source-Plattform für die automatisierte Bereitstellung von Container-Anwendungen. Ursprünglich von Google für den Betrieb der eigenen Systeme entwickelt, wird das Projekt seit 2014 als Teil der Cloud Native Computing Foundation (CNCF) verwaltet. Das markante weiße Steuerrad vor blauem Hintergrund im Logo und der dem griechischen entnommene Name (~ für Steuermann/Helmsman) sind nicht ohne Grund gewählt worden. Kubernetes soll uns dabei helfen, unsere Anwendungen sicher durch die Gewässer von Cloud-Computing und Containerisierung zu steuern.</p>
+                           <p>Container kommen schon seit über 10 Jahren bei der Bereitstellung von Anwendungen und in der Softwareentwicklung zum Einsatz. Die Verwaltung dieser leichtgewichtigen, eigenständigen und vor allem standardisierten Softwarepakete wird ab einer gewissen Größenordnung aber anspruchsvoll und hier kommt Kubernetes ins Spiel.</p>
+                           <p>Der Zweck von Kubernetes ist es, Anwendungen flexibel, skalierbar und hochverfügbar bereitzustellen. Dafür werden die Anwendungs-Workloads über ein Kubernetes-Cluster verteilt und die Kommunikation zwischen den einzelnen Services automatisiert. Um das zu ermöglichen, braucht es eine Vielzahl von Konzepten und Prozessen, die wir im Folgenden kurz und einfach erklären möchten.</p>
+                           
+                           <h2>Was sind Container</h2>
+                           <p>Bei Containern handelt es sich um eine Virtualisierungstechnologie, die nicht die Hardware vom Betriebssystem abstrahiert, sondern einen oder mehrere Prozesse in einer leichtgewichtigen und standardisierten Umgebung isoliert. Auf diese Weise können mehrere Anwendungen parallel zueinander auf demselben Kernel und derselben Hardware ausgeführt und schnell bereitgestellt werden, wobei die Isolierung zwischen den einzelnen Workloads erhalten bleibt. Container sind in diesem Sinne leichtgewichtiger als virtuelle Maschinen.</p>
+                           
+                           <h2>Die Kubernetes Architektur</h2>
+                           
+                           <h3>Master- und Worker-Nodes</h3>
+                           <p>Ein Kubernetes Cluster besteht aus mehreren einzelnen Servern, genannt Nodes. Diese Nodes können sowohl physische als auch virtuelle Maschinen sein. Kubernetes hostet Container nicht direkt auf den Nodes, sondern nutzt dafür das Objekt Pod. Ferner unterscheidet man in Worker-Nodes und Master-Nodes. Ein Cluster besteht aus einem Master-Node und mehreren Worker-Nodes. Die Worker-Nodes verrichten den Großteil der Workloads. Der Master Node überwacht und steuert die Vorgänge im Cluster. Dazu gehört das Scheduling und die Verteilung von Workloads auf die einzelne Nodes, sowie die Reaktion auf Events innerhalb des Clusters. Zum Beispiel der Neustart von fehlerhaften Pods.</p>
+                           
+                           <div class="architecture-img">
+                              <i class="fas fa-network-wired"></i>
+                              <p style="margin-top:10px;"><strong>Kubernetes Architektur</strong><br>Master Node + Worker Nodes</p>
+                           </div>
+                           
+                           <h3>Control Plane</h3>
+                           <p>Die Control Plane ist Kraftwerk und Steuerhaus zugleich. Hier wird dafür gesorgt, dass sich alle Komponenten des Clusters im gewünschten Zustand befinden. Deployments werden von der Control Plane konfiguriert, verwaltet und umgesetzt. Es werden Daten über interne Cluster-Ereignisse, externe Systeme und Anwendungen von Drittanbietern verarbeitet und darauf basierend Entscheidungen getroffen und Maßnahmen ausgeführt.</p>
+                           
+                           <h3>etcd</h3>
+                           <p>etcd ist ein integraler Bestandteil von Kubernetes. Der reliable and distributed Key-Value-Store ist für Service Discovery, die Koordination verteilter Systeme und ganz allgemein die dauerhafte Speicherung aller Cluster-Daten, wie Cluster-Zustand und Cluster-Konfiguration verantwortlich. Weil es sich bei allen diesen Informationen um hochsensible Daten handelt, ist der Zugriff auf etcd nur über den kube-apiserver möglich. Die Funktionen von etcd machen es überhaupt erst möglich, Anwendungen ausfallsicher und konsistent bereitzustellen.</p>
+                           
+                           <h3>kube-apiserver</h3>
+                           <p>Der API-Server ist das Tor zum Kubernetes-Cluster, da er die Endpunkte der Kubernetes API via REST exponiert. Eine zentrale Schnittstelle, auf die alle Benutzer und Komponenten zugreifen und über die die Control Plane mit den Worker-Nodes und anderen externen Systemen interagiert. Der API-Server ist stateless und lässt sich beliebig replizieren, um höheren Anfragelasten zu begegnen. In einem hochverfügbaren Cluster sind drei API-Server Instanzen üblich.</p>
+                           
+                           <h3>controller-manager</h3>
+                           <p>Alle Ressourcen in Kubernetes werden über YAML Manifeste definiert. In diesen Manifesten wird der gewünschte Zustand eines Clusters und seiner Objekte deklariert. Als Teil der Control Plane ist der kube-controller-manager wiederum für weitere Controller-Manager verantwortlich, die laufend den Zustand des Kubernetes-Clusters überwachen, indem sie Anfragen gegen die API stellen. Diese kontinuierlichen Abfragen (control loops) erfolgen in festgelegten Zeiträumen. Weicht der Ist-Zustand des Clusters vom Soll-Zustand ab, ergreift der zuständige Controller unter Berücksichtigung der vorhandenen Ressourcen, Nodes und definierten Verhaltens-Richtlinien, entsprechende Maßnahmen.</p>
+                           
+                           <h2>Die wichtigsten Ressourcen im Überblick</h2>
+                           
+                           <h3>Pod</h3>
+                           <p>Ein Pod besteht zumindest aus einem, meist aber einer Gruppe von Containern und ist zugleich die kleinste, bereitstellbare Einheit in Kubernetes. Innerhalb des Pod können die Container über localhost miteinander kommunizieren. Die Container teilen sich die Ressourcen des Pods (Volumes, IP-Adresse, Ports).</p>
+                           
+                           <h3>Ingress</h3>
+                           <p>Ingress-Objekte ermöglichen den Zugriff auf Kubernetes-Dienste von außerhalb des Clusters. Dafür werden eine Reihe von Routing-Regeln erstellt, die festlegen, über welche eingehenden Verbindungen welche Dienste erreichbar sind. In der Regel werden dafür HTTPS- und HTTP-Protokolle verwendet. Die Ingress-Ressource setzt sich aus der Ingress API und dem Ingress Controller zusammen.</p>
+                           
+                           <h3>Service</h3>
+                           <p>Jedem Pod wird beim Start eine eigene IP-Adresse zugewiesen. Allerdings sind Pods in Kubernetes vergänglich ("ephemeral") und bei jedem Neustart werden neue IP-Adressen vergeben. Die internen IP-Adressen für die Kommunikation im Cluster zu nutzen, ist somit nicht praktikabel. Diesem Problem begegnet Kubernetes mit der Service Komponente, die jeden Pod innerhalb des Clusters für die anderen Ressourcen erreichbar macht. Die Service-Komponente übernimmt außerdem die Lastenverteilung eingehender Anfragen.</p>
+                           
+                           <h3>Deployment</h3>
+                           <p>Das Deployment beschreibt mittels einer deklarativen Anweisung – meist als YAML-Datei – den gewünschten Zustand des Systems. Nutzer geben nicht vor, wie ein Update ausgeführt wird, sondern deklarieren einen Endpunkt, woraufhin der Kubernetes-Controller den Ist-Zustand dem Soll-Zustand anpasst. Über Deployments wird der Lifecycle von Pod-Instanzen und Clustern automatisiert. Sie ermöglichen eine schnellere Bereitstellung und helfen dabei, Fehler zu vermeiden.</p>
+                           
+                           <h3>ReplicaSet</h3>
+                           <p>ReplicaSets gehören zur Gruppe der Kubernetes-Controller und sorgen dafür, dass Pods in definierter Anzahl, zu jedem Zeitpunkt im Cluster ausgeführt werden. Wird ein Pod entfernt oder fällt er aus, startet das ReplicaSet automatisch neue Instanzen, bis der gewünschte Cluster-Zustand erreicht ist.</p>
+                           
+                           <h3>DaemonSet</h3>
+                           <p>Ein DaemonSet sorgt dafür, dass eine oder mehrere Instanzen eines Pods auf jedem Node des Clusters ausgeführt werden. Wird dem Cluster ein neuer Node hinzugefügt, startet das DaemonSet die gewünschten Instanzen. Das macht DaemonSets besonders hilfreich für Wartungs-Aufgaben oder z. B. das Sammeln von Cluster-Metriken.</p>
+                           
+                           <h3>StatefulSet</h3>
+                           <p>Zustandsabhängige Anwendungen (stateful apps) arbeiten mit veränderlichen Daten bzw. nichtflüchtigem Speicher. Für die Arbeit mit zustandsabhängigen Anwendungen in Kubernetes sind StatefulSets zuständig. Ein StatefulSet behält für jeden Pod, den es verwaltet, eine eindeutige und dauerhafte Identität und verwendet dieselbe Identität, wenn Pods neu gestartet werden.</p>
+                           
+                           <h3>Job & Cronjob</h3>
+                           <p>Anders als Controller-Objekte, wie ReplicaSet und DaemonSet, sind Jobs dafür zuständig, einen Pod mit einer bestimmten Aufgabe zu starten und dann zu terminieren, wenn die Aufgabe erledigt ist. CronJobs führen diese Aufgaben zu festgelegten Zeitpunkten oder regelmäßig auf unbestimmte Zeit aus.</p>
+                           
+                           <h2>Vor- und Nachteile von Kubernetes</h2>
+                           <p>Kubernetes ist eine leistungsstarke Open Source-Plattform für die Verwaltung von Container-Anwendungen. Sie bietet eine Vielzahl von Vorteilen gegenüber herkömmlichen Verwaltungsmethoden, wie zum Beispiel Docker Swarm und ist seit Jahren auf dem Vormarsch. Kubernetes macht die horizontale und vertikale Skalierung von Anwendungen und Workloads einfacher und kann die Produktivität von Entwickler- und Operations-Teams verbessern. Anwendungen können schneller, stabiler und vor allem dezentral bereitgestellt werden.</p>
+                           <p>Kubernetes unterstützt eine Vielzahl von Container-Laufzeitumgebungen, die wiederum auf fast allen Infrastrukturen betrieben werden können. Das macht Kubernetes so interessant für Unternehmen mit komplexen und variablen Infrastrukturen und zu einem interessanten Tool für den Betrieb von Multicloud-Umgebungen.</p>
+                           <p>Ein wesentlicher Vorteil von Kubernetes ist die allgemeingültige API – ganz gleich bei welchem Cloud-Provider oder in welcher Infrastruktur die Cluster betrieben werden. Das heißt, ein Cluster bei einem Anbieter sollte – zumindest in der Basis-Funktionalität – genauso bei einem anderen Anbieter funktionieren. In diesem Zusammenhang wird Kubernetes teils auch als die lingua franca der IT-Infrastruktur bezeichnet (Vermeidung von Vendor Lock-Ins).</p>
+                           <p>Die vielen Optionen und möglichen Konfigurationen machen den Betrieb von Kubernetes aber auch zu einer Herausforderung. So erfordert die Integration von Storage, Load Balancing und Infrastruktur besonders bei größeren und verteilten Projekten einiges an Know-how.</p>
+                           <p>Für kleinere Anwendungen ist Kubernetes nur mit Vorbehalt die beste Lösung. Aber für schnell-wachsende, mittelgroße und große Anwendungen kommen die Vorteile fast immer zur Geltung. In jedem Fall ist es ratsam, die Einführung von Kubernetes-Infrastrukturen frühzeitig und mit allen beteiligten Teams zu planen, um teure Fehler zu vermeiden.</p>
+                           
+                           <div class="highlight-box">
+                              <h3 style="margin-top:0;">Fazit</h3>
+                              <p>Kubernetes ist der Standard für Container-Orchestrierung geworden. Für Entwickler und Unternehmen, die vertraute Container-Technologien wie Docker nutzen, ist Kubernetes der logische nächste Schritt, um Anwendungen konsistent, stabil und sicher bereitzustellen. Die Lernkurve ist steil, aber die Vorteile überwiegen für viele Unternehmen schnell die anfänglichen Herausforderungen.</p>
+                           </div>
+                           
+                           <div class="blog-single-tag">
+                              <a href="/free-courses/kubernetes">Kubernetes</a>
+                              <a href="/free-courses/kubernetes">Container</a>
+                              <a href="/free-courses/devops">DevOps</a>
+                              <a href="/free-courses/kubernetes">Docker</a>
+                              <a href="/free-courses/kubernetes">Cloud Native</a>
+                           </div>
+                           
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <!-- Blog Content Ende -->
+         
+         <!-- FOOTER -->
+         <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/index.html">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses.html">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/blog">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/event.html">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact.html">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p>Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+         <!-- FOOTER ENDE -->
+      </div>
+      
+            <!-- JAVASCRIPTS -->
+      <script src="/assets/js/jquery.min.js"></script>
+      <script src="/assets/js/bootstrap.min.js"></script>
+      <script src="/assets/js/wow.min.js"></script>
+      <script>
+          new WOW().init();
+      </script>
+   <!-- i18n Language Switcher -->
+<script>
+var i18n = {
+  de: {
+    'header-msg': 'Willkommen bei der Koffi Academy — Ihre Cloud- & DevOps-Reise beginnt hier.',
+    'nav-home': 'Startseite', 'nav-courses': 'Kurse', 'nav-lab': 'Laboratoire',
+    'nav-events': 'Veranstaltungen', 'nav-about-me': 'Über mich',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Kontakt',
+    'nav-about': 'Über uns', 'nav-faq': 'Häufige Fragen', 'nav-support': 'Support', 'nav-login': 'Anmelden / Registrieren',
+    'k8s-breadcrumb': 'Kubernetes für Einsteiger',
+    'footer-contact': 'Kontakt',
+    'k8s-article': null
+  },
+  fr: {
+    'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
+    'nav-home': 'Accueil', 'nav-courses': 'Cours', 'nav-lab': 'Laboratoire',
+    'nav-events': 'Événements', 'nav-about-me': 'À propos de moi',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+    'nav-about': 'À propos', 'nav-faq': 'FAQ', 'nav-support': 'Support', 'nav-login': "Se connecter / S'inscrire",
+    'k8s-breadcrumb': 'Kubernetes pour débutants',
+    'footer-contact': 'Contact',
+    'k8s-article':
+      '<div class="news-tag"><a href="/free-courses/devops">DevOps</a> <a href="/free-courses/kubernetes">Kubernetes</a> <a href="/free-courses/kubernetes">Conteneurs</a></div>' +
+      '<h1>Kubernetes pour débutants</h1>' +
+      '<p class="meta" style="color:#666;margin-bottom:20px;">Dans cet article, nous vous donnons un aperçu clair et compréhensible du fonctionnement de Kubernetes.</p>' +
+      '<div class="kubernetes-logo"><i class="fas fa-dharmachakra"></i><p style="margin-top:10px;"><strong>Kubernetes</strong> — Le pilote de vos conteneurs</p></div>' +
+      '<p>Kubernetes a pratiquement conquis le monde de l\'informatique. De nombreuses raisons poussent les entreprises IT à migrer vers les technologies de conteneurs. Avec Kubernetes, elles simplifient et accélèrent leur infrastructure, tout en améliorant la stabilité et la disponibilité des workloads.</p>' +
+      '<h2>Qu\'est-ce que Kubernetes ?</h2>' +
+      '<p>Kubernetes est une plateforme open source pour le déploiement automatisé d\'applications conteneurisées. Développé par Google et géré depuis 2014 par la Cloud Native Computing Foundation (CNCF), son nom grec signifie "pilote". Kubernetes guide nos applications à travers les eaux du cloud computing et de la conteneurisation.</p>' +
+      '<p>Les conteneurs sont utilisés depuis plus de 10 ans dans le développement logiciel. Leur gestion devient complexe à grande échelle — c\'est là qu\'intervient Kubernetes.</p>' +
+      '<p>L\'objectif de Kubernetes est de déployer des applications de manière flexible, évolutive et hautement disponible, en distribuant les workloads sur un cluster et en automatisant la communication entre services.</p>' +
+      '<h2>Que sont les conteneurs ?</h2>' +
+      '<p>Les conteneurs sont une technologie de virtualisation qui isole des processus dans un environnement léger et standardisé. Plusieurs applications s\'exécutent en parallèle sur le même noyau, tout en restant isolées les unes des autres — plus légers que les machines virtuelles.</p>' +
+      '<h2>L\'architecture Kubernetes</h2>' +
+      '<h3>Nœuds maîtres et workers</h3>' +
+      '<p>Un cluster Kubernetes est composé de nœuds (serveurs physiques ou virtuels). Un nœud maître surveille et contrôle le cluster (planification, distribution, réponse aux événements). Les nœuds workers exécutent les workloads via des Pods.</p>' +
+      '<div class="architecture-img"><i class="fas fa-network-wired"></i><p style="margin-top:10px;"><strong>Architecture Kubernetes</strong><br>Nœud maître + nœuds workers</p></div>' +
+      '<h3>Plan de contrôle</h3>' +
+      '<p>Le plan de contrôle est le moteur du cluster. Il s\'assure que tous les composants sont dans l\'état souhaité, configure et exécute les déploiements.</p>' +
+      '<h3>etcd</h3>' +
+      '<p>etcd est un store clé-valeur distribué responsable du stockage persistant de toutes les données du cluster. L\'accès n\'est possible que via le kube-apiserver.</p>' +
+      '<h3>kube-apiserver</h3>' +
+      '<p>Le serveur API est la porte d\'entrée du cluster. Il expose les endpoints de l\'API Kubernetes via REST, interface centrale pour tous les utilisateurs et composants.</p>' +
+      '<h3>controller-manager</h3>' +
+      '<p>Le kube-controller-manager surveille en permanence l\'état du cluster via des boucles de contrôle. Si l\'état actuel diverge de l\'état souhaité, il prend les mesures correctives.</p>' +
+      '<h2>Les ressources principales</h2>' +
+      '<h3>Pod</h3>' +
+      '<p>Un Pod est la plus petite unité déployable de Kubernetes. Il regroupe un ou plusieurs conteneurs partageant les mêmes ressources (volumes, IP, ports).</p>' +
+      '<h3>Ingress</h3>' +
+      '<p>Les objets Ingress permettent l\'accès aux services depuis l\'extérieur du cluster via des règles de routage HTTP/HTTPS.</p>' +
+      '<h3>Service</h3>' +
+      '<p>Le Service rend chaque Pod accessible aux autres ressources du cluster et assure la répartition de charge, indépendamment des adresses IP éphémères des Pods.</p>' +
+      '<h3>Deployment</h3>' +
+      '<p>Le Deployment décrit l\'état souhaité via un manifeste YAML déclaratif. Le contrôleur adapte automatiquement l\'état actuel à l\'état souhaité.</p>' +
+      '<h3>ReplicaSet</h3>' +
+      '<p>Les ReplicaSets garantissent qu\'un nombre défini de Pods s\'exécute à tout moment. Si un Pod tombe en panne, de nouvelles instances sont démarrées automatiquement.</p>' +
+      '<h3>DaemonSet</h3>' +
+      '<p>Un DaemonSet garantit qu\'une instance de Pod s\'exécute sur chaque nœud du cluster — utile pour la maintenance et la collecte de métriques.</p>' +
+      '<h3>StatefulSet</h3>' +
+      '<p>Les StatefulSets gèrent les applications avec état, maintenant une identité unique et persistante pour chaque Pod, même après redémarrage.</p>' +
+      '<h3>Job &amp; CronJob</h3>' +
+      '<p>Les Jobs démarrent un Pod pour une tâche spécifique et le terminent une fois accomplie. Les CronJobs exécutent ces tâches à intervalles définis.</p>' +
+      '<h2>Avantages et inconvénients de Kubernetes</h2>' +
+      '<p>Kubernetes facilite la mise à l\'échelle horizontale et verticale et améliore la productivité des équipes de développement et d\'exploitation. Les applications se déploient plus rapidement et de façon décentralisée.</p>' +
+      '<p>Kubernetes prend en charge une grande variété d\'environnements de conteneurs sur presque toutes les infrastructures — idéal pour les environnements multi-cloud.</p>' +
+      '<p>L\'API universelle garantit un fonctionnement identique quel que soit le fournisseur cloud, évitant ainsi le vendor lock-in.</p>' +
+      '<p>Cependant, les nombreuses options de configuration font de l\'exploitation de Kubernetes un défi, notamment pour les grands projets distribués.</p>' +
+      '<p>Pour les petites applications, Kubernetes nécessite une réflexion approfondie. Pour les applications en croissance rapide, les avantages l\'emportent rapidement.</p>' +
+      '<div class="highlight-box"><h3 style="margin-top:0;">Conclusion</h3><p>Kubernetes est devenu le standard de l\'orchestration de conteneurs. Pour les développeurs utilisant Docker, c\'est la prochaine étape logique pour des déploiements cohérents, stables et sécurisés.</p></div>' +
+      '<div class="blog-single-tag"><a href="/free-courses/kubernetes">Kubernetes</a> <a href="/free-courses/kubernetes">Conteneurs</a> <a href="/free-courses/devops">DevOps</a> <a href="/free-courses/kubernetes">Docker</a> <a href="/free-courses/kubernetes">Cloud Native</a></div>'
+  },
+  en: {
+    'header-msg': 'Online Courses — Millions of people are learning!',
+    'nav-home': 'Home', 'nav-courses': 'Courses', 'nav-lab': 'Laboratoire',
+    'nav-events': 'Events', 'nav-about-me': 'About Me',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+    'nav-about': 'About Us', 'nav-faq': 'FAQ', 'nav-support': 'Support', 'nav-login': 'Login / Register',
+    'k8s-breadcrumb': 'Kubernetes for Beginners',
+    'footer-contact': 'Contact',
+    'k8s-article':
+      '<div class="news-tag"><a href="/free-courses/devops">DevOps</a> <a href="/free-courses/kubernetes">Kubernetes</a> <a href="/free-courses/kubernetes">Containers</a></div>' +
+      '<h1>Kubernetes for Beginners</h1>' +
+      '<p class="meta" style="color:#666;margin-bottom:20px;">In this article, we give you a brief and understandable insight into how Kubernetes works.</p>' +
+      '<div class="kubernetes-logo"><i class="fas fa-dharmachakra"></i><p style="margin-top:10px;"><strong>Kubernetes</strong> — The Helmsman for Your Containers</p></div>' +
+      '<p>Kubernetes has practically taken the IT world by storm. There are many reasons why IT companies and development teams are migrating their applications to container technologies. With containers and Kubernetes, companies quickly simplify their entire IT infrastructure while improving the stability and availability of workloads.</p>' +
+      '<h2>What is Kubernetes?</h2>' +
+      '<p>Kubernetes is an open-source platform for the automated deployment of containerized applications. Originally developed by Google, the project has been managed since 2014 by the Cloud Native Computing Foundation (CNCF). Its Greek-derived name means "helmsman" — Kubernetes guides applications through the waters of cloud computing and containerization.</p>' +
+      '<p>Containers have been used for over 10 years in software development. Managing these lightweight, self-contained packages becomes challenging at scale — this is where Kubernetes comes in.</p>' +
+      '<p>The purpose of Kubernetes is to deploy applications flexibly, scalably, and with high availability, distributing workloads across a cluster and automating service communication.</p>' +
+      '<h2>What are Containers?</h2>' +
+      '<p>Containers are a virtualization technology that isolates processes in a lightweight and standardized environment. Multiple applications run in parallel on the same kernel while maintaining isolation between workloads — more lightweight than virtual machines.</p>' +
+      '<h2>The Kubernetes Architecture</h2>' +
+      '<h3>Master and Worker Nodes</h3>' +
+      '<p>A Kubernetes cluster consists of nodes (physical or virtual servers). A master node monitors and controls cluster operations (scheduling, distribution, event response). Worker nodes run workloads via Pods.</p>' +
+      '<div class="architecture-img"><i class="fas fa-network-wired"></i><p style="margin-top:10px;"><strong>Kubernetes Architecture</strong><br>Master Node + Worker Nodes</p></div>' +
+      '<h3>Control Plane</h3>' +
+      '<p>The control plane is the powerhouse of the cluster. It ensures all components are in the desired state and manages all deployments.</p>' +
+      '<h3>etcd</h3>' +
+      '<p>etcd is a reliable distributed key-value store responsible for persistent storage of all cluster data. Access is only possible via the kube-apiserver.</p>' +
+      '<h3>kube-apiserver</h3>' +
+      '<p>The API server is the gateway to the Kubernetes cluster. It exposes Kubernetes API endpoints via REST — the central interface for all users and components.</p>' +
+      '<h3>controller-manager</h3>' +
+      '<p>The kube-controller-manager continuously monitors cluster state via control loops. When current state diverges from desired state, it takes corrective action.</p>' +
+      '<h2>Key Resources Overview</h2>' +
+      '<h3>Pod</h3>' +
+      '<p>A Pod is the smallest deployable unit in Kubernetes. It groups one or more containers sharing the same resources (volumes, IP address, ports).</p>' +
+      '<h3>Ingress</h3>' +
+      '<p>Ingress objects enable access to Kubernetes services from outside the cluster via HTTP/HTTPS routing rules.</p>' +
+      '<h3>Service</h3>' +
+      '<p>The Service component makes each Pod accessible within the cluster and handles load balancing, regardless of ephemeral Pod IP addresses.</p>' +
+      '<h3>Deployment</h3>' +
+      '<p>A Deployment describes the desired system state via a declarative YAML manifest. The Kubernetes controller automatically reconciles current state with desired state.</p>' +
+      '<h3>ReplicaSet</h3>' +
+      '<p>ReplicaSets ensure a defined number of Pods run at all times. If a Pod fails, new instances are started automatically.</p>' +
+      '<h3>DaemonSet</h3>' +
+      '<p>A DaemonSet ensures one Pod instance runs on every cluster node — useful for maintenance tasks and metric collection.</p>' +
+      '<h3>StatefulSet</h3>' +
+      '<p>StatefulSets manage stateful applications, maintaining a unique and persistent identity for each Pod across restarts.</p>' +
+      '<h3>Job &amp; CronJob</h3>' +
+      '<p>Jobs start a Pod for a specific task and terminate it upon completion. CronJobs execute tasks at scheduled times or on a recurring basis.</p>' +
+      '<h2>Pros and Cons of Kubernetes</h2>' +
+      '<p>Kubernetes simplifies horizontal and vertical scaling and improves the productivity of development and operations teams. Applications can be deployed faster and in a decentralized manner.</p>' +
+      '<p>Kubernetes supports a wide variety of container runtimes on almost all infrastructures, making it ideal for multi-cloud environments.</p>' +
+      '<p>The universal API ensures clusters work the same way regardless of cloud provider — avoiding vendor lock-in.</p>' +
+      '<p>However, the many configuration options make operating Kubernetes a challenge, especially for larger distributed projects.</p>' +
+      '<p>For smaller applications, Kubernetes requires careful consideration. For fast-growing medium and large applications, the benefits almost always outweigh the challenges.</p>' +
+      '<div class="highlight-box"><h3 style="margin-top:0;">Conclusion</h3><p>Kubernetes has become the standard for container orchestration. For developers using Docker, it is the logical next step for consistent, stable, and secure application deployment.</p></div>' +
+      '<div class="blog-single-tag"><a href="/free-courses/kubernetes">Kubernetes</a> <a href="/free-courses/kubernetes">Containers</a> <a href="/free-courses/devops">DevOps</a> <a href="/free-courses/kubernetes">Docker</a> <a href="/free-courses/kubernetes">Cloud Native</a></div>'
+  }
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) { el.textContent = i18n[lang][key]; }
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-html');
+    if (i18n[lang][key]) { el.innerHTML = i18n[lang][key]; }
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+});
+</script>
+<!-- end i18n -->
+<script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/announce.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

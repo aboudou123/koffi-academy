@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="/assets/css/style.css">
+      <link rel="stylesheet" href="/assets/css/responsive.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="stylesheet" href="/assets/css/modern.css">
+      <link rel="shortcut icon" href="/assets/images/logo.png">
+      <title>Was ist Application Lifecycle Management (ALM)? | Koffi Academy</title>
+      <meta name="description" content="Application Lifecycle Management (ALM) erklärt: Phasen, Tools und Best Practices für den gesamten Lebenszyklus Ihrer Anwendungen.">
+      <meta name="theme-color" content="#07294d">
+      
+      <style>
+         .goog-te-banner-frame.skiptranslate { display: none !important; }
+         body { top: 0px !important; }
+         .goog-te-gadget { font-family: 'Poppins', sans-serif !important; color: #666 !important; }
+         .goog-te-gadget img { display: none !important; }
+         .goog-te-gadget .goog-te-combo { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; background: white; }
+         
+         .article-content h1 { font-size: 2.2rem; color: #07294d; margin-bottom: 15px; font-family: 'Rubik', sans-serif; }
+         .article-content h2 { font-size: 1.6rem; margin-top: 30px; margin-bottom: 15px; color: #2c3e50; font-family: 'Rubik', sans-serif; border-left: 4px solid #ffc600; padding-left: 15px; }
+         .article-content h3 { font-size: 1.3rem; margin-top: 20px; margin-bottom: 10px; color: #34495e; }
+         .article-content p { font-size: 16px; line-height: 1.8; color: #444; margin-bottom: 20px; }
+         .article-content .meta-info { color: #666; font-size: 0.85rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+         .article-content .meta-info i { margin-right: 5px; }
+         .article-content ul, .article-content ol { margin: 15px 0 20px 25px; }
+         .article-content li { font-size: 16px; color: #444; margin-bottom: 8px; line-height: 1.6; }
+         .article-content .highlight-box { background: #f8f9fa; border-left: 4px solid #ffc600; padding: 20px; margin: 25px 0; border-radius: 8px; }
+         .article-content .phase-box { background: #f0f4f8; padding: 20px; border-radius: 10px; margin: 20px 0; }
+         .article-content .phase-box h3 { margin-top: 0; }
+         .tool-list { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+         .tool-tag { background: white; border: 1px solid #ddd; padding: 8px 18px; border-radius: 30px; font-size: 14px; color: #07294d; font-weight: 500; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+         @media (max-width: 768px) {
+            .article-content h1 { font-size: 1.8rem; }
+            .article-content h2 { font-size: 1.4rem; }
+         }
+      .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+   <style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style>
+<style>
+/* ── Article Hero ───────────────────────────── */
+.article-hero{background:linear-gradient(135deg,#07294d 0%,#0d3a6e 55%,#1a5276 100%);padding:52px 0 46px;position:relative;overflow:hidden}
+.article-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 85% 50%,rgba(255,198,0,.07),transparent 70%);pointer-events:none}
+.art-hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,198,0,.15);border:1px solid rgba(255,198,0,.3);color:#ffc600;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px}
+.art-breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px;flex-wrap:wrap}
+.art-breadcrumb a{color:rgba(255,255,255,.6);text-decoration:none;transition:.18s}
+.art-breadcrumb a:hover{color:#ffc600}
+.art-breadcrumb i{font-size:9px;color:rgba(255,255,255,.25)}
+.art-breadcrumb span{color:rgba(255,255,255,.9);font-weight:600}
+.art-hero-title{font-size:2.2rem;font-weight:800;color:#fff;line-height:1.22;letter-spacing:-.03em;margin-bottom:20px;max-width:800px}
+.art-hero-meta{display:flex;flex-wrap:wrap;gap:20px}
+.art-hero-meta span{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,.6)}
+.art-hero-meta i{color:#ffc600;font-size:11px}
+/* ── Reading progress ────────────────────────── */
+#rpb{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,#ffc600,#ff8c00);z-index:10000;transition:width .08s linear}
+/* ── Article layout ─────────────────────────── */
+.blog-single-area.page-paddings{background:#f0f4f8;padding:40px 0 60px}
+.blog-post{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 6px 32px rgba(7,41,77,.09);margin-bottom:24px}
+.blog-post-images img{width:100%;height:220px;object-fit:cover;display:block}
+.post-content-text.article-content{padding:36px 40px}
+.article-content .news-tag,.article-content h1,.article-content #articleTitle,.article-content .meta-info,.article-content #articleMeta{display:none}
+.article-content h2{font-size:1.38rem;font-weight:700;color:#07294d;margin:32px 0 13px;padding-left:14px;border-left:4px solid #ffc600;line-height:1.3}
+.article-content h3{font-size:1.12rem;font-weight:700;color:#1e3a5f;margin:20px 0 9px}
+.article-content p{font-size:15.5px;line-height:1.85;color:#374151;margin-bottom:17px}
+.article-content .highlight-box{background:#fffbeb;border-left:4px solid #ffc600;padding:18px 22px;border-radius:0 12px 12px 0;margin:20px 0;box-shadow:0 2px 10px rgba(255,198,0,.1)}
+.article-content .info-box{background:#eff6ff;border:1px solid #bfdbfe;padding:18px 22px;border-radius:12px;margin:18px 0}
+.article-content ul,.article-content ol{margin:12px 0 16px 22px}
+.article-content li{font-size:15.5px;line-height:1.75;color:#374151;margin-bottom:6px}
+.article-content .tool-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.article-content .tool-tag{background:#eef2ff;color:#3730a3;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:600}
+.blog-sidebar .widget{background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 20px rgba(7,41,77,.08);margin-bottom:22px}
+.blog-news-title h2{font-size:13px;font-weight:700;color:#07294d;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #ffc600}
+@media(max-width:768px){.art-hero-title{font-size:1.6rem}.post-content-text.article-content{padding:20px}}
+/* ── Related Articles ──────────────────────── */
+.related-articles{background:#f0f4f8;padding:56px 0 64px;border-top:1px solid #e2e8f0}
+.related-header{margin-bottom:36px}
+.related-kicker{display:inline-flex;align-items:center;gap:7px;background:rgba(255,198,0,.15);color:#7a5800;border:1px solid rgba(255,198,0,.4);font-size:11px;font-weight:700;padding:4px 14px;border-radius:999px;text-transform:uppercase;letter-spacing:.9px;margin-bottom:12px}
+.related-kicker i{color:#ffc600;font-size:10px}
+.related-header h2{font-size:1.6rem;font-weight:800;color:#07294d;letter-spacing:-.03em;margin:0}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.related-card{background:#fff;border-radius:16px;padding:24px;border:1px solid #e2e8f0;box-shadow:0 4px 18px rgba(7,41,77,.06);text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:12px;transition:all .22s;position:relative;overflow:hidden}
+.related-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ffc600,rgba(255,198,0,.3))}
+.related-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(7,41,77,.13);border-color:rgba(255,198,0,.4)}
+.related-card-icon{width:46px;height:46px;background:rgba(255,198,0,.12);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.related-card-icon i{color:#07294d;font-size:18px}
+.related-card-tag{font-size:11px;font-weight:700;color:#ffc600;text-transform:uppercase;letter-spacing:.7px}
+.related-card h3{font-size:14.5px;font-weight:700;color:#07294d;line-height:1.38;margin:0}
+.related-card p{font-size:13px;color:#64748b;line-height:1.65;margin:0;flex:1}
+.related-card-arrow{display:flex;align-items:center;justify-content:flex-end;color:#ffc600;font-size:13px;font-weight:700;gap:6px;margin-top:auto}
+.related-card-arrow span{font-size:12px;color:#94a3b8;transition:.18s}
+.related-card:hover .related-card-arrow span{color:#07294d}
+@media(max-width:900px){.related-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:576px){.related-grid{grid-template-columns:1fr}}
+</style><link rel="stylesheet" href="/assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+   <body>
+      <div class="page-main">
+         <!-- HEADER -->
+         <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="/index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="/index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses.html" data-i18n="footCatalog">Kurskatalog</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+<a href="/blog">Blog</a>
+<a href="/culture.html">Culture</a>
+<a href="/koffi-profile">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="/login.html">Anmelden</a><a class="kh__btn" href="/register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+
+         <!-- ARTICLE HERO -->
+         <section class="article-hero">
+           <div class="container">
+             <div class="art-hero-badge"><i class="fas fa-layer-group"></i> <span data-i18n="heroBadge">ALM &amp; DevOps</span></div>
+             <nav class="art-breadcrumb">
+               <a href="/index.html">Startseite</a><i class="fas fa-chevron-right"></i>
+               <a href="/blog">Blog</a><i class="fas fa-chevron-right"></i>
+               <span>ALM</span>
+             </nav>
+             <h1 class="art-hero-title" data-i18n="heroTitle">Was ist Application Lifecycle Management (ALM)?</h1>
+             <div class="art-hero-meta">
+               <span><i class="far fa-calendar-alt"></i> <span data-i18n="heroDate">30. April 2026</span></span>
+               <span><i class="far fa-clock"></i> <span data-i18n="heroRead">3 Min. Lesezeit</span></span>
+               <span><i class="fas fa-user-pen"></i> K.A.</span>
+             </div>
+           </div>
+         </section>
+         
+         <!-- Article Content -->
+         <section class="blog-single-area page-paddings">
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12">
+                     <div class="blog-post">
+                        <div class="blog-post-images">
+                           <img src="/assets/images/blog/blog1.svg" alt="Application Lifecycle Management">
+                        </div>
+                        <div class="post-content-text article-content">
+<div class="lang-sect" data-lang="de">
+                           <div class="news-tag"><a href="/free-courses/what-is-alm">ALM</a> <a href="/free-courses/devops">DevOps</a> <a href="/free-courses/what-is-alm">Softwareentwicklung</a></div>
+                           
+                           <h1>Was ist Application Lifecycle Management (ALM)?</h1>
+                           <div class="meta-info">
+                              <i class="far fa-calendar-alt"></i> 30. April 2026 &nbsp;|&nbsp;
+                              <i class="far fa-clock"></i> 3 Minuten Lesezeit
+                           </div>
+                           
+                           <p><strong>Application Lifecycle Management (ALM)</strong> steht für eine Kombination aus Personen, Tools und Prozessen, die den gesamten Lebenszyklus einer Anwendung verwalten – von der ersten Idee bis zur endgültigen Stilllegung.</p>
+                           
+                           <div class="highlight-box">
+                              <p><strong>📌 Kernaussage:</strong> ALM setzt sich aus mehreren Disziplinen zusammen, die in früheren Entwicklungsprozessen oft getrennt waren: Projektmanagement, Anforderungsmanagement, Entwicklung, Tests, Deployment und Wartung. ALM bringt diese Bereiche zusammen und schafft so ein ganzheitliches Framework.</p>
+                           </div>
+                           
+                           <h2>Überblick</h2>
+                           <p>Application Lifecycle Management überschneidet sich mit dem Bereich <strong>Platform Engineering</strong> und ergänzt agile Methoden und <strong>DevOps</strong>, damit Teams in Ihrem Unternehmen effektiver zusammenarbeiten können. Die Einführung von ALM führt zu <strong>Continuous Delivery</strong> mit häufigen Releases – manchmal sogar mehrmals täglich – im Gegensatz zu traditionellen Releases, die nur alle paar Monate oder einmal im Jahr erscheinen.</p>
+                           
+                           <p>ALM bietet ein Framework für die Softwareentwicklung und unterstützt Sie gleichzeitig dabei, Ihre Software langfristig zu managen. Bei der Softwareentwicklung mit ALM müssen Sie die gesamte Lebensdauer der Anwendung berücksichtigen – einschließlich Wartung, zukünftige Updates und den Zeitpunkt, zu dem die Anwendung eingestellt und ersetzt werden muss.</p>
+                           
+                           <p>Durch die Zusammenführung dieser Komponenten kann ALM für <strong>schnellere Deployments</strong>, mehr Transparenz in Ihren Workflows, qualitativ hochwertigere Produkte und eine höhere Zufriedenheit im Entwicklungsteam sorgen.</p>
+                           
+                           <h2>ALM-Phasen</h2>
+                           <p>Mit ALM lässt sich der Entwicklungsprozess transparenter gestalten. Da der Prozess integriert ist, können Sie jederzeit sehen, welche Fortschritte erzielt wurden, welche Schritte noch zu erledigen sind, wie lange die einzelnen Schritte dauern, welche Tests bereits abgeschlossen sind und vieles mehr.</p>
+                           
+                           <div class="phase-box">
+                              <h3>📋 Anwendungs-Governance</h3>
+                              <p><strong>Governance</strong> bezeichnet die Entscheidungen, die über eine Anwendung getroffen werden. Wenn Sie mit der Entwicklung einer neuen Anwendung beginnen, starten Sie mit einer ersten Idee. Sie müssen überlegen, wie diese Idee zu Ihren geschäftlichen Anforderungen und Zielen passt. Governance umfasst auch Ressourcenmanagement, Daten und Sicherheit sowie Benutzerzugriff. Die Standardisierung dieser Prozesse ermöglicht eine automatisierte Governance, was die Anwendungsbereitstellung beschleunigt.</p>
+                           </div>
+                           
+                           <div class="phase-box">
+                              <h3>⚙️ Anwendungsentwicklung</h3>
+                              <p>Nachdem die Anforderungen definiert und vereinbart wurden, kann die Entwicklung beginnen. Teams, die agile Methodik anwenden, entwickeln und stellen möglicherweise mehrmals täglich Anwendungen bereit. Design, Entwicklung, Tests und Deployment gehören alle zur Entwicklungsphase.</p>
+                           </div>
+                           
+                           <div class="phase-box">
+                              <h3>🧪 Softwaretests</h3>
+                              <p>Sobald die Anwendung entwickelt wurde, muss sie getestet werden. Für agile und DevOps-Teams sollte das Testen gleichzeitig mit der Entwicklung erfolgen – Feedback sollte kontinuierlich an das Entwicklungsteam weitergeleitet werden. <strong>Continuous Integration</strong> ist hier essenziell, damit häufige Updates nicht miteinander in Konflikt stehen. Ziel ist es sicherzustellen, dass alle Anforderungen erfüllt wurden, bevor die Anwendung für Nutzer freigegeben wird.</p>
+                           </div>
+                           
+                           <div class="phase-box">
+                              <h3>🚀 Betrieb und Wartung</h3>
+                              <p>Nach Abschluss der Tests kann die Anwendung für die Nutzer bereitgestellt werden. Der Schwerpunkt von ALM liegt auf der Betriebs- und Wartungsphase – und diese endet nicht mit dem Deployment. Regelmäßige Wartungen, Updates und schließlich die <strong>Stilllegung</strong> einer Anwendung sind ebenfalls Teil des Prozesses. Teams sollten festlegen, ab wann eine Anwendung nicht mehr unterstützt wird.</p>
+                           </div>
+                           
+                           <h2>ALM im Vergleich zu SDLC</h2>
+                           <p>ALM wird manchmal mit dem <strong>Softwareentwicklungs-Lifecycle (SDLC)</strong> verwechselt, weil sich beide mit der Softwareentwicklung befassen. Der Hauptunterschied:</p>
+                           <ul>
+                              <li><strong>SDLC</strong> konzentriert sich hauptsächlich auf die Entwicklungsphase (Planung, Design, Implementierung, Tests, Deployment).</li>
+                              <li><strong>ALM</strong> umfasst den gesamten Lebenszyklus – von der Konzeption über die Wartung bis zur Stilllegung – und wird auch nach der Entwicklung fortgesetzt.</li>
+                           </ul>
+                           <p>SDLC kann als Teil des ALM betrachtet werden, während ALM mehrere Entwicklungs-Lifecycles für eine bestimmte Anwendung umfassen kann.</p>
+                           
+                           <h2>Tools für Application Lifecycle Management</h2>
+                           <p>ALM-Tools fungieren im Wesentlichen als Projektmanagement-Tools, mit denen Sie Personen und Prozesse zusammenführen können. Ein gutes ALM-Tool sollte folgende Funktionen bieten:</p>
+                           <ul>
+                              <li>Versionskontrolle</li>
+                              <li>Echtzeitkommunikation für Teams</li>
+                              <li>Anforderungsmanagement</li>
+                              <li>Projektplanung und Schätzungen</li>
+                              <li>Quellcodeverwaltung</li>
+                              <li>Testmanagement</li>
+                           </ul>
+                           
+                           <p><strong>Beispiele für ALM-Tools:</strong></p>
+                           <div class="tool-list">
+                              <span class="tool-tag">Atlassian Jira</span>
+                              <span class="tool-tag">Microsoft Azure DevOps</span>
+                              <span class="tool-tag">GitLab</span>
+                              <span class="tool-tag">Basecamp</span>
+                              <span class="tool-tag">Tuleap</span>
+                              <span class="tool-tag">GitHub Projects</span>
+                           </div>
+                           
+                           <h2>Warum Koffi Academy als Anwendungsplattform?</h2>
+                           <p><strong>Koffi Academy</strong> ist ein führender Anbieter von Plattform-Engineering-Beratung und bietet wichtige Tools für die Sicherheit, Vereinfachung und Automatisierung Ihrer Infrastruktur.</p>
+                           
+                           <p>Unsere Experten unterstützen Sie bei der Einführung von ALM-Praktiken, die zu Ihren Geschäftszielen passen. Wir helfen Ihnen, die richtigen Tools auszuwählen, Prozesse zu optimieren und Ihre Teams zu befähigen, bessere Software schneller zu liefern.</p>
+                           
+                           <p>Mit unserer Expertise im Bereich Cloud-native Entwicklung, Kubernetes und DevOps können wir Ihre ALM-Strategie ganzheitlich begleiten – von der ersten Idee bis zum zuverlässigen Betrieb Ihrer Anwendungen.</p>
+                           
+                           <div class="highlight-box">
+                              <p><strong>📌 Fazit:</strong> Application Lifecycle Management (ALM) ist ein ganzheitlicher Ansatz, der den gesamten Lebenszyklus einer Anwendung abdeckt – nicht nur die Entwicklung. Mit ALM schaffen Sie Transparenz, verbessern die Zusammenarbeit und liefern hochwertigere Software. In Kombination mit DevOps, Platform Engineering und agilen Methoden wird ALM zum Rückgrat moderner Softwareentwicklung.</p>
+                           </div>
+                           
+                           <div class="blog-single-tag">
+                              <a href="/free-courses/what-is-alm">ALM</a>
+                              <a href="/free-courses/what-is-alm">Application Lifecycle Management</a>
+                              <a href="/free-courses/devops">DevOps</a>
+                              <a href="/free-courses/what-is-alm">SDLC</a>
+                              <a href="/free-courses/what-is-alm">Jira</a>
+                              <a href="/free-courses/what-is-alm">Azure DevOps</a>
+                           </div>
+                        </div>
+<div class="lang-sect" data-lang="en" style="display:none">
+<div class="news-tag"><a href="/free-courses/what-is-alm">ALM</a> <a href="/free-courses/devops">DevOps</a> <a href="/free-courses/what-is-alm">Software Development</a></div>
+<h1>What Is Application Lifecycle Management (ALM)?</h1>
+<div class="meta-info">
+    <i class="far fa-calendar-alt"></i> April 30, 2026 &nbsp;|&nbsp;
+    <i class="far fa-clock"></i> 3 minutes read
+</div>
+<p><strong>Application Lifecycle Management (ALM)</strong> refers to a combination of people, tools, and processes that manage the entire lifecycle of an application — from the initial idea to its final retirement.</p>
+<div class="highlight-box"><p><strong>📌 Key insight:</strong> ALM integrates several disciplines that were often separate in earlier development processes: project management, requirements management, development, testing, deployment, and maintenance. ALM brings these areas together to create a holistic framework.</p></div>
+<h2>Overview</h2>
+<p>Application Lifecycle Management overlaps with <strong>Platform Engineering</strong> and complements agile methodologies and <strong>DevOps</strong>, enabling teams to collaborate more effectively. Adopting ALM leads to <strong>Continuous Delivery</strong> with frequent releases — sometimes multiple times a day — as opposed to traditional releases every few months or once a year.</p>
+<p>ALM provides a framework for software development and simultaneously helps you manage your software for the long term. When developing software with ALM, you must consider the entire lifespan of the application — including maintenance, future updates, and when the application must be retired and replaced.</p>
+<p>By bringing these components together, ALM can drive <strong>faster deployments</strong>, greater transparency in your workflows, higher-quality products, and increased developer team satisfaction.</p>
+<h2>ALM Phases</h2>
+<p>With ALM, the development process becomes more transparent. Since the process is integrated, you can see at any time what progress has been made, which steps remain, how long each step takes, which tests are complete, and much more.</p>
+<div class="phase-box">
+    <h3>📋 Application Governance</h3>
+    <p><strong>Governance</strong> refers to the decisions made about an application. When you start developing a new application, you begin with an initial idea. You need to consider how that idea fits your business requirements and goals. Governance also covers resource management, data and security, and user access. Standardizing these processes enables automated governance, which accelerates application delivery.</p>
+</div>
+<div class="phase-box">
+    <h3>⚙️ Application Development</h3>
+    <p>Once requirements have been defined and agreed upon, development can begin. Teams applying agile methodology may develop and deploy applications multiple times per day. Design, development, testing, and deployment all belong to the development phase.</p>
+</div>
+<div class="phase-box">
+    <h3>🧪 Software Testing</h3>
+    <p>Once the application has been developed, it must be tested. For agile and DevOps teams, testing should happen simultaneously with development — feedback should be continuously relayed to the development team. <strong>Continuous Integration</strong> is essential here to ensure frequent updates don't conflict. The goal is to ensure all requirements have been met before the application is released to users.</p>
+</div>
+<div class="phase-box">
+    <h3>🚀 Operations &amp; Maintenance</h3>
+    <p>After testing is complete, the application can be deployed to users. ALM's focus extends beyond deployment. Regular maintenance, updates, and eventually the <strong>retirement</strong> of an application are all part of the process. Teams should define when an application will no longer be supported.</p>
+</div>
+<h2>ALM vs SDLC</h2>
+<p>ALM is sometimes confused with the <strong>Software Development Lifecycle (SDLC)</strong> because both deal with software development. The key difference:</p>
+<ul>
+    <li><strong>SDLC</strong> focuses primarily on the development phase (planning, design, implementation, testing, deployment).</li>
+    <li><strong>ALM</strong> covers the entire lifecycle — from conception through maintenance to retirement — and continues even after development.</li>
+</ul>
+<p>SDLC can be viewed as a part of ALM, while ALM may encompass multiple development lifecycles for a specific application.</p>
+<h2>Application Lifecycle Management Tools</h2>
+<p>ALM tools essentially serve as project management tools that help you bring people and processes together. A good ALM tool should offer:</p>
+<ul>
+    <li>Version control</li><li>Real-time team communication</li>
+    <li>Requirements management</li><li>Project planning and estimation</li>
+    <li>Source code management</li><li>Test management</li>
+</ul>
+<p><strong>Examples of ALM tools:</strong></p>
+<div class="tool-list">
+    <span class="tool-tag">Atlassian Jira</span><span class="tool-tag">Microsoft Azure DevOps</span>
+    <span class="tool-tag">GitLab</span><span class="tool-tag">Basecamp</span>
+    <span class="tool-tag">Tuleap</span><span class="tool-tag">GitHub Projects</span>
+</div>
+<h2>Why Koffi Academy as Your Application Platform Partner?</h2>
+<p><strong>Koffi Academy</strong> is a leading provider of platform engineering consulting and offers essential tools for securing, simplifying, and automating your infrastructure.</p>
+<p>Our experts support you in adopting ALM practices that align with your business objectives. We help you select the right tools, optimize processes, and empower your teams to deliver better software faster.</p>
+<p>With our expertise in cloud-native development, Kubernetes, and DevOps, we can accompany your ALM strategy end-to-end — from the initial idea to the reliable operation of your applications.</p>
+<div class="highlight-box"><p><strong>📌 Conclusion:</strong> Application Lifecycle Management (ALM) is a holistic approach covering the entire lifecycle of an application — not just its development. ALM creates transparency, improves collaboration, and delivers higher-quality software. Combined with DevOps, Platform Engineering, and agile methodologies, ALM becomes the backbone of modern software development.</p></div>
+<div class="blog-single-tag">
+    <a href="/free-courses/what-is-alm">ALM</a>
+    <a href="/free-courses/what-is-alm">Application Lifecycle Management</a>
+    <a href="/free-courses/devops">DevOps</a>
+    <a href="/free-courses/what-is-alm">SDLC</a>
+    <a href="/free-courses/what-is-alm">Jira</a>
+    <a href="/free-courses/what-is-alm">Azure DevOps</a>
+</div>
+</div>
+<div class="lang-sect" data-lang="fr" style="display:none">
+<div class="news-tag"><a href="/free-courses/what-is-alm">ALM</a> <a href="/free-courses/devops">DevOps</a> <a href="/free-courses/what-is-alm">Développement logiciel</a></div>
+<h1>Qu'est-ce que l'Application Lifecycle Management (ALM)&nbsp;?</h1>
+<div class="meta-info">
+    <i class="far fa-calendar-alt"></i> 30 avril 2026 &nbsp;|&nbsp;
+    <i class="far fa-clock"></i> 3 minutes de lecture
+</div>
+<p>L'<strong>Application Lifecycle Management (ALM)</strong> désigne une combinaison de personnes, d'outils et de processus qui gèrent l'intégralité du cycle de vie d'une application — de la première idée à sa mise hors service définitive.</p>
+<div class="highlight-box"><p><strong>📌 Concept clé :</strong> L'ALM intègre plusieurs disciplines qui étaient souvent séparées dans les anciens processus de développement : gestion de projet, gestion des exigences, développement, tests, déploiement et maintenance. L'ALM réunit ces domaines pour créer un cadre global et cohérent.</p></div>
+<h2>Vue d'ensemble</h2>
+<p>L'Application Lifecycle Management se superpose au domaine du <strong>Platform Engineering</strong> et complète les méthodes agiles et <strong>DevOps</strong>, permettant aux équipes de collaborer plus efficacement. L'adoption de l'ALM conduit à la <strong>livraison continue</strong> avec des releases fréquentes — parfois plusieurs fois par jour — contrairement aux releases traditionnelles tous les quelques mois ou une fois par an.</p>
+<p>L'ALM fournit un cadre pour le développement logiciel tout en vous aidant à gérer votre logiciel sur le long terme. Lors du développement avec l'ALM, vous devez prendre en compte toute la durée de vie de l'application — y compris la maintenance, les mises à jour futures et le moment où l'application devra être retirée et remplacée.</p>
+<p>En réunissant ces composantes, l'ALM peut favoriser des <strong>déploiements plus rapides</strong>, une plus grande transparence dans vos workflows, des produits de meilleure qualité et une satisfaction accrue au sein des équipes de développement.</p>
+<h2>Phases de l'ALM</h2>
+<p>Avec l'ALM, le processus de développement devient plus transparent. Comme le processus est intégré, vous pouvez voir à tout moment les progrès réalisés, les étapes restantes, la durée de chaque étape, les tests déjà effectués et bien plus encore.</p>
+<div class="phase-box">
+    <h3>📋 Gouvernance applicative</h3>
+    <p>La <strong>gouvernance</strong> désigne les décisions prises concernant une application. Lorsque vous commencez à développer une nouvelle application, vous partez d'une idée initiale. Vous devez réfléchir à la manière dont cette idée s'inscrit dans vos exigences et objectifs métier. La gouvernance comprend également la gestion des ressources, des données, de la sécurité et des accès utilisateurs. La standardisation de ces processus permet une gouvernance automatisée, ce qui accélère la livraison des applications.</p>
+</div>
+<div class="phase-box">
+    <h3>⚙️ Développement applicatif</h3>
+    <p>Une fois les exigences définies et validées, le développement peut commencer. Les équipes agile peuvent développer et déployer des applications plusieurs fois par jour. La conception, le développement, les tests et le déploiement font tous partie de la phase de développement.</p>
+</div>
+<div class="phase-box">
+    <h3>🧪 Tests logiciels</h3>
+    <p>Une fois l'application développée, elle doit être testée. Pour les équipes agile et DevOps, les tests doivent se dérouler en parallèle du développement — le retour d'information doit être continuellement transmis à l'équipe de développement. <strong>L'intégration continue</strong> est ici indispensable. L'objectif est de vérifier que toutes les exigences ont été satisfaites avant de mettre l'application à disposition des utilisateurs.</p>
+</div>
+<div class="phase-box">
+    <h3>🚀 Exploitation et maintenance</h3>
+    <p>Une fois les tests terminés, l'application peut être déployée pour les utilisateurs. L'ALM ne s'arrête pas au déploiement. La maintenance régulière, les mises à jour et, finalement, la <strong>mise hors service</strong> d'une application font également partie du processus. Les équipes doivent définir à partir de quel moment une application ne sera plus prise en charge.</p>
+</div>
+<h2>ALM vs SDLC</h2>
+<p>L'ALM est parfois confondu avec le <strong>Software Development Lifecycle (SDLC)</strong>, car les deux portent sur le développement logiciel. La différence principale :</p>
+<ul>
+    <li>Le <strong>SDLC</strong> se concentre principalement sur la phase de développement (planification, conception, implémentation, tests, déploiement).</li>
+    <li>L'<strong>ALM</strong> couvre l'intégralité du cycle de vie — de la conception à la mise hors service — et se poursuit bien après le développement.</li>
+</ul>
+<p>Le SDLC peut être considéré comme une partie de l'ALM, tandis que l'ALM peut englober plusieurs cycles de développement pour une application donnée.</p>
+<h2>Outils pour l'Application Lifecycle Management</h2>
+<p>Les outils ALM fonctionnent essentiellement comme des outils de gestion de projet permettant de réunir personnes et processus. Un bon outil ALM doit offrir :</p>
+<ul>
+    <li>Contrôle de version</li><li>Communication en temps réel pour les équipes</li>
+    <li>Gestion des exigences</li><li>Planification de projet et estimations</li>
+    <li>Gestion du code source</li><li>Gestion des tests</li>
+</ul>
+<p><strong>Exemples d'outils ALM :</strong></p>
+<div class="tool-list">
+    <span class="tool-tag">Atlassian Jira</span><span class="tool-tag">Microsoft Azure DevOps</span>
+    <span class="tool-tag">GitLab</span><span class="tool-tag">Basecamp</span>
+    <span class="tool-tag">Tuleap</span><span class="tool-tag">GitHub Projects</span>
+</div>
+<h2>Pourquoi choisir Koffi Academy comme partenaire applicatif&nbsp;?</h2>
+<p><strong>Koffi Academy</strong> est un acteur de référence en conseil Platform Engineering, proposant des outils essentiels pour sécuriser, simplifier et automatiser votre infrastructure.</p>
+<p>Nos experts vous accompagnent dans l'adoption des pratiques ALM adaptées à vos objectifs métier. Nous vous aidons à sélectionner les bons outils, à optimiser vos processus et à donner à vos équipes les moyens de livrer de meilleurs logiciels plus rapidement.</p>
+<p>Grâce à notre expertise en développement cloud-native, Kubernetes et DevOps, nous pouvons accompagner votre stratégie ALM de bout en bout — de la première idée à l'exploitation fiable de vos applications.</p>
+<div class="highlight-box"><p><strong>📌 Conclusion :</strong> L'Application Lifecycle Management (ALM) est une approche holistique qui couvre l'intégralité du cycle de vie d'une application — et pas seulement son développement. Avec l'ALM, vous créez de la transparence, améliorez la collaboration et livrez des logiciels de meilleure qualité. En combinaison avec DevOps, le Platform Engineering et les méthodes agiles, l'ALM devient l'épine dorsale du développement logiciel moderne.</p></div>
+<div class="blog-single-tag">
+    <a href="/free-courses/what-is-alm">ALM</a>
+    <a href="/free-courses/what-is-alm">Application Lifecycle Management</a>
+    <a href="/free-courses/devops">DevOps</a>
+    <a href="/free-courses/what-is-alm">SDLC</a>
+    <a href="/free-courses/what-is-alm">Jira</a>
+    <a href="/free-courses/what-is-alm">Azure DevOps</a>
+</div>
+</div>
+</div>
+                     </div>
+
+
+                  </div>
+                  
+                  <!-- Sidebar -->
+                  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
+                     <div class="sidebar">
+                        <div class="widget-box">
+                           <div class="widget">
+                              <div class="blog-news-title"><h2 data-i18n="sidebarRelated">Neueste Artikel</h2></div>
+                              <div class="feature-box-main">
+                                 <ul class="feature-box">
+                                    <li><div class="post-item"><div class="post-img"><img src="/assets/images/blog/blog2.svg" alt="CI/CD"></div><div class="post-info"><h4><a href="/free-courses/what-is-ci-cd">Was ist CI/CD?</a></h4><span class="post-time"><i class="far fa-calendar-alt"></i> 30. April 2026</span></div></div></li>
+                                    <li><div class="post-item"><div class="post-img"><img src="/assets/images/blog/blog3.svg" alt="Platform Engineering"></div><div class="post-info"><h4><a href="/free-courses/platform-engineering-vs-devops">Platform Engineering vs. DevOps</a></h4><span class="post-time"><i class="far fa-calendar-alt"></i> 30. April 2026</span></div></div></li>
+                                 </ul>
+                              </div>
+                           </div>
+                           <div class="widget">
+                              <div class="blog-news-title"><h2 data-i18n="sidebarTopics">Themen</h2></div>
+                              <ul class="widget-tag">
+                                 <li><a href="/free-courses/what-is-alm"><i class="fas fa-chevron-right"></i> ALM</a></li>
+                                 <li><a href="/free-courses/devops"><i class="fas fa-chevron-right"></i> DevOps</a></li>
+                                 <li><a href="/free-courses/what-is-alm"><i class="fas fa-chevron-right"></i> SDLC</a></li>
+                                 <li><a href="/free-courses/platform-engineering-devops"><i class="fas fa-chevron-right"></i> Plattform Engineering</a></li>
+                              </ul>
+                           </div>
+                           <div class="widget">
+                              <div class="blog-news-title"><h2 data-i18n="sidebarTools">Tools</h2></div>
+                              <ul class="widget-tag">
+                                 <li><a href="/free-courses/what-is-alm">Jira</a></li>
+                                 <li><a href="/free-courses/what-is-alm">Azure DevOps</a></li>
+                                 <li><a href="/free-courses/what-is-alm">GitLab</a></li>
+                                 <li><a href="/free-courses/what-is-alm">Basecamp</a></li>
+                              </ul>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         
+         <!-- ARTICLES CONNEXES -->
+         <section class="related-articles">
+           <div class="container">
+             <div class="related-header">
+               <div class="related-kicker"><i class="fas fa-bookmark"></i> <span data-i18n="relatedKicker">Weiterlesen</span></div>
+               <h2 data-i18n="relatedTitle">Diese Artikel könnten Sie auch interessieren</h2>
+             </div>
+             <div class="related-grid">
+               <a href="/free-courses/what-is-ci-cd" class="related-card">
+                 <div class="related-card-icon"><i class="fas fa-code-branch"></i></div>
+                 <div class="related-card-tag">CI/CD &amp; DevOps</div>
+                 <h3 data-i18n="relCard_cicd_title">Was ist CI/CD?</h3>
+                 <p data-i18n="relCard_cicd_desc">Continuous Integration und Deployment – Automatisierung des gesamten Software-Release-Zyklus.</p>
+                 <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+               </a>
+               <a href="/free-courses/what-is-sre" class="related-card">
+                 <div class="related-card-icon"><i class="fas fa-server"></i></div>
+                 <div class="related-card-tag">SRE &amp; Platform</div>
+                 <h3 data-i18n="relCard_sre_title">Was ist SRE?</h3>
+                 <p data-i18n="relCard_sre_desc">Site Reliability Engineering – Software-Methoden für zuverlässigen IT-Betrieb und Automatisierung.</p>
+                 <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+               </a>
+               <a href="/free-courses/what-is-performance-engineering" class="related-card">
+                 <div class="related-card-icon"><i class="fas fa-gauge-high"></i></div>
+                 <div class="related-card-tag">Performance</div>
+                 <h3 data-i18n="relCard_pe_title">Was ist Performance Engineering?</h3>
+                 <p data-i18n="relCard_pe_desc">Proaktives Testen und Überwachen der Anwendungsleistung in jeder Entwicklungsphase.</p>
+                 <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+               </a>
+               <a href="/free-courses/virtual-llm" class="related-card">
+                 <div class="related-card-icon"><i class="fas fa-microchip"></i></div>
+                 <div class="related-card-tag">KI &amp; LLM</div>
+                 <h3 data-i18n="relCard_vllm_title">Was ist vLLM?</h3>
+                 <p data-i18n="relCard_vllm_desc">Wie vLLM mit PagedAttention die LLM-Inferenz beschleunigt und skalierbar macht.</p>
+                 <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+               </a>
+             </div>
+           </div>
+         </section>
+
+         <!-- FOOTER -->
+         <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footContact">Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footNav">Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/index.html" data-i18n="footHome">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses.html" data-i18n="footCatalog">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/blog" data-i18n="footBlog">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/event.html" data-i18n="footEvents">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footSupport">Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about" data-i18n="footAbout">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq" data-i18n="footFaq">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact.html" data-i18n="footContactLink">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p data-i18n-html="footCopyright">Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+      </div>
+      
+            <script src="/assets/js/jquery.min.js"></script>
+      <script src="/assets/js/bootstrap.min.js"></script>
+      <script src="/assets/js/wow.min.js"></script>
+      <script>new WOW().init();</script>
+   <!-- i18n Language Switcher -->
+<script>
+var i18n = {
+  de: {
+    'sidebarRelated': 'Ähnliche Artikel',
+    'sidebarTopics': 'Themen',
+    'sidebarTools': 'Tools',
+    'relatedKicker': 'Weiterlesen',
+    'readMore': 'Artikel lesen',
+    'relatedTitle': 'Diese Artikel könnten Sie auch interessieren',
+    'footContact': 'Kontakt',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Startseite',
+    'footBlog': 'Blog',
+    'footCatalog': 'Kurskatalog',
+    'footEvents': 'Veranstaltungen',
+    'footAbout': 'Ueber uns',
+    'footFaq': 'Haeufige Fragen',
+    'footContactLink': 'Kontakt &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.',
+    'relCard_cicd_title': 'Was ist CI/CD?',
+    'relCard_cicd_desc': 'Continuous Integration und Deployment – Automatisierung des gesamten Software-Release-Zyklus.',
+    'relCard_sre_title': 'Was ist SRE?',
+    'relCard_sre_desc': 'Site Reliability Engineering – Software-Methoden für zuverlässigen IT-Betrieb und Automatisierung.',
+    'relCard_alm_title': 'Was ist ALM?',
+    'relCard_alm_desc': 'Application Lifecycle Management – vom Konzept bis zur Abkündigung einer Anwendung.',
+    'relCard_pe_title': 'Was ist Performance Engineering?',
+    'relCard_pe_desc': 'Proaktives Testen und Überwachen der Anwendungsleistung in jeder Entwicklungsphase.',
+    'relCard_vllm_title': 'Was ist vLLM?',
+    'relCard_vllm_desc': 'Wie vLLM mit PagedAttention die LLM-Inferenz beschleunigt und skalierbar macht.',
+    'header-msg': 'Willkommen bei der Koffi Academy — Ihre Cloud- & DevOps-Reise beginnt hier.',
+    'nav-home': 'Startseite',
+    'nav-courses': 'Kurse',
+    'nav-events': 'Veranstaltungen',
+    'nav-about-me': 'Über mich',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Kontakt',
+    'nav-about': 'Über uns',
+    'nav-support': 'Support',
+    'nav-login': 'Anmelden / Registrieren',
+    'heroBadge': 'ALM &amp; DevOps',
+    'heroTitle': 'Was ist Application Lifecycle Management (ALM)?',
+    'heroDate': '30. April 2026',
+    'heroRead': '3 Min. Lesezeit',
+  },
+  en: {
+    'sidebarRelated': 'Related Articles',
+    'sidebarTopics': 'Topics',
+    'sidebarTools': 'Tools',
+    'relatedKicker': 'Read More',
+    'readMore': 'Read article',
+    'relatedTitle': 'You might also be interested in',
+    'footContact': 'Contact',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Home',
+    'footBlog': 'Blog',
+    'footCatalog': 'Course Catalog',
+    'footEvents': 'Events',
+    'footAbout': 'About Us',
+    'footFaq': 'FAQ',
+    'footContactLink': 'Contact &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; All rights reserved.',
+    'relCard_cicd_title': 'What Is CI/CD?',
+    'relCard_cicd_desc': 'Continuous Integration and Deployment – automating the entire software release cycle.',
+    'relCard_sre_title': 'What Is SRE?',
+    'relCard_sre_desc': 'Site Reliability Engineering – software approaches for reliable IT operations and automation.',
+    'relCard_alm_title': 'What Is ALM?',
+    'relCard_alm_desc': 'Application Lifecycle Management – from concept to application retirement.',
+    'relCard_pe_title': 'What Is Performance Engineering?',
+    'relCard_pe_desc': 'Proactive testing and monitoring of application performance in every development phase.',
+    'relCard_vllm_title': 'What Is vLLM?',
+    'relCard_vllm_desc': 'How vLLM uses PagedAttention to accelerate and scale LLM inference.',
+    'header-msg': 'Online Courses — Millions of people are learning!',
+    'nav-home': 'Home',
+    'nav-courses': 'Courses',
+    'nav-events': 'Events',
+    'nav-about-me': 'About Me',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Contact',
+    'nav-about': 'About Us',
+    'nav-support': 'Support',
+    'nav-login': 'Login / Register',
+    'heroBadge': 'ALM &amp; DevOps',
+    'heroTitle': 'What Is Application Lifecycle Management (ALM)?',
+    'heroDate': 'April 30, 2026',
+    'heroRead': '3 min read',
+  },
+  fr: {
+    'sidebarRelated': 'Articles similaires',
+    'sidebarTopics': 'Thèmes',
+    'sidebarTools': 'Outils',
+    'relatedKicker': 'Lire la suite',
+    'readMore': 'Lire l\'article',
+    'relatedTitle': 'Ces articles pourraient vous intéresser',
+    'footContact': 'Contact',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Accueil',
+    'footBlog': 'Blog',
+    'footCatalog': 'Catalogue de cours',
+    'footEvents': 'Événements',
+    'footAbout': 'À propos',
+    'footFaq': 'FAQ',
+    'footContactLink': 'Contact &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Tous droits réservés.',
+    'relCard_cicd_title': 'Qu\'est-ce que CI/CD ?',
+    'relCard_cicd_desc': 'Intégration et déploiement continus – automatisation de l\'ensemble du cycle de release logiciel.',
+    'relCard_sre_title': 'Qu\'est-ce que SRE ?',
+    'relCard_sre_desc': 'Site Reliability Engineering – approches logicielles pour des opérations IT fiables et automatisées.',
+    'relCard_alm_title': 'Qu\'est-ce que l\'ALM ?',
+    'relCard_alm_desc': 'Application Lifecycle Management – de la conception jusqu\'à la mise hors service de l\'application.',
+    'relCard_pe_title': 'Qu\'est-ce que le Performance Engineering ?',
+    'relCard_pe_desc': 'Tests et surveillance proactifs des performances applicatives à chaque phase de développement.',
+    'relCard_vllm_title': 'Qu\'est-ce que vLLM ?',
+    'relCard_vllm_desc': 'Comment vLLM utilise PagedAttention pour accélérer et mettre à l\'échelle l\'inférence LLM.',
+    'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
+    'nav-home': 'Accueil',
+    'nav-courses': 'Cours',
+    'nav-events': 'Événements',
+    'nav-about-me': 'À propos de moi',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Contact',
+    'nav-about': 'À propos',
+    'nav-support': 'Support',
+    'nav-login': 'Se connecter / S\'inscrire',
+    'heroBadge': 'ALM &amp; DevOps',
+    'heroTitle': 'Qu\'est-ce que l\'Application Lifecycle Management (ALM) ?',
+    'heroDate': '30 avril 2026',
+    'heroRead': '3 min de lecture',
+  },
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-html');
+    if (i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
+  });
+  document.querySelectorAll('.lang-sect[data-lang]').forEach(function(el) {
+    el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+});
+</script>
+<!-- end i18n -->
+<script>
+(function(){
+  var b=document.createElement('div');b.id='rpb';document.body.prepend(b);
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    b.style.width=(h>0?(window.scrollY/h*100):0)+'%';
+  },{passive:true});
+})();
+</script>
+<script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/announce.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

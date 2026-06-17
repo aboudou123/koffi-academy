@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Was ist SRE (Site Reliability Engineering)? | Koffi Academy</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="stylesheet" href="/assets/css/modern.css">
+    <link rel="shortcut icon" href="/assets/images/logo.png">
+    <meta name="description" content="Site Reliability Engineering (SRE) – Softwareentwicklung für IT-Betrieb. Lernen Sie SRE-Rollen, DevOps vs. SRE und Best Practices kennen.">
+    <meta name="theme-color" content="#07294d">
+    <style>
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        .goog-te-gadget { font-family: 'Poppins', sans-serif !important; color: #666 !important; }
+        .goog-te-gadget img { display: none !important; }
+        .goog-te-gadget .goog-te-combo { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; background: white; }
+        
+        .article-content h1 { font-size: 2.2rem; color: #07294d; margin-bottom: 15px; font-family: 'Rubik', sans-serif; }
+        .article-content h2 { font-size: 1.6rem; margin-top: 30px; margin-bottom: 15px; color: #2c3e50; font-family: 'Rubik', sans-serif; border-left: 4px solid #ffc600; padding-left: 15px; }
+        .article-content h3 { font-size: 1.3rem; margin-top: 20px; margin-bottom: 10px; color: #34495e; }
+        .article-content p { font-size: 16px; line-height: 1.8; color: #444; margin-bottom: 20px; }
+        .article-content .meta-info { color: #666; font-size: 0.85rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .article-content .meta-info i { margin-right: 5px; }
+        .article-content ul, .article-content ol { margin: 15px 0 20px 25px; }
+        .article-content li { font-size: 16px; color: #444; margin-bottom: 8px; line-height: 1.6; }
+        .article-content .highlight-box { background: #f8f9fa; border-left: 4px solid #ffc600; padding: 20px; margin: 25px 0; border-radius: 8px; }
+        .article-content .info-box { background: #e8f4fd; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .article-content .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: white; border-radius: 12px; overflow: hidden; }
+        .article-content .comparison-table th, .comparison-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .article-content .comparison-table th { background: #07294d; color: white; }
+        @media (max-width: 768px) {
+            .article-content h1 { font-size: 1.8rem; }
+            .article-content h2 { font-size: 1.4rem; }
+        }
+    .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+<style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style>
+<style>
+/* ── Article Hero ───────────────────────────── */
+.article-hero{background:linear-gradient(135deg,#07294d 0%,#0d3a6e 55%,#1a5276 100%);padding:52px 0 46px;position:relative;overflow:hidden}
+.article-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 85% 50%,rgba(255,198,0,.07),transparent 70%);pointer-events:none}
+.art-hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,198,0,.15);border:1px solid rgba(255,198,0,.3);color:#ffc600;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px}
+.art-breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px;flex-wrap:wrap}
+.art-breadcrumb a{color:rgba(255,255,255,.6);text-decoration:none;transition:.18s}
+.art-breadcrumb a:hover{color:#ffc600}
+.art-breadcrumb i{font-size:9px;color:rgba(255,255,255,.25)}
+.art-breadcrumb span{color:rgba(255,255,255,.9);font-weight:600}
+.art-hero-title{font-size:2.2rem;font-weight:800;color:#fff;line-height:1.22;letter-spacing:-.03em;margin-bottom:20px;max-width:800px}
+.art-hero-meta{display:flex;flex-wrap:wrap;gap:20px}
+.art-hero-meta span{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,.6)}
+.art-hero-meta i{color:#ffc600;font-size:11px}
+/* ── Reading progress ────────────────────────── */
+#rpb{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,#ffc600,#ff8c00);z-index:10000;transition:width .08s linear}
+/* ── Article layout ─────────────────────────── */
+.blog-single-area.page-paddings{background:#f0f4f8;padding:40px 0 60px}
+.blog-post{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 6px 32px rgba(7,41,77,.09);margin-bottom:24px}
+.blog-post-images img{width:100%;height:220px;object-fit:cover;display:block}
+.post-content-text.article-content{padding:36px 40px}
+.article-content .news-tag,.article-content h1,.article-content #articleTitle,.article-content .meta-info,.article-content #articleMeta{display:none}
+.article-content h2{font-size:1.38rem;font-weight:700;color:#07294d;margin:32px 0 13px;padding-left:14px;border-left:4px solid #ffc600;line-height:1.3}
+.article-content h3{font-size:1.12rem;font-weight:700;color:#1e3a5f;margin:20px 0 9px}
+.article-content p{font-size:15.5px;line-height:1.85;color:#374151;margin-bottom:17px}
+.article-content .highlight-box{background:#fffbeb;border-left:4px solid #ffc600;padding:18px 22px;border-radius:0 12px 12px 0;margin:20px 0;box-shadow:0 2px 10px rgba(255,198,0,.1)}
+.article-content .info-box{background:#eff6ff;border:1px solid #bfdbfe;padding:18px 22px;border-radius:12px;margin:18px 0}
+.article-content ul,.article-content ol{margin:12px 0 16px 22px}
+.article-content li{font-size:15.5px;line-height:1.75;color:#374151;margin-bottom:6px}
+.article-content .tool-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.article-content .tool-tag{background:#eef2ff;color:#3730a3;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:600}
+.blog-sidebar .widget{background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 20px rgba(7,41,77,.08);margin-bottom:22px}
+.blog-news-title h2{font-size:13px;font-weight:700;color:#07294d;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #ffc600}
+@media(max-width:768px){.art-hero-title{font-size:1.6rem}.post-content-text.article-content{padding:20px}}
+/* ── Related Articles ──────────────────────── */
+.related-articles{background:#f0f4f8;padding:56px 0 64px;border-top:1px solid #e2e8f0}
+.related-header{margin-bottom:36px}
+.related-kicker{display:inline-flex;align-items:center;gap:7px;background:rgba(255,198,0,.15);color:#7a5800;border:1px solid rgba(255,198,0,.4);font-size:11px;font-weight:700;padding:4px 14px;border-radius:999px;text-transform:uppercase;letter-spacing:.9px;margin-bottom:12px}
+.related-kicker i{color:#ffc600;font-size:10px}
+.related-header h2{font-size:1.6rem;font-weight:800;color:#07294d;letter-spacing:-.03em;margin:0}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.related-card{background:#fff;border-radius:16px;padding:24px;border:1px solid #e2e8f0;box-shadow:0 4px 18px rgba(7,41,77,.06);text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:12px;transition:all .22s;position:relative;overflow:hidden}
+.related-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ffc600,rgba(255,198,0,.3))}
+.related-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(7,41,77,.13);border-color:rgba(255,198,0,.4)}
+.related-card-icon{width:46px;height:46px;background:rgba(255,198,0,.12);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.related-card-icon i{color:#07294d;font-size:18px}
+.related-card-tag{font-size:11px;font-weight:700;color:#ffc600;text-transform:uppercase;letter-spacing:.7px}
+.related-card h3{font-size:14.5px;font-weight:700;color:#07294d;line-height:1.38;margin:0}
+.related-card p{font-size:13px;color:#64748b;line-height:1.65;margin:0;flex:1}
+.related-card-arrow{display:flex;align-items:center;justify-content:flex-end;color:#ffc600;font-size:13px;font-weight:700;gap:6px;margin-top:auto}
+.related-card-arrow span{font-size:12px;color:#94a3b8;transition:.18s}
+.related-card:hover .related-card-arrow span{color:#07294d}
+@media(max-width:900px){.related-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:576px){.related-grid{grid-template-columns:1fr}}
+</style><link rel="stylesheet" href="/assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body>
+    <div class="page-main">
+        <!-- HEADER -->
+        <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="/index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="/index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses.html" data-i18n="footCatalog">Kurskatalog</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+<a href="/blog">Blog</a>
+<a href="/culture.html">Culture</a>
+<a href="/koffi-profile">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="/login.html">Anmelden</a><a class="kh__btn" href="/register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+
+        <!-- ARTICLE HERO -->
+        <section class="article-hero">
+          <div class="container">
+            <div class="art-hero-badge"><i class="fas fa-server"></i> <span data-i18n="heroBadge">SRE &amp; Platform</span></div>
+            <nav class="art-breadcrumb">
+              <a href="/index.html">Startseite</a><i class="fas fa-chevron-right"></i>
+              <a href="/blog">Blog</a><i class="fas fa-chevron-right"></i>
+              <span>SRE</span>
+            </nav>
+            <h1 class="art-hero-title" data-i18n="heroTitle">Was ist SRE (Site Reliability Engineering)?</h1>
+            <div class="art-hero-meta">
+              <span><i class="far fa-calendar-alt"></i> <span data-i18n="heroDate">4. Mai 2020</span></span>
+              <span><i class="far fa-clock"></i> <span data-i18n="heroRead">4 Min. Lesezeit</span></span>
+              <span><i class="fas fa-user-pen"></i> K.A.</span>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Article Content -->
+        <section class="blog-single-area page-paddings">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12">
+                        <div class="blog-post">
+                            <div class="blog-post-images">
+                                <img src="/assets/images/blog/blog1.svg" alt="SRE Site Reliability Engineering">
+                            </div>
+                            <div class="post-content-text article-content">
+<div class="lang-sect" data-lang="de">
+                                <div class="news-tag"><a href="#">SRE</a> <a href="#">DevOps</a> <a href="#">Platform Engineering</a></div>
+                                
+                                <h1 id="articleTitle">Was ist SRE (Site Reliability Engineering)?</h1>
+                                <div class="meta-info" id="articleMeta">
+                                    <i class="far fa-calendar-alt"></i> 4. Mai 2020 &nbsp;|&nbsp;
+                                    <i class="far fa-clock"></i> 4 Minuten Lesezeit
+                                </div>
+                                
+                                <div id="articleContent">
+                                    <h2>Überblick</h2>
+                                    <p><strong>Site Reliability Engineering (SRE)</strong> ist ein Softwareentwicklungsansatz für den IT-Betrieb. SRE-Teams nutzen Software als Werkzeug, um Systeme zu verwalten, Probleme zu lösen und Betriebsaufgaben zu automatisieren.</p>
+                                    
+                                    <p>SRE übernimmt Aufgaben, die traditionell von Betriebsteams oft manuell durchgeführt wurden, und überträgt sie Ingenieuren oder Betriebsteams, die Software und Automatisierung nutzen, um Probleme zu lösen und Produktionssysteme zu verwalten.</p>
+                                    
+                                    <p>SRE ist eine wertvolle Praxis bei der Erstellung skalierbarer und hochzuverlässiger Softwaresysteme. Es hilft, große Systeme durch Code zu verwalten, was für Systemadministratoren, die Tausende oder Hunderttausende von Maschinen verwalten, skalierbarer und nachhaltiger ist.</p>
+                                    
+                                    <div class="highlight-box">
+                                        <p>🔍 <strong>Das Konzept des Site Reliability Engineering stammt vom Google Engineering Team</strong> und wird Ben Treynor Sloss zugeschrieben. SRE hilft Teams, ein Gleichgewicht zwischen der Veröffentlichung neuer Funktionen und der Gewährleistung der Zuverlässigkeit für Benutzer zu finden.</p>
+                                    </div>
+                                    
+                                    <p>In diesem Zusammenhang sind <strong>Standardisierung und Automatisierung</strong> zwei wichtige Komponenten des SRE-Modells. Hier streben Site-Reliability-Ingenieure danach, Betriebsaufgaben zu verbessern und zu automatisieren.</p>
+                                    
+                                    <p>SRE unterstützt Teams, die ihre IT-Operationen von einem traditionellen Ansatz zu einem Cloud-Native-Ansatz migrieren.</p>
+                                    
+                                    <h2>Was macht ein Site Reliability Engineer?</h2>
+                                    <p>Ein Site Reliability Engineer ist eine einzigartige Rolle, die entweder einen Hintergrund als Systemadministrator, einen Softwareentwickler mit zusätzlicher Betriebserfahrung oder jemanden in einer IT-Betriebsrolle mit zusätzlichen Softwareentwicklungskenntnissen erfordert.</p>
+                                    
+                                    <p>SRE-Teams sind verantwortlich für:</p>
+                                    <ul>
+                                        <li>Wie Code bereitgestellt, konfiguriert und überwacht wird</li>
+                                        <li>Verfügbarkeit, Latenz, Change Management, Notfallreaktion und Kapazitätsmanagement von Diensten in der Produktion</li>
+                                    </ul>
+                                    
+                                    <h3>Service-Level Agreements (SLAs), SLIs und SLOs</h3>
+                                    <p>SRE-Teams bestimmen die Einführung neuer Funktionen durch die Verwendung von <strong>Service-Level Agreements (SLAs)</strong>, um die erforderliche Zuverlässigkeit des Systems durch <strong>Service-Level Indicators (SLI)</strong> und <strong>Service-Level Objectives (SLO)</strong> zu definieren.</p>
+                                    
+                                    <ul>
+                                        <li><strong>SLI</strong> misst spezifische Aspekte der bereitgestellten Service-Levels. Wichtige SLIs umfassen Anforderungslatenz, Verfügbarkeit, Fehlerquote und Systemdurchsatz.</li>
+                                        <li><strong>SLO</strong> basiert auf dem Zielwert oder Bereich für ein bestimmtes Service-Level basierend auf dem SLI.</li>
+                                    </ul>
+                                    
+                                    <div class="info-box">
+                                        <p>📊 <strong>Error Budget (Fehlerbudget)</strong> – Das SLO für die erforderliche Systemzuverlässigkeit basiert dann auf der als akzeptabel erachteten Ausfallzeit. Dieses Ausfallzeitniveau wird als Error Budget bezeichnet – der maximal zulässige Schwellenwert für Fehler und Ausfälle. Bei SRE wird 100%ige Zuverlässigkeit nicht erwartet – Ausfälle sind eingeplant und zu erwarten.</p>
+                                    </div>
+                                    
+                                    <p>Sobald das Error Budget festgelegt ist, kann das Entwicklungsteam das Error Budget bei der Veröffentlichung einer neuen Funktion "ausgeben". Basierend auf dem SLO und Error Budget bestimmt das Team, ob ein Produkt oder Dienst basierend auf dem verfügbaren Error Budget gestartet werden kann.</p>
+                                    
+                                    <h3>Die 50%-Regel</h3>
+                                    <p>Site Reliability Engineers teilen ihre Zeit zwischen Betriebsaufgaben und Projektarbeit auf. Laut SRE-Best-Practices von Google dürfen Site-Reliability-Ingenieure maximal <strong>50% ihrer Zeit für Betriebsaufgaben</strong> aufwenden – und sie sollten überwacht werden, um sicherzustellen, dass sie diese Grenze nicht überschreiten. Die restliche Zeit sollte für Entwicklungstätigkeiten wie die Erstellung neuer Funktionen, die Skalierung des Systems und die Implementierung von Automatisierung aufgewendet werden.</p>
+                                    
+                                    <div class="comparison-table">
+                                        <thead><tr><th>Rolle</th><th>Betriebsaufgaben</th><th>Entwicklungsaufgaben</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Traditioneller Sysadmin</td><td>80-100%</td><td>0-20%</td></tr>
+                                            <tr><td>SRE (ideal)</td><td>Max. 50%</td><td>Min. 50%</td></tr>
+                                        </tbody>
+                                    </div>
+                                    
+                                    <p>Übermäßige Betriebsarbeit und schlecht performende Dienste können an das Entwicklungsteam zurückgegeben werden, damit der Site Reliability Engineer nicht zu viel Zeit für den Betrieb einer Anwendung oder eines Dienstes aufwendet.</p>
+                                    
+                                    <p><strong>Automatisierung</strong> ist ein wichtiger Bestandteil der Rolle des Site Reliability Engineers. Wenn sie wiederholt mit einem Problem konfrontiert werden, werden sie wahrscheinlich eine Lösung automatisieren. Die Aufrechterhaltung des Gleichgewichts zwischen Betriebs- und Entwicklungsarbeit ist ein Schlüsselbestandteil von SRE.</p>
+                                    
+                                    <h2>DevOps vs. SRE</h2>
+                                    <p><strong>DevOps</strong> ist ein Ansatz für Kultur, Automatisierung und Plattformdesign, der darauf abzielt, erhöhten Geschäftswert und Reaktionsfähigkeit durch schnelle, qualitativ hochwertige Servicebereitstellung zu liefern. <strong>SRE kann als eine Implementierung von DevOps betrachtet werden.</strong></p>
+                                    
+                                    <div class="comparison-table">
+                                        <thead><tr><th>Aspekt</th><th>DevOps</th><th>SRE</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Fokus</td><td>Effiziente Entwicklungspipeline</td><td>Gleichgewicht zwischen Zuverlässigkeit und neuen Funktionen</td></tr>
+                                            <tr><td>Ziel</td><td>Schnellere Bereitstellung</td><td>Systemzuverlässigkeit mit Fehlerbudget</td></tr>
+                                            <tr><td>Ursprung</td><td>Community-Bewegung</td><td>Google (Ben Treynor Sloss)</td></tr>
+                                            <tr><td>Hauptmetrik</td><td>Lieferzeit, Häufigkeit</td><td>Error Budget, SLIs/SLOs</td></tr>
+                                        </tbody>
+                                    </div>
+                                    
+                                    <p>Wie DevOps zielt auch SRE auf Teamkultur und -beziehungen ab. Sowohl SRE als auch DevOps arbeiten daran, die Lücke zwischen Entwicklungs- und Betriebsteams zu schließen, um Dienste schneller zu liefern.</p>
+                                    
+                                    <h2>Platform Engineer vs. SRE</h2>
+                                    <p>Sowohl Platform Engineering als auch Site Reliability Engineering befassen sich mit der Erstellung und Wartung von Systemen. Der Unterschied zwischen den beiden Konzepten liegt im Fokus jeder Praxis:</p>
+                                    <ul>
+                                        <li><strong>SRE</strong> konzentriert sich auf IT-Betriebsteams und hilft ihnen, Software als Werkzeug zur Verwaltung von Systemen, Lösung von Problemen und Automatisierung von Betriebsaufgaben zu nutzen.</li>
+                                        <li><strong>Platform Engineering</strong> konzentriert sich auf Entwicklungsteams und hilft ihnen, Plattformen zur Verwaltung von Systemen, Lösung von Problemen und Automatisierung von Entwicklungsaufgaben zu erstellen.</li>
+                                    </ul>
+                                    
+                                    <h2>Technologie zur Unterstützung von SRE</h2>
+                                    <p>SRE basiert auf der Automatisierung routinemäßiger Betriebsaufgaben und der Standardisierung über den gesamten Anwendungslebenszyklus. <strong>Red Hat® Ansible® Automation Platform</strong> ist eine umfassende, integrierte Plattform, die SRE-Teams hilft, Automatisierung für Geschwindigkeit, Zusammenarbeit und Wachstum zu nutzen.</p>
+                                    
+                                    <p>Ansible Automation Platform bietet:</p>
+                                    <ul>
+                                        <li>Infrastruktur-Orchestrierung in der Cloud und on-premise für Instanzen, Routing, Load Balancing, Firewalls und mehr</li>
+                                        <li>Infrastrukturoptimierung, einschließlich der richtigen Dimensionierung von Cloud-Ressourcen</li>
+                                        <li>Cloud-Operationen, einschließlich Anwendungsbereitstellungen mit CI/CD-Pipelines, Betriebssystem-Patching und Wartung</li>
+                                        <li>Business Continuity, einschließlich Verschieben und Kopieren von Ressourcen aus der Cloud</li>
+                                    </ul>
+                                    
+                                    <div class="highlight-box">
+                                        <p><strong>📌 Fazit:</strong> SRE ist ein leistungsfähiger Ansatz, der Softwareentwicklung mit IT-Betrieb verbindet. Durch die Kombination von Automatisierung, Standardisierung und klaren Fehlerbudgets können Organisationen hochzuverlässige Systeme aufbauen und gleichzeitig Innovation und neue Funktionen vorantreiben.</p>
+                                    </div>
+                                    
+                                    <div class="blog-single-tag">
+                                        <a href="#">SRE</a>
+                                        <a href="#">Site Reliability Engineering</a>
+                                        <a href="#">DevOps</a>
+                                        <a href="#">Platform Engineering</a>
+                                        <a href="#">Ansible</a>
+                                        <a href="#">Kubernetes</a>
+                                    </div>
+                                </div>
+                            </div>
+<div class="lang-sect" data-lang="en" style="display:none">
+<div class="news-tag"><a href="#">SRE</a> <a href="#">DevOps</a> <a href="#">Platform Engineering</a></div>
+<h1 id="articleTitle">What Is SRE (Site Reliability Engineering)?</h1>
+<div class="meta-info" id="articleMeta">
+    <i class="far fa-calendar-alt"></i> May 4, 2020 &nbsp;|&nbsp;
+    <i class="far fa-clock"></i> 4 minutes read
+</div>
+<div id="articleContent">
+    <h2>Overview</h2>
+    <p><strong>Site Reliability Engineering (SRE)</strong> is a software engineering approach applied to IT operations. SRE teams use software as a tool to manage systems, solve problems, and automate operational tasks.</p>
+    <p>SRE takes tasks that have traditionally been performed manually by operations teams and transfers them to engineers or operations teams who use software and automation to solve problems and manage production systems.</p>
+    <p>SRE is a valuable practice for building scalable and highly reliable software systems. It helps manage large systems through code, which is more scalable and sustainable for system administrators managing thousands or hundreds of thousands of machines.</p>
+    <div class="highlight-box"><p>🔍 <strong>The concept of Site Reliability Engineering originated from the Google Engineering Team</strong> and is attributed to Ben Treynor Sloss. SRE helps teams find a balance between releasing new features and ensuring reliability for users.</p></div>
+    <p>In this context, <strong>standardization and automation</strong> are two important components of the SRE model. Site Reliability Engineers strive to improve and automate operational tasks.</p>
+    <p>SRE supports teams that are migrating their IT operations from a traditional approach to a cloud-native approach.</p>
+    <h2>What Does a Site Reliability Engineer Do?</h2>
+    <p>A Site Reliability Engineer is a unique role that requires either a background as a system administrator, a software developer with additional operational experience, or someone in an IT operations role with additional software development skills.</p>
+    <p>SRE teams are responsible for:</p>
+    <ul>
+        <li>How code is deployed, configured, and monitored</li>
+        <li>Availability, latency, change management, incident response, and capacity management of production services</li>
+    </ul>
+    <h3>Service Level Agreements (SLAs), SLIs, and SLOs</h3>
+    <p>SRE teams determine the rollout of new features by using <strong>Service Level Agreements (SLAs)</strong> to define the required system reliability through <strong>Service Level Indicators (SLI)</strong> and <strong>Service Level Objectives (SLO)</strong>.</p>
+    <ul>
+        <li><strong>SLI</strong> measures specific aspects of the provided service levels. Key SLIs include request latency, availability, error rate, and system throughput.</li>
+        <li><strong>SLO</strong> is based on the target value or range for a specific service level based on the SLI.</li>
+    </ul>
+    <div class="info-box"><p>📊 <strong>Error Budget</strong> – The SLO for the required system reliability is then based on the downtime considered acceptable. This downtime level is called the Error Budget — the maximum allowable threshold for errors and failures. In SRE, 100% reliability is not expected — failures are planned for and expected.</p></div>
+    <p>Once the Error Budget is set, the development team can "spend" the Error Budget when releasing a new feature. Based on the SLO and Error Budget, the team determines whether a product or service can be launched given the available Error Budget.</p>
+    <h3>The 50% Rule</h3>
+    <p>Site Reliability Engineers divide their time between operational tasks and project work. According to Google's SRE best practices, Site Reliability Engineers may spend a maximum of <strong>50% of their time on operational tasks</strong> — and they should be monitored to ensure they do not exceed this limit. The remaining time should be spent on development activities such as building new features, scaling the system, and implementing automation.</p>
+    <div class="comparison-table">
+        <thead><tr><th>Role</th><th>Operational tasks</th><th>Development tasks</th></tr></thead>
+        <tbody>
+            <tr><td>Traditional Sysadmin</td><td>80-100%</td><td>0-20%</td></tr>
+            <tr><td>SRE (ideal)</td><td>Max. 50%</td><td>Min. 50%</td></tr>
+        </tbody>
+    </div>
+    <p>Excessive operational work and poorly performing services can be returned to the development team so that the Site Reliability Engineer does not spend too much time operating an application or service.</p>
+    <p><strong>Automation</strong> is an important part of the Site Reliability Engineer's role. When repeatedly confronted with a problem, they will likely automate a solution. Maintaining the balance between operational and development work is a key component of SRE.</p>
+    <h2>DevOps vs. SRE</h2>
+    <p><strong>DevOps</strong> is an approach to culture, automation, and platform design aimed at delivering increased business value and responsiveness through rapid, high-quality service delivery. <strong>SRE can be considered an implementation of DevOps.</strong></p>
+    <div class="comparison-table">
+        <thead><tr><th>Aspect</th><th>DevOps</th><th>SRE</th></tr></thead>
+        <tbody>
+            <tr><td>Focus</td><td>Efficient development pipeline</td><td>Balance between reliability and new features</td></tr>
+            <tr><td>Goal</td><td>Faster delivery</td><td>System reliability with Error Budget</td></tr>
+            <tr><td>Origin</td><td>Community movement</td><td>Google (Ben Treynor Sloss)</td></tr>
+            <tr><td>Key metric</td><td>Lead time, frequency</td><td>Error Budget, SLIs/SLOs</td></tr>
+        </tbody>
+    </div>
+    <p>Like DevOps, SRE also focuses on team culture and relationships. Both SRE and DevOps work to close the gap between development and operations teams to deliver services faster.</p>
+    <h2>Platform Engineer vs. SRE</h2>
+    <p>Both Platform Engineering and Site Reliability Engineering deal with building and maintaining systems. The difference lies in the focus of each practice:</p>
+    <ul>
+        <li><strong>SRE</strong> focuses on IT operations teams and helps them use software as a tool to manage systems, solve problems, and automate operational tasks.</li>
+        <li><strong>Platform Engineering</strong> focuses on development teams and helps them build platforms to manage systems, solve problems, and automate development tasks.</li>
+    </ul>
+    <h2>Technology to Support SRE</h2>
+    <p>SRE is based on automating routine operational tasks and standardizing across the entire application lifecycle. <strong>Red Hat® Ansible® Automation Platform</strong> is a comprehensive, integrated platform that helps SRE teams leverage automation for speed, collaboration, and growth.</p>
+    <p>Ansible Automation Platform provides:</p>
+    <ul>
+        <li>Infrastructure orchestration in the cloud and on-premise for instances, routing, load balancing, firewalls, and more</li>
+        <li>Infrastructure optimization, including right-sizing cloud resources</li>
+        <li>Cloud operations, including application deployments with CI/CD pipelines, OS patching, and maintenance</li>
+        <li>Business continuity, including moving and copying resources from the cloud</li>
+    </ul>
+    <div class="highlight-box"><p><strong>📌 Conclusion:</strong> SRE is a powerful approach that connects software development with IT operations. By combining automation, standardization, and clear error budgets, organizations can build highly reliable systems while driving innovation and new features.</p></div>
+    <div class="blog-single-tag">
+        <a href="#">SRE</a><a href="#">Site Reliability Engineering</a>
+        <a href="#">DevOps</a><a href="#">Platform Engineering</a>
+        <a href="#">Ansible</a><a href="#">Kubernetes</a>
+    </div>
+</div>
+</div>
+<div class="lang-sect" data-lang="fr" style="display:none">
+<div class="news-tag"><a href="#">SRE</a> <a href="#">DevOps</a> <a href="#">Platform Engineering</a></div>
+<h1 id="articleTitle">Qu'est-ce que le SRE (Site Reliability Engineering)&nbsp;?</h1>
+<div class="meta-info" id="articleMeta">
+    <i class="far fa-calendar-alt"></i> 4 mai 2020 &nbsp;|&nbsp;
+    <i class="far fa-clock"></i> 4 minutes de lecture
+</div>
+<div id="articleContent">
+    <h2>Vue d'ensemble</h2>
+    <p>Le <strong>Site Reliability Engineering (SRE)</strong> est une approche d'ingénierie logicielle appliquée aux opérations IT. Les équipes SRE utilisent le logiciel comme outil pour gérer les systèmes, résoudre les problèmes et automatiser les tâches opérationnelles.</p>
+    <p>Le SRE reprend des tâches traditionnellement effectuées manuellement par les équipes d'exploitation et les confie à des ingénieurs ou équipes qui utilisent le logiciel et l'automatisation pour gérer les systèmes en production.</p>
+    <p>Le SRE est une pratique précieuse pour créer des systèmes logiciels évolutifs et hautement fiables. Il aide à gérer de grands systèmes par le code, ce qui est plus scalable et durable pour les administrateurs système gérant des milliers voire des centaines de milliers de machines.</p>
+    <div class="highlight-box"><p>🔍 <strong>Le concept de Site Reliability Engineering est issu de l'équipe d'ingénierie de Google</strong>, attribué à Ben Treynor Sloss. Le SRE aide les équipes à trouver un équilibre entre la publication de nouvelles fonctionnalités et la garantie de fiabilité pour les utilisateurs.</p></div>
+    <p>Dans ce contexte, la <strong>standardisation et l'automatisation</strong> sont deux composantes essentielles du modèle SRE. Les ingénieurs SRE s'efforcent d'améliorer et d'automatiser les tâches opérationnelles.</p>
+    <p>Le SRE soutient les équipes qui migrent leurs opérations IT d'une approche traditionnelle vers une approche cloud-native.</p>
+    <h2>Que fait un Site Reliability Engineer&nbsp;?</h2>
+    <p>Un Site Reliability Engineer est un rôle unique qui nécessite soit un profil d'administrateur système, soit un développeur logiciel avec une expérience opérationnelle supplémentaire, soit quelqu'un dans un rôle d'exploitation IT avec des compétences supplémentaires en développement logiciel.</p>
+    <p>Les équipes SRE sont responsables de :</p>
+    <ul>
+        <li>La manière dont le code est déployé, configuré et supervisé</li>
+        <li>La disponibilité, la latence, la gestion des changements, la réponse aux incidents et la gestion de la capacité des services en production</li>
+    </ul>
+    <h3>Accords de niveau de service (SLA), SLI et SLO</h3>
+    <p>Les équipes SRE déterminent le déploiement de nouvelles fonctionnalités en utilisant des <strong>Service Level Agreements (SLA)</strong> pour définir la fiabilité requise du système à travers des <strong>Service Level Indicators (SLI)</strong> et des <strong>Service Level Objectives (SLO)</strong>.</p>
+    <ul>
+        <li>Le <strong>SLI</strong> mesure des aspects spécifiques des niveaux de service fournis. Les SLI clés incluent la latence des requêtes, la disponibilité, le taux d'erreur et le débit du système.</li>
+        <li>Le <strong>SLO</strong> est basé sur la valeur ou la plage cible pour un niveau de service spécifique défini par le SLI.</li>
+    </ul>
+    <div class="info-box"><p>📊 <strong>Error Budget (Budget d'erreur)</strong> – Le SLO pour la fiabilité système requise est basé sur le temps d'arrêt jugé acceptable. Ce niveau de temps d'arrêt est appelé Error Budget — le seuil maximal tolérable pour les erreurs et pannes. Dans le SRE, une fiabilité à 100% n'est pas attendue — les pannes sont planifiées et anticipées.</p></div>
+    <p>Une fois l'Error Budget défini, l'équipe de développement peut « dépenser » ce budget lors de la mise en production d'une nouvelle fonctionnalité. En se basant sur le SLO et l'Error Budget, l'équipe détermine si un produit ou service peut être lancé selon le budget disponible.</p>
+    <h3>La règle des 50%</h3>
+    <p>Les Site Reliability Engineers répartissent leur temps entre les tâches opérationnelles et le travail de projet. Selon les bonnes pratiques SRE de Google, ils ne peuvent consacrer qu'un maximum de <strong>50% de leur temps aux tâches opérationnelles</strong> — et doivent être supervisés pour ne pas dépasser cette limite. Le temps restant doit être consacré à des activités de développement telles que la création de nouvelles fonctionnalités, la mise à l'échelle du système et la mise en œuvre de l'automatisation.</p>
+    <div class="comparison-table">
+        <thead><tr><th>Rôle</th><th>Tâches opérationnelles</th><th>Tâches de développement</th></tr></thead>
+        <tbody>
+            <tr><td>Sysadmin traditionnel</td><td>80-100%</td><td>0-20%</td></tr>
+            <tr><td>SRE (idéal)</td><td>Max. 50%</td><td>Min. 50%</td></tr>
+        </tbody>
+    </div>
+    <p>Un travail opérationnel excessif et des services peu performants peuvent être renvoyés à l'équipe de développement, afin que le SRE ne passe pas trop de temps à exploiter une application ou un service.</p>
+    <p>L'<strong>automatisation</strong> est une composante importante du rôle du Site Reliability Engineer. Face à un problème répétitif, il automatisera probablement une solution. Maintenir l'équilibre entre travail opérationnel et développement est un élément clé du SRE.</p>
+    <h2>DevOps vs. SRE</h2>
+    <p><strong>DevOps</strong> est une approche de culture, d'automatisation et de conception de plateforme visant à apporter plus de valeur métier et de réactivité grâce à une livraison de services rapide et de qualité. <strong>Le SRE peut être considéré comme une implémentation de DevOps.</strong></p>
+    <div class="comparison-table">
+        <thead><tr><th>Aspect</th><th>DevOps</th><th>SRE</th></tr></thead>
+        <tbody>
+            <tr><td>Focalisation</td><td>Pipeline de développement efficace</td><td>Équilibre entre fiabilité et nouvelles fonctionnalités</td></tr>
+            <tr><td>Objectif</td><td>Livraison plus rapide</td><td>Fiabilité du système avec Error Budget</td></tr>
+            <tr><td>Origine</td><td>Mouvement communautaire</td><td>Google (Ben Treynor Sloss)</td></tr>
+            <tr><td>Métrique clé</td><td>Lead time, fréquence</td><td>Error Budget, SLI/SLO</td></tr>
+        </tbody>
+    </div>
+    <p>Tout comme DevOps, le SRE s'intéresse à la culture et aux relations d'équipe. SRE et DevOps travaillent tous deux à combler le fossé entre les équipes de développement et d'exploitation pour livrer des services plus rapidement.</p>
+    <h2>Platform Engineer vs. SRE</h2>
+    <p>Le Platform Engineering et le Site Reliability Engineering traitent tous deux de la création et de la maintenance de systèmes. La différence réside dans la focalisation de chaque pratique :</p>
+    <ul>
+        <li>Le <strong>SRE</strong> se concentre sur les équipes d'exploitation IT et les aide à utiliser le logiciel comme outil pour gérer les systèmes, résoudre les problèmes et automatiser les tâches opérationnelles.</li>
+        <li>Le <strong>Platform Engineering</strong> se concentre sur les équipes de développement et les aide à créer des plateformes pour gérer les systèmes, résoudre les problèmes et automatiser les tâches de développement.</li>
+    </ul>
+    <h2>Technologies pour soutenir le SRE</h2>
+    <p>Le SRE repose sur l'automatisation des tâches opérationnelles routinières et la standardisation sur l'ensemble du cycle de vie des applications. <strong>Red Hat® Ansible® Automation Platform</strong> est une plateforme complète et intégrée qui aide les équipes SRE à tirer parti de l'automatisation pour la vitesse, la collaboration et la croissance.</p>
+    <p>Ansible Automation Platform offre :</p>
+    <ul>
+        <li>Orchestration d'infrastructure dans le cloud et on-premise pour les instances, le routage, l'équilibrage de charge, les pare-feu et plus</li>
+        <li>Optimisation de l'infrastructure, y compris le dimensionnement approprié des ressources cloud</li>
+        <li>Opérations cloud, y compris les déploiements d'applications avec des pipelines CI/CD, le patching du système d'exploitation et la maintenance</li>
+        <li>Continuité d'activité, y compris le déplacement et la copie de ressources depuis le cloud</li>
+    </ul>
+    <div class="highlight-box"><p><strong>📌 Conclusion :</strong> Le SRE est une approche puissante qui relie le développement logiciel aux opérations IT. En combinant automatisation, standardisation et budgets d'erreur clairs, les organisations peuvent construire des systèmes hautement fiables tout en stimulant l'innovation et les nouvelles fonctionnalités.</p></div>
+    <div class="blog-single-tag">
+        <a href="#">SRE</a><a href="#">Site Reliability Engineering</a>
+        <a href="#">DevOps</a><a href="#">Platform Engineering</a>
+        <a href="#">Ansible</a><a href="#">Kubernetes</a>
+    </div>
+</div>
+</div>
+</div>
+                        </div>
+
+                        
+                        
+                    </div>
+                    
+                    <!-- Sidebar -->
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
+                        <div class="sidebar">
+                            <div class="widget-box">
+                                <div class="widget">
+                                    <div class="blog-news-title"><h2 data-i18n="sidebarRelated">Ähnliche Artikel</h2></div>
+                                    <div class="feature-box-main">
+                                        <ul class="feature-box">
+                                            <li><div class="post-item"><div class="post-img"><img src="/assets/images/blog/blog2.svg" alt="DevOps"></div><div class="post-info"><h4><a href="#">DevOps Best Practices</a></h4><span class="post-time"><i class="far fa-calendar-alt"></i> 20. April 2020</span></div></div></li>
+                                            <li><div class="post-item"><div class="post-img"><img src="/assets/images/blog/blog3.svg" alt="Platform Engineering"></div><div class="post-info"><h4><a href="#">Platform Engineering & DevOps</a></h4><span class="post-time"><i class="far fa-calendar-alt"></i> 15. April 2020</span></div></div></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="widget">
+                                    <div class="blog-news-title"><h2 data-i18n="sidebarTopics">Themen</h2></div>
+                                    <ul class="widget-tag">
+                                        <li><a href="#"><i class="fas fa-chevron-right"></i> SRE</a></li>
+                                        <li><a href="#"><i class="fas fa-chevron-right"></i> DevOps</a></li>
+                                        <li><a href="#"><i class="fas fa-chevron-right"></i> Platform Engineering</a></li>
+                                        <li><a href="#"><i class="fas fa-chevron-right"></i> Automatisierung</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ARTICLES CONNEXES -->
+        <section class="related-articles">
+          <div class="container">
+            <div class="related-header">
+              <div class="related-kicker"><i class="fas fa-bookmark"></i> <span data-i18n="relatedKicker">Weiterlesen</span></div>
+              <h2 data-i18n="relatedTitle">Diese Artikel könnten Sie auch interessieren</h2>
+            </div>
+            <div class="related-grid">
+              <a href="/free-courses/what-is-ci-cd" class="related-card">
+                <div class="related-card-icon"><i class="fas fa-code-branch"></i></div>
+                <div class="related-card-tag">CI/CD &amp; DevOps</div>
+                <h3 data-i18n="relCard_cicd_title">Was ist CI/CD?</h3>
+                <p data-i18n="relCard_cicd_desc">Continuous Integration und Deployment – Automatisierung des gesamten Software-Release-Zyklus.</p>
+                <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+              </a>
+              <a href="/free-courses/what-is-alm" class="related-card">
+                <div class="related-card-icon"><i class="fas fa-layer-group"></i></div>
+                <div class="related-card-tag">ALM &amp; DevOps</div>
+                <h3 data-i18n="relCard_alm_title">Was ist ALM?</h3>
+                <p data-i18n="relCard_alm_desc">Application Lifecycle Management – vom Konzept bis zur Abkündigung einer Anwendung.</p>
+                <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+              </a>
+              <a href="/free-courses/what-is-performance-engineering" class="related-card">
+                <div class="related-card-icon"><i class="fas fa-gauge-high"></i></div>
+                <div class="related-card-tag">Performance</div>
+                <h3 data-i18n="relCard_pe_title">Was ist Performance Engineering?</h3>
+                <p data-i18n="relCard_pe_desc">Proaktives Testen und Überwachen der Anwendungsleistung in jeder Entwicklungsphase.</p>
+                <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+              </a>
+              <a href="/free-courses/virtual-llm" class="related-card">
+                <div class="related-card-icon"><i class="fas fa-microchip"></i></div>
+                <div class="related-card-tag">KI &amp; LLM</div>
+                <h3 data-i18n="relCard_vllm_title">Was ist vLLM?</h3>
+                <p data-i18n="relCard_vllm_desc">Wie vLLM mit PagedAttention die LLM-Inferenz beschleunigt und skalierbar macht.</p>
+                <div class="related-card-arrow"><span data-i18n="readMore">Artikel lesen</span> <i class="fas fa-arrow-right"></i></div>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footContact">Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footNav">Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/index.html" data-i18n="footHome">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses.html" data-i18n="footCatalog">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/blog" data-i18n="footBlog">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/event.html" data-i18n="footEvents">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3 data-i18n="footSupport">Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about" data-i18n="footAbout">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq" data-i18n="footFaq">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact.html" data-i18n="footContactLink">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p data-i18n-html="footCopyright">Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+    </div>
+    
+        <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/wow.min.js"></script>
+    <script>new WOW().init();</script>
+<!-- i18n Language Switcher -->
+<script>
+var i18n = {
+  de: {
+    'sidebarRelated': 'Ähnliche Artikel',
+    'sidebarTopics': 'Themen',
+    'sidebarTools': 'Tools',
+    'relatedKicker': 'Weiterlesen',
+    'readMore': 'Artikel lesen',
+    'relatedTitle': 'Diese Artikel könnten Sie auch interessieren',
+    'footContact': 'Kontakt',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Startseite',
+    'footBlog': 'Blog',
+    'footCatalog': 'Kurskatalog',
+    'footEvents': 'Veranstaltungen',
+    'footAbout': 'Ueber uns',
+    'footFaq': 'Haeufige Fragen',
+    'footContactLink': 'Kontakt &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.',
+    'relCard_cicd_title': 'Was ist CI/CD?',
+    'relCard_cicd_desc': 'Continuous Integration und Deployment – Automatisierung des gesamten Software-Release-Zyklus.',
+    'relCard_sre_title': 'Was ist SRE?',
+    'relCard_sre_desc': 'Site Reliability Engineering – Software-Methoden für zuverlässigen IT-Betrieb und Automatisierung.',
+    'relCard_alm_title': 'Was ist ALM?',
+    'relCard_alm_desc': 'Application Lifecycle Management – vom Konzept bis zur Abkündigung einer Anwendung.',
+    'relCard_pe_title': 'Was ist Performance Engineering?',
+    'relCard_pe_desc': 'Proaktives Testen und Überwachen der Anwendungsleistung in jeder Entwicklungsphase.',
+    'relCard_vllm_title': 'Was ist vLLM?',
+    'relCard_vllm_desc': 'Wie vLLM mit PagedAttention die LLM-Inferenz beschleunigt und skalierbar macht.',
+    'header-msg': 'Willkommen bei der Koffi Academy — Ihre Cloud- & DevOps-Reise beginnt hier.',
+    'nav-home': 'Startseite',
+    'nav-courses': 'Kurse',
+    'nav-events': 'Veranstaltungen',
+    'nav-about-me': 'Über mich',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Kontakt',
+    'nav-about': 'Über uns',
+    'nav-support': 'Support',
+    'nav-login': 'Anmelden / Registrieren',
+    'heroBadge': 'SRE &amp; Platform',
+    'heroTitle': 'Was ist SRE (Site Reliability Engineering)?',
+    'heroDate': '4. Mai 2020',
+    'heroRead': '4 Min. Lesezeit',
+  },
+  en: {
+    'sidebarRelated': 'Related Articles',
+    'sidebarTopics': 'Topics',
+    'sidebarTools': 'Tools',
+    'relatedKicker': 'Read More',
+    'readMore': 'Read article',
+    'relatedTitle': 'You might also be interested in',
+    'footContact': 'Contact',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Home',
+    'footBlog': 'Blog',
+    'footCatalog': 'Course Catalog',
+    'footEvents': 'Events',
+    'footAbout': 'About Us',
+    'footFaq': 'FAQ',
+    'footContactLink': 'Contact &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; All rights reserved.',
+    'relCard_cicd_title': 'What Is CI/CD?',
+    'relCard_cicd_desc': 'Continuous Integration and Deployment – automating the entire software release cycle.',
+    'relCard_sre_title': 'What Is SRE?',
+    'relCard_sre_desc': 'Site Reliability Engineering – software approaches for reliable IT operations and automation.',
+    'relCard_alm_title': 'What Is ALM?',
+    'relCard_alm_desc': 'Application Lifecycle Management – from concept to application retirement.',
+    'relCard_pe_title': 'What Is Performance Engineering?',
+    'relCard_pe_desc': 'Proactive testing and monitoring of application performance in every development phase.',
+    'relCard_vllm_title': 'What Is vLLM?',
+    'relCard_vllm_desc': 'How vLLM uses PagedAttention to accelerate and scale LLM inference.',
+    'header-msg': 'Online Courses — Millions of people are learning!',
+    'nav-home': 'Home',
+    'nav-courses': 'Courses',
+    'nav-events': 'Events',
+    'nav-about-me': 'About Me',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Contact',
+    'nav-about': 'About Us',
+    'nav-support': 'Support',
+    'nav-login': 'Login / Register',
+    'heroBadge': 'SRE &amp; Platform',
+    'heroTitle': 'What Is SRE (Site Reliability Engineering)?',
+    'heroDate': 'May 4, 2020',
+    'heroRead': '4 min read',
+  },
+  fr: {
+    'sidebarRelated': 'Articles similaires',
+    'sidebarTopics': 'Thèmes',
+    'sidebarTools': 'Outils',
+    'relatedKicker': 'Lire la suite',
+    'readMore': 'Lire l\'article',
+    'relatedTitle': 'Ces articles pourraient vous intéresser',
+    'footContact': 'Contact',
+    'footNav': 'Navigation',
+    'footSupport': 'Support',
+    'footHome': 'Accueil',
+    'footBlog': 'Blog',
+    'footCatalog': 'Catalogue de cours',
+    'footEvents': 'Événements',
+    'footAbout': 'À propos',
+    'footFaq': 'FAQ',
+    'footContactLink': 'Contact &amp; Support',
+    'footCopyright': 'Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Tous droits réservés.',
+    'relCard_cicd_title': 'Qu\'est-ce que CI/CD ?',
+    'relCard_cicd_desc': 'Intégration et déploiement continus – automatisation de l\'ensemble du cycle de release logiciel.',
+    'relCard_sre_title': 'Qu\'est-ce que SRE ?',
+    'relCard_sre_desc': 'Site Reliability Engineering – approches logicielles pour des opérations IT fiables et automatisées.',
+    'relCard_alm_title': 'Qu\'est-ce que l\'ALM ?',
+    'relCard_alm_desc': 'Application Lifecycle Management – de la conception jusqu\'à la mise hors service de l\'application.',
+    'relCard_pe_title': 'Qu\'est-ce que le Performance Engineering ?',
+    'relCard_pe_desc': 'Tests et surveillance proactifs des performances applicatives à chaque phase de développement.',
+    'relCard_vllm_title': 'Qu\'est-ce que vLLM ?',
+    'relCard_vllm_desc': 'Comment vLLM utilise PagedAttention pour accélérer et mettre à l\'échelle l\'inférence LLM.',
+    'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
+    'nav-home': 'Accueil',
+    'nav-courses': 'Cours',
+    'nav-events': 'Événements',
+    'nav-about-me': 'À propos de moi',
+    'nav-pricing': 'Sponsor',
+    'nav-blog': 'Blog',
+    'nav-contact': 'Contact',
+    'nav-about': 'À propos',
+    'nav-support': 'Support',
+    'nav-login': 'Se connecter / S\'inscrire',
+    'heroBadge': 'SRE &amp; Platform',
+    'heroTitle': 'Qu\'est-ce que le SRE (Site Reliability Engineering) ?',
+    'heroDate': '4 mai 2020',
+    'heroRead': '4 min de lecture',
+  },
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-html');
+    if (i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
+  });
+  document.querySelectorAll('.lang-sect[data-lang]').forEach(function(el) {
+    el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+});
+</script>
+<!-- end i18n -->
+<script>
+(function(){
+  var b=document.createElement('div');b.id='rpb';document.body.prepend(b);
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    b.style.width=(h>0?(window.scrollY/h*100):0)+'%';
+  },{passive:true});
+})();
+</script>
+<script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/announce.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="/assets/css/style.css">
+      <link rel="stylesheet" href="/assets/css/responsive.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      <link rel="stylesheet" href="/assets/css/modern.css">
+      <link rel="shortcut icon" href="/assets/images/logo.png">
+      <title>Platform Engineering vs. DevOps | Koffi Academy</title>
+      <meta name="description" content="Plattform-Engineering und DevOps im Vergleich: Unterschiede, Gemeinsamkeiten, Use Cases und wie Koffi Academy helfen kann.">
+      <meta name="theme-color" content="#07294d">
+      
+      <style>
+         .goog-te-banner-frame.skiptranslate { display: none !important; }
+         body { top: 0px !important; }
+         .goog-te-gadget { font-family: 'Poppins', sans-serif !important; color: #666 !important; }
+         .goog-te-gadget img { display: none !important; }
+         .goog-te-gadget .goog-te-combo { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; background: white; }
+         
+         .article-content h1 { font-size: 2.2rem; color: #07294d; margin-bottom: 15px; font-family: 'Rubik', sans-serif; }
+         .article-content h2 { font-size: 1.6rem; margin-top: 30px; margin-bottom: 15px; color: #2c3e50; font-family: 'Rubik', sans-serif; border-left: 4px solid #ffc600; padding-left: 15px; }
+         .article-content h3 { font-size: 1.3rem; margin-top: 20px; margin-bottom: 10px; color: #34495e; }
+         .article-content p { font-size: 16px; line-height: 1.8; color: #444; margin-bottom: 20px; }
+         .article-content .meta-info { color: #666; font-size: 0.85rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+         .article-content .meta-info i { margin-right: 5px; }
+         .article-content ul, .article-content ol { margin: 15px 0 20px 25px; }
+         .article-content li { font-size: 16px; color: #444; margin-bottom: 8px; line-height: 1.6; }
+         .article-content .highlight-box { background: #f8f9fa; border-left: 4px solid #ffc600; padding: 20px; margin: 25px 0; border-radius: 8px; }
+         .article-content .video-note { background: #e8f4fd; padding: 15px; border-radius: 10px; text-align: center; margin: 25px 0; }
+         @media (max-width: 768px) {
+            .article-content h1 { font-size: 1.8rem; }
+            .article-content h2 { font-size: 1.4rem; }
+         }
+      .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+   <style>
+.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
+.simple-footer a:hover{color:#ffc600}
+.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
+.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
+.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
+.simple-footer li a{color:rgba(255,255,255,.78)}
+.simple-footer li a:hover{color:#ffc600}
+.sfooter-cols{padding-bottom:36px}
+.sfooter-cols>[class*='col-']{margin-bottom:24px}
+.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
+.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
+.simple-footer-bottom a{color:rgba(255,255,255,.62)}
+.simple-footer-bottom a:hover{color:#ffc600}
+</style><link rel="stylesheet" href="/assets/css/modern-header.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+   <body>
+      <div class="page-main">
+         <!-- HEADER -->
+         <header class="kh">
+<div class="kh__in">
+<a class="kh__brand" href="/index.html">
+<span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+<span class="kh__name">Koffi Academy</span>
+</a>
+<nav class="kh__nav">
+<a href="/index.html">Startseite</a>
+<span class="kh__drop"><span class=" kh__droplabel active">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses.html">Kurskatalog</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+<a href="/blog">Blog</a>
+<a href="/culture.html">Culture</a>
+<a href="/koffi-profile">Über mich</a>
+
+<span class="kh__auth"><a class="kh__login" href="/login.html">Anmelden</a><a class="kh__btn" href="/register.html">Registrieren</a></span>
+</nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+</div>
+</header>
+         </div>
+         
+         <!-- Breadcrumb -->
+         <section class="breadcrumb-area">
+            <div class="breadcrumb-shape"><img src="/assets/images/slider-bottom-pattern.png" alt="Form"></div>
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                     <div class="breadcrumb-box"><h2>Blog</h2></div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         
+         <!-- Article Content -->
+         <section class="blog-single-area page-paddings">
+            <div class="container">
+               <div class="row">
+                  <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12">
+                     <div class="blog-post">
+                        <div class="blog-post-images">
+                           <img src="/assets/images/blog/blog1.svg" alt="Platform Engineering vs DevOps">
+                        </div>
+                        <div class="post-content-text article-content">
+                           <div class="news-tag"><a href="/free-courses/platform-engineering-devops">Platform Engineering</a> <a href="/free-courses/devops">DevOps</a></div>
+                           
+                           <h1>Platform Engineering im Vergleich zu DevOps</h1>
+                           <div class="meta-info">
+                              <i class="far fa-calendar-alt"></i> 30. April 2026 &nbsp;|&nbsp;
+                              <i class="far fa-clock"></i> 5 Minuten Lesezeit
+                           </div>
+                           
+                           <p>Sowohl <strong>Platform Engineering</strong> als auch <strong>DevOps</strong> sind moderne IT-Praktiken, die darauf abzielen, die Softwareentwicklung zu beschleunigen und Entwicklungshindernisse abzubauen. Allerdings werden diese beiden Ansätze zu unterschiedlichen Zeitpunkten und mit unterschiedlichen Schwerpunkten eingesetzt. Wer die Unterschiede kennt, kann die richtige Strategie für die eigenen Ziele wählen.</p>
+                           
+                           <p><strong>DevOps</strong> ist ein kulturelles Konzept, bei dem Entwicklung (Development) und IT-Betrieb (Operations) in iterative Arbeitsabläufe zusammengeführt werden. <strong>Platform Engineering</strong> hingegen konzentriert sich stärker auf den Aufbau interner Plattformen und Werkzeuge, die diese Arbeitsabläufe unterstützen und skalieren.</p>
+                           
+                           <h2>Was ist DevOps?</h2>
+                           <p>DevOps verbindet die Bereiche Entwicklung und IT-Betrieb miteinander. Es nutzt agile Prinzipien – eine Entwicklungsmethodik, die auf selbstorganisierten Teams und schnellen Iterationen basiert. DevOps erfordert eine enge, funktionsübergreifende Zusammenarbeit und den Aufbau von Vertrauen zwischen den Teams. Aus diesem Grund wird DevOps oft als kultureller Wandel betrachtet, nicht nur als reine Prozessänderung.</p>
+                           
+                           <p>DevOps entstand als Antwort auf die Kritik an traditionellen Wasserfall-Methoden, die Innovationen ausbremsen und zu organisatorischen Barrieren führen können. Im Gegensatz dazu setzt DevOps auf Automatisierung und zyklische Prozesse. Entwicklungsteams können Software schnell von der Entwicklung in die Produktion bringen und dort kontinuierlich verbessern.</p>
+                           
+                           <div class="highlight-box">
+                              <p><strong>💡 Kernidee von DevOps:</strong> Unternehmen, die DevOps einführen, können ihre Software systematisch weiterentwickeln. Teams passen sich flexibel an Veränderungen an und probieren neue Ansätze aus – etwas, das traditionelle Entwicklungsmodelle oft verhindern.</p>
+                           </div>
+                           
+                           <h2>Was ist Platform Engineering?</h2>
+                           <p>Platform Engineering erweitert DevOps-Praktiken, indem es standardisierte Tools, Dienste und Arbeitsabläufe bereitstellt. Entwicklungsteams können so effizienter arbeiten, ohne die zugrundeliegende Infrastruktur direkt verwalten zu müssen. Platform Engineers kuratieren und pflegen die verschiedenen Werkzeuge und Dokumentationen, die Entwicklungsteams benötigen.</p>
+                           
+                           <p>Mit der Verbreitung von DevOps wird auch Platform Engineering immer wichtiger. Es bietet die zugrundeliegenden Komponenten zur Unterstützung von DevOps-Workflows und hilft Unternehmen bei der Skalierung ihrer Entwicklungspraktiken.</p>
+                           
+                           <div class="video-note">
+                              <i class="fas fa-video" style="font-size: 24px; color: #07294d;"></i>
+                              <p style="margin: 10px 0 0;"><strong>Backstage mit Platform Engineering</strong><br>Weitere Informationen zu internen Entwicklerportalen finden Sie in unseren Kursen.</p>
+                           </div>
+                           
+                           <h2>Die Unterschiede zwischen Platform Engineering und DevOps</h2>
+                           <p>Platform Engineering hilft dabei, DevOps zu skalieren, weil Entwicklungsteams nicht mehr alles selbst machen müssen. Eine gut kuratierte Plattform ermöglicht es Entwicklungsteams, sich auf ihre Anwendungen zu konzentrieren, während das Plattformteam die zugrundeliegenden Komponenten bereitstellt und wartet.</p>
+                           
+                           <p>Platform Engineering könnte theoretisch zu neuen Abhängigkeiten führen – Entwicklungsteams müssten dann auf das Plattformteam warten. In der Praxis reduziert Platform Engineering jedoch Redundanz und wiederholte Arbeit. Mehrere Teams können dieselbe Self-Service-Plattform nutzen, anstatt jede eigene Lösung zu entwickeln.</p>
+                           
+                           <h2>Welche Rolle spielt Site Reliability Engineering?</h2>
+                           <p><strong>Site Reliability Engineering (SRE)</strong> wurde von Google geprägt und beschreibt Systeme, die Produkte mithilfe von Automatisierung betreiben. SRE kümmert sich um die zugrundeliegende Infrastruktur, die Verfügbarkeit und die Performance.</p>
+                           
+                           <p>SRE-Teams und Platform Engineers haben ähnliche Ziele, aber unterschiedliche Schwerpunkte:</p>
+                           <ul>
+                              <li><strong>SRE</strong> konzentriert sich auf Performance, Zuverlässigkeit und Skalierung von Software</li>
+                              <li><strong>Platform Engineering</strong> kümmert sich um Systeme, die das Entwicklungserlebnis (Developer Experience) verbessern</li>
+                           </ul>
+                           
+                           <h2>Use Cases für Platform Engineering und DevOps</h2>
+                           <p>Teams nutzen Platform Engineering häufig, um <strong>interne Entwicklerplattformen (IDPs)</strong> aufzubauen – zentrale Portale mit Tools, Services und Dokumentationen im Self-Service. Platform Engineers entwickeln diese Plattform basierend auf Nutzerfeedback und Best Practices.</p>
+                           
+                           <p>Organisationen, die <strong>CI/CD (Continuous Integration / Continuous Delivery)</strong> etablieren möchten, müssen DevOps-Praktiken einführen. CI/CD automatisiert das Entwickeln und Testen von Code, minimiert Fehler und beschleunigt den gesamten Software-Lebenszyklus.</p>
+                           
+                           <h2>Wie Koffi Academy helfen kann</h2>
+                           <p><strong>Koffi Academy</strong> bietet Plattform-Engineering-Beratung und Schulungen, die Unternehmen dabei unterstützen, ihre Entwicklungsproduktivität zu steigern. Durch die Kombination von DevOps-Beratung, Plattform-Engineering-Schulungen und individuellen Lösungen helfen wir Organisationen, Self-Service zu verbessern, das Onboarding zu beschleunigen und wiederkehrende Aufgaben zu reduzieren.</p>
+                           
+                           <p>Unsere Experten begleiten Sie bei der Einführung von:</p>
+                           <ul>
+                              <li>Internen Entwicklerplattformen (IDPs) auf Basis moderner Technologien</li>
+                              <li>CI/CD-Pipelines und Automatisierungslösungen</li>
+                              <li>DevOps-Kulturwandel und Teamorganisation</li>
+                              <li>Cloud-Infrastruktur und Kubernetes</li>
+                           </ul>
+                           
+                           <div class="highlight-box">
+                              <p><strong>📌 Fazit:</strong> Platform Engineering und DevOps sind keine Konkurrenten, sondern ergänzen sich ideal. DevOps schafft die kulturelle Grundlage für schnelle, iterative Entwicklung. Platform Engineering liefert die technische Plattform, die diese Entwicklung effizient und skalierbar macht. Gemeinsam bilden sie die Grundlage für moderne, erfolgreiche Softwareorganisationen.</p>
+                           </div>
+                           
+                           <div class="blog-single-tag">
+                              <a href="/free-courses/platform-engineering-devops">Platform Engineering</a>
+                              <a href="/free-courses/devops">DevOps</a>
+                              <a href="/free-courses/what-is-ci-cd">CI/CD</a>
+                              <a href="/blog-detail.html">IDP</a>
+                              <a href="/free-courses/kubernetes">Kubernetes</a>
+                           </div>
+                        </div>
+                     </div>
+
+
+                  </div>
+                  
+                  <!-- Sidebar -->
+                  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
+                     <div class="sidebar">
+                        <div class="widget-box">
+                           <div class="widget">
+                              <div class="blog-news-title"><h2>Neueste Artikel</h2></div>
+                              <div class="feature-box-main">
+                                 <ul class="feature-box">
+                                    <li><div class="post-item"><div class="post-img"><img src="/assets/images/blog/blog2.svg" alt="IDP"></div><div class="post-info"><h4><a href="/blog-detail.html">Internal Developer Platforms (IDP) erklärt</a></h4><span class="post-time"><i class="far fa-calendar-alt"></i> 30. April 2026</span></div></div></li>
+                                    <li><div class="post-item"><div class="post-img"><img src="/assets/images/blog/blog3.svg" alt="Kubernetes"></div><div class="post-info"><h4><a href="/free-courses/kubernetes">Kubernetes für Einsteiger</a></h4><span class="post-time"><i class="far fa-calendar-alt"></i> 30. April 2026</span></div></div></li>
+                                 </ul>
+                              </div>
+                           </div>
+                           <div class="widget">
+                              <div class="blog-news-title"><h2>Themen</h2></div>
+                              <ul class="widget-tag">
+                                 <li><a href="/free-courses/platform-engineering-devops"><i class="fas fa-chevron-right"></i> Platform Engineering</a></li>
+                                 <li><a href="/free-courses/devops"><i class="fas fa-chevron-right"></i> DevOps</a></li>
+                                 <li><a href="/free-courses/what-is-ci-cd"><i class="fas fa-chevron-right"></i> CI/CD</a></li>
+                                 <li><a href="/free-courses/kubernetes"><i class="fas fa-chevron-right"></i> Kubernetes</a></li>
+                              </ul>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         
+         <!-- FOOTER -->
+         <footer class="simple-footer">
+   <div class="container">
+      <div class="row sfooter-cols">
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Kontakt</h3>
+            <ul>
+               <li><i class="fas fa-map-marker-alt lead-icon"></i> Deutschland</li>
+               <li><i class="fas fa-phone-alt lead-icon"></i> +491775061655</li>
+               <li><i class="fas fa-envelope lead-icon"></i> info@lingenieur.de</li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Navigation</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/index.html">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses.html">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/blog">Blog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/event.html">Veranstaltungen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/sponsor.html">Sponsor</a></li>
+            </ul>
+         </div>
+         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <h3>Support</h3>
+            <ul>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about">Ueber uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq">Haeufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact.html">Kontakt &amp; Support</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="simple-footer-bottom">
+         <p>Copyright &copy; 2026 <a href="/index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+      </div>
+   </div>
+</footer>
+      </div>
+      
+            <script src="/assets/js/jquery.min.js"></script>
+      <script src="/assets/js/bootstrap.min.js"></script>
+      <script src="/assets/js/wow.min.js"></script>
+      <script>new WOW().init();</script>
+   <!-- i18n Language Switcher -->
+<script>
+var i18n = {
+  de: {
+    'header-msg': 'Willkommen bei der Koffi Academy — Ihre Cloud- & DevOps-Reise beginnt hier.',
+    'nav-home': 'Startseite', 'nav-courses': 'Kurse',
+    'nav-events': 'Veranstaltungen', 'nav-about-me': 'Über mich',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Kontakt',
+    'nav-about': 'Über uns', 'nav-support': 'Support',
+    'nav-login': 'Anmelden / Registrieren'
+  },
+  fr: {
+    'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
+    'nav-home': 'Accueil', 'nav-courses': 'Cours',
+    'nav-events': 'Événements', 'nav-about-me': 'À propos de moi',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+    'nav-about': 'À propos', 'nav-support': 'Support',
+    'nav-login': "Se connecter / S'inscrire"
+  },
+  en: {
+    'header-msg': 'Online Courses — Millions of people are learning!',
+    'nav-home': 'Home', 'nav-courses': 'Courses',
+    'nav-events': 'Events', 'nav-about-me': 'About Me',
+    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
+    'nav-about': 'About Us', 'nav-support': 'Support',
+    'nav-login': 'Login / Register'
+  }
+};
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) { el.textContent = i18n[lang][key]; }
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang') || 'de';
+  setLanguage(saved);
+});
+</script>
+<!-- end i18n -->
+<script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/announce.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>
