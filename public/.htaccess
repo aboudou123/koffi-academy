@@ -53,6 +53,8 @@ AddDefaultCharset UTF-8
 # Block pages that require a real backend or expose client-side pseudo-security
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # --- Sécurité : blocage de pages sensibles ---
   RewriteRule ^sponsor/?$ pricing.html [L]
   RewriteRule ^sponsor\.html$ pricing.html [L]
   RewriteRule ^admin/ - [F]
@@ -61,4 +63,10 @@ AddDefaultCharset UTF-8
   RewriteRule ^article\.html$ - [F]
   RewriteRule ^contact\.html$ - [F]
   RewriteRule ^paid-courses/ - [F]
+
+  # --- Clean URLs : sert folder/index.html pour /folder ---
+  # Si ce n'est pas un fichier existant ET que folder/index.html existe → le servir
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}/index.html -f
+  RewriteRule ^(.+?)/?$ /$1/index.html [L]
 </IfModule>
