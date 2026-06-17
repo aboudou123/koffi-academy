@@ -1,131 +1,232 @@
 <!doctype html>
 <html lang="de">
-   <head>
-      <!-- Required meta tags -->
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <link rel="stylesheet" href="/assets/css/style.css">
-      <link rel="stylesheet" href="/assets/css/responsive.css">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-      <link rel="shortcut icon" href="/assets/images/logo.png">
-      <title>Leitfaden zur Backstage Kubernetes-Integration</title>
-      <meta name="Keywords" content="Backstage, Kubernetes, IDP, Internal Developer Platform, Spotify, Uffizzi, DevOps">
-      <meta name="Description" content="Backstage ist ein beliebtes Softwareprojekt des Teams von Spotify, das es Organisationen ermöglicht, ein Entwicklerportal aufzubauen.">
-      <meta name="theme-color" content="#07294d">
-      <meta name="twitter:card" content="summary">
-      <meta name="twitter:description" content="Backstage ist ein beliebtes Softwareprojekt des Teams von Spotify, das es Organisationen ermöglicht, ein Entwicklerportal aufzubauen.">
-      <meta name="twitter:title" content="Leitfaden zur Backstage Kubernetes-Integration">
-      <meta name="twitter:image" content="assets/images/meta-banner.jpg">
-      <meta property="og:locale" content="de_DE">
-      <meta property="og:type" content="article">
-      <meta property="og:title" content="Leitfaden zur Backstage Kubernetes-Integration">
-      <meta property="og:description" content="Backstage ist ein beliebtes Softwareprojekt des Teams von Spotify, das es Organisationen ermöglicht, ein Entwicklerportal aufzubauen.">
-      <meta property="og:url" content="https://www.elearning.com/">
-      <meta property="og:site_name" content="E-Learning">
-      <meta property="og:image" content="assets/images/meta-banner.jpg">
-      <meta property="og:image:secure_url" content="assets/images/meta-banner.jpg">
-      <style>
-         /* ── Typographie ── */
-         .idp-content h1 { font-size: 2.2rem; margin-bottom: 0.5rem; color: #1a1a1a; overflow-wrap: break-word; word-break: break-word; hyphens: manual; }
-         .idp-content h2 { font-size: 1.65rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #2c3e50; overflow-wrap: break-word; word-break: break-word; hyphens: manual; }
-         .idp-content h3 { font-size: 1.3rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #34495e; overflow-wrap: break-word; word-break: break-word; hyphens: manual; }
-         .idp-content p { overflow-wrap: break-word; }
-         .idp-content .meta { color: #666; font-size: 0.9rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
-         .idp-content .meta-author { font-weight: 500; color: #3498db; }
-         .idp-content .read-time { display: inline-block; background: #e8f4fd; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.85rem; margin-left: 1rem; }
-
-         /* ── Tableau ── */
-         .idp-content .table-scroll { overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0; }
-         .idp-content table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin: 0; min-width: 480px; }
-         .idp-content th { background: #2c3e50; color: #fff; padding: 0.85rem 1rem; text-align: left; font-size: 0.82rem; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
-         .idp-content td { padding: 0.9rem 1rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; font-size: 0.93rem; line-height: 1.55; }
-         .idp-content tbody tr:last-child td { border-bottom: 0; }
-         .idp-content tr:nth-child(even) td { background: #f8f9fa; }
-         .idp-content .summary-table { margin: 2rem 0; }
-
-         /* Tableau carte sur très petit écran */
-         @media (max-width: 540px) {
-            .idp-content .table-scroll { border: none; border-radius: 0; }
-            .idp-content table { min-width: 0; }
-            .idp-content thead { display: none; }
-            .idp-content tbody tr { display: block; border: 1px solid #dde3ec; border-radius: 10px; margin-bottom: 12px; overflow: hidden; background: #fff; box-shadow: 0 1px 4px rgba(7,41,77,.07); }
-            .idp-content tbody td { display: block; border-bottom: 1px solid #eef1f6; padding: 10px 14px; }
-            .idp-content tbody td::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: #7a8a9b; margin-bottom: 4px; }
-            .idp-content tbody td:last-child { border-bottom: 0; }
-            .idp-content tbody tr:nth-child(even) td { background: #fff; }
-         }
-
-         /* ── Autres éléments ── */
-         .idp-content blockquote { background: #f8f9fa; border-left: 4px solid #3498db; padding: 1.5rem; margin: 2rem 0; font-style: italic; border-radius: 0 8px 8px 0; }
-         .idp-content .cta { background: #2c3e50; color: white; padding: 2rem; border-radius: 8px; text-align: center; margin: 3rem 0 1rem; }
-         .idp-content .cta a { color: #3498db; font-weight: bold; text-decoration: none; }
-         .idp-content .cta a:hover { text-decoration: underline; }
-         .idp-content ul, .idp-content ol { margin: 1rem 0; padding-left: 1.5rem; }
-         .idp-content li { margin-bottom: 0.25rem; }
-         .idp-content .code-block { background: #1e2a3a; color: #e2e8f0; padding: 1rem 1.2rem; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.85rem; margin: 1rem 0; overflow-x: auto; white-space: pre; line-height: 1.6; }
-         .idp-content .image-placeholder { background: #f0f4f8; border: 2px dashed #93b8d4; padding: 2rem; text-align: center; margin: 2rem 0; border-radius: 8px; color: #5a7a95; font-weight: 600; font-size: 0.9rem; }
-         .idp-content .guide-chapters { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 2rem 0; }
-         .idp-content .guide-chapter { background: #f8f9fa; padding: 1.25rem 1.5rem; border-radius: 8px; border-left: 4px solid #3498db; }
-         .idp-content .guide-chapter h4 { margin-top: 0; color: #2c3e50; font-size: 0.95rem; }
-         .idp-content .guide-chapter a { color: #3498db; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
-         .idp-content .guide-chapter a:hover { text-decoration: underline; }
-
-         /* ── Responsive mobile ── */
-         @media (max-width: 768px) {
-            .idp-content h1 { font-size: 1.65rem; line-height: 1.25; }
-            .idp-content h2 { font-size: 1.35rem; }
-            .idp-content h3 { font-size: 1.15rem; }
-            .idp-content .guide-chapters { grid-template-columns: 1fr; }
-            .idp-content .code-block { font-size: 0.8rem; padding: 0.8rem 1rem; }
-         }
-         @media (max-width: 480px) {
-            .idp-content h1 { font-size: 1.4rem; }
-            .idp-content h2 { font-size: 1.2rem; }
-         }
-      .kl-drop{position:relative;flex-shrink:0}
-.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
-.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
-.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
-.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
-.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
-.kl-drop.open .kl-caret{transform:rotate(180deg)}
-.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
-.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
-.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
-.kl-opt:hover{background:rgba(255,255,255,.08)}
-.kl-opt.kl-on{background:rgba(255,198,0,.15)}
-.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
-.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
-.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
-</style>
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/assets/css/style.css">
+   <link rel="stylesheet" href="/assets/css/responsive.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <link rel="shortcut icon" href="/assets/images/logo.png">
+   <title>Backstage Kubernetes-Integration · Koffi Academy</title>
+   <meta name="Keywords" content="Backstage, Kubernetes, IDP, Internal Developer Platform, Spotify, Uffizzi, DevOps, Platform Engineering">
+   <meta name="Description" content="Ein vollständiger Leitfaden zur Backstage Kubernetes-Integration: Servicekatalog, Cluster-Monitoring, ephemere Umgebungen mit Uffizzi und Schritt-für-Schritt-Installation.">
+   <meta name="theme-color" content="#07294d">
+   <meta name="twitter:card" content="summary_large_image">
+   <meta name="twitter:title" content="Leitfaden zur Backstage Kubernetes-Integration · Koffi Academy">
+   <meta name="twitter:description" content="Wie Backstage die Kubernetes-Komplexität abstrahiert und Entwicklern ein vollständiges Self-Service-Erlebnis bietet.">
+   <meta property="og:locale" content="de_DE">
+   <meta property="og:type" content="article">
+   <meta property="og:title" content="Leitfaden zur Backstage Kubernetes-Integration">
+   <meta property="og:description" content="Ein vollständiger Leitfaden zur Backstage Kubernetes-Integration mit Uffizzi, Plugins und Schritt-für-Schritt-Installation.">
+   <meta property="og:url" content="https://lingenieur.de/faq">
+   <meta property="og:site_name" content="Koffi Academy">
+   <link rel="stylesheet" href="/assets/css/modern-header.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
    <style>
-.simple-footer{background:#061f3c;color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}
-.simple-footer a:hover{color:#ffc600}
-.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}
-.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
-.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}
-.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}
-.simple-footer li a{color:rgba(255,255,255,.78)}
-.simple-footer li a:hover{color:#ffc600}
-.sfooter-cols{padding-bottom:36px}
-.sfooter-cols>[class*='col-']{margin-bottom:24px}
-.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}
-.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
-.simple-footer-bottom a{color:rgba(255,255,255,.62)}
-.simple-footer-bottom a:hover{color:#ffc600}
-</style><link rel="stylesheet" href="/assets/css/modern-header.css"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+/* ── Language picker ── */
+.kl-drop{position:relative;flex-shrink:0}.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}.kl-drop.open .kl-caret{transform:rotate(180deg)}.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}.kl-opt:hover{background:rgba(255,255,255,.08)}.kl-opt.kl-on{background:rgba(255,198,0,.15)}.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+/* ── Footer ── */
+.simple-footer{background:linear-gradient(180deg,#07294d 0%,#041a32 100%);color:rgba(255,255,255,.75);padding:48px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}.simple-footer a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .18s}.simple-footer a:hover{color:#ffc600}.simple-footer h3{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,0,.28)}.simple-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}.simple-footer li{font-size:13.5px;line-height:1.5;display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.68)}.simple-footer li i.lead-icon{color:#ffc600;font-size:11px;margin-top:4px;flex-shrink:0;width:13px}.simple-footer li a{color:rgba(255,255,255,.78)}.simple-footer li a:hover{color:#ffc600}.sfooter-cols{padding-bottom:36px}.sfooter-cols>[class*='col-']{margin-bottom:24px}.simple-footer-bottom{background:rgba(0,0,0,.25);padding:14px 0;text-align:center}.simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}.simple-footer-bottom a{color:rgba(255,255,255,.62)}.simple-footer-bottom a:hover{color:#ffc600}
+
+/* ══════════════════════════════════════════
+   ARTICLE PAGE — REDESIGN COMPLET
+══════════════════════════════════════════ */
+
+/* Reading progress bar */
+#rpbar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#f9d77e,#d6a02d);z-index:9999;width:0%;pointer-events:none;transition:width .08s linear}
+
+/* ── Hero ── */
+.art-hero{background:linear-gradient(150deg,#051e37 0%,#0a3460 50%,#07294d 100%);padding:64px 0 88px;position:relative;overflow:hidden}
+.art-hero__dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.045) 1px,transparent 1px);background-size:26px 26px;pointer-events:none}
+.art-hero__glow{position:absolute;top:-120px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(214,160,45,.14) 0%,transparent 65%);pointer-events:none}
+.art-hero__glow2{position:absolute;bottom:-80px;left:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(37,99,235,.1) 0%,transparent 65%);pointer-events:none}
+.art-hero__inner{max-width:880px;margin:0 auto;padding:0 28px;position:relative}
+.art-hero__badge{display:inline-flex;align-items:center;gap:7px;background:rgba(249,215,126,.14);border:1px solid rgba(249,215,126,.35);color:#f9d77e;font-size:11px;font-weight:800;padding:5px 14px;border-radius:20px;letter-spacing:.07em;text-transform:uppercase;margin-bottom:26px}
+.art-hero__badge i{font-size:9px}
+.art-hero__title{font-size:clamp(2rem,4.8vw,3rem);font-weight:800;color:#fff;line-height:1.15;margin:0 0 36px;letter-spacing:-.028em;overflow-wrap:break-word;word-break:break-word}
+.art-hero__title span{color:#f9d77e}
+.art-hero__meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.art-hero__av{width:46px;height:46px;border-radius:50%;border:2.5px solid rgba(249,215,126,.55);object-fit:cover;flex-shrink:0;background:#1e4080;display:flex;align-items:center;justify-content:center;font-size:18px}
+.art-hero__av-placeholder{width:46px;height:46px;border-radius:50%;border:2.5px solid rgba(249,215,126,.55);background:linear-gradient(135deg,#1e4080,#2563eb);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.art-hero__txt{display:flex;flex-direction:column;gap:5px}
+.art-hero__author{color:#f9d77e;font-size:13.5px;font-weight:700}
+.art-hero__info{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.art-hero__date{color:rgba(255,255,255,.56);font-size:12.5px;display:flex;align-items:center;gap:5px}
+.art-hero__pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:3px 12px;color:rgba(255,255,255,.72);font-size:12px}
+.art-hero__pill i{font-size:10px;color:rgba(249,215,126,.75)}
+
+/* ── Background ── */
+.art-bg{background:#f1f4f8;padding:0 0 80px}
+
+/* ── Grid ── */
+.art-grid{max-width:1160px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 308px;gap:32px;align-items:start}
+
+/* ── Main card ── */
+.art-main{background:#fff;border-radius:18px;box-shadow:0 4px 28px rgba(7,41,77,.09),0 1px 6px rgba(7,41,77,.05);padding:46px 52px;margin-top:-40px}
+
+/* ── Sidebar ── */
+.art-sidebar{margin-top:-40px}
+.art-toc{background:#fff;border-radius:14px;box-shadow:0 4px 28px rgba(7,41,77,.09);padding:24px;position:sticky;top:88px;margin-bottom:20px}
+.art-toc__hd{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:#8a9aaa;margin:0 0 14px;display:flex;align-items:center;gap:7px}
+.art-toc ul{list-style:none;margin:0;padding:0}
+.art-toc li{margin:0}
+.art-toc a{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;font-weight:600;color:#4a5568;padding:8px 10px;border-radius:8px;text-decoration:none;line-height:1.4;transition:all .15s}
+.art-toc a:hover{background:#f0f5ff;color:#07294d}
+.art-toc a.on{background:rgba(214,160,45,.12);color:#9a6510;font-weight:700}
+.art-toc__n{flex-shrink:0;width:19px;height:19px;border-radius:50%;background:#eef1f6;color:#7a8a9b;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.art-toc a.on .art-toc__n{background:rgba(214,160,45,.22);color:#9a6510}
+.art-widget{background:#fff;border-radius:14px;box-shadow:0 4px 28px rgba(7,41,77,.09);padding:22px;margin-bottom:20px}
+.art-widget h3{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:#8a9aaa;margin:0 0 16px;padding:0;border:0}
+.rel-list{list-style:none;margin:0;padding:0}
+.rel-list li{border-bottom:1px solid #eef1f6}
+.rel-list li:last-child{border-bottom:0}
+.rel-item{display:flex;gap:12px;padding:12px 0;align-items:flex-start}
+.rel-img{width:62px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#eef4ff}
+.rel-info h4{font-size:.8rem;font-weight:700;color:#1a2332;margin:0 0 4px;line-height:1.3}
+.rel-info h4 a{text-decoration:none;color:inherit;transition:color .15s}
+.rel-info h4 a:hover{color:#2563eb}
+.rel-info span{font-size:.72rem;color:#8a9aaa;display:flex;align-items:center;gap:4px}
+.topic-list{list-style:none;margin:0;padding:0}
+.topic-list li{margin-bottom:3px}
+.topic-list a{display:flex;align-items:center;gap:8px;font-size:.83rem;font-weight:600;color:#4a5568;padding:7px 10px;border-radius:8px;text-decoration:none;transition:all .15s}
+.topic-list a:hover{background:#f0f5ff;color:#07294d}
+.topic-list i{color:#d6a02d;font-size:9px;width:12px;flex-shrink:0}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:7px}
+.tag-cloud a{background:#f4f7f9;border:1px solid #dde3ec;color:#4a5568;font-size:.76rem;font-weight:700;padding:4px 12px;border-radius:20px;text-decoration:none;transition:all .15s}
+.tag-cloud a:hover{background:#eef4ff;border-color:#2563eb;color:#2563eb}
+
+/* ── Share strip ── */
+.art-share{display:flex;align-items:center;gap:10px;padding:0 0 26px;margin-bottom:28px;border-bottom:1px solid #eef1f6;flex-wrap:wrap}
+.art-share__lbl{font-size:10.5px;font-weight:800;color:#9aabb6;text-transform:uppercase;letter-spacing:.12em}
+.art-share a{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;font-size:14px;text-decoration:none;transition:all .18s}
+.art-share a.fb{background:#e7f0fd;color:#1877f2}
+.art-share a.tw{background:#f0f0f0;color:#111}
+.art-share a.ln{background:#e8f4fb;color:#0077b5}
+.art-share a:hover{transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.14)}
+
+/* ── Typography ── */
+.idp-content{color:#1f2d3d;line-height:1.8;font-size:1rem;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.idp-content h1{display:none}
+.idp-content h2{font-size:1.52rem;font-weight:800;color:#07294d;margin:3.2rem 0 1rem;padding-top:1.8rem;border-top:2px solid #eef1f6;letter-spacing:-.024em;overflow-wrap:break-word;word-break:break-word;display:flex;align-items:center;gap:10px}
+.idp-content h2:first-of-type{margin-top:0;border-top:0;padding-top:0}
+.idp-content h2 .h2-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,rgba(214,160,45,.2),rgba(214,160,45,.08));display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.idp-content h3{font-size:1.14rem;font-weight:700;color:#1e3c5f;margin:2.2rem 0 .8rem;overflow-wrap:break-word}
+.idp-content p{margin:0 0 1.3rem;overflow-wrap:break-word}
+.idp-content ul,.idp-content ol{margin:1rem 0 1.3rem;padding-left:1.6rem}
+.idp-content li{margin-bottom:.45rem;overflow-wrap:break-word;line-height:1.7}
+.idp-content a{color:#2563eb;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+.idp-content a:hover{color:#1d4ed8}
+.idp-content em{color:#5a6a7a;font-size:.9rem;line-height:1.6}
+.idp-content strong{color:#0f1f2e;font-weight:700}
+
+/* ── Tag badge ── */
+.news-tag{margin-bottom:1.2rem}
+.news-tag a{display:inline-flex;align-items:center;gap:5px;background:rgba(214,160,45,.12);border:1px solid rgba(214,160,45,.38);color:#9a6510;font-size:10.5px;font-weight:800;padding:4px 14px;border-radius:20px;letter-spacing:.07em;text-transform:uppercase;text-decoration:none}
+
+/* ── Summary table ── */
+.idp-content .table-scroll{overflow-x:auto;border-radius:12px;border:1px solid #e2e8f0;margin:2.2rem 0;box-shadow:0 2px 12px rgba(7,41,77,.06)}
+.idp-content table{width:100%;border-collapse:collapse;font-size:.91rem;margin:0;min-width:400px}
+.idp-content th{background:linear-gradient(90deg,#07294d,#0e3d6e);color:#fff;padding:.85rem 1.1rem;text-align:left;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+.idp-content th:first-child{border-radius:12px 0 0 0}
+.idp-content th:last-child{border-radius:0 12px 0 0}
+.idp-content td{padding:.9rem 1.1rem;border-bottom:1px solid #eef1f6;vertical-align:top;font-size:.9rem;line-height:1.65}
+.idp-content tbody tr:last-child td{border-bottom:0}
+.idp-content tr:nth-child(even) td{background:#f8fbff}
+@media(max-width:540px){
+  .idp-content .table-scroll{border:0;border-radius:0;overflow:visible;box-shadow:none}
+  .idp-content table{min-width:0}
+  .idp-content thead{display:none}
+  .idp-content tbody tr{display:block;border:1px solid #dde3ec;border-radius:12px;margin-bottom:12px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(7,41,77,.07)}
+  .idp-content tbody td{display:block;border-bottom:1px solid #eef1f6;padding:10px 14px}
+  .idp-content tbody td::before{content:attr(data-label);display:block;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#7a8a9b;margin-bottom:4px}
+  .idp-content tbody td:last-child{border-bottom:0}
+  .idp-content tbody tr:nth-child(even) td{background:#fff}
+}
+
+/* ── Code blocks ── */
+.code-wrap{margin:1.8rem 0;border-radius:14px;overflow:hidden;box-shadow:0 8px 32px rgba(7,41,77,.18)}
+.code-hd{background:#1a2535;padding:10px 16px;display:flex;align-items:center;gap:9px}
+.code-dots{display:flex;gap:5px}
+.code-dot{width:11px;height:11px;border-radius:50%}
+.code-dot.r{background:#ff5f57}.code-dot.y{background:#febc2e}.code-dot.g{background:#28c840}
+.code-lang{margin-left:auto;font-size:10px;font-weight:700;color:rgba(255,255,255,.32);letter-spacing:.1em;text-transform:uppercase}
+.idp-content .code-block{background:#0d1b2e;color:#abb2bf;padding:1.3rem 1.5rem;margin:0;font-family:'Courier New',Consolas,monospace;font-size:.82rem;overflow-x:auto;white-space:pre;line-height:1.72;border:0}
+
+/* ── SVG illustrations ── */
+.art-fig{margin:2.2rem 0;border-radius:14px;overflow:hidden;box-shadow:0 10px 40px rgba(7,41,77,.14);border:1px solid #dde3ec}
+.art-fig svg{display:block;width:100%;height:auto}
+.art-fig figcaption{background:#fff;padding:13px 22px;font-size:.82rem;color:#6b7280;border-top:1px solid #eef1f6;font-style:italic;line-height:1.55}
+
+/* ── Blockquote ── */
+.idp-content blockquote{background:linear-gradient(to right,rgba(37,99,235,.07),rgba(37,99,235,.02));border-left:4px solid #2563eb;padding:1.2rem 1.6rem;margin:2rem 0;border-radius:0 12px 12px 0;font-style:italic;color:#334155;line-height:1.72}
+
+/* ── CTA box ── */
+.art-cta-box{background:linear-gradient(135deg,#06213d 0%,#0b3764 100%);border-radius:18px;padding:2.8rem 2.5rem;text-align:center;margin:3rem 0;position:relative;overflow:hidden}
+.art-cta-box::before{content:'';position:absolute;width:260px;height:260px;background:radial-gradient(circle,rgba(249,215,126,.12),transparent 70%);border-radius:50%;top:-80px;right:-80px;pointer-events:none}
+.art-cta-box::after{content:'';position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(37,99,235,.1),transparent 70%);border-radius:50%;bottom:-60px;left:-60px;pointer-events:none}
+.art-cta-box h3{color:#f9d77e;margin:0 0 .75rem;font-size:1.3rem;font-weight:800;position:relative;z-index:1}
+.art-cta-box p{color:rgba(255,255,255,.72);margin:0 0 1.6rem;font-size:.96rem;position:relative;z-index:1}
+.art-cta-btn{display:inline-flex;align-items:center;gap:9px;background:#0077b5;color:#fff;padding:.82rem 2.2rem;border-radius:10px;text-decoration:none;font-weight:700;font-size:.95rem;transition:all .2s;position:relative;z-index:1}
+.art-cta-btn:hover{background:#005d8f;transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,119,181,.35);color:#fff}
+
+/* ── Chapter cards ── */
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(224px,1fr));gap:14px;margin:1.8rem 0}
+.ch-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:1.25rem 1.4rem;display:flex;flex-direction:column;gap:.55rem;transition:all .22s;text-decoration:none}
+.ch-card:hover{border-color:rgba(214,160,45,.55);box-shadow:0 10px 32px rgba(7,41,77,.12);transform:translateY(-3px)}
+.ch-card.current{background:linear-gradient(135deg,rgba(214,160,45,.07),rgba(214,160,45,.02));border-color:rgba(214,160,45,.5)}
+.ch-num{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:#d6a02d}
+.ch-card h4{font-size:.88rem;font-weight:800;color:#07294d;margin:0;line-height:1.32}
+.ch-card p{font-size:.79rem;color:#5a6a7a;margin:0;line-height:1.55;flex:1}
+.ch-link{font-size:.8rem;font-weight:700;color:#2563eb;display:inline-flex;align-items:center;gap:4px;margin-top:.3rem}
+
+/* ── Article tags ── */
+.art-tags{display:flex;flex-wrap:wrap;gap:8px;margin:2.2rem 0 0;padding-top:1.8rem;border-top:1px solid #eef1f6}
+.art-tags a{display:inline-flex;align-items:center;gap:5px;background:#f4f7f9;border:1px solid #dde3ec;color:#4a5568;font-size:.76rem;font-weight:700;padding:5px 13px;border-radius:20px;text-decoration:none;transition:all .15s}
+.art-tags a:hover{background:#eef4ff;border-color:#2563eb;color:#2563eb}
+.art-tags a i{font-size:9px}
+
+/* ── Author bar ── */
+.art-author-bar{display:flex;align-items:center;gap:14px;padding:22px 0 0;margin-top:26px;border-top:1px solid #eef1f6;flex-wrap:wrap}
+.art-author-av{width:52px;height:52px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#07294d,#2563eb);display:flex;align-items:center;justify-content:center;font-size:20px;border:3px solid rgba(214,160,45,.4)}
+.art-author-info span{display:block;font-size:.8rem;color:#8a9aaa;margin-bottom:3px}
+.art-author-info strong{font-size:.96rem;font-weight:700;color:#07294d}
+
+/* ── Responsive ── */
+@media(max-width:940px){
+  .art-grid{grid-template-columns:1fr}
+  .art-toc{position:static;display:none}
+  .art-main{padding:30px 26px;margin-top:-28px}
+  .art-sidebar{margin-top:0}
+}
+@media(max-width:600px){
+  .art-hero{padding:40px 0 68px}
+  .art-main{padding:22px 18px;border-radius:14px;margin-top:-22px}
+  .ch-grid{grid-template-columns:1fr}
+  .idp-content h2{font-size:1.28rem}
+}
+/* ── Utility ── */
+.icon-gold{color:#f9d77e}
+.icon-gold-lg{color:#f9d77e;font-size:18px}
+.no-mt{margin-top:0}
+.mt-xl{margin-top:2.5rem}
+.ch-link--gold{color:#d6a02d}
+.art-date-badge{margin-left:auto;font-size:.82rem;color:#8a9aaa;display:flex;align-items:center;gap:6px}
+/* ── Footer legal ── */
+.footer-legal{border-top:1px solid rgba(255,255,255,.10);background:rgba(2,12,26,.30);padding:14px 0 16px}
+.footer-legal__inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 18px;text-align:center}
+.footer-legal__brand{font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.68);font-weight:500}
+.footer-legal__links{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px}
+.footer-legal__links a{font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.84);font-weight:700;letter-spacing:.01em;text-decoration:none;transition:color .16s ease}
+.footer-legal__links a:hover{color:#f9d77e}
+.footer-legal__sep{color:rgba(255,255,255,.30);font-size:11px}
+   </style>
 </head>
-   <body>
-      <style type="text/css">
-         .why-choose-us-area {
-         padding: 60px 0px;
-         }
-      </style>
-      <div class="page-main">
-         <!-- header -->
-         <header class="kh">
+<body>
+<div id="rpbar"></div>
+<div class="page-main">
+
+<!-- ── Header ── -->
+<header class="kh">
 <div class="kh__in">
 <a class="kh__brand" href="/">
 <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
@@ -133,447 +234,724 @@
 </a>
 <nav class="kh__nav">
 <a href="/">Startseite</a>
-<span class="kh__drop"><span class=" kh__droplabel">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses">Kurskatalog</a><a href="/idp-demo" data-i18n="navDevPortal">Dev Portal</a></span></span>
-<a href="/blog">Blog</a>
+<span class="kh__drop"><span class="kh__droplabel">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses">Kurskatalog</a><a href="/idp-demo" data-i18n="navDevPortal">Dev Portal</a></span></span>
+<a href="/blog" class="active">Blog</a>
 <a href="/culture">Culture</a>
 <a href="/koffi-profile">Über mich</a>
-
 <span class="kh__auth"><a class="kh__login" href="/login">Anmelden</a><a class="kh__btn" href="/register">Registrieren</a></span>
 </nav>
 <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
-
 </div>
 </header>
-         <!-- header -->
-         <!-- breadcrumb -->
-         <section class="breadcrumb-area">
-            <div class="breadcrumb-shape">
-               <img src="/assets/images/slider-bottom-pattern.png" alt="Form">
+
+<!-- ── Article Hero ── -->
+<section class="art-hero">
+  <div class="art-hero__dots"></div>
+  <div class="art-hero__glow"></div>
+  <div class="art-hero__glow2"></div>
+  <div class="art-hero__inner">
+    <div class="art-hero__badge"><i class="fa-solid fa-microchip"></i> Technologie &nbsp;·&nbsp; Platform Engineering</div>
+    <h1 class="art-hero__title">Leitfaden zur <span>Backstage</span><br>Kubernetes&#8209;Integration</h1>
+    <div class="art-hero__meta">
+      <div class="art-hero__av-placeholder"><i class="fa-solid fa-graduation-cap icon-gold-lg"></i></div>
+      <div class="art-hero__txt">
+        <span class="art-hero__author">Koffi Academy &mdash; Redaktion</span>
+        <div class="art-hero__info">
+          <span class="art-hero__date"><i class="far fa-calendar-alt"></i> 30. April 2026</span>
+          <span class="art-hero__pill"><i class="far fa-clock"></i> 10 min Lesezeit</span>
+          <span class="art-hero__pill"><i class="fa-solid fa-layer-group"></i> IDP Leitfaden</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Content ── -->
+<div class="art-bg">
+  <div class="art-grid">
+
+    <!-- ── Main article ── -->
+    <main class="art-main" id="art-main">
+      <div class="idp-content">
+
+        <!-- Share -->
+        <div class="art-share">
+          <span class="art-share__lbl">Teilen</span>
+          <a href="https://www.facebook.com/" class="fb" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://x.com/" class="tw" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://www.linkedin.com/" class="ln" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+
+        <div class="news-tag"><a href="/blog"><i class="fa-solid fa-tag"></i> Technologie</a></div>
+
+        <!-- ── INTRO ── -->
+        <p>Backstage ist ein beliebtes Softwareprojekt, das vom Team bei Spotify entwickelt wurde, um Organisationen den Aufbau eines Entwicklerportals zu ermöglichen, das als kuratierte Schnittstelle zum gesamten Software-Stack der Organisation dient. Backstage ermöglicht es Entwicklern, einen Servicekatalog zu nutzen, um Software zu entdecken, Dokumentation einzusehen und Infrastruktur zu starten, die von beliebig vielen Teams verwaltet wird.</p>
+        <p>Backstage unterstützt nativ die Integration mit Kubernetes, was eine wertvolle Funktion für eine Organisation ist, die Kubernetes-Cluster-Infrastruktur als Compute-Plattform nutzt. Die Kubernetes-Integration ermöglicht es Entwicklern, Statusinformationen für ihre Software direkt in der Backstage-Oberfläche anzuzeigen.</p>
+
+        <!-- Summary table -->
+        <div class="summary-table">
+          <h3 class="no-mt">Zusammenfassung der wichtigsten Konzepte</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Abschnitt</th><th>Beschreibung</th></tr></thead>
+              <tbody>
+                <tr><td data-label="Abschnitt"><strong>Was ist Backstage?</strong></td><td data-label="Beschreibung">Backstage vereinheitlicht das Software-Ökosystem in einem einzigen Tool — zentrale Anlaufstelle für Entwickler, um Software und Infrastruktur anderer Teams zu nutzen.</td></tr>
+                <tr><td data-label="Abschnitt"><strong>Backstage &amp; Kubernetes</strong></td><td data-label="Beschreibung">Native Kubernetes-Integration ermöglicht Entwicklern, Anwendungsstatus direkt in der Backstage-Oberfläche anzuzeigen — kein kubectl, keine manuelle Authentifizierung.</td></tr>
+                <tr><td data-label="Abschnitt"><strong>Ephemere Umgebungen</strong></td><td data-label="Beschreibung">Uffizzi-Integration bietet Sandbox-Cluster für Tests vor Produktionsbereitstellungen — unter 60 Sekunden gestartet, vollständig isoliert.</td></tr>
+                <tr><td data-label="Abschnitt"><strong>Erste Schritte</strong></td><td data-label="Beschreibung">Installation in wenigen Minuten via <code>npx @backstage/create-app@latest</code> — minimale Abhängigkeiten, sofort einsatzbereit.</td></tr>
+                <tr><td data-label="Abschnitt"><strong>Kubernetes-Plugins</strong></td><td data-label="Beschreibung">Zwei Plugins (Frontend + Backend) ermöglichen Backstage, sich mit einem oder mehreren Kubernetes-Clustern zu verbinden und Cluster-Informationen anzuzeigen.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ══ Was ist Backstage? ══ -->
+        <h2 id="was-ist-backstage"><span class="h2-icon">🏗️</span> Was ist Backstage?</h2>
+
+        <p>Backstage ist ein Open-Source-Softwareprojekt, das von Spotify entwickelt wurde, um einen einheitlichen Einstiegspunkt für das Software-Ökosystem einer Organisation bereitzustellen — Werkzeuge, Dienste, Bereitstellungspipelines, Compute-Infrastruktur und Dokumentation in einem einzigen kohärenten Entwicklerportal.</p>
+        <p>Das Problem, das Backstage löst, ist eines, bei dem große Organisationen viele Software-Teams haben, die in Silos arbeiten, ohne eine einheitliche Entwicklererfahrung. Entwickler müssen ein Labyrinth von Werkzeugen navigieren, sich auf unterschiedliche Dokumentationsquellen verlassen und mit dem kognitiven Aufwand umgehen, neue Prozesse zu lernen — all dies verlangsamt die Entwicklergeschwindigkeit und das Onboarding.</p>
+        <p>Backstage fungiert hauptsächlich als <strong>Servicekatalog</strong>, in dem jedes Team seine Softwareprojekte, Dokumentation, API-Schemata und Git-Repositories an einem einzigen Ort integrieren kann. Ein Entwickler kann durch alle in der Organisation verfügbaren Softwarekomponenten browsen und verstehen, wie er sie vollständig im Self-Service nutzen und bereitstellen kann.</p>
+
+        <!-- SVG 1: Backstage Catalog -->
+        <figure class="art-fig">
+          <svg viewBox="0 0 820 420" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+            <!-- Browser chrome -->
+            <rect width="820" height="420" rx="12" fill="#d1d5db"/>
+            <rect width="820" height="38" rx="12" fill="#e5e7eb"/>
+            <rect y="26" width="820" height="12" fill="#e5e7eb"/>
+            <!-- Window buttons -->
+            <circle cx="20" cy="19" r="5.5" fill="#ff5f57"/>
+            <circle cx="37" cy="19" r="5.5" fill="#febc2e"/>
+            <circle cx="54" cy="19" r="5.5" fill="#28c840"/>
+            <!-- URL bar -->
+            <rect x="80" y="8" width="560" height="22" rx="11" fill="#fff" opacity=".85"/>
+            <text x="360" y="23" text-anchor="middle" font-size="11" fill="#555" font-weight="500">localhost:3000/catalog</text>
+            <!-- Refresh + nav icons -->
+            <text x="660" y="23" font-size="11" fill="#888">⟳  ☆  ⋮</text>
+            <!-- App background -->
+            <rect y="38" width="820" height="382" fill="#f3f4f6"/>
+            <!-- Backstage top app bar -->
+            <rect y="38" width="820" height="50" fill="#171717"/>
+            <!-- Backstage logo -->
+            <rect x="14" y="50" width="26" height="26" rx="5" fill="#36bffa"/>
+            <text x="27" y="67" text-anchor="middle" font-size="12" font-weight="800" fill="#171717">B</text>
+            <text x="48" y="67" font-size="14" font-weight="700" fill="#fff">Backstage</text>
+            <!-- Search bar -->
+            <rect x="210" y="50" width="320" height="28" rx="7" fill="#2d2d2d"/>
+            <text x="228" y="68" font-size="11" fill="#888">🔍</text>
+            <text x="246" y="68" font-size="11" fill="#666">  Suchen...</text>
+            <!-- User avatar placeholder -->
+            <circle cx="794" cy="63" r="14" fill="#36bffa"/>
+            <text x="794" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">KA</text>
+            <!-- Left sidebar -->
+            <rect x="0" y="88" width="200" height="332" fill="#fff"/>
+            <!-- Sidebar items -->
+            <rect x="0" y="88" width="200" height="46" fill="#eff6ff"/>
+            <rect x="6" y="96" width="3" height="30" rx="2" fill="#2563eb"/>
+            <text x="24" y="108" font-size="11" fill="#1e40af">🏠</text>
+            <text x="42" y="109" font-size="12" font-weight="700" fill="#1e40af">Home</text>
+            <text x="24" y="148" font-size="11" fill="#555">📦</text>
+            <text x="42" y="149" font-size="12" font-weight="600" fill="#374151">Catalog</text>
+            <text x="24" y="182" font-size="11" fill="#555">📄</text>
+            <text x="42" y="183" font-size="12" font-weight="600" fill="#374151">Docs</text>
+            <text x="24" y="216" font-size="11" fill="#555">⚙️</text>
+            <text x="42" y="217" font-size="12" font-weight="600" fill="#374151">APIs</text>
+            <text x="24" y="250" font-size="11" fill="#555">🛠️</text>
+            <text x="42" y="251" font-size="12" font-weight="600" fill="#374151">Tech Radar</text>
+            <text x="24" y="284" font-size="11" fill="#555">➕</text>
+            <text x="42" y="285" font-size="12" font-weight="600" fill="#374151">Erstellen</text>
+            <!-- Sidebar footer -->
+            <line x1="12" y1="310" x2="188" y2="310" stroke="#eee" stroke-width="1"/>
+            <circle cx="24" cy="330" r="10" fill="#36bffa"/>
+            <text x="24" y="334" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">KA</text>
+            <text x="40" y="326" font-size="10" font-weight="700" fill="#111">Koffi Academy</text>
+            <text x="40" y="338" font-size="9" fill="#888">admin@koffi.de</text>
+            <!-- Main content -->
+            <!-- Page header -->
+            <text x="220" y="116" font-size="16" font-weight="800" fill="#111">Catalog</text>
+            <rect x="220" y="124" width="580" height="1" fill="#e5e7eb"/>
+            <!-- Tabs -->
+            <text x="226" y="148" font-size="12" fill="#6b7280">All</text>
+            <rect x="220" y="150" width="30" height="2" rx="1" fill="#2563eb"/>
+            <text x="270" y="148" font-size="12" fill="#6b7280">Services</text>
+            <text x="340" y="148" font-size="12" fill="#6b7280">Libraries</text>
+            <text x="410" y="148" font-size="12" fill="#6b7280">APIs</text>
+            <!-- Filter / search row -->
+            <rect x="220" y="160" width="340" height="30" rx="7" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+            <text x="238" y="180" font-size="11" fill="#9ca3af">🔍  Komponenten filtern...</text>
+            <rect x="572" y="160" width="106" height="30" rx="7" fill="#2563eb"/>
+            <text x="625" y="180" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">+ Hinzufügen</text>
+            <!-- Component list -->
+            <!-- Row 1: payment-service -->
+            <rect x="220" y="202" width="580" height="56" rx="9" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+            <rect x="232" y="214" width="32" height="32" rx="8" fill="#dbeafe"/>
+            <text x="248" y="234" text-anchor="middle" font-size="15">⚡</text>
+            <text x="276" y="226" font-size="12" font-weight="700" fill="#111">payment-service</text>
+            <text x="276" y="243" font-size="10.5" fill="#6b7280">Service · Backend · von platform-team</text>
+            <rect x="492" y="214" width="70" height="18" rx="9" fill="#dcfce7"/>
+            <text x="527" y="226" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">TypeScript</text>
+            <rect x="570" y="214" width="50" height="18" rx="9" fill="#dbeafe"/>
+            <text x="595" y="226" text-anchor="middle" font-size="9" font-weight="700" fill="#1d4ed8">REST API</text>
+            <circle cx="775" cy="230" r="6" fill="#22c55e"/>
+            <text x="786" y="234" font-size="9" fill="#15803d">OK</text>
+            <!-- Row 2: user-api -->
+            <rect x="220" y="268" width="580" height="56" rx="9" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+            <rect x="232" y="280" width="32" height="32" rx="8" fill="#fce7f3"/>
+            <text x="248" y="300" text-anchor="middle" font-size="15">👤</text>
+            <text x="276" y="292" font-size="12" font-weight="700" fill="#111">user-api</text>
+            <text x="276" y="309" font-size="10.5" fill="#6b7280">API · Backend · von backend-team</text>
+            <rect x="492" y="280" width="62" height="18" rx="9" fill="#fce7f3"/>
+            <text x="523" y="292" text-anchor="middle" font-size="9" font-weight="700" fill="#be185d">Node.js</text>
+            <circle cx="775" cy="296" r="6" fill="#22c55e"/>
+            <text x="786" y="300" font-size="9" fill="#15803d">OK</text>
+            <!-- Row 3: frontend-app -->
+            <rect x="220" y="334" width="580" height="56" rx="9" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+            <rect x="232" y="346" width="32" height="32" rx="8" fill="#fefce8"/>
+            <text x="248" y="366" text-anchor="middle" font-size="15">🌐</text>
+            <text x="276" y="358" font-size="12" font-weight="700" fill="#111">frontend-app</text>
+            <text x="276" y="375" font-size="10.5" fill="#6b7280">Website · Frontend · von frontend-team</text>
+            <rect x="492" y="346" width="52" height="18" rx="9" fill="#fefce8"/>
+            <text x="518" y="358" text-anchor="middle" font-size="9" font-weight="700" fill="#92400e">React</text>
+            <circle cx="775" cy="362" r="6" fill="#f59e0b"/>
+            <text x="786" y="366" font-size="9" fill="#92400e">Warn</text>
+          </svg>
+          <figcaption>Die Backstage-Katalogoberfläche zeigt eine Liste von Komponenten, die von Software-Teams der Organisation registriert wurden. Entwickler können Komponenten auswählen und Software direkt von Backstage aus bereitstellen.</figcaption>
+        </figure>
+
+        <!-- ══ Kubernetes Integration ══ -->
+        <h2 id="kubernetes-integration"><span class="h2-icon">☸️</span> Backstage-Integration für Kubernetes</h2>
+
+        <p>Kubernetes ist eine Container-Orchestrierungsplattform und eines der größten Open-Source-Projekte der Welt. Infrastrukturteams können Backstage nutzen, um Entwicklern die einfache Bereitstellung und Überwachung von Software auf Kubernetes-Infrastruktur zu ermöglichen — <strong>ohne den kognitiven Aufwand</strong>, sich mit Kubernetes- und Cloud-Anbieter-Konzepten, Werkzeugen und Architekturen auseinandersetzen zu müssen.</p>
+        <p>Backstage unterstützt die einfache Integration mit Kubernetes durch Plugins, die es Drittanbietern oder unabhängigen Entwicklern ermöglichen, Unterstützung hinzuzufügen und die Funktionalität zu erweitern. Viele Drittanbieter wie AWS und Weaveworks entwickeln Plugins für Backstage.</p>
+        <p>Durch die Integration des "Backstage Kubernetes"-Plugins kann das Projekt auch Cluster abfragen, um Anwendungszustandsdaten abzurufen und dem Entwickler direkt in der Backstage-Oberfläche anzuzeigen. Der Entwickler kann Zustandsdetails der Anwendung (Pod-Status, Container-Ressourcen) einsehen, ohne manuell <code>kubectl</code> zu installieren oder sich mit Cluster-Authentifizierung zu befassen.</p>
+
+        <!-- SVG 2: Kubernetes Plugin in Backstage -->
+        <figure class="art-fig">
+          <svg viewBox="0 0 820 390" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+            <rect width="820" height="390" rx="12" fill="#f3f4f6"/>
+            <!-- Top bar -->
+            <rect width="820" height="50" rx="0" fill="#171717"/>
+            <rect x="14" y="13" width="24" height="24" rx="5" fill="#36bffa"/>
+            <text x="26" y="29" text-anchor="middle" font-size="11" font-weight="800" fill="#171717">B</text>
+            <text x="46" y="29" font-size="13" font-weight="700" fill="#fff">Backstage</text>
+            <text x="200" y="20" font-size="10" fill="#888">Catalog</text>
+            <text x="240" y="20" font-size="10" fill="#888">/</text>
+            <text x="250" y="20" font-size="10" fill="#888">payment-service</text>
+            <text x="200" y="38" font-size="12" font-weight="700" fill="#fff">payment-service</text>
+            <text x="360" y="38" font-size="10" fill="#9ca3af">Service · v2.4.1 · platform-team</text>
+            <!-- Entity detail card -->
+            <rect y="50" width="820" height="340" fill="#fff"/>
+            <!-- Tabs -->
+            <rect y="50" width="820" height="42" fill="#f9fafb" stroke="none"/>
+            <text x="24" y="76" font-size="12" fill="#6b7280" font-weight="600">Übersicht</text>
+            <text x="110" y="76" font-size="12" fill="#6b7280" font-weight="600">CI/CD</text>
+            <text x="180" y="76" font-size="12" fill="#6b7280" font-weight="600">API</text>
+            <!-- Kubernetes tab - ACTIVE -->
+            <text x="236" y="76" font-size="12" fill="#2563eb" font-weight="700">Kubernetes</text>
+            <rect x="228" y="85" width="80" height="3" rx="1.5" fill="#2563eb"/>
+            <text x="340" y="76" font-size="12" fill="#6b7280" font-weight="600">Abhängigkeiten</text>
+            <line x1="0" y1="92" x2="820" y2="92" stroke="#e5e7eb" stroke-width="1"/>
+            <!-- Kubernetes content -->
+            <!-- Cluster info box -->
+            <rect x="16" y="106" width="784" height="40" rx="9" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+            <text x="32" y="121" font-size="11" fill="#1d4ed8">☸️</text>
+            <text x="52" y="122" font-size="11" font-weight="700" fill="#1e40af">Cluster: prod-cluster-1</text>
+            <text x="52" y="136" font-size="10" fill="#3b82f6">k8s.company.internal · 14 Nodes · Kubernetes 1.29</text>
+            <circle cx="760" cy="126" r="7" fill="#22c55e"/>
+            <text x="774" y="130" font-size="9" font-weight="700" fill="#15803d">OK</text>
+            <!-- Deployment card -->
+            <rect x="16" y="158" width="784" height="206" rx="9" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+            <rect x="16" y="158" width="784" height="34" rx="9" fill="#f8fafc"/>
+            <rect x="16" y="179" width="784" height="13" fill="#f8fafc"/>
+            <text x="32" y="179" font-size="11" font-weight="700" fill="#374151">📦  Deployment: payment-service-deploy</text>
+            <rect x="640" y="161" width="88" height="20" rx="10" fill="#dcfce7"/>
+            <text x="684" y="175" text-anchor="middle" font-size="9" font-weight="800" fill="#15803d">✓ Available</text>
+            <text x="740" y="175" font-size="10" fill="#6b7280">3/3</text>
+            <!-- Pod list header -->
+            <rect x="16" y="192" width="784" height="24" fill="#f1f5f9"/>
+            <text x="32" y="208" font-size="10" font-weight="700" fill="#64748b">CONTAINER</text>
+            <text x="280" y="208" font-size="10" font-weight="700" fill="#64748b">STATUS</text>
+            <text x="400" y="208" font-size="10" font-weight="700" fill="#64748b">CPU</text>
+            <text x="520" y="208" font-size="10" font-weight="700" fill="#64748b">MEMORY</text>
+            <text x="650" y="208" font-size="10" font-weight="700" fill="#64748b">RESTART</text>
+            <text x="730" y="208" font-size="10" font-weight="700" fill="#64748b">ALTER</text>
+            <!-- Pod 1 -->
+            <line x1="16" y1="216" x2="800" y2="216" stroke="#f1f5f9" stroke-width="1"/>
+            <circle cx="28" cy="232" r="5" fill="#22c55e"/>
+            <text x="40" y="236" font-size="10.5" fill="#111">payment-service-7d9f8-xk2lp</text>
+            <text x="280" y="236" font-size="10" fill="#15803d" font-weight="700">Running</text>
+            <text x="400" y="236" font-size="10" fill="#374151">48m / 500m</text>
+            <rect x="450" y="227" width="48" height="7" rx="3" fill="#e5e7eb"/>
+            <rect x="450" y="227" width="5" height="7" rx="3" fill="#3b82f6"/>
+            <text x="520" y="236" font-size="10" fill="#374151">128Mi / 512Mi</text>
+            <rect x="580" y="227" width="56" height="7" rx="3" fill="#e5e7eb"/>
+            <rect x="580" y="227" width="14" height="7" rx="3" fill="#22c55e"/>
+            <text x="650" y="236" font-size="10" fill="#374151">0</text>
+            <text x="730" y="236" font-size="10" fill="#374151">4h 23m</text>
+            <!-- Pod 2 -->
+            <line x1="16" y1="246" x2="800" y2="246" stroke="#f1f5f9" stroke-width="1"/>
+            <circle cx="28" cy="262" r="5" fill="#22c55e"/>
+            <text x="40" y="266" font-size="10.5" fill="#111">payment-service-7d9f8-nm8qv</text>
+            <text x="280" y="266" font-size="10" fill="#15803d" font-weight="700">Running</text>
+            <text x="400" y="266" font-size="10" fill="#374151">52m / 500m</text>
+            <rect x="450" y="257" width="48" height="7" rx="3" fill="#e5e7eb"/>
+            <rect x="450" y="257" width="5" height="7" rx="3" fill="#3b82f6"/>
+            <text x="520" y="266" font-size="10" fill="#374151">136Mi / 512Mi</text>
+            <rect x="580" y="257" width="56" height="7" rx="3" fill="#e5e7eb"/>
+            <rect x="580" y="257" width="16" height="7" rx="3" fill="#22c55e"/>
+            <text x="650" y="266" font-size="10" fill="#374151">0</text>
+            <text x="730" y="266" font-size="10" fill="#374151">4h 21m</text>
+            <!-- Pod 3 -->
+            <line x1="16" y1="276" x2="800" y2="276" stroke="#f1f5f9" stroke-width="1"/>
+            <circle cx="28" cy="292" r="5" fill="#f59e0b"/>
+            <text x="40" y="296" font-size="10.5" fill="#111">payment-service-7d9f8-p4wrt</text>
+            <text x="280" y="296" font-size="10" fill="#92400e" font-weight="700">Pending</text>
+            <text x="400" y="296" font-size="10" fill="#374151">—</text>
+            <text x="520" y="296" font-size="10" fill="#374151">—</text>
+            <text x="650" y="296" font-size="10" fill="#374151">1</text>
+            <text x="730" y="296" font-size="10" fill="#374151">12s</text>
+            <!-- Footer in card -->
+            <line x1="16" y1="310" x2="800" y2="310" stroke="#f1f5f9" stroke-width="1"/>
+            <text x="32" y="345" font-size="10" fill="#9ca3af">Zuletzt synchronisiert: vor 45 Sekunden</text>
+            <rect x="660" y="328" width="124" height="26" rx="7" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+            <text x="722" y="345" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">⟳  Aktualisieren</text>
+          </svg>
+          <figcaption>Das Kubernetes-Plugin in Backstage zeigt Pod-Status, Ressourcenverbrauch und Deployment-Zustand für eine Softwarekomponente — direkt in der Backstage-Oberfläche, ohne kubectl oder manuelle Cluster-Authentifizierung.</figcaption>
+        </figure>
+
+        <!-- ══ Ephemere Umgebungen ══ -->
+        <h2 id="ephemere-umgebungen"><span class="h2-icon">🧪</span> Ephemere Umgebungen mit Backstage und Uffizzi</h2>
+
+        <p>Ephemere Umgebungen sind eine entscheidende Technologie für Software-Teams, die Anwendungen auf Kubernetes-Clustern bereitstellen. Dies sind Sandbox-Virtual-Cluster-Umgebungen, in denen Software vor Produktionsbereitstellungen getestet und validiert werden kann.</p>
+        <p>Uffizzi wurde speziell für die Verwaltung dieser ephemeren Umgebungen entwickelt. Im Dev-Modus ermöglicht Uffizzi Entwicklern, isolierte Remote-Entwicklungsumgebungen auszuführen, in denen Codeänderungen sofort synchronisiert werden. Uffizzi-Umgebungen starten in <strong>unter 60 Sekunden</strong>, sind vollständig isoliert und nutzen nur einen Bruchteil der Ressourcen vollständiger Kubernetes-Cluster.</p>
+
+        <h3>GitHub-Integration</h3>
+        <p>Plattformteams können ihre Konfigurationsdateien in einem GitHub-Repository speichern und die Backstage-Servicekatalog-Komponente auf das GitHub-Repository verweisen lassen. Wenn Entwickler Software über den Backstage-Katalog starten, sind ihre Repositories bereits so konfiguriert, dass sie Uffizzi-Umgebungen automatisch nutzen.</p>
+        <p>Entwickler öffnen einfach Pull-Requests zu ihren neuen Repositories, und Uffizzi kümmert sich automatisch um die Bereitstellung und gibt den Build-Status zurück.</p>
+
+        <!-- SVG 3: GitHub PR with Uffizzi -->
+        <figure class="art-fig">
+          <svg viewBox="0 0 820 360" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+            <rect width="820" height="360" rx="12" fill="#f6f8fa"/>
+            <!-- GitHub top bar -->
+            <rect width="820" height="48" rx="12" fill="#24292f"/>
+            <rect y="36" width="820" height="12" fill="#24292f"/>
+            <text x="20" y="28" font-size="13" font-weight="800" fill="#fff">GitHub</text>
+            <rect x="80" y="10" width="440" height="28" rx="6" fill="#2f363d" stroke="#444d56" stroke-width="1"/>
+            <text x="96" y="28" font-size="11" fill="#8b949e">🔍  my-org / payment-service</text>
+            <!-- Breadcrumb -->
+            <text x="20" y="72" font-size="11" fill="#0969da">my-org</text>
+            <text x="68" y="72" font-size="11" fill="#57606a">/</text>
+            <text x="76" y="72" font-size="11" fill="#0969da">payment-service</text>
+            <text x="168" y="72" font-size="11" fill="#57606a">/  Pull Requests  /  #42</text>
+            <!-- PR Header -->
+            <text x="20" y="102" font-size="17" font-weight="700" fill="#1f2328">feat: Update container image to v2.4.1</text>
+            <!-- PR badges -->
+            <rect x="20" y="112" width="52" height="22" rx="11" fill="#1a7f37"/>
+            <text x="46" y="127" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">● Open</text>
+            <text x="82" y="127" font-size="11" fill="#57606a">dev-user</text>
+            <text x="124" y="127" font-size="11" fill="#57606a">möchte 3 Commits in</text>
+            <text x="270" y="127" font-size="11" fill="#0969da" font-weight="600">main</text>
+            <text x="292" y="127" font-size="11" fill="#57606a">einspielen aus</text>
+            <text x="367" y="127" font-size="11" fill="#0969da" font-weight="600">feat/v2.4.1</text>
+            <!-- Tab bar -->
+            <line x1="0" y1="146" x2="820" y2="146" stroke="#d0d7de" stroke-width="1"/>
+            <rect x="20" y="132" width="80" height="14" rx="0" fill="none"/>
+            <text x="20" y="143" font-size="11" font-weight="600" fill="#1f2328">Conversation</text>
+            <rect x="20" y="144" width="86" height="2" fill="#fd7e14"/>
+            <text x="120" y="143" font-size="11" fill="#57606a">Commits (3)</text>
+            <text x="220" y="143" font-size="11" fill="#57606a">Files changed (4)</text>
+            <line x1="0" y1="146" x2="820" y2="146" stroke="#d0d7de" stroke-width="1"/>
+            <!-- Checks section -->
+            <rect x="16" y="160" width="590" height="180" rx="9" fill="#fff" stroke="#d0d7de" stroke-width="1"/>
+            <rect x="16" y="160" width="590" height="38" rx="9" fill="#f6f8fa"/>
+            <rect x="16" y="186" width="590" height="12" fill="#f6f8fa"/>
+            <text x="32" y="183" font-size="12" font-weight="700" fill="#1f2328">Checks</text>
+            <rect x="500" y="167" width="90" height="22" rx="6" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1"/>
+            <text x="545" y="182" text-anchor="middle" font-size="10" font-weight="600" fill="#57606a">Details anzeigen</text>
+            <!-- Check 1: build -->
+            <line x1="16" y1="198" x2="606" y2="198" stroke="#f0f2f5" stroke-width="1"/>
+            <text x="28" y="218" font-size="14" fill="#1a7f37">✓</text>
+            <text x="48" y="215" font-size="11" font-weight="700" fill="#1f2328">CI / build</text>
+            <text x="48" y="228" font-size="10" fill="#57606a">Alle Tests bestanden · 2m 14s</text>
+            <rect x="500" y="208" width="90" height="20" rx="6" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1"/>
+            <text x="545" y="221" text-anchor="middle" font-size="9" font-weight="600" fill="#57606a">Details</text>
+            <!-- Check 2: uffizzi -->
+            <line x1="16" y1="240" x2="606" y2="240" stroke="#f0f2f5" stroke-width="1"/>
+            <text x="28" y="258" font-size="14" fill="#1a7f37">✓</text>
+            <text x="48" y="255" font-size="11" font-weight="700" fill="#1f2328">uffizzi / preview-cluster</text>
+            <text x="48" y="268" font-size="10" fill="#57606a">Deployment erfolgreich — Vorschau-URL bereit</text>
+            <rect x="500" y="248" width="90" height="20" rx="6" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1"/>
+            <text x="545" y="261" text-anchor="middle" font-size="9" font-weight="600" fill="#57606a">Details</text>
+            <!-- Preview URL badge -->
+            <rect x="28" y="278" width="520" height="24" rx="6" fill="#ddf4ff" stroke="#54aeff" stroke-width="1"/>
+            <text x="38" y="294" font-size="10" fill="#0969da">🔗</text>
+            <text x="52" y="294" font-size="10" font-weight="700" fill="#0969da">Vorschau: </text>
+            <text x="110" y="294" font-size="10" fill="#0969da" text-decoration="underline">https://pr-42.preview.uffizzi.app</text>
+            <!-- Check 3: security -->
+            <line x1="16" y1="310" x2="606" y2="310" stroke="#f0f2f5" stroke-width="1"/>
+            <text x="28" y="328" font-size="14" fill="#1a7f37">✓</text>
+            <text x="48" y="325" font-size="11" font-weight="700" fill="#1f2328">security / trivy-scan</text>
+            <text x="48" y="338" font-size="10" fill="#57606a">Keine kritischen Schwachstellen gefunden</text>
+            <!-- Merge box -->
+            <rect x="622" y="160" width="182" height="180" rx="9" fill="#fff" stroke="#d0d7de" stroke-width="1"/>
+            <text x="713" y="188" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2328">Reviewers</text>
+            <circle cx="654" cy="214" r="12" fill="#a78bfa"/>
+            <text x="654" y="219" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">PL</text>
+            <text x="672" y="217" font-size="10" fill="#57606a">platform-lead</text>
+            <text x="672" y="228" font-size="9" fill="#1a7f37">✓ Genehmigt</text>
+            <line x1="630" y1="242" x2="796" y2="242" stroke="#f0f2f5" stroke-width="1"/>
+            <text x="713" y="262" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2328">Labels</text>
+            <rect x="635" y="272" width="64" height="18" rx="9" fill="#bef264"/>
+            <text x="667" y="284" text-anchor="middle" font-size="9" font-weight="700" fill="#365314">ready</text>
+            <rect x="707" y="272" width="68" height="18" rx="9" fill="#bfdbfe"/>
+            <text x="741" y="284" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a8a">kubernetes</text>
+            <rect x="636" y="308" width="148" height="28" rx="7" fill="#1a7f37"/>
+            <text x="710" y="326" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Merge Pull Request</text>
+          </svg>
+          <figcaption>Ein GitHub-Pull-Request mit automatisierten CI-Checks inkl. Uffizzi-Deployment: Entwickler erhalten einen sofortigen Vorschau-Link zur validierten Umgebung, bevor der Code in main eingespielt wird.</figcaption>
+        </figure>
+
+        <h3>Virtuelle Cluster</h3>
+        <p>Uffizzi unterstützt die Erstellung virtueller Cluster mit einem einfachen Befehlszeilenwerkzeug:</p>
+
+        <div class="code-wrap">
+          <div class="code-hd"><div class="code-dots"><span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span></div><span class="code-lang">bash</span></div>
+          <pre class="code-block">uffizzi cluster create quickstart</pre>
+        </div>
+
+        <p>Plattformteams können diese Befehlszeilenschritte mit ihren Backstage-Katalogkomponenten einschließen und Entwicklern erlauben, das Tool direkt auszuführen, um virtuelle Uffizzi-Cluster bereitzustellen.</p>
+
+        <!-- ══ Erste Schritte ══ -->
+        <h2 id="erste-schritte"><span class="h2-icon">🚀</span> Erste Schritte mit Backstage für Kubernetes</h2>
+
+        <p>Backstage ist eine Node.js-Anwendung, die recht einfach installiert werden kann. Das Paket ist über npm verfügbar und hat nur einige geringfügige Abhängigkeiten (SQLite, Docker, npm, Git). Die Installation in einer Linux-basierten Umgebung:</p>
+
+        <div class="code-wrap">
+          <div class="code-hd"><div class="code-dots"><span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span></div><span class="code-lang">bash</span></div>
+          <pre class="code-block">npx @backstage/create-app@latest</pre>
+        </div>
+
+        <p>Nach der Installation kann das Projekt gestartet werden:</p>
+
+        <div class="code-wrap">
+          <div class="code-hd"><div class="code-dots"><span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span></div><span class="code-lang">bash</span></div>
+          <pre class="code-block">cd my-backstage-app
+yarn dev</pre>
+        </div>
+
+        <p>Der Aufruf von <code>http://localhost:3000</code> zeigt die Backstage-Oberfläche:</p>
+
+        <!-- SVG 4: Backstage Welcome Screen -->
+        <figure class="art-fig">
+          <svg viewBox="0 0 820 380" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+            <!-- Browser chrome -->
+            <rect width="820" height="380" rx="12" fill="#d1d5db"/>
+            <rect width="820" height="36" rx="12" fill="#e5e7eb"/>
+            <rect y="24" width="820" height="12" fill="#e5e7eb"/>
+            <circle cx="20" cy="18" r="5.5" fill="#ff5f57"/>
+            <circle cx="37" cy="18" r="5.5" fill="#febc2e"/>
+            <circle cx="54" cy="18" r="5.5" fill="#28c840"/>
+            <rect x="80" y="7" width="480" height="22" rx="11" fill="#fff" opacity=".85"/>
+            <text x="320" y="22" text-anchor="middle" font-size="11" fill="#555" font-weight="500">http://localhost:3000</text>
+            <!-- App BG -->
+            <rect y="36" width="820" height="344" fill="#fff"/>
+            <!-- Top nav -->
+            <rect y="36" width="820" height="50" fill="#171717"/>
+            <rect x="14" y="49" width="26" height="24" rx="6" fill="#36bffa"/>
+            <text x="27" y="65" text-anchor="middle" font-size="12" font-weight="800" fill="#171717">B</text>
+            <text x="48" y="65" font-size="14" font-weight="700" fill="#fff">Backstage</text>
+            <rect x="196" y="49" width="320" height="26" rx="7" fill="#2d2d2d"/>
+            <text x="216" y="66" font-size="11" fill="#666">🔍  Suchen in Backstage...</text>
+            <text x="560" y="65" font-size="11" fill="#fff">Erstellen</text>
+            <text x="626" y="65" font-size="11" fill="#fff">Docs</text>
+            <circle cx="795" cy="61" r="14" fill="#36bffa"/>
+            <text x="795" y="66" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">KA</text>
+            <!-- Sidebar -->
+            <rect x="0" y="86" width="190" height="294" fill="#fafafa" stroke="#f0f0f0" stroke-width="1"/>
+            <rect x="0" y="86" width="190" height="42" fill="#fff"/>
+            <rect x="6" y="94" width="3" height="26" rx="1.5" fill="#36bffa"/>
+            <text x="24" y="104" font-size="10" fill="#8b949e">🏠</text>
+            <text x="40" y="105" font-size="11" font-weight="700" fill="#111">Home</text>
+            <text x="24" y="130" font-size="10" fill="#8b949e">📦</text>
+            <text x="40" y="131" font-size="11" fill="#57606a">Catalog</text>
+            <text x="24" y="156" font-size="10" fill="#8b949e">📄</text>
+            <text x="40" y="157" font-size="11" fill="#57606a">Docs</text>
+            <text x="24" y="182" font-size="10" fill="#8b949e">⚙️</text>
+            <text x="40" y="183" font-size="11" fill="#57606a">APIs</text>
+            <text x="24" y="208" font-size="10" fill="#8b949e">🛠️</text>
+            <text x="40" y="209" font-size="11" fill="#57606a">Tech Radar</text>
+            <text x="24" y="234" font-size="10" fill="#8b949e">➕</text>
+            <text x="40" y="235" font-size="11" fill="#57606a">Erstellen</text>
+            <line x1="12" y1="260" x2="178" y2="260" stroke="#eee" stroke-width="1"/>
+            <text x="24" y="282" font-size="9" fill="#8b949e">EINSTELLUNGEN</text>
+            <text x="24" y="305" font-size="10" fill="#57606a">👤  Profil</text>
+            <text x="24" y="322" font-size="10" fill="#57606a">⚙️  Präferenzen</text>
+            <text x="24" y="339" font-size="10" fill="#57606a">🚪  Abmelden</text>
+            <!-- Main welcome content -->
+            <text x="220" y="120" font-size="22" font-weight="800" fill="#1f2328">Willkommen zurück, Koffi! 👋</text>
+            <text x="220" y="140" font-size="12" fill="#57606a">Ihr internes Entwicklerportal — alles an einem Ort</text>
+            <!-- Quick access cards row -->
+            <!-- Card 1 -->
+            <rect x="220" y="158" width="180" height="100" rx="10" fill="#fff" stroke="#e5e7eb" stroke-width="1.5" filter="url(#s1)"/>
+            <rect x="232" y="170" width="36" height="36" rx="9" fill="#dbeafe"/>
+            <text x="250" y="193" text-anchor="middle" font-size="18">🔍</text>
+            <text x="232" y="224" font-size="11" font-weight="700" fill="#1f2328">Suchen &amp; Entdecken</text>
+            <text x="232" y="238" font-size="9.5" fill="#57606a">Alle Komponenten</text>
+            <text x="232" y="248" font-size="9.5" fill="#57606a">durchsuchen</text>
+            <!-- Card 2 -->
+            <rect x="414" y="158" width="180" height="100" rx="10" fill="#fff" stroke="#e5e7eb" stroke-width="1.5"/>
+            <rect x="426" y="170" width="36" height="36" rx="9" fill="#dcfce7"/>
+            <text x="444" y="193" text-anchor="middle" font-size="18">➕</text>
+            <text x="426" y="224" font-size="11" font-weight="700" fill="#1f2328">Erstellen</text>
+            <text x="426" y="238" font-size="9.5" fill="#57606a">Neue Komponente</text>
+            <text x="426" y="248" font-size="9.5" fill="#57606a">aus Template</text>
+            <!-- Card 3 -->
+            <rect x="608" y="158" width="180" height="100" rx="10" fill="#fff" stroke="#e5e7eb" stroke-width="1.5"/>
+            <rect x="620" y="170" width="36" height="36" rx="9" fill="#fce7f3"/>
+            <text x="638" y="193" text-anchor="middle" font-size="18">📄</text>
+            <text x="620" y="224" font-size="11" font-weight="700" fill="#1f2328">Dokumentation</text>
+            <text x="620" y="238" font-size="9.5" fill="#57606a">TechDocs für alle</text>
+            <text x="620" y="248" font-size="9.5" fill="#57606a">Komponenten</text>
+            <!-- Recent activity -->
+            <text x="220" y="282" font-size="12" font-weight="700" fill="#1f2328">Kürzliche Aktivität</text>
+            <line x1="220" y1="290" x2="790" y2="290" stroke="#f1f5f9" stroke-width="1"/>
+            <circle cx="234" cy="310" r="5" fill="#22c55e"/>
+            <text x="248" y="314" font-size="11" fill="#374151"><tspan font-weight="600">payment-service</tspan> deployed auf prod-cluster</text>
+            <text x="630" y="314" font-size="10" fill="#9ca3af">vor 4h</text>
+            <circle cx="234" cy="334" r="5" fill="#3b82f6"/>
+            <text x="248" y="338" font-size="11" fill="#374151"><tspan font-weight="600">user-api</tspan> v2.1.0 published in Catalog</text>
+            <text x="630" y="338" font-size="10" fill="#9ca3af">vor 1d</text>
+            <circle cx="234" cy="358" r="5" fill="#a78bfa"/>
+            <text x="248" y="362" font-size="11" fill="#374151"><tspan font-weight="600">frontend-app</tspan> Kubernetes-Integration aktiviert</text>
+            <text x="630" y="362" font-size="10" fill="#9ca3af">vor 2d</text>
+          </svg>
+          <figcaption>Backstage Welcome-Screen unter http://localhost:3000 — nach wenigen Minuten Installation ist das vollständige Entwicklerportal lokal verfügbar mit Katalog, Dokumentation, Erstellen-Funktion und Aktivitäts-Feed.</figcaption>
+        </figure>
+
+        <p>Nach der Installation können Sie mit der Backstage-Installation experimentieren und sich mit der Funktionsweise vertraut machen. Für eine produktionsreife Backstage-Einrichtung sollten Sie Authentifizierung und persistenten Speicher konfigurieren.</p>
+
+        <blockquote>Es ist auch möglich, Backstage auf Kubernetes-Clustern bereitzustellen — als Kubernetes Deployment-Ressource mit dem Backstage Container-Image und einer Postgres-Datenbank für persistenten Speicher.</blockquote>
+
+        <!-- ══ Kubernetes Plugins ══ -->
+        <h2 id="kubernetes-plugins"><span class="h2-icon">🔌</span> Installation der Backstage Kubernetes-Plugins</h2>
+
+        <p>Es gibt zwei Plugins, die für eine vollständige Kubernetes-Integration mit Backstage erforderlich sind. Das <strong>Frontend-Plugin</strong> fügt die Benutzeroberflächenfunktionen hinzu (z.B. einen "Kubernetes"-Tab im Softwarekatalog). Das <strong>Backend-Plugin</strong> bietet die Funktionalität zur Authentifizierung und Verbindung mit den Kubernetes-Clustern.</p>
+
+        <p>Installation des Frontend-Plugins:</p>
+        <div class="code-wrap">
+          <div class="code-hd"><div class="code-dots"><span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span></div><span class="code-lang">bash</span></div>
+          <pre class="code-block"># Vom Backstage-Stammverzeichnis
+yarn add --cwd packages/app @backstage/plugin-kubernetes</pre>
+        </div>
+
+        <p>Dann die <code>EntityPage.tsx</code> aktualisieren, um das Plugin einzubinden:</p>
+        <div class="code-wrap">
+          <div class="code-hd"><div class="code-dots"><span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span></div><span class="code-lang">tsx</span></div>
+          <pre class="code-block">// packages/app/src/components/catalog/EntityPage.tsx
+import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
+
+const serviceEntityPage = (
+  &lt;EntityLayout&gt;
+    {/* other tabs... */}
+    &lt;EntityLayout.Route path="/kubernetes" title="Kubernetes"&gt;
+      &lt;EntityKubernetesContent refreshIntervalMs={30000} /&gt;
+    &lt;/EntityLayout.Route&gt;
+  &lt;/EntityLayout&gt;
+);</pre>
+        </div>
+
+        <p>Installation des Backend-Plugins:</p>
+        <div class="code-wrap">
+          <div class="code-hd"><div class="code-dots"><span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span></div><span class="code-lang">bash</span></div>
+          <pre class="code-block"># Vom Backstage-Stammverzeichnis
+yarn add --cwd packages/backend @backstage/plugin-kubernetes-backend</pre>
+        </div>
+
+        <p>Kubernetes-Konfiguration in <code>app-config.yaml</code> hinzufügen:</p>
+        <div class="code-wrap">
+          <div class="code-hd"><div class="code-dots"><span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span></div><span class="code-lang">yaml</span></div>
+          <pre class="code-block">kubernetes:
+  serviceLocatorMethod:
+    type: 'multiTenant'
+  clusterLocatorMethods:
+    - type: 'config'
+      clusters:
+        - url: http://127.0.0.1:9999
+          name: cluster-lokal
+          authProvider: 'serviceAccount'
+          skipTLSVerify: false
+          serviceAccountToken: ${K8S_MINIKUBE_TOKEN}
+          caData: ${K8S_CONFIG_CA_DATA}
+        - url: https://eks.eu-central-1.amazonaws.com
+          name: cluster-aws
+          authProvider: 'aws'</pre>
+        </div>
+
+        <p>Diese Konfiguration verbindet Backstage mit zwei Kubernetes-Clustern gleichzeitig — einem lokalen und einem auf AWS. Diese Schritte müssen nur einmal durchgeführt werden, danach steht die Kubernetes-Integration für alle im Backstage-Katalog gespeicherten Softwarekomponenten zur Verfügung.</p>
+
+        <!-- ══ Fazit ══ -->
+        <h2 id="fazit"><span class="h2-icon">✅</span> Fazit</h2>
+
+        <p>Backstage bietet eine starke Grundlage, um die Entwicklungsbemühungen von Software-Teams in großen Organisationen zu vereinheitlichen. Die Fähigkeit, eine zentrale Anlaufstelle für Entwickler zu implementieren, um Software und Infrastruktur vollständig im Self-Service bereitzustellen, ist ein mächtiger Schritt im Bereich des Platform Engineering.</p>
+        <p>Die Integration mit Kubernetes ermöglicht es Infrastrukturteams, Kubernetes-Cluster für Entwickler bereitzustellen, ohne Entwickler mit dem kognitiven Aufwand des Kubernetes-Expertenwissens zu belasten. Die mit Backstage mögliche Abstraktion ermöglicht es Entwicklern, containerisierte Anwendungen nahtlos bereitzustellen — Cluster-Erstellung, lokale Tools, Authentifizierung — alles über die Backstage-Oberfläche.</p>
+        <p>Die Erweiterung durch ephemere Umgebungen mit Uffizzi ist ein weiterer Schritt in Richtung vollständiger Self-Service-Fähigkeiten: Entwickler können ihre Kubernetes-Manifeste schnell validieren, wenn sie Pull-Requests erstellen, und erhalten sofortiges Feedback.</p>
+
+        <!-- CTA -->
+        <div class="art-cta-box">
+          <h3>Gefällt Ihnen dieser Leitfaden?</h3>
+          <p>Abonnieren Sie unseren LinkedIn-Newsletter und bleiben Sie über Platform Engineering, Kubernetes und IDP auf dem Laufenden.</p>
+          <a href="https://www.linkedin.com/" class="art-cta-btn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i> Jetzt auf LinkedIn folgen</a>
+        </div>
+
+        <!-- Chapter cards -->
+        <h3 class="mt-xl">Weitere Leitfäden dieser Serie</h3>
+        <div class="ch-grid">
+          <a class="ch-card" href="/free-courses/platform-engineering-devops">
+            <span class="ch-num">Kapitel 1</span>
+            <h4>Platform Engineering</h4>
+            <p>Wie Platform Engineering die Lücke zwischen Cloud-Native-Technologien und täglichen Engineering-Workflows schließt.</p>
+            <span class="ch-link">Lesen <i class="fas fa-arrow-right"></i></span>
+          </a>
+          <a class="ch-card" href="/blog-detail">
+            <span class="ch-num">Kapitel 2</span>
+            <h4>Internal Developer Platform</h4>
+            <p>Automatisierte Self-Service-Lösungen zur Vereinfachung und Standardisierung von Softwarepraktiken und Infrastruktur.</p>
+            <span class="ch-link">Lesen <i class="fas fa-arrow-right"></i></span>
+          </a>
+          <a class="ch-card" href="/blog">
+            <span class="ch-num">Kapitel 3</span>
+            <h4>Citizen Developer</h4>
+            <p>Wie sich Citizen Developer von traditionellen Entwicklern unterscheiden und ihre Rolle bei der technologischen Agilität.</p>
+            <span class="ch-link">Lesen <i class="fas fa-arrow-right"></i></span>
+          </a>
+          <a class="ch-card current" href="/faq">
+            <span class="ch-num">Kapitel 4</span>
+            <h4>Backstage Kubernetes-Integration</h4>
+            <p>Wie Backstage das Software-Ökosystem in einem einzigen Entwicklerportal vereint — dieser Leitfaden.</p>
+            <span class="ch-link ch-link--gold">Aktueller Artikel</span>
+          </a>
+          <a class="ch-card" href="/blog-detail">
+            <span class="ch-num">Kapitel 5</span>
+            <h4>IDP Open Source</h4>
+            <p>Die richtigen Tools und Komponenten zur Minimierung der Komplexität beim Aufbau einer Internal Developer Platform.</p>
+            <span class="ch-link">Lesen <i class="fas fa-arrow-right"></i></span>
+          </a>
+          <a class="ch-card" href="/free-courses/platform-engineering-vs-devops">
+            <span class="ch-num">Kapitel 6</span>
+            <h4>Platform Engineering vs DevOps</h4>
+            <p>Wie Platform Engineering und DevOps sich ergänzen, um eine effiziente Softwarebereitstellungspipeline zu schaffen.</p>
+            <span class="ch-link">Lesen <i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+
+        <!-- Tags -->
+        <div class="art-tags">
+          <a href="/faq"><i class="fas fa-tag"></i> Backstage</a>
+          <a href="/free-courses/kubernetes"><i class="fas fa-tag"></i> Kubernetes</a>
+          <a href="/free-courses/platform-engineering-devops"><i class="fas fa-tag"></i> IDP</a>
+          <a href="/free-courses/platform-engineering-devops"><i class="fas fa-tag"></i> Platform Engineering</a>
+          <a href="/blog"><i class="fas fa-tag"></i> DevOps</a>
+          <a href="/faq"><i class="fas fa-tag"></i> Uffizzi</a>
+          <a href="/blog"><i class="fas fa-tag"></i> Cloud Native</a>
+        </div>
+
+        <!-- Author bar -->
+        <div class="art-author-bar">
+          <div class="art-author-av"><i class="fa-solid fa-graduation-cap icon-gold"></i></div>
+          <div class="art-author-info">
+            <span>Veröffentlicht von</span>
+            <strong>Koffi Academy &mdash; Redaktion</strong>
+          </div>
+          <div class="art-date-badge"><i class="far fa-calendar-alt"></i> 30. April 2026</div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ── Sidebar ── -->
+    <aside class="art-sidebar">
+      <!-- TOC -->
+      <nav class="art-toc" aria-label="Inhaltsverzeichnis">
+        <div class="art-toc__hd"><i class="fas fa-list-ul"></i>&nbsp; Inhalt</div>
+        <ul>
+          <li><a href="#was-ist-backstage"><span class="art-toc__n">1</span> Was ist Backstage?</a></li>
+          <li><a href="#kubernetes-integration"><span class="art-toc__n">2</span> Kubernetes-Integration</a></li>
+          <li><a href="#ephemere-umgebungen"><span class="art-toc__n">3</span> Ephemere Umgebungen</a></li>
+          <li><a href="#erste-schritte"><span class="art-toc__n">4</span> Erste Schritte</a></li>
+          <li><a href="#kubernetes-plugins"><span class="art-toc__n">5</span> Kubernetes-Plugins</a></li>
+          <li><a href="#fazit"><span class="art-toc__n">6</span> Fazit</a></li>
+        </ul>
+      </nav>
+
+      <!-- Related articles -->
+      <div class="art-widget">
+        <h3>Ähnliche Artikel</h3>
+        <ul class="rel-list">
+          <li>
+            <div class="rel-item">
+              <img class="rel-img" src="/assets/images/blog/blog2.svg" alt="DevOps Best Practices">
+              <div class="rel-info">
+                <h4><a href="/blog-detail">DevOps Best Practices 2026</a></h4>
+                <span><i class="far fa-calendar-alt"></i> 30. April 2026</span>
+              </div>
             </div>
-            <div class="container">
-               <div class="row">
-                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                     <div class="breadcrumb-box">
-                        <h2>Blog Einzelansicht</h2>
-                     </div>
-                  </div>
-               </div>
+          </li>
+          <li>
+            <div class="rel-item">
+              <img class="rel-img" src="/assets/images/blog/blog3.svg" alt="Kubernetes Guide">
+              <div class="rel-info">
+                <h4><a href="/free-courses/kubernetes">Kubernetes für Einsteiger</a></h4>
+                <span><i class="far fa-calendar-alt"></i> 18. März 2026</span>
+              </div>
             </div>
-         </section>
-         <!-- breadcrumb -->
-         <!-- blog -->
-         <section class="blog-single-area page-paddings">
-               <div class="container">
-                  <div class="row">
-                     <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12">
-                        <div class="blog-post wow fadeInUp center" data-wow-delay="0.1s">
-                           <div class="blog-post-images">
-                              <img src="/assets/images/blog/blog1.jpg" alt="Backstage Kubernetes Integration">
-                           </div>
-                           <div class="post-content">
-                              <div class="post-social">
-                                 <span>Teilen</span>
-                                 <ul class="share-post">
-                                    <li><a href="https://www.facebook.com/" class="facebook"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="https://x.com/" class="twitter"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a href="https://www.pinterest.com/" class="pinterest"><i class="fab fa-pinterest"></i></a></li>
-                                 </ul>
-                              </div>
-                              <div class="post-content-text idp-content">
-                                 <div class="news-tag"><a href="/blog">Technologie</a></div>
-                                 <h1>Leitfaden zur Backstage Kubernetes-Integration</h1>
-                                 <p class="meta">30. April 2026 <span class="read-time">10 min Lesezeit</span></p>
-                                 
-                                 <p>Backstage ist ein beliebtes Softwareprojekt, das vom Team bei Spotify entwickelt wurde, um Organisationen den Aufbau eines Entwicklerportals zu ermöglichen, das als kuratierte Schnittstelle zum gesamten Software-Stack der Organisation dient. Backstage ermöglicht es Entwicklern, einen Servicekatalog zu nutzen, um Software zu entdecken, Dokumentation einzusehen und Infrastruktur zu starten, die von beliebig vielen Teams verwaltet wird. Der einheitliche Einstiegspunkt (eine "zentrale Anlaufstelle") zum Starten eines gesamten Software-Stacks ermöglicht es Teams, effektiv zusammenzuarbeiten und Software innerhalb der Organisation zu verwalten.</p>
-                                 
-                                 <p>Backstage unterstützt nativ die Integration mit Kubernetes, was eine wertvolle Funktion für eine Organisation ist, die Kubernetes-Cluster-Infrastruktur als ihre Compute-Plattform nutzt. Die Kubernetes-Integration ermöglicht es Entwicklern, Statusinformationen für ihre Software, die auf Kubernetes-Clustern bereitgestellt wird, direkt anzuzeigen.</p>
-                                 
-                                 <p>Backstage kann Cluster-Daten abfragen und relevante Informationen (wie Pod-Status) direkt in der Backstage-Oberfläche bereitstellen, sodass Entwickler den Zustand ihrer Software einsehen können, ohne sich manuell mit Kubernetes-Clustern verbinden, Authentifizierung verwalten oder die Kubectl-Befehlszeile konfigurieren zu müssen. Zusätzliche Plugins bieten auch Funktionen zum Erstellen von Clustern direkt über Backstage. Die Verbesserung der Entwicklererfahrung ist das Hauptziel von Backstage, und dieser Artikel diskutiert, wie das Projekt dies erreicht, mit Schwerpunkt auf dem Wert der Kubernetes-Integration.</p>
-                                 
-                                 <div class="summary-table">
-                                    <h3>Zusammenfassung der wichtigsten Konzepte</h3>
-                                    <div class="table-scroll">
-                                    <table>
-                                       <thead>
-                                          <tr>
-                                             <th>Abschnitt</th>
-                                             <th>Beschreibung</th>
-                                          </tr>
-                                       </thead>
-                                       <tbody>
-                                          <tr>
-                                             <td data-label="Abschnitt"><strong>Was ist Backstage?</strong></td>
-                                             <td data-label="Beschreibung">Backstage ist ein Projekt, das es Organisationen ermöglicht, ihre Software-Ökosysteme in einem einzigen Tool zu vereinheitlichen. Backstage bietet eine zentrale Anlaufstelle für Entwickler, um Software und Infrastruktur anderer Teams zu nutzen.</td>
-                                          </tr>
-                                          <tr>
-                                             <td data-label="Abschnitt"><strong>Backstage-Integration für Kubernetes</strong></td>
-                                             <td data-label="Beschreibung">Backstage bietet native Integrationsmöglichkeiten mit Kubernetes, die es Entwicklern ermöglichen, Informationen zum Anwendungsstatus von Kubernetes direkt in der Backstage-Oberfläche anzuzeigen.</td>
-                                          </tr>
-                                          <tr>
-                                             <td data-label="Abschnitt"><strong>Ephemere Umgebungen mit Backstage und Uffizzi</strong></td>
-                                             <td data-label="Beschreibung">Die Plattform von Uffizzi bietet ephemere Umgebungen, die mit Backstage integriert werden können, sodass Entwickler einfach Testumgebungen für ihre Software nutzen können.</td>
-                                          </tr>
-                                          <tr>
-                                             <td data-label="Abschnitt"><strong>Erste Schritte mit Backstage für Kubernetes</strong></td>
-                                             <td data-label="Beschreibung">Die Installation des Backstage Node.js-Pakets und der Kubernetes-Plugins kann in nur wenigen Schritten durchgeführt werden.</td>
-                                          </tr>
-                                          <tr>
-                                             <td data-label="Abschnitt"><strong>Installation der Backstage Kubernetes-Plugins</strong></td>
-                                             <td data-label="Beschreibung">Die Kubernetes-Plugins ermöglichen es Backstage, sich mit einem oder mehreren Kubernetes-Clustern zu verbinden, um Cluster-Informationen über die Backstage-Oberfläche für den Entwickler zugänglich zu machen.</td>
-                                          </tr>
-                                       </tbody>
-                                    </table>
-                                    </div>
-                                 </div>
-                                 
-                                 <h2>Was ist Backstage?</h2>
-                                 
-                                 <p>Backstage ist ein Open-Source-Softwareprojekt, das von Spotify entwickelt wurde, um einen einheitlichen Einstiegspunkt für das Software-Ökosystem einer Organisation bereitzustellen, einschließlich Werkzeugen, von mehreren Teams verwalteten Diensten, Bereitstellungspipelines, Compute-Infrastruktur und Dokumentation. Backstage zielt darauf ab, unterschiedliche Elemente des Software-Stacks einer Organisation in einem einzigen, kohärenten Entwicklerportal zu vereinen, sodass Teams einfach zusammenarbeiten und ihre Software und Infrastruktur verwalten können. Diese Konzepte sind Teil einer modernen Strategie namens Internal Developer Platforms (IDPs). Die Einführung einer IDP beinhaltet die Implementierung von Werkzeugen und Prozessen, die Entwicklern innerhalb einer Organisation helfen, ihre Entwicklungsbemühungen zu vereinfachen und zu skalieren, wobei Werkzeuge wie Backstage genutzt werden.</p>
-                                 
-                                 <p>Das Problem, das Backstage löst, ist eines, bei dem große Organisationen viele Software-Teams haben, die in Silos arbeiten, ohne eine einheitliche Entwicklererfahrung. Unter solchen Umständen müssen Entwickler ein Labyrinth von Werkzeugen und Infrastruktur navigieren, sich auf unterschiedliche Dokumentationsquellen verlassen und mit dem kognitiven Aufwand umgehen, neue Prozesse zu lernen, um ihre Software bereitzustellen. All dies verlangsamt die Entwicklergeschwindigkeit und das Onboarding und erzeugt gleichzeitig doppelte Arbeit aufgrund fehlender zentraler Organisation. Teams in wachsenden Organisationen hatten Schwierigkeiten, Entwicklern eine zentrale Anlaufstelle zu bieten, aufgrund fehlender Werkzeuge und der Schwierigkeit, mit einer einheitlichen Oberfläche zusammenzuarbeiten - eine Lücke, die Backstage schließt.</p>
-                                 
-                                 <p>Backstage hilft Organisationen, ihre Teams zusammenzubringen, um Entwicklern über eine einzige Benutzerreise zu dienen. Backstage fungiert hauptsächlich als Servicekatalog, in dem jedes Team in der Organisation seine Softwareprojekte, Dokumentation, API-Schemata und Git-Repositories an einem einzigen Ort integrieren kann. Ein Entwickler kann dann durch alle in der Organisation verfügbaren Softwarekomponenten browsen und verstehen, wie er sie vollständig im Self-Service nutzen und bereitstellen kann. Backstage enthält Plugins für verschiedene Überwachungstools, sodass Entwickler ihre Anwendung sogar über die Backstage-Oberfläche überwachen können.</p>
-                                 
-                                 <p>Diese Benutzerreise ist eine signifikante Verbesserung gegenüber dem traditionellen Ansatz, der von den meisten Organisationen verwendet wird. In klassischen Arrangements sind Entwickler vielen Tools mit separaten Oberflächen ausgesetzt, Dokumentation über mehrere Quellen verteilt, es gibt keine zentralisierten Bereitstellungspipelines und mehrere Überwachungstools.</p>
-                                 
-                                 <div class="image-placeholder">Hier Bilder - Screenshot des Backstage-Portals</div>
-                                 
-                                 <p><em>Die Backstage-Katalogoberfläche zeigt eine Liste von Komponenten, die von Software-Teams in der gesamten Organisation registriert wurden. Entwickler können Komponenten auswählen und die Software direkt von Backstage aus bereitstellen.</em></p>
-                                 
-                                 <h2>Backstage-Integration für Kubernetes</h2>
-                                 
-                                 <p>Kubernetes ist eine Container-Orchestrierungsplattform und eines der weltweit größten Open-Source-Projekte. Es ist die Plattform der Wahl für Organisationen, die containerisierte Workloads in großem Maßstab entwickeln und bereitstellen.</p>
-                                 
-                                 <p>Infrastrukturteams können Backstage nutzen, um Entwicklern die einfache Bereitstellung und Überwachung von Software auf Kubernetes-Infrastruktur zu ermöglichen, ohne den kognitiven Aufwand, sich mit Kubernetes- und Cloud-Anbieter-Konzepten, Werkzeugen und Architekturen auseinandersetzen zu müssen. Entwickler ziehen es typischerweise vor, ihre Aufmerksamkeit auf die Anwendungsentwicklung und Geschäftslogik zu konzentrieren, während sie erwarten, dass die Implementierungsdetails der Infrastruktur für sie abstrahiert und transparent sind.</p>
-                                 
-                                 <p>Plattformteams haben das Ziel, diese Komplexität zu abstrahieren und den kognitiven Aufwand ihrer Entwickler zu reduzieren, damit sie sich mehr auf die Anwendungsentwicklung konzentrieren können, während die Infrastruktur transparent gewartet wird. Die Implementierung von Backstage mit Kubernetes ist ein Ansatz zur Lösung dieses Problems.</p>
-                                 
-                                 <p>Backstage unterstützt die einfache Integration mit Kubernetes durch Plugins, die es Drittanbietern oder unabhängigen Entwicklern ermöglichen, Unterstützung hinzuzufügen und die Funktionalität zu erweitern. Viele Drittanbieter wie AWS und Weaveworks entwickeln Plugins für Backstage, um eine einfachere Integration mit ihren Diensten zu ermöglichen.</p>
-                                 
-                                 <div class="image-placeholder">Hier Bilder - Kubernetes-Plugin-Screenshot</div>
-                                 
-                                 <p><em>Die Kubernetes-Integration ermöglicht es Entwicklern, den Status ihrer Kubernetes-Workloads direkt über die Backstage-Oberfläche anzuzeigen.</em></p>
-                                 
-                                 <p>Ein Beispiel für die Kubernetes-Integration mit Backstage ist das GitOps-Profiles-Plugin, das Backstage ermöglicht, dem Entwickler einen einfachen Cluster-Erstellungs-Workflow zu präsentieren.</p>
-                                 
-                                 <p>Der Entwickler wählt eine "Cluster-Vorlage" aus, die vom Infrastrukturteam der Organisation vordefiniert wurde, und startet die Vorlage über das Backstage-Formular. Das Infrastrukturteam stellt sicher, dass die Cluster-Vorlagen sinnvolle Standardeinstellungen enthalten, die für Software-Teams in der Organisation geeignet sind. Die Bereitstellung der Vorlage kann Cluster-Erstellungs-Workflows auslösen, die vom Infrastrukturteam mit Tools wie Uffizzi, GitHub Hooks, ClusterAPI, eksctl usw. verwaltet werden.</p>
-                                 
-                                 <p>Entwickler müssen nicht wissen, wie der Cluster im Hintergrund erstellt wird; sie erwarten einfach, dass die Backstage-Oberfläche ihre Anfragen nach Clustern abschließt, damit sie mit der Bereitstellung einer Anwendung beginnen können. Wenn sie andere Software im Backstage-Servicekatalog auswählen, haben sie Cluster-Infrastruktur bereit, um ihre Software zu hosten.</p>
-                                 
-                                 <p>Die Benutzerreise ist hier weitaus einfacher, als zu erwarten, dass der Entwickler die Komplexität des Cluster-Aufbaus lernt und versteht. Die Nutzung von Backstage zur Abstraktion dieser Komplexität ermöglicht es Infrastrukturteams auch, Leitplanken und Best Practices in ihren Cluster-Vorlagen durchzusetzen. Eine Beispiel-Leitplanke könnte sein, sicherzustellen, dass mehrere Kubernetes-Worker-Nodes in verschiedenen Verfügbarkeitszonen bereitgestellt werden, was Hochverfügbarkeit ermöglicht. Durch die Durchsetzung dieser Konfiguration in den Cluster-Vorlagen-Standards können Infrastrukturteams sicherstellen, dass jeder über Backstage gestartete Cluster dieser Best Practice folgt.</p>
-                                 
-                                 <p>Einen Schritt weiter gehend, kann das Projekt durch die Integration des "Backstage Kubernetes"-Plugins auch Cluster abfragen, um Anwendungszustandsdaten abzurufen und dem Entwickler direkt in der Backstage-Oberfläche anzuzeigen. Der Entwickler, der Software über den Backstage-Servicekatalog auf einem Kubernetes-Cluster bereitgestellt hat, kann jetzt die Zustandsdetails der Anwendung (wie Pod-Status) einsehen, ohne manuell Tools wie kubectl installieren, sich mit Cluster-Authentifizierung befassen oder lernen zu müssen, wie man seine Ressourcen abfragt.</p>
-                                 
-                                 <p>Die obige Benutzerreise ist eine signifikante Verbesserung für Entwickler, die versuchen, ihre Software schnell zum Laufen zu bringen. Backstage hat es ihnen ermöglicht, schnell einen Kubernetes-Cluster zu starten (mit integrierten Leitplanken), eine Softwarekomponente aus einem Servicekatalog auf dem Cluster zu starten und den Zustand der Software automatisch zu überwachen. All dies geschieht vollständig über die Backstage-Oberfläche.</p>
-                                 
-                                 <p>Die Software- und Infrastrukturteams, die diese Komponenten besitzen, sind verantwortlich für die Implementierungsdetails, wie die Softwarekomponenten konfiguriert und bereitgestellt werden oder wie die Kubernetes-Cluster entworfen sind. Diese Teams können nun ihre Software und Infrastruktur Entwicklern einfach über eine einheitliche Oberfläche "verkaufen" und so ein vollständiges Self-Service-Erlebnis ermöglichen. Die Teams haben die Kontrolle über die Konfiguration der in Backstage aufgeführten Ressourcen, um sicherzustellen, dass alles Best Practices folgt und sinnvolle Standardeinstellungen verwendet, was dazu beiträgt, dass Entwickler unabhängig arbeiten können und weniger Zeit mit Fehlerbehebung verbringen.</p>
-                                 
-                                 <h2>Ephemere Umgebungen mit Backstage und Uffizzi</h2>
-                                 
-                                 <p>Ephemere Umgebungen sind eine entscheidende Technologie für Software-Teams, die Anwendungen auf Kubernetes-Clustern bereitstellen. Dies sind Sandbox-Virtual-Cluster-Umgebungen (wie Staging-Kubernetes-Cluster), in denen Software vor Produktionsbereitstellungen getestet und validiert werden kann.</p>
-                                 
-                                 <p>Als Teil der Benutzerreise des Entwicklers in Backstage ermöglicht die Integration von ephemeren Umgebungsfähigkeiten über eine einfache Oberfläche Entwicklern, ihre Software schnell zu testen und die Produktionsbereitschaft zu validieren. Ein Beispielansatz zur Integration beinhaltet die Verwendung von GitHub Actions-Integration, um Container in der ephemeren Umgebung bereitzustellen und den Bereitstellungsstatus des Containers an den Pull-Request auszugeben. Dies würde es Entwicklern ermöglichen zu validieren, dass ihre Container erfolgreich gebaut, bereitgestellt und ausgeführt werden, als Teil des Code-Review-Workloads, sodass notwendige Tests vor dem Zusammenführen von Änderungen stattfinden können.</p>
-                                 
-                                 <p>Uffizzi wurde speziell für die Verwaltung dieser ephemeren Umgebungen entwickelt, die für die Remote-Entwicklung oder als temporäre QA- oder Staging-Umgebungen genutzt werden können. Im Dev-Modus ermöglicht Uffizzi Entwicklern, einzelne, isolierte Remote-Entwicklungsumgebungen auszuführen, in denen Codeänderungen sofort synchronisiert werden. Diese Fähigkeit hilft Teams, neue Entwickler schnell mit einem standardisierten Setup einzuarbeiten und ermöglicht Entwicklern, produktionsähnliche Umgebungen auszuführen, ohne ihre Laptops zu belasten.</p>
-                                 
-                                 <p>Uffizzi kann in einer selbst-gehosteten Konfiguration betrieben werden, in der Teams die vollständige Kontrolle über ihre Infrastruktur und Datenebene haben, oder es kann in einer verwalteten Konfiguration für Teams betrieben werden, die die zugrunde liegende Infrastruktur auslagern möchten.</p>
-                                 
-                                 <p>Uffizzi's ephemere Umgebungen laufen als virtuelle Cluster, sodass Entwickler sie schnell hochfahren können (unter 60 Sekunden), sie sind vollständig von anderer Infrastruktur isoliert für Sicherheit und Compliance, und sie nutzen einen Bruchteil der Ressourcen von vollständigen Kubernetes-Clustern. Uffizzi-Umgebungen können als Entwicklungscluster, Preview- oder Pull-Request-Umgebungen, automatisierte Testumgebungen oder jeden anderen Anwendungsfall mit begrenztem Zeitraum dienen.</p>
-                                 
-                                 <h3>GitHub-Integration</h3>
-                                 
-                                 <p>Plattformteams können ihre Konfigurationsdateien in einem GitHub-Repository speichern und sicherstellen, dass die Backstage-Servicekatalog-Komponente auf das GitHub-Repository verweist. Das Plattformteam kann das Template-Repository bereitstellen, das eine sofort einsatzbereite Integration mit GitHub Actions zur Verbindung mit der Uffizzi-Plattform enthält. Das Ergebnis wird sein, dass, wenn Entwickler Software über den Backstage-Katalog starten, ihre Repositories bereits so konfiguriert sind, dass sie Uffizzi-Umgebungen automatisch nutzen.</p>
-                                 
-                                 <p>Die Entwickler können einfach Pull-Requests zu ihren neuen Repositories mit ihren Container-Images öffnen, und Uffizzi kümmert sich um die Bereitstellung von Build-Status. Dies ermöglicht es Plattformteams, automatisch die Kubernetes-Workload-Validierung für andere Entwickler in der Organisation zu aktivieren, während die anfänglichen Einrichtungsschritte zur Verbindung des Repositories mit Uffizzi abstrahiert werden.</p>
-                                 
-                                 <div class="image-placeholder">Hier Bilder - GitHub Pull-Request Screenshot</div>
-                                 
-                                 <p><em>Dieser Screenshot zeigt einen GitHub-Pull-Request mit automatisierten Tests, die durch Bereitstellung von Kubernetes-Manifesten auf der Uffizzi-Plattform durchgeführt wurden. Entwickler können das Ergebnis der Build-Ausgabe leicht sehen, was hilft, Manifeständerungen vor dem Zusammenführen zu validieren.</em></p>
-                                 
-                                 <h3>Virtuelle Cluster</h3>
-                                 
-                                 <p>Uffizzi unterstützt die Erstellung virtueller Cluster mit einem Befehlszeilenwerkzeug:</p>
-                                 
-                                 <div class="code-block">
-                                    uffizzi cluster create quickstart
-                                 </div>
-                                 
-                                 <p>Plattformteams könnten die Befehlszeilenschritte mit ihren Backstage-Katalogkomponenten einschließen und Entwicklern erlauben, das Tool direkt auszuführen, um die virtuellen Uffizzi-Cluster bereitzustellen. Dieser Ansatz kann hilfreich sein für Entwickler, die sicher im direkten Bereitstellen auf einem Kubernetes-Cluster sind. Sie können jetzt ihre Kubernetes-Manifeste mit dem neu erstellten virtuellen Cluster, der auf der Uffizzi-Plattform gehostet wird, bereitstellen und testen.</p>
-                                 
-                                 <p>Andere Ansätze können ebenfalls verfügbar sein, abhängig davon, welche Plugins für Backstage installiert wurden. Zum Beispiel ist es möglich, Uffizzi's ephemere Umgebungen in eine Continuous-Integration-Pipeline wie GitLab CI zu integrieren.</p>
-                                 
-                                 <p>Ephemere Umgebungen sind ein wesentlicher Aspekt der Validierung moderner containerisierter Anwendungen. Entwicklern zu erlauben, ihre Kubernetes-Workloads schnell in verwalteten Sandbox-Umgebungen zu testen, ist ein großer Schritt, um zuverlässige Testergebnisse vor Produktionsbereitstellungen zu erfassen und den Entwicklungsprozess zu beschleunigen. Uffizzi macht es einfach, diese Funktionalität als standardmäßigen Teil der Entwicklererfahrung bereitzustellen.</p>
-                                 
-                                 <h2>Erste Schritte mit Backstage für Kubernetes</h2>
-                                 
-                                 <p>Backstage ist eine Node.js-Anwendung, die recht einfach installiert werden kann. Das Paket ist über npm verfügbar und hat nur einige geringfügige Abhängigkeiten, wie SQLite, Docker, npm und Git. Die Installation in einer Linux-basierten Umgebung ist so einfach wie:</p>
-                                 
-                                 <div class="code-block">
-                                    npx @backstage/create-app@latest
-                                 </div>
-                                 
-                                 <p>Vollständige Installationsschritte finden Sie <a href="documentation/index.html" style="color: #3498db;">hier</a>.</p>
-                                 
-                                 <p>Nach der Installation kann das Projekt gestartet werden durch Ausführen von:</p>
-                                 
-                                 <div class="code-block">
-                                    cd my-backstage-app<br>
-                                    yarn dev
-                                 </div>
-                                 
-                                 <p>Der Aufruf von http://localhost:3000 sollte die Backstage-Oberfläche anzeigen:</p>
-                                 
-                                 <div class="image-placeholder">Hier Bilder - Backstage-Portal</div>
-                                 
-                                 <p>Und das war's! Jetzt können Sie mit der Backstage-Installation experimentieren und sich mit der Funktionsweise vertraut machen. Wenn Sie versuchen, eine produktionsreife Backstage-Einrichtung bereitzustellen, sollten Sie Funktionen wie Authentifizierung und persistenten Speicher konfigurieren.</p>
-                                 
-                                 <p>Es ist auch möglich, Backstage auf Kubernetes-Clustern bereitzustellen. Es läuft mit einer Kubernetes Deployment-Ressource mit dem Container-Image für Backstage und einer weiteren Deployment-Ressource für eine Postgres-Datenbank, die für persistenten Speicher verwendet wird. Der Backstage-Endpunkt kann dann über eine Kubernetes Service- oder Ingress-Ressource bereitgestellt werden, genauso wie andere Cluster-Webanwendungen Traffic erhalten.</p>
-                                 
-                                 <h2>Installation der Backstage Kubernetes-Plugins</h2>
-                                 
-                                 <p>Die Installationsschritte für Plugins können variieren, je nachdem, ob das Plugin benutzerdefiniert oder integriert/nativ ist. Die folgenden Schritte erklären, wie die nativen Kubernetes-Plugins für Backstage installiert werden.</p>
-                                 
-                                 <p>Es gibt zwei Plugins, die für eine vollständige Kubernetes-Integration mit Backstage erforderlich sind. Das "Frontend"-Plugin fügt die Benutzeroberflächenfunktionen hinzu, wie einen "Kubernetes"-Tab im Softwarekatalog. Das "Backend"-Plugin bietet die Funktionalität zur Authentifizierung und Verbindung mit den Kubernetes-Clustern.</p>
-                                 
-                                 <p>Die Installation des Frontend-Plugins erfordert Yarn-Befehle, genau wie bei der Installation von Backstage:</p>
-                                 
-                                 <div class="code-block">
-                                    # Vom Backstage-Stammverzeichnis<br>
-                                    yarn add --cwd packages/app @backstage/plugin-kubernetes
-                                 </div>
-                                 
-                                 <p>Dies fügt die Plugin-Dateien in das Backstage-Installationsverzeichnis ein. Jetzt müssen wir sicherstellen, dass Backstage das neue Plugin lädt, indem wir die EntityPage-Datei aktualisieren:</p>
-                                 
-                                 <div class="code-block">
-                                    # packages/app/src/components/catalog/EntityPage.tsx<br>
-                                    import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';<br>
-                                    const serviceEntityPage = (<br>
-                                      &lt;EntityLayout&gt;<br>
-                                    	{/* other tabs... */}<br>
-                                    	&lt;EntityLayout.Route path="/kubernetes" title="Kubernetes"&gt;<br>
-                                  	    &lt;EntityKubernetesContent refreshIntervalMs={30000} /&gt;<br>
-                                    	&lt;/EntityLayout.Route&gt;<br>
-                                      &lt;/EntityLayout&gt;<br>
-                                    );
-                                 </div>
-                                 
-                                 <p>Das Frontend-Plugin ist jetzt installiert und wird beim nächsten Aktualisieren des Servicekatalogs geladen. Jetzt können wir das Backend-Plugin installieren:</p>
-                                 
-                                 <div class="code-block">
-                                    # Vom Backstage-Stammverzeichnis<br>
-                                    yarn add --cwd packages/backend @backstage/plugin-kubernetes-backend
-                                 </div>
-                                 
-                                 <p>Als nächstes erstellen wir eine neue Datei namens kubernetes.ts, die einige Konfigurationsparameter speichert, die wir als Standard belassen können (wie sie sind kopieren/einfügen):</p>
-                                 
-                                 <div class="code-block">
-                                    # packages/backend/src/plugins/kubernetes.ts<br>
-                                    import { KubernetesBuilder } from '@backstage/plugin-kubernetes-backend';<br>
-                                    import { Router } from 'express';<br>
-                                    import { PluginEnvironment } from '../types';<br>
-                                    import { CatalogClient } from '@backstage/catalog-client';<br>
-                                    <br>
-                                    export default async function createPlugin(<br>
-                                      env: PluginEnvironment,<br>
-                                    ): Promise {<br>
-                                      const catalogApi = new CatalogClient({ discoveryApi: env.discovery });<br>
-                                      const { router } = await KubernetesBuilder.createBuilder({<br>
-                                    	logger: env.logger,<br>
-                                    	config: env.config,<br>
-                                    	catalogApi,<br>
-                                    	permissions: env.permissions,<br>
-                                      }).build();<br>
-                                      return router;<br>
-                                    }
-                                 </div>
-                                 
-                                 <p>Jetzt importieren wir einfach das Backend-Plugin, indem wir die index.ts-Datei aktualisieren:</p>
-                                 
-                                 <div class="code-block">
-                                    #packages/backend/src/index.ts<br>
-                                    // ..<br>
-                                    import kubernetes from './plugins/kubernetes';<br>
-                                    <br>
-                                    async function main() {<br>
-                                      // ...<br>
-                                      const kubernetesEnv = useHotMemoize(module, () => createEnv('kubernetes'));<br>
-                                      // ...<br>
-                                      apiRouter.use('/kubernetes', await kubernetes(kubernetesEnv));
-                                 </div>
-                                 
-                                 <p>Die Plugins sind jetzt bereit. Der letzte Schritt, um sicherzustellen, dass die Kubernetes-Cluster-Funktionalität bereit ist, besteht darin, die Cluster-Konfigurationsdetails wie den API-Server-Endpunkt und Authentifizierungsdetails bereitzustellen. Das Stammverzeichnis der Backstage-Installation enthält eine "app-config.yaml"-Datei, die verschiedene Umgebungskonfigurationsdetails enthält. Hier müssen wir einen neuen Abschnitt namens "kubernetes" hinzufügen:</p>
-                                 
-                                 <div class="code-block">
-                                    kubernetes:<br>
-                                      serviceLocatorMethod:<br>
-                                    	type: 'multiTenant'<br>
-                                      clusterLocatorMethods:<br>
-                                    	- type: 'config'<br>
-                                      	clusters:<br>
-                                        	- url: http://127.0.0.1:9999<br>
-                                          	name: cluster-1<br>
-                                          	authProvider: 'serviceAccount'<br>
-                                          	skipTLSVerify: false<br>
-                                          	skipMetricsLookup: true<br>
-                                          	serviceAccountToken: ${K8S_MINIKUBE_TOKEN}<br>
-                                          	caData: ${K8S_CONFIG_CA_DATA}<br>
-                                          	caFile: '' # lokaler Pfad zur CA-Datei<br>
-                                        	- url: http://127.0.0.2:9999<br>
-                                          	name: cluster-2<br>
-                                          	authProvider: 'aws'
-                                 </div>
-                                 
-                                 <p>Diese Konfiguration verbindet Backstage mit zwei Kubernetes-Clustern, einem lokal laufenden und einem auf AWS laufenden. Details wie Authentifizierungsdaten können zu dieser Konfigurationsdatei hinzugefügt werden. Wie wir oben sehen können, können wir Backstage so konfigurieren, dass es mit mehr als einem Cluster integriert wird, sodass Entwickler Software auf mehreren Clustern bereitstellen können.</p>
-                                 
-                                 <p>Diese Schritte müssen nur einmal durchgeführt werden, und dann steht die Kubernetes-Integration für alle im Backstage-Katalog gespeicherten Softwarekomponenten zur Verfügung.</p>
-                                 
-                                 <h2>Fazit</h2>
-                                 
-                                 <p>Backstage bietet eine starke Grundlage, um die Entwicklungsbemühungen von Software-Teams in großen Organisationen zu vereinheitlichen. Die Fähigkeit, eine zentrale Anlaufstelle für Entwickler zu implementieren, um Software und Infrastruktur vollständig im Self-Service bereitzustellen, ist ein mächtiger Schritt im Bereich des Platform Engineering, der die Produktivität steigert und die kognitive Belastung für Entwickler reduziert.</p>
-                                 
-                                 <p>Die Integration mit Kubernetes ist eine großartige Funktion, die es Infrastrukturteams ermöglicht, Kubernetes-Cluster für Entwickler bereitzustellen, um Software auszuführen, ohne Entwickler mit dem kognitiven Aufwand zu belasten, Kubernetes-Experten werden zu müssen. Die mit Backstage mögliche Abstraktion ermöglicht es Entwicklern, containerisierte Anwendungen nahtlos bereitzustellen, ohne den operativen Aufwand der Cluster-Erstellung, Einrichtung lokaler Tools, Authentifizierung usw. Alles geschieht über die Backstage-Oberfläche, was es Infrastrukturteams ermöglicht, Leitplanken und Best Practices bereitzustellen, die in die Cluster-Nutzungserfahrung eingebaut sind.</p>
-                                 
-                                 <p>Die Erweiterung der Backstage-Fähigkeiten durch die Integration von ephemeren Umgebungen ist ein weiterer Schritt in Richtung vollständiger Self-Service-Fähigkeiten. Entwickler können jetzt Software nutzen, die mit automatischer Integration in die Uffizzi-Plattform kommt, sodass Entwickler ihre Kubernetes-Manifeste schnell validieren können, wenn sie Pull-Requests erstellen, und erhalten Feedback.</p>
-                                 
-                                 <p>Die Gesamtvorteile, die Backstage bietet, sind enorm für Organisationen, die eine bessere Zusammenarbeit zwischen Teams fördern, die kognitive Belastung für Entwickler reduzieren und die Geschwindigkeit von Anwendungsbereitstellungen beschleunigen wollen. Sie möchten vielleicht mit Backstage experimentieren, indem Sie die obigen Einrichtungsschritte verwenden, um festzustellen, ob es für Ihren Anwendungsfall geeignet ist. Um schnell eine Demo-Umgebung für die Bereitstellung von Backstage zu erhalten, können Sie kostenlos einen virtuellen Uffizzi-Cluster auf der Starter-Stufe starten.</p>
-                                 
-                                 <div style="background: #f8f9fa; padding: 2rem; border-radius: 8px; margin: 2rem 0; text-align: center;">
-                                    <h3 style="margin-top: 0; color: #2c3e50;">Gefällt Ihnen dieser Artikel?</h3>
-                                    <p>Abonnieren Sie unseren LinkedIn-Newsletter, um weitere nützliche Inhalte zu erhalten.</p>
-                                    <a href="https://www.linkedin.com/" style="display: inline-block; background: #0077b5; color: white; padding: 0.8rem 2rem; border-radius: 4px; text-decoration: none; font-weight: bold;">Jetzt abonnieren</a>
-                                 </div>
-                                 
-                                 <div class="guide-chapters">
-                                    <div class="guide-chapter">
-                                       <h4>Kapitel 1: Platform Engineering</h4>
-                                       <p>Erfahren Sie, wie Platform Engineering die Lücke zwischen komplexen Cloud-Native-Technologien und täglichen Engineering-Workflows schließt.</p>
-                                       <a href="/free-courses/platform-engineering-devops">Leitfaden lesen →</a>
-                                    </div>
-                                    <div class="guide-chapter">
-                                       <h4>Kapitel 2: Internal Developer Platform</h4>
-                                       <p>Erfahren Sie, wie Internal Developer Platforms automatisierte Self-Service-Lösungen bieten, um Softwarepraktiken, Infrastruktur, Umgebungen und Betrieb zu vereinfachen und zu standardisieren.</p>
-                                       <a href="/blog-detail">Leitfaden lesen →</a>
-                                    </div>
-                                    <div class="guide-chapter">
-                                       <h4>Kapitel 3: Citizen Developer</h4>
-                                       <p>Erfahren Sie, wie sich Citizen Developer von traditionellen Entwicklern unterscheiden und welche wichtige Rolle sie bei der Förderung technologischer Agilität in Unternehmen spielen.</p>
-                                       <a href="/blog">Leitfaden lesen →</a>
-                                    </div>
-                                    <div class="guide-chapter">
-                                       <h4>Kapitel 4: Backstage Kubernetes-Integration</h4>
-                                       <p>Erfahren Sie, wie Backstage, ein Open-Source-Projekt von Spotify, helfen kann, das Software-Ökosystem einer Organisation in einem einzigen Entwicklerportal zu vereinen.</p>
-                                       <a href="/faq">Leitfaden lesen →</a>
-                                    </div>
-                                    <div class="guide-chapter">
-                                       <h4>Kapitel 5: Internal Developer Platform Open Source</h4>
-                                       <p>Erfahren Sie, wie Sie die richtigen Tools und Komponenten auswählen, um die Komplexität beim Aufbau einer Internal Developer Platform zu minimieren.</p>
-                                       <a href="/blog-detail">Leitfaden lesen →</a>
-                                    </div>
-                                    <div class="guide-chapter">
-                                       <h4>Kapitel 6: Platform Engineering vs DevOps</h4>
-                                       <p>Erfahren Sie, wie Platform Engineering und DevOps sich ergänzen, um eine effiziente Softwarebereitstellungspipeline zu schaffen.</p>
-                                       <a href="/free-courses/platform-engineering-vs-devops">Leitfaden lesen →</a>
-                                    </div>
-                                 </div>
-                                 
-                                 <div class="blog-single-tag">
-                                    <a href="/faq">Backstage</a><a href="/free-courses/kubernetes">Kubernetes</a><a href="/free-courses/platform-engineering-devops">IDP</a><a href="/free-courses/devops">DevOps</a><a href="/faq">Uffizzi</a>
-                                 </div>
-                                 <div class="post-meta">
-                                    <ul>
-                                       <li><a href="/koffi-profile"><img src="/assets/images/testimonial/1.jpg" alt="Autor"> Redaktion</a></li>
-                                       <li><span class="post-time">30. April 2026</span></li>
-                                    </ul>
-                                 </div>
-                              </div>
-                           </div>
-                           
-                           
-                        </div>
-                     </div>
-                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
-                        <div class="sidebar">
-                           <div class="widget-box">
-                              <div class="widget wow fadeInUp center" data-wow-delay="0.2s">
-                                 <div class="blog-news-title">
-                                    <h2>Ähnliche Artikel</h2>
-                                 </div>
-                                 <div class="feature-box-main">
-                                    <ul class="feature-box">
-                                       <li>
-                                          <div class="post-item">
-                                             <div class="post-img">
-                                                <a href="/blog-detail"><img src="/assets/images/blog/blog2.jpg" alt="DevOps Best Practices"></a>
-                                             </div>
-                                             <div class="post-info">
-                                                <h4><a href="/blog-detail">DevOps Best Practices 2026</a></h4>
-                                                <span class="post-time"><i class="far fa-calendar-alt"></i> 30. April 2026</span>
-                                             </div>
-                                          </div>
-                                       </li>
-                                       <li>
-                                          <div class="post-item">
-                                             <div class="post-img">
-                                                <a href="/blog-detail"><img src="/assets/images/blog/blog3.jpg" alt="Kubernetes Guide"></a>
-                                             </div>
-                                             <div class="post-info">
-                                                <h4><a href="/blog-detail">Kubernetes für Einsteiger</a></h4>
-                                                <span class="post-time"><i class="far fa-calendar-alt"></i> 30. April 2026</span>
-                                             </div>
-                                          </div>
-                                       </li>
-                                       <li>
-                                          <div class="post-item">
-                                             <div class="post-img">
-                                                <a href="/blog-detail"><img src="/assets/images/blog/blog4.jpg" alt="Internal Developer Platform"></a>
-                                             </div>
-                                             <div class="post-info">
-                                                <h4><a href="/blog-detail">Internal Developer Platform Grundlagen</a></h4>
-                                                <span class="post-time"><i class="far fa-calendar-alt"></i> 30. April 2026</span>
-                                             </div>
-                                          </div>
-                                       </li>
-                                    </ul>
-                                 </div>
-                              </div>
-                              <div class="widget wow fadeInUp center" data-wow-delay="0.3s">
-                                 <ul class="widget-category">
-                                    <div class="blog-news-title">
-                                       <h2>Themen</h2>
-                                    </div>
-                                    <ul class="widget-tag">
-                                       <li><a href="/faq"><i class="fas fa-chevron-right"></i> Backstage</a></li>
-                                       <li><a href="/free-courses/kubernetes"><i class="fas fa-chevron-right"></i> Kubernetes</a></li>
-                                       <li><a href="/free-courses/platform-engineering-devops"><i class="fas fa-chevron-right"></i> IDP</a></li>
-                                       <li><a href="/free-courses/devops"><i class="fas fa-chevron-right"></i> DevOps</a></li>
-                                       <li><a href="/blog"><i class="fas fa-chevron-right"></i> Cloud Native</a></li>
-                                    </ul>
-                                 </ul>
-                              </div>
-                              <div class="widget wow fadeInUp center" data-wow-delay="0.4s">
-                                 <ul class="widget-tag">
-                                    <div class="blog-news-title">
-                                       <h2>Schlagwörter</h2>
-                                    </div>
-                                    <ul class="widget-tag">
-                                       <li><a href="/faq">Backstage</a></li>
-                                       <li><a href="/free-courses/kubernetes">Kubernetes</a></li>
-                                       <li><a href="/free-courses/platform-engineering-devops">IDP</a></li>
-                                       <li><a href="/free-courses/devops">DevOps</a></li>
-                                       <li><a href="/faq">Uffizzi</a></li>
-                                       <li><a href="/blog">Cloud</a></li>
-                                    </ul>
-                                 </ul>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-         </section>
-         <!-- blog -->
-         <!-- footer -->
-         <footer class="simple-footer">
+          </li>
+          <li>
+            <div class="rel-item">
+              <img class="rel-img" src="/assets/images/blog/blog1.svg" alt="IDP Guide">
+              <div class="rel-info">
+                <h4><a href="/free-courses/platform-engineering-devops">Platform Engineering Grundlagen</a></h4>
+                <span><i class="far fa-calendar-alt"></i> 5. Februar 2026</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Topics -->
+      <div class="art-widget">
+        <h3>Themen</h3>
+        <ul class="topic-list">
+          <li><a href="/faq"><i class="fas fa-chevron-right"></i> Backstage</a></li>
+          <li><a href="/free-courses/kubernetes"><i class="fas fa-chevron-right"></i> Kubernetes</a></li>
+          <li><a href="/free-courses/platform-engineering-devops"><i class="fas fa-chevron-right"></i> Platform Engineering</a></li>
+          <li><a href="/free-courses/platform-engineering-devops"><i class="fas fa-chevron-right"></i> IDP</a></li>
+          <li><a href="/blog"><i class="fas fa-chevron-right"></i> Cloud Native</a></li>
+          <li><a href="/blog"><i class="fas fa-chevron-right"></i> DevOps</a></li>
+        </ul>
+      </div>
+
+      <!-- Tag cloud -->
+      <div class="art-widget">
+        <h3>Schlagwörter</h3>
+        <div class="tag-cloud">
+          <a href="/faq">Backstage</a>
+          <a href="/free-courses/kubernetes">Kubernetes</a>
+          <a href="/free-courses/platform-engineering-devops">IDP</a>
+          <a href="/blog">DevOps</a>
+          <a href="/faq">Uffizzi</a>
+          <a href="/blog">Cloud</a>
+          <a href="/blog">CI/CD</a>
+          <a href="/free-courses/github-actions">GitHub Actions</a>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<!-- ── Footer ── -->
+<footer class="simple-footer">
    <div class="container">
       <div class="row sfooter-cols">
          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
@@ -588,7 +966,8 @@
             <h3>Navigation</h3>
             <ul>
                <li><i class="fas fa-chevron-right lead-icon"></i><a href="/">Startseite</a></li>
-               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses">Kurskatalog</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses">Kurskatalog</a></li>
                <li><i class="fas fa-chevron-right lead-icon"></i><a href="/blog">Blog</a></li>
                <li><i class="fas fa-chevron-right lead-icon"></i><a href="/event">Veranstaltungen</a></li>
                <li><i class="fas fa-chevron-right lead-icon"></i><a href="/sponsor">Sponsor</a></li>
@@ -597,9 +976,9 @@
          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
             <h3>Support</h3>
             <ul>
-               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about">Ueber uns</a></li>
-               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq">Haeufige Fragen</a></li>
-               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact.html">Kontakt &amp; Support</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about">Über uns</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq">Häufige Fragen</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact">Kontakt &amp; Support</a></li>
             </ul>
          </div>
       </div>
@@ -607,28 +986,58 @@
          <p>Copyright &copy; 2026 <a href="/">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
       </div>
    </div>
-<div class="footer-legal" style="border-top:1px solid rgba(255,255,255,.10);background:rgba(2,12,26,.30);padding:14px 0 16px"><div class="footer-legal__inner" style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 18px;text-align:center"><span class="footer-legal__brand" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.68);font-weight:500">&copy; 2026 Koffi Academy</span><nav class="footer-legal__links" aria-label="Rechtliches" style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px"><a href="/impressum" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.84);font-weight:700;letter-spacing:.01em;text-decoration:none;transition:color .16s ease">Impressum</a><span class="footer-legal__sep" aria-hidden="true" style="color:rgba(255,255,255,.30);font-size:11px">·</span><a href="/datenschutz" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.84);font-weight:700;letter-spacing:.01em;text-decoration:none;transition:color .16s ease">Datenschutz</a></nav></div></div>
+   <div class="footer-legal"><div class="footer-legal__inner"><span class="footer-legal__brand">&copy; 2026 Koffi Academy</span><nav class="footer-legal__links" aria-label="Rechtliches"><a href="/impressum">Impressum</a><span class="footer-legal__sep" aria-hidden="true">·</span><a href="/datenschutz">Datenschutz</a></nav></div></div>
 </footer>
-         <!-- footer -->
-      </div>
-      <script src="/assets/js/jquery.min.js"></script>
-      <script src="/assets/js/bootstrap.min.js"></script>
-      <script src="/assets/js/jquery.fancybox.min.js"></script>
-      <script src="/assets/js/owl.carousel.min.js"></script>
-      <script src="/assets/js/isotope.pkgd.min.js"></script>
-      <script src="/assets/js/wow.min.js"></script>
-      <script src="/assets/js/custom.js"></script>
-   <script src="/assets/js/kontakt-popup.js"></script>
-<script src="/assets/js/announce.js"></script>
+
+</div><!-- .page-main -->
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/wow.min.js"></script>
+<script src="/assets/js/custom.js"></script>
 <script src="/assets/js/mobile-nav.js"></script>
 <script>
+/* Language picker */
 var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
 function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
 function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
-function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klPick(lang){if(typeof setLanguage==='function')setLanguage(lang);klSync(lang);klClose();}
 function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
 document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
 document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+
+/* Reading progress bar */
+document.addEventListener('scroll',function(){
+  var main=document.getElementById('art-main');
+  if(!main)return;
+  var rect=main.getBoundingClientRect();
+  var total=rect.height;
+  var scrolled=Math.max(0,-rect.top);
+  var pct=Math.min(100,Math.round(scrolled/total*100));
+  var bar=document.getElementById('rpbar');
+  if(bar)bar.style.width=pct+'%';
+});
+
+/* TOC active link on scroll */
+(function(){
+  var links=document.querySelectorAll('.art-toc a');
+  var secs=[];
+  links.forEach(function(a){
+    var id=a.getAttribute('href').replace('#','');
+    var el=document.getElementById(id);
+    if(el)secs.push({id:id,el:el,a:a});
+  });
+  if(!secs.length)return;
+  var onScroll=function(){
+    var top=window.scrollY+120;
+    var active=secs[0];
+    secs.forEach(function(s){if(s.el.offsetTop<=top)active=s;});
+    links.forEach(function(a){a.classList.remove('on');});
+    if(active)active.a.classList.add('on');
+  };
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+})();
 </script>
 </body>
 </html>
