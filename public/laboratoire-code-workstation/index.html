@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Code Execution Workstation | Laboratoire - Koffi Academy</title>
+  <meta name="description" content="Koffi Academy lab workstation with terminal, dataset editor, code runner, guided instructions and progress tracking.">
+  <meta name="theme-color" content="#071a2f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+:root{
+  --bg:#07111f;
+  --panel:#10182b;
+  --panel-2:#151e34;
+  --panel-3:#1c2740;
+  --line:rgba(255,255,255,.11);
+  --muted:#94a3b8;
+  --soft:#c8d4e4;
+  --text:#f7fbff;
+  --navy:#07294d;
+  --teal:#20d3b6;
+  --green:#54e39a;
+  --amber:#f8b85f;
+  --orange:#f89035;
+  --blue:#71a7ff;
+  --danger:#ff6b6b;
+  --shadow:0 24px 80px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);overflow-x:hidden}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,textarea,input{font:inherit}
+button{cursor:pointer}
+.lab-shell{width:100%;max-width:100%;min-height:100vh;display:flex;flex-direction:column;overflow:hidden;background:
+  radial-gradient(circle at 20% -10%,rgba(32,211,182,.18),transparent 28%),
+  radial-gradient(circle at 88% 4%,rgba(248,144,53,.18),transparent 30%),
+  linear-gradient(135deg,#08111f 0%,#0b1730 52%,#09101e 100%)}
+.topline{height:4px;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));opacity:.95}
+.labbar{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(10,17,31,.88);backdrop-filter:blur(18px);position:sticky;top:0;z-index:30}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand__mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#f9d77e,#d6a02d 55%,#b97911);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(214,160,45,.30);flex-shrink:0}
+.brand__mark svg{width:62%;height:62%;display:block}
+.brand__text{min-width:0}
+.brand__k{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.18em;color:var(--teal);text-transform:uppercase;margin-bottom:2px}
+.brand__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.labbar__spacer{flex:1}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
+.topbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:36px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:rgba(255,255,255,.9);border-radius:8px;padding:8px 13px;font-weight:700;font-size:13px;letter-spacing:.01em;line-height:1.15;text-align:center;overflow-wrap:anywhere;transition:.16s}
+.topbtn:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.28)}
+.topbtn--ai{background:linear-gradient(135deg,#6d73ff,#8468ff);border-color:rgba(255,255,255,.12);box-shadow:0 10px 28px rgba(109,115,255,.24)}
+.topbtn--ai:hover{filter:brightness(1.06)}
+.lab-main{width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1.42fr) minmax(360px,.76fr);gap:0;flex:1;min-height:0}
+.workspace{min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--line);background:rgba(7,12,22,.54)}
+.work-tabs{display:flex;align-items:center;gap:2px;padding:0 14px;background:rgba(255,255,255,.05);border-bottom:1px solid var(--line);min-height:44px}
+.tab{position:relative;border:0;background:transparent;color:rgba(255,255,255,.72);display:inline-flex;align-items:center;gap:8px;padding:13px 14px;font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;transition:.16s}
+.tab i{font-size:13px}
+.tab.is-active{color:#fff}
+.tab.is-active:after{content:"";position:absolute;left:10px;right:10px;bottom:0;height:2px;background:var(--teal);border-radius:999px}
+.work-surface{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr)}
+.view{display:none;min-height:0}
+.view.is-active{display:flex}
+.terminal-view{flex-direction:column;background:#151515}
+.terminal-output{flex:1;min-height:360px;max-height:calc(100vh - 160px);overflow:auto;padding:20px 22px;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.62;color:#f7f7f7;white-space:pre-wrap;word-break:break-word}
+.terminal-output .line-muted{color:#8ea3b8}
+.terminal-output .line-ok{color:#52ef9f}
+.terminal-output .line-warn{color:#ffce73}
+.terminal-output .line-error{color:#ff7d7d}
+.terminal-output .prompt{color:#8cf0ce}
+.terminal-inputbar{display:flex;align-items:center;gap:10px;border-top:1px solid #303030;background:#101010;padding:12px 16px}
+.terminal-prompt{font-family:'JetBrains Mono',monospace;font-size:13px;color:#8cf0ce;white-space:nowrap}
+.terminal-input{flex:1;border:0;outline:0;background:transparent;color:#fff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;min-width:0}
+.runbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:rgba(10,17,31,.88);border-bottom:1px solid var(--line)}
+.runbar__title{display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--soft);min-width:0}
+.runbar__title i{color:var(--teal)}
+.runbar__title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.runbar__actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.toolbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.07);color:#fff;border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:800;transition:.16s}
+.toolbtn:hover{background:rgba(255,255,255,.13)}
+.toolbtn--primary{border-color:transparent;background:linear-gradient(135deg,var(--orange),#ffb057);box-shadow:0 10px 24px rgba(248,144,53,.26)}
+.toolbtn--primary:hover{filter:brightness(1.04)}
+.editor-view,.datasets-view{flex-direction:column;background:#0b1222}
+.code-editor,.dataset-editor{flex:1;min-height:420px;width:100%;border:0;outline:0;resize:none;padding:20px 22px;background:#0b1222;color:#d9f4ff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.65;tab-size:2}
+.code-editor::selection,.dataset-editor::selection{background:rgba(32,211,182,.28)}
+.dataset-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;flex:1;min-height:0}
+.dataset-editor{border-right:1px solid var(--line)}
+.dataset-side{padding:18px;background:rgba(255,255,255,.035);overflow:auto}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.metric{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:10px;padding:12px}
+.metric__k{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.metric__v{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-top:3px}
+.file-list{display:grid;gap:8px}
+.file-pill{display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.06);border-radius:10px;padding:10px 11px;color:var(--soft);font-size:12.5px;font-weight:700}
+.file-pill i{color:var(--amber)}
+.instructions{min-width:0;background:linear-gradient(180deg,rgba(33,41,68,.96),rgba(22,29,50,.98));display:flex;flex-direction:column;min-height:0}
+.instructions.is-hidden{display:none}
+.instructions__head{display:flex;align-items:center;gap:12px;padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.instructions__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;margin:0;letter-spacing:-.01em}
+.instructions__head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:20px;line-height:1;padding:4px;border-radius:7px}
+.instructions__head button:hover{background:rgba(255,255,255,.10)}
+.instructions__body{min-width:0;overflow:auto;padding:20px 18px 28px}
+.lab-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:32px;line-height:1.12;font-weight:800;letter-spacing:-.02em;margin:0 0 14px;color:#fff}
+.lab-sub{font-size:15px;line-height:1.65;color:rgba(255,255,255,.78);margin:0 0 20px}
+.progress-card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:12px;padding:14px 15px;margin-bottom:18px}
+.progress-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.progress-row span:first-child{font-size:12px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.08em}
+.progress-row span:last-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:#fff}
+.progress-track{height:8px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));border-radius:999px;transition:width .25s}
+.step{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.065);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.step__top{display:flex;align-items:center;gap:12px;padding:16px}
+.step__check{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:transparent;flex-shrink:0}
+.step.is-done .step__check{background:rgba(84,227,154,.16);border-color:rgba(84,227,154,.42);color:var(--green)}
+.step h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;line-height:1.2;font-weight:800;letter-spacing:-.02em;margin:0;color:#fff}
+.step__body{border-top:1px solid rgba(255,255,255,.10);padding:16px 18px 18px;color:rgba(255,255,255,.82);font-size:14px;line-height:1.62}
+.step__body code{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:#06090f;border:1px solid rgba(255,255,255,.10);border-radius:6px;padding:2px 6px;color:#a8fff0}
+.codebox{max-width:100%;margin:12px 0 0;border:1px solid rgba(255,255,255,.12);background:#050505;border-radius:10px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12.4px;line-height:1.65;color:#fff;overflow:auto}
+.help-panel{position:fixed;right:18px;bottom:18px;width:min(420px,calc(100vw - 36px));background:#10182b;border:1px solid rgba(255,255,255,.15);box-shadow:var(--shadow);border-radius:14px;overflow:hidden;z-index:60;display:none}
+.help-panel.is-open{display:block}
+.help-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:linear-gradient(135deg,#202b50,#2c3562);border-bottom:1px solid var(--line)}
+.help-head h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;margin:0}
+.help-head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:18px;border-radius:7px;padding:4px}
+.help-body{padding:16px;color:var(--soft);font-size:13.5px;line-height:1.58}
+.hint{border-left:3px solid var(--teal);background:rgba(32,211,182,.08);padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0}
+.hidden{display:none!important}
+@media(max-width:1080px){
+  .lab-main{grid-template-columns:1fr}
+  .workspace{border-right:0}
+  .instructions{border-top:1px solid var(--line)}
+  .terminal-output{max-height:none}
+}
+@media(max-width:720px){
+  .labbar{align-items:flex-start;flex-direction:column}
+  .brand{width:100%}
+  .brand__text{flex:1;max-width:calc(100vw - 76px)}
+  .brand__title{display:block;max-width:100%}
+  .actions{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .topbtn{width:100%;font-size:12px;padding:8px 10px;white-space:normal}
+  .topbtn--ai{grid-column:1/-1}
+  .dataset-grid{grid-template-columns:1fr}
+  .dataset-editor{border-right:0;border-bottom:1px solid var(--line);min-height:360px}
+  .dataset-side{display:block}
+  .lab-title{font-size:26px}
+  .step h3{font-size:19px}
+  .work-tabs{overflow:auto}
+  .tab{white-space:nowrap}
+  .lab-sub,.step__body{overflow-wrap:break-word}
+}
+@media(max-width:480px){
+  .actions{display:flex;flex-direction:column;align-items:stretch}
+  .topbtn,.topbtn--ai{grid-column:auto;width:100%}
+  .brand__title{font-size:16px}
+  .terminal-output,.code-editor,.dataset-editor{font-size:12.5px;padding:16px}
+  .instructions__body{padding:16px 14px 24px}
+  .runbar{align-items:flex-start;flex-direction:column}
+}
+  </style>
+</head>
+<body>
+<div class="lab-shell">
+  <div class="topline"></div>
+  <header class="labbar">
+    <a class="brand" href="../laboratoire">
+      <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+      <span class="brand__text">
+        <span class="brand__k">Koffi Academy Lab</span>
+        <span class="brand__title">Code Execution Workstation</span>
+      </span>
+    </a>
+    <div class="labbar__spacer"></div>
+    <nav class="actions" aria-label="Lab actions">
+      <button type="button" class="topbtn" data-open-tab="editor"><i class="fa-solid fa-code"></i> Editor</button>
+      <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-arrow-left"></i> Back to Labs</a>
+      <button type="button" class="topbtn" id="progressBtn"><i class="fa-solid fa-chart-simple"></i> Progress</button>
+      <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> Hide Instructions</button>
+      <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> Need Help? Ask AI</button>
+    </nav>
+  </header>
+
+  <main class="lab-main">
+    <section class="workspace" aria-label="Code workstation">
+      <div class="work-tabs" role="tablist">
+        <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
+        <button type="button" class="tab" data-tab="editor" role="tab"><i class="fa-solid fa-code"></i>Editor</button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-database"></i>Datasets</button>
+      </div>
+      <div class="work-surface">
+        <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
+          <div class="terminal-output" id="terminalOutput" aria-live="polite"></div>
+          <form class="terminal-inputbar" id="terminalForm">
+            <span class="terminal-prompt">student@koffi-lab:~$</span>
+            <input class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" aria-label="Terminal command" autofocus>
+          </form>
+        </section>
+
+        <section class="view editor-view" id="editorView" role="tabpanel">
+          <div class="runbar">
+            <div class="runbar__title"><i class="fa-brands fa-js"></i><span>workspace/main.js</span></div>
+            <div class="runbar__actions">
+              <button type="button" class="toolbtn" id="formatCode"><i class="fa-solid fa-wand-magic-sparkles"></i>Format</button>
+              <button type="button" class="toolbtn" id="resetCode"><i class="fa-solid fa-rotate-left"></i>Reset</button>
+              <button type="button" class="toolbtn toolbtn--primary" id="runCode"><i class="fa-solid fa-play"></i>Run Code</button>
+            </div>
+          </div>
+          <textarea class="code-editor" id="codeEditor" spellcheck="false"></textarea>
+        </section>
+
+        <section class="view datasets-view" id="datasetsView" role="tabpanel">
+          <div class="runbar">
+            <div class="runbar__title"><i class="fa-solid fa-database"></i><span>datasets/kubernetes_eval.json</span></div>
+            <div class="runbar__actions">
+              <button type="button" class="toolbtn" id="validateDataset"><i class="fa-solid fa-shield-check"></i>Validate JSON</button>
+              <button type="button" class="toolbtn" id="resetDataset"><i class="fa-solid fa-rotate-left"></i>Reset</button>
+              <button type="button" class="toolbtn toolbtn--primary" id="saveDataset"><i class="fa-solid fa-floppy-disk"></i>Save Dataset</button>
+            </div>
+          </div>
+          <div class="dataset-grid">
+            <textarea class="dataset-editor" id="datasetEditor" spellcheck="false"></textarea>
+            <aside class="dataset-side">
+              <div class="metric-grid">
+                <div class="metric"><span class="metric__k">Items</span><div class="metric__v" id="datasetItems">0</div></div>
+                <div class="metric"><span class="metric__k">Keywords</span><div class="metric__v" id="keywordItems">0</div></div>
+              </div>
+              <div class="file-list">
+                <div class="file-pill"><i class="fa-brands fa-js"></i>workspace/main.js</div>
+                <div class="file-pill"><i class="fa-solid fa-database"></i>datasets/kubernetes_eval.json</div>
+                <div class="file-pill"><i class="fa-regular fa-file-lines"></i>README.md</div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="instructions" id="instructions">
+      <div class="instructions__head">
+        <h2>Instructions</h2>
+        <button type="button" id="closeInstructions" aria-label="Close instructions">&times;</button>
+      </div>
+      <div class="instructions__body">
+        <h1 class="lab-title">Create Evaluation Dataset</h1>
+        <p class="lab-sub">Build a small evaluation dataset for Kubernetes answers, run scoring code against it, and validate the result directly inside the workstation.</p>
+
+        <div class="progress-card">
+          <div class="progress-row"><span>Progress</span><span id="progressText">0 / 4</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <article class="step" data-step="dataset">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3>Step 1: Create Golden Dataset</h3></div>
+          <div class="step__body">
+            Use the Datasets tab and keep a JSON array with questions, reference answers and expected keywords.
+            <div class="codebox">[
+  {
+    "id": "k8s-001",
+    "question": "How do I check the logs of a Kubernetes pod?",
+    "reference_answer": "Use kubectl logs followed by the pod name.",
+    "expected_keywords": ["kubectl", "logs", "pod"]
+  }
+]</div>
+          </div>
+        </article>
+
+        <article class="step" data-step="score">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3>Step 2: Write the Scorer</h3></div>
+          <div class="step__body">
+            In <code>workspace/main.js</code>, transform the dataset and print a quality report. The variable <code>dataset</code> is available when you run the file.
+          </div>
+        </article>
+
+        <article class="step" data-step="run">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3>Step 3: Execute Code</h3></div>
+          <div class="step__body">
+            Run <code>node main.js</code> in the terminal or click <code>Run Code</code>. Console output appears in the terminal.
+          </div>
+        </article>
+
+        <article class="step" data-step="validate">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3>Step 4: Validate</h3></div>
+          <div class="step__body">
+            Run <code>check</code>. The lab verifies that the dataset is valid and that your scorer executed successfully.
+          </div>
+        </article>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<section class="help-panel" id="helpPanel" aria-label="Lab assistant">
+  <div class="help-head">
+    <i class="fa-solid fa-robot"></i>
+    <h3>Lab Copilot</h3>
+    <button type="button" id="closeHelp" aria-label="Close help">&times;</button>
+  </div>
+  <div class="help-body">
+    <p>This local assistant can guide the lab flow. For a production AI helper, this panel will connect to your backend and pass the current step, code and terminal logs.</p>
+    <div class="hint" id="hintText">Start with <strong>run</strong> in the terminal, then inspect the output and adjust the scorer.</div>
+    <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i>Next Hint</button>
+  </div>
+</section>
+
+<script>
+(function(){
+  "use strict";
+
+  var defaultDataset = [
+    {
+      "id": "k8s-001",
+      "question": "How do I check the logs of a Kubernetes pod?",
+      "reference_answer": "Use kubectl logs followed by the pod name. Add -f for streaming logs.",
+      "expected_keywords": ["kubectl", "logs", "pod"],
+      "category": "basics"
+    },
+    {
+      "id": "k8s-002",
+      "question": "How do I list pods in all namespaces?",
+      "reference_answer": "Run kubectl get pods --all-namespaces or kubectl get pods -A.",
+      "expected_keywords": ["kubectl", "get", "pods", "all-namespaces"],
+      "category": "basics"
+    },
+    {
+      "id": "k8s-003",
+      "question": "How can I debug a CrashLoopBackOff pod?",
+      "reference_answer": "Inspect kubectl describe pod, check logs, verify events and review probes or container command errors.",
+      "expected_keywords": ["describe", "logs", "events", "CrashLoopBackOff"],
+      "category": "debugging"
+    }
+  ];
+
+  var defaultCode = [
+    "const report = dataset.map((item) => {",
+    "  const answer = item.reference_answer.toLowerCase();",
+    "  const hits = item.expected_keywords.filter((keyword) =>",
+    "    answer.includes(keyword.toLowerCase())",
+    "  );",
+    "",
+    "  return {",
+    "    id: item.id,",
+    "    category: item.category,",
+    "    keywordCoverage: `${hits.length}/${item.expected_keywords.length}`,",
+    "    ready: hits.length === item.expected_keywords.length",
+    "  };",
+    "});",
+    "",
+    "console.table(report);",
+    "console.log('Total questions:', dataset.length);",
+    "console.log('Ready items:', report.filter((item) => item.ready).length);"
+  ].join("\n");
+
+  var files = {
+    "workspace/main.js": defaultCode,
+    "datasets/kubernetes_eval.json": JSON.stringify(defaultDataset, null, 2),
+    "README.md": "Run node main.js, edit datasets/kubernetes_eval.json, then run check."
+  };
+
+  var completed = { dataset:false, score:false, run:false, validate:false };
+  var lastRunOk = false;
+  var hintIndex = 0;
+  var hints = [
+    "The scorer receives a variable named dataset. You do not need to read files manually.",
+    "A good first check is to count expected_keywords and compare them with words inside reference_answer.",
+    "Use console.table(report) for a clean terminal table.",
+    "When the dataset is valid and the script runs without errors, run check to finish the lab."
+  ];
+
+  var terminalOutput = document.getElementById("terminalOutput");
+  var terminalInput = document.getElementById("terminalInput");
+  var codeEditor = document.getElementById("codeEditor");
+  var datasetEditor = document.getElementById("datasetEditor");
+
+  function escapeHtml(value){
+    return String(value).replace(/[&<>"]/g,function(ch){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch];
+    });
+  }
+
+  function print(text, cls){
+    var line = document.createElement("div");
+    if(cls) line.className = cls;
+    line.innerHTML = escapeHtml(text);
+    terminalOutput.appendChild(line);
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+  }
+
+  function printRaw(html){
+    var line = document.createElement("div");
+    line.innerHTML = html;
+    terminalOutput.appendChild(line);
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+  }
+
+  function formatValue(value){
+    if(typeof value === "string") return value;
+    if(value === undefined) return "undefined";
+    try { return JSON.stringify(value, null, 2); }
+    catch(err){ return String(value); }
+  }
+
+  function parseDataset(){
+    return JSON.parse(files["datasets/kubernetes_eval.json"]);
+  }
+
+  function syncEditors(){
+    codeEditor.value = files["workspace/main.js"];
+    datasetEditor.value = files["datasets/kubernetes_eval.json"];
+    updateDatasetMetrics();
+  }
+
+  function saveCode(){
+    files["workspace/main.js"] = codeEditor.value;
+    completed.score = codeEditor.value.trim().length > 120 && /dataset/.test(codeEditor.value);
+    updateProgress();
+  }
+
+  function saveDataset(){
+    try{
+      var parsed = JSON.parse(datasetEditor.value);
+      if(!Array.isArray(parsed)) throw new Error("Dataset must be a JSON array.");
+      files["datasets/kubernetes_eval.json"] = JSON.stringify(parsed, null, 2);
+      datasetEditor.value = files["datasets/kubernetes_eval.json"];
+      completed.dataset = parsed.length > 0 && parsed.every(function(item){
+        return item.id && item.question && item.reference_answer && Array.isArray(item.expected_keywords);
+      });
+      updateDatasetMetrics();
+      updateProgress();
+      print("Dataset saved: " + parsed.length + " items", "line-ok");
+      return true;
+    }catch(err){
+      print("Dataset error: " + err.message, "line-error");
+      return false;
+    }
+  }
+
+  function updateDatasetMetrics(){
+    try{
+      var items = JSON.parse(datasetEditor.value);
+      var keywords = Array.isArray(items) ? items.reduce(function(total,item){
+        return total + (Array.isArray(item.expected_keywords) ? item.expected_keywords.length : 0);
+      },0) : 0;
+      document.getElementById("datasetItems").textContent = Array.isArray(items) ? items.length : 0;
+      document.getElementById("keywordItems").textContent = keywords;
+    }catch(err){
+      document.getElementById("datasetItems").textContent = "!";
+      document.getElementById("keywordItems").textContent = "!";
+    }
+  }
+
+  function consoleProxy(){
+    return {
+      log:function(){
+        print(Array.prototype.slice.call(arguments).map(formatValue).join(" "));
+      },
+      warn:function(){
+        print(Array.prototype.slice.call(arguments).map(formatValue).join(" "), "line-warn");
+      },
+      error:function(){
+        print(Array.prototype.slice.call(arguments).map(formatValue).join(" "), "line-error");
+      },
+      table:function(rows){
+        if(!Array.isArray(rows)){
+          print(formatValue(rows));
+          return;
+        }
+        if(rows.length === 0){
+          print("(empty table)", "line-muted");
+          return;
+        }
+        var keys = Object.keys(rows[0]);
+        var widths = keys.map(function(key){
+          return Math.max(key.length, ...rows.map(function(row){ return String(row[key]).length; }));
+        });
+        var header = keys.map(function(key,i){ return key.padEnd(widths[i]); }).join("  ");
+        var sep = widths.map(function(w){ return "-".repeat(w); }).join("  ");
+        print(header);
+        print(sep, "line-muted");
+        rows.forEach(function(row){
+          print(keys.map(function(key,i){ return String(row[key]).padEnd(widths[i]); }).join("  "));
+        });
+      }
+    };
+  }
+
+  function runCode(){
+    saveCode();
+    if(!saveDataset()) return false;
+    print("$ node main.js", "prompt");
+    try{
+      var dataset = parseDataset();
+      var runner = new Function("dataset", "console", "\"use strict\";\n" + files["workspace/main.js"]);
+      runner(dataset, consoleProxy());
+      lastRunOk = true;
+      completed.run = true;
+      updateProgress();
+      print("Process exited with code 0", "line-ok");
+      return true;
+    }catch(err){
+      lastRunOk = false;
+      completed.run = false;
+      updateProgress();
+      print(err.name + ": " + err.message, "line-error");
+      return false;
+    }
+  }
+
+  function validateLab(){
+    saveCode();
+    var datasetOk = saveDataset();
+    var codeOk = /dataset/.test(files["workspace/main.js"]) && /expected_keywords|keywordCoverage|console\\.table|map/.test(files["workspace/main.js"]);
+    if(!lastRunOk && codeOk && datasetOk) runCode();
+    completed.dataset = datasetOk;
+    completed.score = codeOk;
+    completed.validate = Boolean(datasetOk && codeOk && lastRunOk);
+    updateProgress();
+    if(completed.validate){
+      print("Lab validation passed: dataset and scorer are ready.", "line-ok");
+    }else{
+      print("Validation incomplete. Check dataset schema, scorer logic and run output.", "line-warn");
+    }
+  }
+
+  function updateProgress(){
+    var total = Object.keys(completed).length;
+    var done = Object.keys(completed).filter(function(key){ return completed[key]; }).length;
+    document.getElementById("progressText").textContent = done + " / " + total;
+    document.getElementById("progressFill").style.width = Math.round(done / total * 100) + "%";
+    Object.keys(completed).forEach(function(key){
+      var node = document.querySelector('[data-step="' + key + '"]');
+      if(node) node.classList.toggle("is-done", completed[key]);
+    });
+  }
+
+  function setTab(name){
+    document.querySelectorAll(".tab").forEach(function(tab){
+      tab.classList.toggle("is-active", tab.getAttribute("data-tab") === name);
+    });
+    document.querySelectorAll(".view").forEach(function(view){
+      view.classList.toggle("is-active", view.id === name + "View");
+    });
+    if(name === "terminal") terminalInput.focus();
+  }
+
+  function listFiles(){
+    return Object.keys(files).join("\n");
+  }
+
+  function handleCommand(command){
+    var raw = command.trim();
+    if(!raw) return;
+    printRaw('<span class="prompt">$ ' + escapeHtml(raw) + '</span>');
+    var parts = raw.split(/\\s+/);
+    var cmd = parts[0].toLowerCase();
+    var arg = parts.slice(1).join(" ");
+    if(cmd === "help"){
+      print("Commands: help, ls, pwd, cat <file>, edit <file>, run, node main.js, check, progress, clear, reset");
+    }else if(cmd === "ls"){
+      print(listFiles());
+    }else if(cmd === "pwd"){
+      print("/home/student/koffi-lab");
+    }else if(cmd === "cat"){
+      if(files[arg]) print(files[arg]);
+      else print("File not found: " + arg, "line-error");
+    }else if(cmd === "edit"){
+      if(arg.indexOf("dataset") >= 0){ setTab("datasets"); }
+      else { setTab("editor"); }
+    }else if(cmd === "run" || raw === "node main.js" || raw === "node workspace/main.js"){
+      runCode();
+    }else if(cmd === "check"){
+      validateLab();
+    }else if(cmd === "progress"){
+      var done = Object.keys(completed).filter(function(key){ return completed[key]; }).length;
+      print(done + " of 4 steps complete.");
+    }else if(cmd === "clear"){
+      terminalOutput.innerHTML = "";
+    }else if(cmd === "reset"){
+      resetAll();
+      print("Workspace reset.", "line-ok");
+    }else{
+      print("Command not found: " + cmd + ". Type help.", "line-error");
+    }
+  }
+
+  function resetAll(){
+    files["workspace/main.js"] = defaultCode;
+    files["datasets/kubernetes_eval.json"] = JSON.stringify(defaultDataset, null, 2);
+    completed = { dataset:false, score:false, run:false, validate:false };
+    lastRunOk = false;
+    syncEditors();
+    updateProgress();
+  }
+
+  function bootTerminal(){
+    print("Koffi Academy Code Workstation");
+    print("Runtime: Browser JavaScript sandbox", "line-muted");
+    print("Workspace mounted at /home/student/koffi-lab", "line-muted");
+    print("");
+    print("Type help, run, or check to begin.", "line-ok");
+  }
+
+  document.querySelectorAll(".tab").forEach(function(tab){
+    tab.addEventListener("click", function(){ setTab(tab.getAttribute("data-tab")); });
+  });
+  document.querySelectorAll("[data-open-tab]").forEach(function(btn){
+    btn.addEventListener("click", function(){ setTab(btn.getAttribute("data-open-tab")); });
+  });
+  document.getElementById("terminalForm").addEventListener("submit", function(event){
+    event.preventDefault();
+    handleCommand(terminalInput.value);
+    terminalInput.value = "";
+  });
+  document.getElementById("runCode").addEventListener("click", function(){ setTab("terminal"); runCode(); });
+  document.getElementById("resetCode").addEventListener("click", function(){ files["workspace/main.js"] = defaultCode; syncEditors(); print("main.js reset.", "line-ok"); });
+  document.getElementById("formatCode").addEventListener("click", function(){ codeEditor.value = codeEditor.value.replace(/\\t/g, "  ").trim() + "\n"; saveCode(); });
+  document.getElementById("saveDataset").addEventListener("click", saveDataset);
+  document.getElementById("validateDataset").addEventListener("click", saveDataset);
+  document.getElementById("resetDataset").addEventListener("click", function(){ files["datasets/kubernetes_eval.json"] = JSON.stringify(defaultDataset, null, 2); syncEditors(); print("Dataset reset.", "line-ok"); });
+  codeEditor.addEventListener("input", saveCode);
+  datasetEditor.addEventListener("input", updateDatasetMetrics);
+  document.getElementById("progressBtn").addEventListener("click", function(){ document.getElementById("instructions").scrollIntoView({behavior:"smooth",block:"start"}); });
+  function hideInstructions(){
+    document.getElementById("instructions").classList.toggle("is-hidden", true);
+    document.getElementById("toggleInstructions").innerHTML = '<i class="fa-solid fa-eye"></i> Show Instructions';
+  }
+  document.getElementById("closeInstructions").addEventListener("click", hideInstructions);
+  document.getElementById("toggleInstructions").addEventListener("click", function(){
+    var panel = document.getElementById("instructions");
+    var hidden = panel.classList.toggle("is-hidden");
+    this.innerHTML = hidden ? '<i class="fa-solid fa-eye"></i> Show Instructions' : '<i class="fa-solid fa-eye-slash"></i> Hide Instructions';
+  });
+  document.getElementById("openHelp").addEventListener("click", function(){ document.getElementById("helpPanel").classList.add("is-open"); });
+  document.getElementById("closeHelp").addEventListener("click", function(){ document.getElementById("helpPanel").classList.remove("is-open"); });
+  document.getElementById("nextHint").addEventListener("click", function(){
+    hintIndex = (hintIndex + 1) % hints.length;
+    document.getElementById("hintText").textContent = hints[hintIndex];
+  });
+
+  syncEditors();
+  bootTerminal();
+  updateProgress();
+})();
+</script>
+</body>
+</html>
