@@ -1453,7 +1453,7 @@ function pairRow(a, b) {
 }
 
 function openModal(id) {
-  if (id === 'create-pipeline') { window.location.href = 'cicd-pipeline-demo.html'; return; }
+  if (id === 'create-pipeline') { window.location.href = '/cicd-pipeline-demo'; return; }
   activeCard = id === 'custom' ? null : ACTIONS.find(function(a){ return a.id===id; });
   document.getElementById('actionModal').classList.toggle('modal-wide', activeCard && activeCard.id === 'scale-deploy');
   var title = activeCard ? (activeCard.titleKey[lang]||activeCard.titleKey.de) : t('btn.newAction');
