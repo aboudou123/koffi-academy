@@ -1603,6 +1603,8 @@ function updateUserUI(user) {
 }
 
 function initFirebaseAuth() {
+  /* Sign out any existing Firebase session so the lock always shows on page load.
+     isAuthenticated is only set to true after explicit sign-in via the lock modal. */
   Promise.all([
     import('https://www.gstatic.com/firebasejs/' + FIREBASE_VER + '/firebase-app.js'),
     import('https://www.gstatic.com/firebasejs/' + FIREBASE_VER + '/firebase-auth.js'),
@@ -1611,11 +1613,8 @@ function initFirebaseAuth() {
     var appMod = mods[0]; var authMod = mods[1]; var cfg = mods[2];
     var fbApp = appMod.getApps().length ? appMod.getApp() : appMod.initializeApp(cfg.firebaseConfig);
     var fbAuth = authMod.getAuth(fbApp);
-    authMod.onAuthStateChanged(fbAuth, function(user) {
-      isAuthenticated = !!user;
-      if (user) updateUserUI(user);
-    });
-  }).catch(function() { /* Firebase unavailable — auth wall stays active */ });
+    authMod.signOut(fbAuth).catch(function(){});
+  }).catch(function(){});
 }
 
 /* ─── openModal: auth gate ─────────────────────────────────────────────────── */
