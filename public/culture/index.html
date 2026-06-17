@@ -6,14 +6,14 @@
   <title>Culture | Koffi Academy</title>
   <meta name="description" content="Culture bei Koffi Academy: ein eigener Bereich für Integration, deutsche Gesellschaft und Einbürgerungstest-Vorbereitung.">
   <meta name="theme-color" content="#06243a">
-  <link rel="shortcut icon" href="assets/images/logo.png">
+  <link rel="shortcut icon" href="/assets/images/logo.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/responsive.css">
-  <link rel="stylesheet" href="assets/css/modern.css">
-  <link rel="stylesheet" href="assets/css/modern-header.css">
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+  <link rel="stylesheet" href="/assets/css/modern.css">
+  <link rel="stylesheet" href="/assets/css/modern-header.css">
   <style>
     :root{--culture-navy:#06243a;--culture-wine:#6f1e34;--culture-gold:#f2c94c;--culture-green:#1f9d68;--culture-bg:#f6f8fb;--culture-text:#102033;--culture-muted:#5c6b7d;--culture-border:#dce5ee}
     body{background:var(--culture-bg);color:var(--culture-text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
@@ -79,12 +79,12 @@
   <div class="page-main">
     <header class="kh">
       <div class="kh__in">
-        <a class="kh__brand" href="index.html">
+        <a class="kh__brand" href="/">
           <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
           <span class="kh__name">Koffi Academy</span>
         </a>
         <nav class="kh__nav">
-          <a href="index.html" data-i18n="navHome">Startseite</a>
+          <a href="/" data-i18n="navHome">Startseite</a>
           <span class="kh__drop"><span class="kh__droplabel" data-i18n="navCourses">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire" data-i18n="navLab">Labore</a><a href="/courses/courses" data-i18n="navCatalog">Kurskatalog</a><a href="/idp-demo" data-i18n="navDevPortal">Dev Portal</a></span></span>
           <a href="/blog" data-i18n="navBlog">Blog</a>
           <a href="/culture" class="active" data-i18n="navCulture">Kultur</a>
@@ -130,7 +130,7 @@
           </div>
           <div class="culture-feature">
             <figure class="culture-image">
-              <img src="assets/images/einbuergerung-passport-training.png" alt="Einbürgerungstest Training Illustration">
+              <img src="/assets/images/einbuergerung-passport-training.png" alt="Einbürgerungstest Training Illustration">
             </figure>
             <article class="culture-panel">
               <span class="culture-pill"><i class="fa-solid fa-passport"></i> <span data-i18n="panelPill">Kultur-Tool</span></span>
@@ -151,7 +151,7 @@
 
     <footer class="culture-footer">
       <div class="culture-wrap">
-        <p data-i18n-html="footerCopy">Copyright &copy; 2026 <a href="index.html">Koffi Academy</a> · <a href="culture/einbuergerungstest.html">Einbürgerungstest Training</a></p>
+        <p data-i18n-html="footerCopy">Copyright &copy; 2026 <a href="/">Koffi Academy</a> · <a href="culture/einbuergerungstest.html">Einbürgerungstest Training</a></p>
       </div>
     </footer>
   </div>
@@ -194,6 +194,6 @@
     document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
     document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';setCultureLang(I18N_CULTURE[l]?l:'de');});
   </script>
-  <script src="assets/js/mobile-nav.js"></script>
+  <script src="/assets/js/mobile-nav.js"></script>
 </body>
 </html>
