@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Koffi Academy | Einbürgerungstest Training</title>
+  <meta name="description" content="Interaktives Koffi Academy Training für den deutschen Einbürgerungstest mit Lernmodus, Prüfungsmodus, Fortschritt, Favoriten und Wiederholung.">
+  <meta name="theme-color" content="#06243a">
+  <link rel="shortcut icon" href="/assets/images/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+  <link rel="stylesheet" href="/assets/css/modern.css">
+  <link rel="stylesheet" href="/assets/css/modern-header.css">
+  <link rel="stylesheet" href="/assets/css/einbuergerungstest.css?v=6">
+</head>
+<body>
+  <header class="kh">
+    <div class="kh__in">
+      <a class="kh__brand" href="/" aria-label="Koffi Academy Startseite">
+        <span class="kh__mark">
+          <svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="26" cy="9" r="2.7" fill="#07294d"/>
+            <circle cx="26" cy="31" r="2.7" fill="#07294d"/>
+            <circle cx="15" cy="20" r="2.2" fill="#07294d"/>
+          </svg>
+        </span>
+        <span class="kh__name">Koffi Academy</span>
+      </a>
+      <nav class="kh__nav" aria-label="Hauptnavigation">
+        <a href="/" data-i18n="nav.home">Startseite</a>
+        <span class="kh__drop"><span class="kh__droplabel" data-i18n="nav.courses">Kurse</span><i class="fa-solid fa-angle-down" aria-hidden="true"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses" data-i18n="nav.catalog">Kurskatalog</a><a href="/idp-demo" data-i18n="navDevPortal">Dev Portal</a></span></span>
+        <a href="/blog">Blog</a>
+        <a href="/culture" class="active" data-i18n="nav.culture">Culture</a>
+        <a href="/koffi-profile" data-i18n="nav.about">Über mich</a>
+        <span class="kh__auth"><a class="kh__login" href="/login" data-i18n="nav.login">Anmelden</a><a class="kh__btn" href="/register" data-i18n="nav.register">Registrieren</a></span>
+      </nav>
+      <div class="ebt-lang" id="ebtLang">
+        <button class="ebt-lang__button" type="button" id="ebtLangBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Sprache wählen" data-i18n-aria-label="lang.aria">
+          <span class="ebt-lang__flag" id="ebtLangFlag" aria-hidden="true">DE</span>
+          <span class="ebt-lang__code" id="ebtLangCode">DE</span>
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="ebt-lang__menu" role="listbox" aria-label="Sprache wählen" data-i18n-aria-label="lang.aria">
+          <button class="ebt-lang__option is-active" type="button" role="option" aria-selected="true" data-lang="de">
+            <span class="ebt-lang__flag" aria-hidden="true">DE</span>
+            <span>Deutsch</span>
+            <strong>DE</strong>
+          </button>
+          <button class="ebt-lang__option" type="button" role="option" aria-selected="false" data-lang="fr">
+            <span class="ebt-lang__flag" aria-hidden="true">FR</span>
+            <span>Français</span>
+            <strong>FR</strong>
+          </button>
+          <button class="ebt-lang__option" type="button" role="option" aria-selected="false" data-lang="en">
+            <span class="ebt-lang__flag" aria-hidden="true">EN</span>
+            <span>English</span>
+            <strong>EN</strong>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="ebt-hero" id="top">
+      <div class="ebt-wrap ebt-hero__grid">
+        <div class="ebt-hero__content">
+          <p class="ebt-eyebrow" data-i18n="hero.eyebrow">Deutsch · Integration · Prüfungsvorbereitung</p>
+          <h1 data-i18n="hero.title">Einbürgerungstest Training</h1>
+          <p class="ebt-hero__lead" data-i18n="hero.lead">Lerne die offiziellen Themen strukturiert, wiederhole deine Fehler gezielt und trainiere im Prüfungsmodus mit Timer. Dein Fortschritt bleibt lokal auf diesem Gerät gespeichert.</p>
+          <div class="ebt-hero__actions">
+            <button class="ebt-btn ebt-btn--primary" type="button" id="startLearningHero">
+              <i class="fa-solid fa-play" aria-hidden="true"></i>
+              <span data-i18n="button.startLearning">Training starten</span>
+            </button>
+            <button class="ebt-btn ebt-btn--light" type="button" id="startExamHero">
+              <i class="fa-solid fa-stopwatch" aria-hidden="true"></i>
+              <span data-i18n="button.examMode">Prüfungsmodus</span>
+            </button>
+          </div>
+          <div class="ebt-hero__stats" aria-label="Fortschrittsübersicht">
+            <div><strong id="heroQuestionTotal">296</strong><span data-i18n="stat.questions">Fragen</span></div>
+            <div><strong id="heroProgress">0%</strong><span data-i18n="stat.progress">Fortschritt</span></div>
+            <div><strong id="heroXp">0</strong><span>XP</span></div>
+          </div>
+        </div>
+        <aside class="ebt-hero__visual" aria-label="Einbürgerungstest Illustration" data-i18n-aria-label="hero.visualAria">
+          <figure class="ebt-passport-card">
+            <img src="/assets/images/einbuergerung-passport-training.png" alt="Pädagogische Illustration für das Einbürgerungstest Training" data-i18n-alt="hero.passportAlt">
+            <figcaption>
+              <strong data-i18n="hero.visualTitle">Training mit klarem Prüfungsfokus</strong>
+              <span data-i18n="hero.visualText">296 Fragen, Simulation und persönliche Wiederholung.</span>
+            </figcaption>
+          </figure>
+        </aside>
+      </div>
+    </section>
+
+    <section class="ebt-dashboard" aria-labelledby="dashboardTitle">
+      <div class="ebt-wrap">
+        <details class="ebt-score-panel">
+          <summary class="ebt-score-panel__summary">
+            <span class="ebt-score-panel__title">
+              <span class="ebt-eyebrow" data-i18n="dashboard.eyebrow">Dashboard</span>
+              <strong id="dashboardTitle" data-i18n="dashboard.title">Dein Lernstand</strong>
+            </span>
+            <span class="ebt-score-panel__quick" aria-hidden="true">
+              <span>
+                <strong id="scorePanelProgress">0%</strong>
+                <small data-i18n="dashboard.totalProgress">Gesamtfortschritt</small>
+              </span>
+              <span>
+                <strong id="scorePanelReview">0</strong>
+                <small data-i18n="dashboard.review">Fehler zur Wiederholung</small>
+              </span>
+            </span>
+            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          </summary>
+          <div class="ebt-score-panel__body">
+            <div class="ebt-metrics">
+              <article class="ebt-metric">
+                <span data-i18n="dashboard.totalProgress">Gesamtfortschritt</span>
+                <strong id="dashProgress">0%</strong>
+              </article>
+              <article class="ebt-metric">
+                <span data-i18n="dashboard.successRate">Erfolgsquote</span>
+                <strong id="dashSuccessRate">0%</strong>
+              </article>
+              <article class="ebt-metric">
+                <span data-i18n="dashboard.remaining">Offene Fragen</span>
+                <strong id="dashRemaining">296</strong>
+              </article>
+              <article class="ebt-metric">
+                <span data-i18n="dashboard.review">Fehler zur Wiederholung</span>
+                <strong id="dashReview">0</strong>
+              </article>
+              <article class="ebt-metric">
+                <span>XP</span>
+                <strong id="dashXp">0</strong>
+              </article>
+              <article class="ebt-metric">
+                <span data-i18n="dashboard.streak">Tagesserie</span>
+                <strong id="dashStreak">0</strong>
+              </article>
+            </div>
+            <div class="ebt-dashboard__bar">
+              <div><span data-i18n="dashboard.badge">Aktueller Badge</span><strong id="dashBadge">Noch kein Badge</strong></div>
+              <div><span data-i18n="dashboard.avgExam">Durchschnitt im Prüfungsmodus</span><strong id="dashAverageExam">0%</strong></div>
+              <button class="ebt-btn ebt-btn--dark" type="button" id="continueBtn">
+                <i class="fa-solid fa-forward" aria-hidden="true"></i>
+                <span data-i18n="button.continue">Weiterlernen</span>
+              </button>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="ebt-app" aria-labelledby="trainerTitle">
+      <div class="ebt-wrap">
+        <div class="ebt-section-head">
+          <p class="ebt-eyebrow" data-i18n="trainer.eyebrow">Training</p>
+          <h2 id="trainerTitle" data-i18n="trainer.title">Lernen, üben, bestehen</h2>
+        </div>
+
+        <div class="ebt-layout">
+          <aside class="ebt-sidebar" aria-label="Lernsteuerung">
+            <div class="ebt-control-group">
+              <h3 data-i18n="sidebar.mode">Modus</h3>
+              <div class="ebt-mode-list" role="group" aria-label="Trainingsmodus auswählen">
+                <button class="ebt-mode is-active" type="button" data-mode="learn"><i class="fa-solid fa-book-open" aria-hidden="true"></i><span data-i18n="mode.learn">Lernmodus</span></button>
+                <button class="ebt-mode" type="button" data-mode="exam"><i class="fa-solid fa-stopwatch" aria-hidden="true"></i><span data-i18n="mode.exam">Prüfung</span></button>
+                <button class="ebt-mode" type="button" data-mode="errors"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><span data-i18n="mode.errors">Meine Fehler</span></button>
+                <button class="ebt-mode" type="button" data-mode="difficult"><i class="fa-solid fa-mountain" aria-hidden="true"></i><span data-i18n="mode.difficult">Schwierige Fragen</span></button>
+                <button class="ebt-mode" type="button" data-mode="favorites"><i class="fa-solid fa-star" aria-hidden="true"></i><span data-i18n="mode.favorites">Favoriten</span></button>
+                <button class="ebt-mode" type="button" data-mode="unseen"><i class="fa-solid fa-eye-slash" aria-hidden="true"></i><span data-i18n="mode.unseen">Noch nicht gesehen</span></button>
+              </div>
+            </div>
+
+            <div class="ebt-control-group">
+              <h3 data-i18n="filters.title">Suche und Filter</h3>
+              <label class="ebt-label" for="searchInput" data-i18n="filters.keyword">Suchbegriff</label>
+              <div class="ebt-search-wrap">
+                <input class="ebt-input" id="searchInput" type="search" placeholder="Bundestag, Grundgesetz, Wahl..." data-i18n-placeholder="filters.placeholder">
+              </div>
+              <label class="ebt-label" for="statusFilter" data-i18n="filters.status">Status</label>
+              <select class="ebt-input" id="statusFilter">
+                <option value="all" data-i18n="filters.allQuestions">Alle Fragen</option>
+                <option value="success" data-i18n="filters.success">Richtig beantwortet</option>
+                <option value="wrong" data-i18n="filters.wrong">Falsch beantwortet</option>
+                <option value="favorites" data-i18n="filters.favorites">Favoriten</option>
+                <option value="unseen" data-i18n="filters.unseen">Noch nicht gesehen</option>
+              </select>
+              <label class="ebt-label" for="categoryFilter" data-i18n="filters.category">Kategorie</label>
+              <select class="ebt-input" id="categoryFilter">
+                <option value="all" data-i18n="filters.allCategories">Alle Kategorien</option>
+              </select>
+              <p class="ebt-result-count" id="resultCount" aria-live="polite">0 Fragen verfügbar</p>
+            </div>
+
+            <div class="ebt-control-group">
+              <h3 data-i18n="sidebar.actions">Aktionen</h3>
+              <button class="ebt-btn ebt-btn--sidebar" type="button" id="resetSessionBtn">
+                <i class="fa-solid fa-shuffle" aria-hidden="true"></i>
+                <span data-i18n="button.newSeries">Neue Serie</span>
+              </button>
+              <button class="ebt-btn ebt-btn--sidebar" type="button" id="resetProgressBtn">
+                <i class="fa-solid fa-eraser" aria-hidden="true"></i>
+                <span data-i18n="button.resetProgress">Fortschritt zurücksetzen</span>
+              </button>
+            </div>
+          </aside>
+
+          <section class="ebt-trainer" aria-label="Zone de question">
+            <div class="ebt-exam-bar" id="examBar" hidden>
+              <div class="ebt-exam-bar__timer">
+                <i class="fa-solid fa-stopwatch" aria-hidden="true"></i>
+                <strong id="examTimer">60:00</strong>
+              </div>
+              <div class="ebt-exam-bar__sep"></div>
+              <div class="ebt-exam-bar__count">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                <span id="examAnswered">0 / 33 beantwortet</span>
+              </div>
+            </div>
+
+            <div class="ebt-progress" aria-label="Progression de la série">
+              <span id="questionCounter">Frage 1 / 1</span>
+              <div class="ebt-progress__track"><span id="progressBar"></span></div>
+            </div>
+
+            <article class="ebt-question-card" id="questionCard">
+              <div class="ebt-question-card__top">
+                <div>
+                  <span class="ebt-pill" id="questionCategory">Kategorie</span>
+                  <span class="ebt-pill ebt-pill--soft" id="questionDifficulty">normal</span>
+                </div>
+                <button class="ebt-favorite" type="button" id="favoriteBtn" aria-label="Frage als Favorit markieren">
+                  <i class="fa-regular fa-star" aria-hidden="true"></i>
+                </button>
+              </div>
+
+              <h3 id="questionText">Die Fragen werden geladen...</h3>
+              <div class="ebt-options" id="optionsList" role="radiogroup" aria-label="Antwortoptionen"></div>
+              <div class="ebt-feedback" id="feedbackBox" aria-live="polite"></div>
+              <div class="ebt-question-card__actions">
+                <button class="ebt-btn ebt-btn--secondary" type="button" id="prevBtn" disabled>
+                  <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                  <span data-i18n="button.previous">Vorherige Frage</span>
+                </button>
+                <button class="ebt-btn ebt-btn--primary" type="button" id="nextBtn" disabled>
+                  <span data-i18n="button.next">Nächste Frage</span>
+                  <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </article>
+
+            <section class="ebt-exam-results" id="examResults" hidden aria-live="polite">
+              <div class="ebt-result-head">
+                <p class="ebt-eyebrow" data-i18n="exam.resultEyebrow">Prüfungsergebnis</p>
+                <h3 id="examScoreTitle">Score</h3>
+                <p id="examScoreText"></p>
+              </div>
+              <div class="ebt-result-list" id="examResultList"></div>
+              <button class="ebt-btn ebt-btn--dark" type="button" id="restartExamBtn" data-i18n="button.restartExam">Prüfung neu starten</button>
+            </section>
+          </section>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="ebt-footer">
+    <div class="ebt-wrap">
+      <div class="ebt-footer__top">
+        <div class="ebt-footer__brand">
+          <a class="ebt-footer__logo" href="/" aria-label="Koffi Academy Startseite">
+            <span class="ebt-footer__mark">
+              <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="26" cy="9" r="2.7" fill="currentColor"/>
+                <circle cx="26" cy="31" r="2.7" fill="currentColor"/>
+                <circle cx="15" cy="20" r="2.2" fill="currentColor"/>
+              </svg>
+            </span>
+            <span>Koffi Academy</span>
+          </a>
+          <p data-i18n="footer.about">Ein strukturierter Browser-Trainer für den Einbürgerungstest: lernen, wiederholen, prüfen und Fortschritt lokal speichern.</p>
+          <div class="ebt-footer__badges" aria-label="Training Merkmale">
+            <span data-i18n="footer.badgeQuestions">296 Fragen</span>
+            <span data-i18n="footer.badgeOffline">Offline-fähig</span>
+            <span data-i18n="footer.badgeLocal">Ohne Backend</span>
+          </div>
+        </div>
+
+        <div class="ebt-footer__col">
+          <h3>Training</h3>
+          <ul>
+            <li><a href="#trainerTitle" data-i18n="footer.trainingLink">Lernmodus</a></li>
+            <li><a href="#dashboardTitle">Dashboard</a></li>
+            <li><a href="#faqTitle">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div class="ebt-footer__col">
+          <h3>Koffi Academy</h3>
+          <ul>
+            <li><a href="/courses/courses" data-i18n="nav.catalog">Kurskatalog</a></li>
+            <li><a href="/laboratoire">Laboratoire</a></li>
+            <li><a href="/culture" data-i18n="nav.culture">Culture</a></li>
+            <li><a href="/koffi-profile" data-i18n="nav.about">Über mich</a></li>
+          </ul>
+        </div>
+
+        <div class="ebt-footer__col">
+          <h3 data-i18n="footer.contact">Kontakt</h3>
+          <ul>
+            <li><a href="/contact.html" data-i18n="footer.support">Support kontaktieren</a></li>
+            <li><a href="/faq" data-i18n="faq.title">Häufige Fragen</a></li>
+            <li><a href="mailto:info@lingenieur.de">info@lingenieur.de</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="ebt-footer__bottom">
+        <p data-i18n="footer.rights">&copy; 2026 Koffi Academy. Alle Rechte vorbehalten.</p>
+        <a href="#top" data-i18n="footer.backTop">Zurück nach oben</a>
+      </div>
+    </div>
+<div class="footer-legal" style="border-top:1px solid rgba(255,255,255,.10);background:rgba(2,12,26,.30);padding:14px 0 16px"><div class="footer-legal__inner" style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 18px;text-align:center"><span class="footer-legal__brand" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.68);font-weight:500">&copy; 2026 Koffi Academy</span><nav class="footer-legal__links" aria-label="Rechtliches" style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px"><a href="/impressum" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.84);font-weight:700;letter-spacing:.01em;text-decoration:none;transition:color .16s ease">Impressum</a><span class="footer-legal__sep" aria-hidden="true" style="color:rgba(255,255,255,.30);font-size:11px">·</span><a href="/datenschutz" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.84);font-weight:700;letter-spacing:.01em;text-decoration:none;transition:color .16s ease">Datenschutz</a></nav></div></div>
+</footer>
+
+  <script src="/assets/js/jquery.min.js"></script>
+  <script src="/assets/js/bootstrap.min.js"></script>
+  <script src="/assets/js/wow.min.js"></script>
+  <script src="/assets/js/einbuergerungstest-data.js"></script>
+  <script src="/assets/js/einbuergerungstest-question-i18n.js"></script>
+  <script src="/assets/js/einbuergerungstest.js?v=2"></script>
+  <script src="/assets/js/kontakt-popup.js"></script>
+  <script src="/assets/js/announce.js"></script>
+  <script src="/assets/js/mobile-nav.js"></script>
+</body>
+</html>
