@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Platform Engineering Fundamentals — Koffi Academy</title>
+<link rel="shortcut icon" href="/assets/images/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,::after,::before{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --nav:52px;
+  --side:340px;
+  --accent:#6366f1;
+  --darker:#04182e;
+  --line:rgba(255,255,255,.09);
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:Inter,system-ui,sans-serif;background:#0f172a}
+
+/* ── Nav ── */
+.pnav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav);
+  background:var(--darker);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;padding:0 18px;z-index:200;
+}
+.pnav__back{
+  display:inline-flex;align-items:center;gap:7px;
+  color:#94a3b8;font-size:12.5px;font-weight:500;
+  text-decoration:none;padding:5px 10px;border-radius:6px;
+  flex-shrink:0;transition:.15s;
+}
+.pnav__back:hover{background:rgba(255,255,255,.06);color:#fff}
+.pnav__back i{font-size:11px}
+.pnav__sep{width:1px;height:22px;background:var(--line);flex-shrink:0}
+.pnav__logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0}
+.pnav__logo img{height:26px}
+.pnav__title{
+  flex:1;min-width:0;font-size:13px;font-weight:600;color:#e2e8f0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+/* Prev / Next in nav */
+.pnav__lnav{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.lnav-btn{
+  width:30px;height:30px;border-radius:7px;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  color:#94a3b8;cursor:pointer;font-size:12px;transition:.14s;
+}
+.lnav-btn:hover:not(:disabled){background:rgba(255,255,255,.12);color:#fff}
+.lnav-btn:disabled{opacity:.3;cursor:default}
+/* Progress */
+.pnav__prog{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.pnav__prog-bar{width:100px;height:3px;background:rgba(255,255,255,.1);border-radius:2px}
+.pnav__prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:.4s}
+.pnav__prog-label{font-size:11px;color:#64748b;white-space:nowrap}
+
+/* ── Layout ── */
+.layout{display:grid;grid-template-columns:1fr var(--side);height:100vh;padding-top:var(--nav)}
+
+/* ── Main column ── */
+.main{display:flex;flex-direction:column;overflow-y:auto;background:#fff}
+
+/* ── Video shell ── */
+.vshell{
+  background:#000;position:relative;width:100%;
+  aspect-ratio:16/9;max-height:calc(100vh - var(--nav) - 156px);
+  flex-shrink:0;
+}
+.vshell video{position:absolute;inset:0;width:100%;height:100%;display:block;background:#000}
+
+/* Placeholder (no video / error) */
+.vready{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;background:#000;
+}
+.vready__icon{
+  width:68px;height:68px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.22);
+}
+.vready__icon i{font-size:24px;color:var(--accent)}
+.vready__msg{font-size:13px;color:#334155;text-align:center;max-width:260px;line-height:1.5}
+
+/* ── Prev/Next row (below video) ── */
+.lnav-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 22px;border-bottom:1px solid #f1f5f9;background:#f8fafc;
+  flex-shrink:0;
+}
+.lnav-wide{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 16px;border-radius:7px;
+  font-size:12.5px;font-weight:600;
+  border:1px solid #e2e8f0;color:#475569;
+  background:#fff;cursor:pointer;font-family:inherit;transition:.13s;
+}
+.lnav-wide:hover:not(:disabled){background:#f1f5f9;border-color:#cbd5e1;color:#0f172a}
+.lnav-wide:disabled{opacity:.35;cursor:default}
+.lnav-wide--next{margin-left:auto}
+.lnav-wide i{font-size:11px}
+
+/* ── Lesson info ── */
+.linfo{padding:20px 26px 16px;border-bottom:1px solid #f1f5f9}
+.linfo__badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--accent);margin-bottom:9px;
+}
+.linfo__title{font-size:1.15rem;font-weight:700;color:#0f172a;line-height:1.35;margin-bottom:7px}
+.linfo__meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:11.5px;color:#64748b;margin-bottom:12px}
+.linfo__meta i{margin-right:4px}
+.linfo__desc{font-size:13.5px;color:#475569;line-height:1.7;max-width:640px}
+.resources{padding:12px 26px;display:flex;gap:8px;flex-wrap:wrap}
+.res-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:6px;border:1px solid #e2e8f0;
+  font-size:12px;font-weight:500;color:#475569;
+  background:#fff;cursor:pointer;text-decoration:none;font-family:inherit;transition:.13s;
+}
+.res-btn:hover{background:#f8fafc;border-color:#cbd5e1;color:#0f172a}
+.res-btn i{font-size:12px}
+
+/* ── Curriculum sidebar ── */
+.curriculum{
+  background:var(--darker);border-left:1px solid var(--line);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.cur-head{padding:14px 16px 12px;border-bottom:1px solid var(--line);flex-shrink:0}
+.cur-head h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;margin-bottom:10px}
+.cur-prog-row{display:flex;align-items:center;gap:8px}
+.cur-prog-bar{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.09);overflow:hidden}
+.cur-prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:.4s}
+.cur-prog-label{font-size:11px;color:#475569;white-space:nowrap}
+.chapters{overflow-y:auto;flex:1}
+.chap-btn{
+  width:100%;display:flex;align-items:flex-start;gap:10px;
+  padding:13px 16px;background:none;border:none;
+  border-bottom:1px solid var(--line);cursor:pointer;text-align:left;transition:.12s;
+}
+.chap-btn:hover{background:rgba(255,255,255,.035)}
+.chap-btn.open{background:rgba(99,102,241,.07)}
+.chap-num{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;margin-top:1px;
+  background:rgba(99,102,241,.15);color:var(--accent);font-size:11px;font-weight:700;
+}
+.chap-info{flex:1;min-width:0}
+.chap-name{font-size:12.5px;font-weight:600;color:#e2e8f0;line-height:1.35;margin-bottom:3px}
+.chap-sub{font-size:11px;color:#475569}
+.chap-arrow{color:#334155;font-size:10px;margin-top:5px;flex-shrink:0;transition:transform .18s}
+.chap-btn.open .chap-arrow{transform:rotate(180deg)}
+.lessons{display:none}
+.lessons.open{display:block}
+.litem{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 16px 9px 52px;
+  cursor:pointer;border-bottom:1px solid rgba(255,255,255,.035);transition:.1s;
+}
+.litem:hover{background:rgba(255,255,255,.04)}
+.litem.active{background:rgba(99,102,241,.1);border-left:2px solid var(--accent);padding-left:50px}
+.litem.done .li-icon{color:#22c55e}
+.li-icon{font-size:12px;color:#334155;flex-shrink:0;width:15px;text-align:center}
+.litem.active .li-icon{color:var(--accent)}
+.li-title{flex:1;min-width:0;font-size:12px;color:#64748b;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.litem.active .li-title{color:#e2e8f0;font-weight:500}
+.litem.done .li-title{color:#334155}
+.li-right{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.li-dur{font-size:10.5px;color:#334155}
+.badge{font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 5px;border-radius:3px;letter-spacing:.04em}
+.badge-type{background:rgba(99,102,241,.18);color:var(--accent)}
+
+/* ── Mobile ── */
+@media(max-width:900px){
+  html,body{overflow:auto}
+  .layout{grid-template-columns:1fr;height:auto;padding-top:var(--nav)}
+  .main{overflow-y:visible}
+  .vshell{max-height:56vw}
+  .curriculum{height:auto;overflow:visible}
+  .chapters{overflow-y:visible;max-height:none}
+  .pnav__title{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="pnav">
+  <a class="pnav__back" href="/courses/courses">
+    <i class="fa-solid fa-arrow-left"></i>Kurse
+  </a>
+  <div class="pnav__sep"></div>
+  <a class="pnav__logo" href="/"><img src="/assets/images/logo.png" alt="Koffi Academy"></a>
+  <span class="pnav__title" id="navTitle">Platform Engineering Fundamentals</span>
+  <div class="pnav__lnav">
+    <button class="lnav-btn" id="prevBtn" onclick="prevLesson()" title="Vorherige Lektion" disabled>
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <button class="lnav-btn" id="nextBtn" onclick="nextLesson()" title="Nächste Lektion">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+  <div class="pnav__prog">
+    <div class="pnav__prog-bar"><div class="pnav__prog-fill" id="topFill"></div></div>
+    <span class="pnav__prog-label" id="topLabel">—</span>
+  </div>
+</nav>
+
+<!-- ── Layout ── -->
+<div class="layout">
+
+  <!-- LEFT: video + info -->
+  <main class="main">
+
+    <!-- Video player -->
+    <div class="vshell">
+      <video id="vEl" controls></video>
+      <div class="vready" id="vReady">
+        <div class="vready__icon"><i class="fa-solid fa-circle-play"></i></div>
+        <p class="vready__msg" id="vMsg">Wählen Sie eine Lektion aus</p>
+      </div>
+    </div>
+
+    <!-- Prev / Next row -->
+    <div class="lnav-row">
+      <button class="lnav-wide" id="prevWide" onclick="prevLesson()" disabled>
+        <i class="fa-solid fa-arrow-left"></i>Vorherige Lektion
+      </button>
+      <button class="lnav-wide lnav-wide--next" id="nextWide" onclick="nextLesson()">
+        Nächste Lektion<i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- Lesson info -->
+    <div class="linfo">
+      <div class="linfo__badge"><i class="fa-solid fa-play"></i>&thinsp;<span id="lessonPos">—</span></div>
+      <h1 class="linfo__title" id="lessonTitle">Platform Engineering Fundamentals</h1>
+      <div class="linfo__meta">
+        <span><i class="fa-regular fa-clock"></i><span id="lessonDur">—</span></span>
+        <span><i class="fa-solid fa-signal"></i><span id="lessonLevel">Anfänger</span></span>
+        <span><i class="fa-solid fa-graduation-cap"></i>DevOps · Kubernetes · Cloud</span>
+      </div>
+      <p class="linfo__desc" id="lessonDesc">Wählen Sie eine Lektion aus dem Kursinhalt.</p>
+    </div>
+
+    <!-- Resources -->
+    <div class="resources">
+      <a class="res-btn" href="#"><i class="fa-solid fa-file-pdf"></i>Handout</a>
+      <a class="res-btn" href="#"><i class="fa-brands fa-github"></i>Code</a>
+      <a class="res-btn" href="#"><i class="fa-solid fa-link"></i>Ressourcen</a>
+    </div>
+
+  </main>
+
+  <!-- RIGHT: curriculum -->
+  <aside class="curriculum">
+    <div class="cur-head">
+      <h2>Kursinhalt</h2>
+      <div class="cur-prog-row">
+        <div class="cur-prog-bar"><div class="cur-prog-fill" id="sideFill"></div></div>
+        <span class="cur-prog-label" id="sideLabel">—</span>
+      </div>
+    </div>
+    <div class="chapters" id="chapList"></div>
+  </aside>
+</div>
+
+<script>
+/*
+ * VIDEOS — déposez vos fichiers MP4 dans :
+ *   /assets/videos/platform-engineering/
+ *
+ * Convention : m{module}-l{leçon}.mp4
+ *   Modul 1, Leçon 1 → m1-l1.mp4
+ *   Modul 2, Leçon 3 → m2-l3.mp4
+ */
+var COURSE = {
+  title: "Platform Engineering Fundamentals",
+  modules: [
+    {
+      name: "Modul 1 — Einführung",
+      lessons: [
+        {id:1, type:"video", dur:"12:04", done:true,
+         title:"Was ist Platform Engineering?",
+         video:"/assets/videos/platform-engineering/m1-l1.mp4",
+         desc:"Eine Einführung in das Konzept des Platform Engineering: Definition, Ziele und Abgrenzung zu DevOps. Wie interne Entwicklerplattformen (IDP) Teams helfen, schneller und sicherer zu arbeiten."},
+        {id:2, type:"video", dur:"8:22",  done:true,
+         title:"DevOps vs. Platform Engineering",
+         video:"/assets/videos/platform-engineering/m1-l2.mp4",
+         desc:"Abgrenzung zwischen DevOps-Kultur und Platform Engineering. Was unterscheidet einen Platform Engineer von einem DevOps Engineer und wie ergänzen sich beide Ansätze?"},
+        {id:3, type:"video", dur:"10:15", done:false,
+         title:"Golden Paths & Developer UX",
+         video:"/assets/videos/platform-engineering/m1-l3.mp4",
+         desc:"Was sind Golden Paths und wie verbessern sie die Entwicklererfahrung? Praxisnahe Beispiele aus realen Plattform-Teams."},
+        {id:4, type:"quiz",  dur:"5 min", done:false,
+         title:"Quiz — Grundlagen",
+         desc:"Testen Sie Ihr Verständnis der Grundlagen des Platform Engineering."}
+      ]
+    },
+    {
+      name: "Modul 2 — Kubernetes als Fundament",
+      lessons: [
+        {id:5, type:"video", dur:"14:33", done:false,
+         title:"Cluster-Architektur für IDPs",
+         video:"/assets/videos/platform-engineering/m2-l1.mp4",
+         desc:"Wie wird ein Kubernetes-Cluster für eine Internal Developer Platform (IDP) ausgelegt? Control Plane, Worker Nodes und Namespace-Strategie."},
+        {id:6, type:"video", dur:"11:47", done:false,
+         title:"Namespaces & RBAC",
+         video:"/assets/videos/platform-engineering/m2-l2.mp4",
+         desc:"Ressourcenisolierung mit Namespaces und Zugriffskontrolle mit RBAC. Best Practices für Produktionsumgebungen."},
+        {id:7, type:"video", dur:"9:58",  done:false,
+         title:"Helm-Charts im Unternehmen",
+         video:"/assets/videos/platform-engineering/m2-l3.mp4",
+         desc:"Wie Helm-Charts als Deployment-Standard in großen Organisationen eingesetzt werden. Wertehierarchien und Environment-Overrides."},
+        {id:8, type:"lab",   dur:"45 min",done:false,
+         title:"Praxis-Lab — kubeadm Setup",
+         desc:"Hands-on: Bootstrappen eines Kubernetes-Clusters mit kubeadm und Konfiguration für den IDP-Einsatz."}
+      ]
+    },
+    {
+      name: "Modul 3 — Backstage & Service Catalog",
+      lessons: [
+        {id:9,  type:"video", dur:"16:12", done:false,
+         title:"Backstage einrichten",
+         video:"/assets/videos/platform-engineering/m3-l1.mp4",
+         desc:"Schritt-für-Schritt: Installation und Konfiguration von Backstage als internes Entwicklerportal."},
+        {id:10, type:"video", dur:"13:08", done:false,
+         title:"Software Templates erstellen",
+         video:"/assets/videos/platform-engineering/m3-l2.mp4",
+         desc:"Erstellen von Software Templates in Backstage, die Entwickler durch den gesamten Onboarding-Prozess führen."}
+      ]
+    }
+  ]
+};
+
+var ICON = {video:"fa-solid fa-play", quiz:"fa-solid fa-clipboard-question", lab:"fa-solid fa-flask"};
+var active = 1;
+
+/* ── Helpers ── */
+function allLessons(){var a=[];COURSE.modules.forEach(function(m){a=a.concat(m.lessons);});return a;}
+function currentIdx(){return allLessons().findIndex(function(l){return l.id===active;});}
+
+/* ── Video ── */
+var vEl   = document.getElementById('vEl');
+var vReady= document.getElementById('vReady');
+var vMsg  = document.getElementById('vMsg');
+
+function loadVideo(lesson){
+  if(lesson.video){
+    vEl.src = lesson.video;
+    vEl.style.display = 'block';
+    vReady.style.display = 'none';
+    vEl.load();
+    vEl.play().catch(function(){});
+  } else {
+    vEl.style.display = 'none';
+    vMsg.textContent = lesson.type==='quiz'  ? 'Quiz – kein Video für diese Lektion'
+                     : lesson.type==='lab'   ? 'Praxis-Lab – öffnen Sie die Lab-Umgebung'
+                     : 'Video wird vorbereitet';
+    vReady.style.display = 'flex';
+  }
+}
+
+/* Auto-advance on video end */
+vEl.addEventListener('ended', function(){ nextLesson(); });
+
+/* Handle missing video file gracefully */
+vEl.addEventListener('error', function(){
+  if(!vEl.src || vEl.src === window.location.href) return;
+  vEl.style.display = 'none';
+  vMsg.textContent  = 'Video wird vorbereitet — bald verfügbar';
+  vReady.style.display = 'flex';
+});
+
+/* ── Lesson selection ── */
+function pick(id){
+  var all    = allLessons();
+  var idx    = all.findIndex(function(l){return l.id===id;});
+  var lesson = all[idx];
+  if(!lesson) return;
+  active = id;
+
+  loadVideo(lesson);
+
+  document.getElementById('lessonPos').textContent   = 'Lektion '+(idx+1)+' von '+all.length;
+  document.getElementById('lessonTitle').textContent  = lesson.title;
+  document.getElementById('lessonDur').textContent    = lesson.dur;
+  document.getElementById('lessonDesc').textContent   = lesson.desc||'';
+  document.getElementById('navTitle').textContent     = lesson.title;
+
+  var atFirst = idx === 0;
+  var atLast  = idx === all.length - 1;
+  document.getElementById('prevBtn').disabled  = atFirst;
+  document.getElementById('prevWide').disabled = atFirst;
+  document.getElementById('nextBtn').disabled  = atLast;
+  document.getElementById('nextWide').disabled = atLast;
+
+  render();
+  updateProgress();
+  document.querySelector('.main').scrollTop = 0;
+}
+
+/* ── Navigation ── */
+function prevLesson(){var idx=currentIdx();if(idx>0)pick(allLessons()[idx-1].id);}
+function nextLesson(){var idx=currentIdx();var all=allLessons();if(idx<all.length-1)pick(all[idx+1].id);}
+
+/* Keyboard: ← → */
+document.addEventListener('keydown',function(e){
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if(e.key==='ArrowLeft')  prevLesson();
+  if(e.key==='ArrowRight') nextLesson();
+});
+
+/* ── Curriculum ── */
+function render(){
+  var html='';
+  COURSE.modules.forEach(function(m,mi){
+    var done=m.lessons.filter(function(l){return l.done;}).length;
+    var open=mi===0?' open':'';
+    html+='<div class="chap">'
+      +'<button class="chap-btn'+open+'" onclick="toggleChap(this)">'
+        +'<div class="chap-num">'+(mi+1)+'</div>'
+        +'<div class="chap-info">'
+          +'<div class="chap-name">'+m.name+'</div>'
+          +'<div class="chap-sub">'+m.lessons.length+' Lektionen · '+done+'/'+m.lessons.length+' erledigt</div>'
+        +'</div>'
+        +'<i class="fa-solid fa-chevron-down chap-arrow"></i>'
+      +'</button>'
+      +'<div class="lessons'+open+'">';
+    m.lessons.forEach(function(l){
+      var cls='litem'+(l.id===active?' active':'')+(l.done?' done':'');
+      var bdg=(l.type==='quiz'||l.type==='lab')
+        ?'<span class="badge badge-type">'+l.type+'</span>':'';
+      html+='<div class="'+cls+'" onclick="pick('+l.id+')">'
+        +'<i class="li-icon '+(ICON[l.type]||ICON.video)+'"></i>'
+        +'<span class="li-title">'+l.title+'</span>'
+        +'<div class="li-right">'+bdg+'<span class="li-dur">'+l.dur+'</span></div>'
+        +'</div>';
+    });
+    html+='</div></div>';
+  });
+  document.getElementById('chapList').innerHTML=html;
+}
+
+function toggleChap(btn){
+  var open=btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open',open);
+}
+
+/* ── Progress ── */
+function updateProgress(){
+  var all=allLessons();
+  var done=all.filter(function(l){return l.done;}).length;
+  var pct=Math.round(done/all.length*100)+'%';
+  document.getElementById('topFill').style.width   = pct;
+  document.getElementById('topLabel').textContent  = done+' / '+all.length;
+  document.getElementById('sideFill').style.width  = pct;
+  document.getElementById('sideLabel').textContent = done+' / '+all.length+' erledigt';
+}
+
+/* ── Init ── */
+render();
+updateProgress();
+pick(1);
+</script>
+</body>
+</html>
