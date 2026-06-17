@@ -50,26 +50,15 @@ AddDefaultCharset UTF-8
   </IfModule>
 </FilesMatch>
 
+# Block pages that require a real backend or expose client-side pseudo-security
 <IfModule mod_rewrite.c>
   RewriteEngine On
-
-  # Block pages that require a real backend
+  RewriteRule ^sponsor/?$ pricing.html [L]
+  RewriteRule ^sponsor\.html$ pricing.html [L]
   RewriteRule ^admin/ - [F]
+  RewriteRule ^payment/(checkout|bank-transfer-request|paypal-success|paypal-cancel)\.html$ - [F]
+  RewriteRule ^dashboard\.html$ - [F]
+  RewriteRule ^article\.html$ - [F]
+  RewriteRule ^contact\.html$ - [F]
   RewriteRule ^paid-courses/ - [F]
-  RewriteRule ^payment/(checkout|bank-transfer-request|paypal-success|paypal-cancel)(\.html)?$ - [F]
-  RewriteRule ^dashboard(\.html)?$ - [F]
-  RewriteRule ^article(\.html)?$ - [F]
-  RewriteRule ^contact(\.html)?$ - [F]
-
-  # Redirect .html URLs → clean URLs (301 permanent)
-  RewriteCond %{THE_REQUEST} ^[A-Z]+ /([^?#]*)\.html [NC]
-  RewriteRule ^ /%1 [R=301,L,QSA]
-
-  # sponsor alias → /pricing
-  RewriteRule ^sponsor/?$ /pricing [R=301,L]
-
-  # Serve .html file for clean URL requests (no extension)
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^([^.]+)$ $1.html [L]
 </IfModule>
