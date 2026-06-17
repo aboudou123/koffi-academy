@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datenschutzerklärung — Koffi Academy</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="shortcut icon" href="/assets/images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/modern.css">
+  <link rel="stylesheet" href="/assets/css/modern-header.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#f8fafc;color:#1e293b;line-height:1.7;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+
+    .lp-hero{background:linear-gradient(135deg,#041a32 0%,#07294d 60%,#0e3d72 100%);padding:72px 0 56px;position:relative;overflow:hidden}
+    .lp-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 80% 50%,rgba(255,198,0,.08),transparent);pointer-events:none}
+    .lp-hero__inner{max-width:760px;margin:0 auto;padding:0 24px;position:relative}
+    .lp-hero__back{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:28px;transition:color .18s}
+    .lp-hero__back:hover{color:#ffc600}
+    .lp-hero__back i{font-size:11px}
+    .lp-hero__badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,198,0,.12);border:1px solid rgba(255,198,0,.3);border-radius:999px;padding:5px 14px 5px 10px;margin-bottom:18px}
+    .lp-hero__badge i{color:#ffc600;font-size:12px}
+    .lp-hero__badge span{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#ffc600}
+    .lp-hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(28px,4vw,42px);font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1.15;margin-bottom:14px}
+    .lp-hero__sub{font-size:15px;color:rgba(255,255,255,.6);max-width:560px}
+
+    .lp-toc{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px 32px;margin:40px auto 0;max-width:760px;padding:28px 24px 28px 32px}
+    .lp-toc h3{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8;margin-bottom:14px}
+    .lp-toc ol{padding-left:18px;display:grid;grid-template-columns:1fr 1fr;gap:4px 24px}
+    .lp-toc ol li{font-size:13.5px;color:#475569;line-height:1.6}
+    .lp-toc ol li a{color:#07294d;font-weight:500;transition:color .15s}
+    .lp-toc ol li a:hover{color:#ffc600}
+
+    .lp-body{max-width:760px;margin:0 auto;padding:32px 24px 80px}
+
+    .lp-section{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:36px 40px;margin-bottom:20px;box-shadow:0 1px 4px rgba(7,41,77,.06);scroll-margin-top:24px}
+    .lp-section:last-child{margin-bottom:0}
+
+    .lp-section__num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:linear-gradient(135deg,#07294d,#0e3d72);color:#ffc600;border-radius:8px;font-size:12px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0;margin-bottom:12px}
+    .lp-section h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:700;color:#07294d;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #f1f5f9;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+    .lp-dl{display:grid;gap:0}
+    .lp-dl dt{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:2px;margin-top:12px}
+    .lp-dl dt:first-child{margin-top:0}
+    .lp-dl dd{font-size:14.5px;color:#334155;line-height:1.6}
+    .lp-dl dd a{color:#07294d;font-weight:500;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#cbd5e1;transition:color .15s,text-decoration-color .15s}
+    .lp-dl dd a:hover{color:#ffc600;text-decoration-color:#ffc600}
+
+    .lp-prose p{font-size:14.5px;color:#475569;line-height:1.75;margin-bottom:12px}
+    .lp-prose p:last-child{margin-bottom:0}
+    .lp-prose strong{color:#334155;font-weight:600}
+
+    .lp-list{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:6px}
+    .lp-list li{font-size:14px;color:#475569;padding-left:20px;position:relative;line-height:1.6}
+    .lp-list li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;background:#ffc600;border-radius:50%}
+
+    .lp-rights{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:16px}
+    .lp-right-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px}
+    .lp-right-item .art{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:4px}
+    .lp-right-item .name{font-size:13.5px;font-weight:600;color:#334155}
+
+    .lp-chip{display:inline-flex;align-items:center;gap:6px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:600;color:#0369a1;margin-left:8px}
+    .lp-chip i{font-size:10px}
+
+    @media(max-width:640px){
+      .lp-section{padding:22px 18px}
+      .lp-body{padding:24px 16px 60px}
+      .lp-toc{margin:24px 16px 0}
+      .lp-toc ol{grid-template-columns:1fr}
+    }
+
+    .kf{background:#07294d;color:rgba(255,255,255,.6);padding:40px 0 0}
+    .kf__bar{border-top:1px solid rgba(255,255,255,.08);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;max-width:1200px;margin:0 auto}
+    .kf__bar p{margin:0;font-size:12.5px;color:rgba(255,255,255,.4)}
+    .kf__bar strong{color:rgba(255,255,255,.7);font-weight:600}
+    .kf-legal{display:flex;align-items:center;gap:16px}
+    .kf-legal a{font-size:12px;color:rgba(255,255,255,.45);transition:color .16s;font-weight:500}
+    .kf-legal a:hover{color:#ffc600}
+    .kf-legal span{color:rgba(255,255,255,.2);font-size:11px}
+  </style>
+</head>
+<body>
+
+<main>
+  <section class="lp-hero">
+    <div class="lp-hero__inner">
+      <a class="lp-hero__back" href="/"><i class="fa-solid fa-arrow-left"></i> Zurück zur Startseite</a>
+      <div class="lp-hero__badge"><i class="fa-solid fa-lock"></i><span>DSGVO / RGPD</span></div>
+      <h1>Datenschutzerklärung</h1>
+      <p class="lp-hero__sub">Transparente Information über die Verarbeitung Ihrer personenbezogenen Daten gemäß DSGVO, BDSG und TTDSG.</p>
+    </div>
+  </section>
+
+  <div style="max-width:760px;margin:0 auto">
+    <div class="lp-toc">
+      <h3>Inhaltsverzeichnis</h3>
+      <ol>
+        <li><a href="#s1">Verantwortlicher</a></li>
+        <li><a href="#s2">Allgemeine Hinweise</a></li>
+        <li><a href="#s3">Hosting</a></li>
+        <li><a href="#s4">Datenerhebung</a></li>
+        <li><a href="#s5">Cookies</a></li>
+        <li><a href="#s6">Nutzerkonto / LMS</a></li>
+        <li><a href="#s7">Digitale Inhalte</a></li>
+        <li><a href="#s8">Zahlungsabwicklung</a></li>
+        <li><a href="#s9">Kontaktaufnahme</a></li>
+        <li><a href="#s10">Newsletter</a></li>
+        <li><a href="#s11">Webanalyse</a></li>
+        <li><a href="#s12">Externe Inhalte</a></li>
+        <li><a href="#s13">Speicherdauer</a></li>
+        <li><a href="#s14">Ihre Rechte</a></li>
+        <li><a href="#s15">Widerrufsrecht</a></li>
+        <li><a href="#s16">Beschwerderecht</a></li>
+        <li><a href="#s17">Datensicherheit</a></li>
+        <li><a href="#s18">Änderungen</a></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="lp-body">
+
+    <div class="lp-section" id="s1">
+      <div class="lp-section__num">1</div>
+      <h2>Verantwortlicher</h2>
+      <dl class="lp-dl">
+        <dt>Name</dt><dd>Koffitse Aboudou</dd>
+        <dt>Anschrift</dt><dd>Güterstraße 2<br>94469 Deggendorf<br>Deutschland</dd>
+        <dt>Telefon</dt><dd><a href="tel:+4917750616555">+49 177 5061655</a></dd>
+        <dt>E-Mail</dt><dd><a href="mailto:info@lingenieur.de">info@lingenieur.de</a></dd>
+      </dl>
+    </div>
+
+    <div class="lp-section" id="s2">
+      <div class="lp-section__num">2</div>
+      <h2>Allgemeine Hinweise zur Datenverarbeitung</h2>
+      <div class="lp-prose">
+        <p>Wir verarbeiten personenbezogene Daten ausschließlich im Rahmen der geltenden Datenschutzgesetze (<strong>DSGVO, BDSG, TTDSG</strong>). Diese Datenschutzerklärung informiert Sie über Art, Umfang und Zweck der Verarbeitung personenbezogener Daten auf unserer Website.</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s3">
+      <div class="lp-section__num">3</div>
+      <h2>Hosting <span class="lp-chip"><i class="fa-brands fa-cloudflare"></i> one.com</span></h2>
+      <div class="lp-prose">
+        <p>Unsere Website wird bei einem externen Hosting-Anbieter betrieben:</p>
+        <p><strong>one.com</strong><br>Der Hosting-Anbieter verarbeitet personenbezogene Daten (z. B. IP-Adressen, Logfiles) auf Grundlage von <strong>Art. 6 Abs. 1 lit. f DSGVO</strong> zur sicheren und effizienten Bereitstellung der Website.</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s4">
+      <div class="lp-section__num">4</div>
+      <h2>Erhebung und Speicherung personenbezogener Daten</h2>
+      <div class="lp-prose">
+        <p>Beim Besuch unserer Website werden automatisch folgende Daten erfasst:</p>
+      </div>
+      <ul class="lp-list">
+        <li>IP-Adresse</li>
+        <li>Datum und Uhrzeit des Zugriffs</li>
+        <li>Browsertyp und Version</li>
+        <li>Betriebssystem</li>
+        <li>Referrer-URL</li>
+        <li>Aufgerufene Seiten</li>
+      </ul>
+      <div class="lp-prose" style="margin-top:14px">
+        <p>Diese Daten dienen der technischen Sicherheit und Stabilität.<br><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s5">
+      <div class="lp-section__num">5</div>
+      <h2>Cookies und Einwilligungsmanagement</h2>
+      <div class="lp-prose">
+        <p>Unsere Website verwendet Cookies. Cookies dienen:</p>
+      </div>
+      <ul class="lp-list">
+        <li>der technischen Funktionalität</li>
+        <li>der Verbesserung der Nutzererfahrung</li>
+        <li>der Analyse des Nutzerverhaltens</li>
+      </ul>
+      <div class="lp-prose" style="margin-top:14px">
+        <p>Nicht notwendige Cookies (z. B. Marketing/Analytics) werden nur nach Einwilligung gemäß <strong>Art. 6 Abs. 1 lit. a DSGVO</strong> gesetzt. Nutzer können ihre Cookie-Einstellungen jederzeit ändern oder widerrufen.</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s6">
+      <div class="lp-section__num">6</div>
+      <h2>Registrierung und Nutzerkonto <span class="lp-chip"><i class="fa-solid fa-graduation-cap"></i> LMS</span></h2>
+      <div class="lp-prose"><p>Wenn Sie ein Konto erstellen, verarbeiten wir:</p></div>
+      <ul class="lp-list">
+        <li>Name</li>
+        <li>E-Mail-Adresse</li>
+        <li>Passwort (verschlüsselt)</li>
+        <li>Kursfortschritt und Lernaktivitäten</li>
+      </ul>
+      <div class="lp-prose" style="margin-top:14px">
+        <p><strong>Zweck:</strong> Bereitstellung von Online-Kursen, Verwaltung von Lerninhalten, Fortschrittsanalyse<br><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s7">
+      <div class="lp-section__num">7</div>
+      <h2>Online-Kurse und digitale Inhalte</h2>
+      <div class="lp-prose"><p>Wir stellen digitale Inhalte (Kurse, wissenschaftliche Publikationen, Lernmaterialien) bereit. Dabei werden verarbeitet:</p></div>
+      <ul class="lp-list">
+        <li>Login-Daten</li>
+        <li>Kurszugriffe</li>
+        <li>Fortschrittsdaten</li>
+        <li>Ggf. Zertifikatsdaten</li>
+      </ul>
+      <div class="lp-prose" style="margin-top:14px">
+        <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s8">
+      <div class="lp-section__num">8</div>
+      <h2>Zahlungsabwicklung</h2>
+      <div class="lp-prose">
+        <p>Falls kostenpflichtige Inhalte angeboten werden, erfolgt die Zahlungsabwicklung über externe Zahlungsdienstleister (z. B. Stripe, PayPal). Dabei können folgende Daten verarbeitet werden:</p>
+      </div>
+      <ul class="lp-list">
+        <li>Name</li>
+        <li>Zahlungsdaten (Kreditkarte, PayPal-ID etc.)</li>
+        <li>Rechnungsadresse</li>
+        <li>Transaktionsdaten</li>
+      </ul>
+      <div class="lp-prose" style="margin-top:14px">
+        <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO<br>Die Zahlungsanbieter sind eigenständig Verantwortliche im Sinne der DSGVO.</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s9">
+      <div class="lp-section__num">9</div>
+      <h2>Kontaktaufnahme</h2>
+      <div class="lp-prose"><p>Bei Kontaktaufnahme per E-Mail oder Telefon werden folgende Daten gespeichert:</p></div>
+      <ul class="lp-list">
+        <li>Name</li>
+        <li>E-Mail-Adresse</li>
+        <li>Inhalt der Nachricht</li>
+      </ul>
+      <div class="lp-prose" style="margin-top:14px">
+        <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s10">
+      <div class="lp-section__num">10</div>
+      <h2>Newsletter / E-Mail-Marketing</h2>
+      <div class="lp-prose"><p>Wenn Sie unseren Newsletter abonnieren:</p></div>
+      <ul class="lp-list">
+        <li>Speichern wir Ihre E-Mail-Adresse</li>
+        <li>Verwenden das Double-Opt-In-Verfahren</li>
+        <li>Protokollieren die Anmeldung</li>
+      </ul>
+      <div class="lp-prose" style="margin-top:14px">
+        <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a DSGVO<br>Sie können den Newsletter jederzeit abbestellen.</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s11">
+      <div class="lp-section__num">11</div>
+      <h2>Webanalyse</h2>
+      <div class="lp-prose">
+        <p>Wir können Webanalyse-Tools einsetzen (z. B. Google Analytics oder vergleichbare Dienste), um das Nutzerverhalten zu analysieren. Dabei können verarbeitet werden:</p>
+      </div>
+      <ul class="lp-list">
+        <li>IP-Adresse (gekürzt)</li>
+        <li>Nutzungsverhalten</li>
+        <li>Besuchte Seiten</li>
+        <li>Geräteinformationen</li>
+      </ul>
+      <div class="lp-prose" style="margin-top:14px">
+        <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a DSGVO</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s12">
+      <div class="lp-section__num">12</div>
+      <h2>Externe Inhalte (Videos, Einbettungen)</h2>
+      <div class="lp-prose">
+        <p>Wir können externe Inhalte einbinden (z. B. YouTube, Lernplattformen, wissenschaftliche Artikel). Dabei können Daten an Drittanbieter übertragen werden.</p>
+        <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a DSGVO</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s13">
+      <div class="lp-section__num">13</div>
+      <h2>Speicherdauer</h2>
+      <div class="lp-prose">
+        <p>Personenbezogene Daten werden nur so lange gespeichert, wie es für die jeweiligen Zwecke erforderlich ist oder gesetzliche Aufbewahrungsfristen bestehen.</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s14">
+      <div class="lp-section__num">14</div>
+      <h2>Rechte der betroffenen Personen</h2>
+      <div class="lp-prose"><p>Sie haben folgende Rechte:</p></div>
+      <div class="lp-rights">
+        <div class="lp-right-item"><div class="art">Art. 15 DSGVO</div><div class="name">Auskunftsrecht</div></div>
+        <div class="lp-right-item"><div class="art">Art. 16 DSGVO</div><div class="name">Berichtigung</div></div>
+        <div class="lp-right-item"><div class="art">Art. 17 DSGVO</div><div class="name">Löschung</div></div>
+        <div class="lp-right-item"><div class="art">Art. 18 DSGVO</div><div class="name">Einschränkung</div></div>
+        <div class="lp-right-item"><div class="art">Art. 20 DSGVO</div><div class="name">Datenübertragbarkeit</div></div>
+        <div class="lp-right-item"><div class="art">Art. 21 DSGVO</div><div class="name">Widerspruchsrecht</div></div>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s15">
+      <div class="lp-section__num">15</div>
+      <h2>Widerrufsrecht</h2>
+      <div class="lp-prose">
+        <p>Sie können eine erteilte Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen. Richten Sie Ihren Widerruf an: <a href="mailto:info@lingenieur.de" style="color:#07294d;font-weight:500;text-decoration:underline">info@lingenieur.de</a></p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s16">
+      <div class="lp-section__num">16</div>
+      <h2>Beschwerderecht</h2>
+      <div class="lp-prose">
+        <p>Sie haben das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren. Die zuständige Aufsichtsbehörde für Bayern ist:</p>
+        <p><strong>Bayerisches Landesamt für Datenschutzaufsicht (BayLDA)</strong><br>Promenade 18, 91522 Ansbach<br><a href="https://www.lda.bayern.de" target="_blank" rel="noopener" style="color:#07294d;font-weight:500;text-decoration:underline">www.lda.bayern.de</a></p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s17">
+      <div class="lp-section__num">17</div>
+      <h2>Datensicherheit</h2>
+      <div class="lp-prose">
+        <p>Wir verwenden technische und organisatorische Sicherheitsmaßnahmen, um Ihre Daten vor Verlust, Missbrauch oder unbefugtem Zugriff zu schützen. Unsere Website wird über <strong>HTTPS/TLS</strong> übertragen.</p>
+      </div>
+    </div>
+
+    <div class="lp-section" id="s18">
+      <div class="lp-section__num">18</div>
+      <h2>Änderungen dieser Datenschutzerklärung</h2>
+      <div class="lp-prose">
+        <p>Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen, um sie an rechtliche oder technische Änderungen anzupassen. Die aktuelle Version ist stets auf dieser Seite abrufbar.</p>
+        <p><strong>Stand:</strong> Juni 2026</p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="kf">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px 32px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-start">
+    <div>
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:6px">Koffi Academy</div>
+      <p style="font-size:13px;color:rgba(255,255,255,.45);max-width:280px;line-height:1.5">Formation technique premium pour les ingénieurs cloud-native &amp; DevOps.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35)">Navigation</span>
+      <a href="/" style="font-size:13.5px;color:rgba(255,255,255,.65)" onmouseover="this.style.color='#ffc600'" onmouseout="this.style.color='rgba(255,255,255,.65)'">Startseite</a>
+      <a href="/laboratoire" style="font-size:13.5px;color:rgba(255,255,255,.65)" onmouseover="this.style.color='#ffc600'" onmouseout="this.style.color='rgba(255,255,255,.65)'">Laboratoires</a>
+      <a href="/courses/courses" style="font-size:13.5px;color:rgba(255,255,255,.65)" onmouseover="this.style.color='#ffc600'" onmouseout="this.style.color='rgba(255,255,255,.65)'">Kurskatalog</a>
+      <a href="/blog" style="font-size:13.5px;color:rgba(255,255,255,.65)" onmouseover="this.style.color='#ffc600'" onmouseout="this.style.color='rgba(255,255,255,.65)'">Blog</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35)">Rechtliches</span>
+      <a href="/impressum" style="font-size:13.5px;color:rgba(255,255,255,.65)" onmouseover="this.style.color='#ffc600'" onmouseout="this.style.color='rgba(255,255,255,.65)'">Impressum</a>
+      <a href="/datenschutz" style="font-size:13.5px;color:#ffc600;font-weight:600">Datenschutzerklärung</a>
+      <a href="/faq" style="font-size:13.5px;color:rgba(255,255,255,.65)" onmouseover="this.style.color='#ffc600'" onmouseout="this.style.color='rgba(255,255,255,.65)'">FAQ</a>
+    </div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,.08)">
+    <div class="kf__bar">
+      <p>&copy; 2026 <strong>Koffi Academy</strong>. Alle Rechte vorbehalten.</p>
+      <div class="kf-legal">
+        <a href="/impressum">Impressum</a>
+        <span aria-hidden="true">·</span>
+        <a href="/datenschutz">Datenschutzerklärung</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
