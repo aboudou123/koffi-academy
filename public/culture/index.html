@@ -54,7 +54,8 @@
     .culture-note{margin-top:28px;border:1px solid rgba(111,30,52,.18);background:#fff;border-radius:8px;padding:18px;display:flex;gap:14px;align-items:flex-start}
     .culture-note i{color:var(--culture-wine);font-size:20px;margin-top:2px}
     .culture-note p{margin:0;color:var(--culture-muted);line-height:1.58}
-    .culture-footer{background:#061f3c;color:rgba(255,255,255,.66);padding:34px 0;text-align:center}
+    .culture-footer{background:linear-gradient(180deg,#07294d 0%,#041a32 100%);color:rgba(255,255,255,.72);padding:34px 0 0;text-align:center}
+    .culture-footer p{margin:0 0 26px}
     .culture-footer a{color:#f2c94c;text-decoration:none}
     .kl-drop{position:relative;flex-shrink:0}
     .kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
@@ -103,7 +104,7 @@
             <h1 data-i18n="heroTitle">Kultur</h1>
             <p data-i18n="heroLead">Ein eigener Bereich für gesellschaftliches Wissen, Integration und Orientierung in Deutschland. Hier steht nicht Cloud, DevOps oder Platform Engineering im Mittelpunkt, sondern das, was Menschen im Alltag und auf dem Weg zur Einbürgerung wirklich brauchen.</p>
             <div class="culture-actions">
-              <a class="culture-btn culture-btn--primary" href="culture/einbuergerungstest.html"><i class="fa-solid fa-play"></i> <span data-i18n="heroPrimary">Einbürgerungstest starten</span></a>
+              <a class="culture-btn culture-btn--primary" href="/culture/einbuergerungstest"><i class="fa-solid fa-play"></i> <span data-i18n="heroPrimary">Einbürgerungstest starten</span></a>
               <a class="culture-btn culture-btn--ghost" href="#einbuergerungstest"><i class="fa-solid fa-circle-info"></i> <span data-i18n="heroSecondary">Bereich ansehen</span></a>
             </div>
           </div>
@@ -142,7 +143,7 @@
                 <li><i class="fa-solid fa-check"></i><span data-i18n="panelL3">Gezielte Wiederholung von Fehlern, schwierigen Fragen und Favoriten.</span></li>
                 <li><i class="fa-solid fa-check"></i><span data-i18n="panelL4">Mehrsprachige Oberfläche für Deutsch, Französisch und Englisch.</span></li>
               </ul>
-              <a class="culture-btn culture-btn--primary" href="culture/einbuergerungstest.html"><i class="fa-solid fa-arrow-right"></i> <span data-i18n="panelButton">Zum Training</span></a>
+              <a class="culture-btn culture-btn--primary" href="/culture/einbuergerungstest"><i class="fa-solid fa-arrow-right"></i> <span data-i18n="panelButton">Zum Training</span></a>
             </article>
           </div>
         </div>
@@ -151,9 +152,9 @@
 
     <footer class="culture-footer">
       <div class="culture-wrap">
-        <p data-i18n-html="footerCopy">Copyright &copy; 2026 <a href="/">Koffi Academy</a> · <a href="culture/einbuergerungstest.html">Einbürgerungstest Training</a></p>
+        <p data-i18n-html="footerCopy">Copyright &copy; 2026 <a href="/">Koffi Academy</a> · <a href="/culture/einbuergerungstest">Einbürgerungstest Training</a></p>
       </div>
-    <div style="border-top:1px solid rgba(255,255,255,.08);padding:10px 0"><div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px"><span style="font-size:12px;color:rgba(255,255,255,.35)">&copy; 2026 Koffi Academy</span><div style="display:flex;align-items:center;gap:14px"><a href="/impressum" style="font-size:12px;color:rgba(255,255,255,.45);font-weight:500;transition:color .15s">Impressum</a><span style="color:rgba(255,255,255,.2);font-size:10px">&#183;</span><a href="/datenschutz" style="font-size:12px;color:rgba(255,255,255,.45);font-weight:500;transition:color .15s">Datenschutz</a></div></div></div>
+<div class="footer-legal" style="border-top:1px solid rgba(255,255,255,.10);background:rgba(2,12,26,.30);padding:14px 0 16px"><div class="footer-legal__inner" style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 18px;text-align:center"><span class="footer-legal__brand" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.68);font-weight:500">&copy; 2026 Koffi Academy</span><nav class="footer-legal__links" aria-label="Rechtliches" style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px"><a href="/impressum" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.84);font-weight:700;letter-spacing:.01em;text-decoration:none;transition:color .16s ease">Impressum</a><span class="footer-legal__sep" aria-hidden="true" style="color:rgba(255,255,255,.30);font-size:11px">·</span><a href="/datenschutz" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.84);font-weight:700;letter-spacing:.01em;text-decoration:none;transition:color .16s ease">Datenschutz</a></nav></div></div>
 </footer>
   </div>
   <script>
@@ -166,7 +167,7 @@
         sectionKicker:"Vorbereitung mit Struktur",sectionTitle:"Einbürgerungstest Training",sectionLead:"Der Trainer bekommt hier seinen eigenen Platz, weil er fachlich nicht in den technischen Kurskatalog gehört. Er ist ein Kultur-Tool: Prüfungsvorbereitung, Orientierung und Wiederholung in einer fokussierten Oberfläche.",
         panelPill:"Kultur-Tool",panelTitle:"Lernen, wiederholen, Prüfung simulieren",panelLead:"Ein strukturierter Browser-Trainer für den deutschen Einbürgerungstest mit Lernmodus, Prüfungsmodus, Favoriten, Fehlerwiederholung und lokal gespeichertem Fortschritt.",
         panelL1:"Offizielle Themenfelder klar gegliedert und filterbar.",panelL2:"Prüfungsmodus mit Timer und direkter Auswertung.",panelL3:"Gezielte Wiederholung von Fehlern, schwierigen Fragen und Favoriten.",panelL4:"Mehrsprachige Oberfläche für Deutsch, Französisch und Englisch.",panelButton:"Zum Training",
-        footerCopy:"Copyright &copy; 2026 <a href=\"index.html\">Koffi Academy</a> · <a href=\"culture/einbuergerungstest.html\">Einbürgerungstest Training</a>"
+        footerCopy:"Copyright &copy; 2026 <a href=\"/culture\">Koffi Academy</a> · <a href=\"/culture/einbuergerungstest\">Einbürgerungstest Training</a>"
       },
       en:{
         navHome:"Home",navCourses:"Courses",navLab:"Labs",navCatalog:"Course catalog",navBlog:"Blog",navCulture:"Culture",navAbout:"About me",navLogin:"Login",navRegister:"Register",
@@ -175,7 +176,7 @@
         sectionKicker:"Structured preparation",sectionTitle:"Einbürgerungstest Training",sectionLead:"The trainer has its own place here because it does not belong in the technical course catalog. It is a Culture tool: exam preparation, orientation and review in a focused interface.",
         panelPill:"Culture tool",panelTitle:"Learn, review, simulate the exam",panelLead:"A structured browser trainer for the German naturalization test with learning mode, exam mode, favorites, error review and locally saved progress.",
         panelL1:"Official topic areas are clearly structured and filterable.",panelL2:"Exam mode with timer and direct evaluation.",panelL3:"Targeted review of mistakes, difficult questions and favorites.",panelL4:"Multilingual interface for German, French and English.",panelButton:"Go to training",
-        footerCopy:"Copyright &copy; 2026 <a href=\"index.html\">Koffi Academy</a> · <a href=\"culture/einbuergerungstest.html\">Einbürgerungstest Training</a>"
+        footerCopy:"Copyright &copy; 2026 <a href=\"/culture\">Koffi Academy</a> · <a href=\"/culture/einbuergerungstest\">Einbürgerungstest Training</a>"
       },
       fr:{
         navHome:"Accueil",navCourses:"Cours",navLab:"Laboratoires",navCatalog:"Catalogue de cours",navBlog:"Blog",navCulture:"Culture",navAbout:"À propos de moi",navLogin:"Connexion",navRegister:"Inscription",
@@ -184,7 +185,7 @@
         sectionKicker:"Préparation structurée",sectionTitle:"Training Einbürgerungstest",sectionLead:"Le trainer a sa propre place ici parce qu'il n'appartient pas au catalogue technique. C'est un outil Culture : préparation à l'examen, orientation et répétition dans une interface ciblée.",
         panelPill:"Outil Culture",panelTitle:"Apprendre, répéter, simuler l'examen",panelLead:"Un trainer navigateur structuré pour l'Einbürgerungstest allemand avec mode apprentissage, mode examen, favoris, répétition des erreurs et progression locale.",
         panelL1:"Thèmes officiels clairement structurés et filtrables.",panelL2:"Mode examen avec timer et évaluation directe.",panelL3:"Répétition ciblée des erreurs, questions difficiles et favoris.",panelL4:"Interface multilingue en allemand, français et anglais.",panelButton:"Aller au training",
-        footerCopy:"Copyright &copy; 2026 <a href=\"index.html\">Koffi Academy</a> · <a href=\"culture/einbuergerungstest.html\">Training Einbürgerungstest</a>"
+        footerCopy:"Copyright &copy; 2026 <a href=\"/culture\">Koffi Academy</a> · <a href=\"/culture/einbuergerungstest\">Training Einbürgerungstest</a>"
       }
     };
     function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}

@@ -133,7 +133,7 @@ h2.sec{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing
 .cta__btns{position:relative;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
 /* Footer */
-.kf{background:var(--navy-d);color:rgba(255,255,255,.6);padding:52px 0 0}
+.kf{background:linear-gradient(180deg,#07294d 0%,#041a32 100%);color:rgba(255,255,255,.68);padding:52px 0 0}
 .kf__cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px;padding-bottom:40px}
 .kf__brand .kh__name{display:block;margin-bottom:12px;color:#fff}
 .kf__brand p{font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.55);margin:0;max-width:280px}
@@ -141,9 +141,13 @@ h2.sec{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing
 .kf ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .kf ul a{font-size:13.6px;color:rgba(255,255,255,.7);transition:color .16s}
 .kf ul a:hover{color:var(--accent)}
-.kf__bar{border-top:1px solid rgba(255,255,255,.08);padding:16px 0;text-align:center}
-.kf__bar p{margin:0;font-size:12.5px;color:rgba(255,255,255,.4)}
-.kf__bar strong{color:rgba(255,255,255,.7);font-weight:600}
+.kf__bar{border-top:1px solid rgba(255,255,255,.10);background:rgba(2,12,26,.30);padding:16px max(24px,calc((100% - 1180px)/2 + 24px));display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 22px;width:100%;margin:0;text-align:left}
+.kf__bar p{margin:0;font-size:12.5px;line-height:1.45;color:rgba(255,255,255,.68)}
+.kf__bar strong{color:rgba(255,255,255,.92);font-weight:700}
+.kf-legal{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px}
+.kf-legal a{font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.84);font-weight:700;letter-spacing:.01em;transition:color .16s;text-decoration:none}
+.kf-legal a:hover{color:var(--accent)}
+.kf-legal span{color:rgba(255,255,255,.30);font-size:11px}
 
 @media (max-width:980px){
   .hero .wrap{grid-template-columns:1fr;gap:34px}
@@ -163,6 +167,7 @@ h2.sec{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing
   .culture-home__copy h2{font-size:27px}
   .kh__cta{display:none}
   .kh__nav a{padding:7px 10px;font-size:13px}
+  .kf__bar{justify-content:center;text-align:center;padding-left:18px;padding-right:18px}
 }
    .lang-sw{display:inline-flex;gap:2px;margin-left:8px;background:rgba(255,255,255,.08);border:1px solid rgba(214,160,45,.26);border-radius:8px;padding:3px}.lang-sw button{border:0;background:transparent;color:rgba(255,255,255,.68);font-family:'Inter',sans-serif;font-size:12px;font-weight:700;padding:5px 9px;border-radius:6px;cursor:pointer;transition:all .16s}.lang-sw button:hover{color:#fff}.lang-sw button.is-active{background:linear-gradient(135deg,#f9d77e,#d6a02d);color:#07294d}
 .kh__drop{position:relative;display:inline-flex;align-items:center}.kh__drop>a{padding-right:4px}.kh__droplabel{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);padding:8px 4px 8px 14px;cursor:default}.kh__drop:hover .kh__droplabel{color:#fff}.kh__droplabel.active{color:#f9d77e}.kh__drop>i{color:rgba(255,255,255,.58);font-size:11px;cursor:pointer;padding:8px 10px 8px 2px}.kh__drop:hover>i{color:#f9d77e}.kh__menu{position:absolute;top:calc(100% + 2px);left:0;min-width:168px;background:#fff;border:1px solid rgba(214,160,45,.28);border-top:3px solid #d6a02d;border-radius:0 0 10px 10px;box-shadow:0 18px 38px rgba(7,41,77,.14);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .2s cubic-bezier(.4,0,.2,1);z-index:70}.kh__drop:hover .kh__menu{opacity:1;visibility:visible;transform:none}.kh__menu a{display:block;padding:9px 12px;border-radius:7px;font-size:14px;font-weight:600;color:rgba(7,41,77,.76)}.kh__menu a:hover{background:rgba(214,160,45,.12);color:#9a6510}.kh__menu a.active{color:#9a6510}
@@ -422,7 +427,11 @@ h2.sec{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing
       </div>
       <div class="kf__bar">
          <p>&copy; 2026 <strong>Koffi Academy</strong>. <span data-i18n="fRights">Tous droits réservés.</span></p>
-         <div style="display:flex;align-items:center;gap:14px"><a href="/impressum" style="font-size:12px;color:rgba(255,255,255,.45);font-weight:500;transition:color .15s">Impressum</a><span style="color:rgba(255,255,255,.2);font-size:10px">·</span><a href="/datenschutz" style="font-size:12px;color:rgba(255,255,255,.45);font-weight:500;transition:color .15s">Datenschutz</a></div>
+         <nav class="kf-legal" aria-label="Rechtliches">
+            <a href="/impressum">Impressum</a>
+            <span aria-hidden="true">·</span>
+            <a href="/datenschutz">Datenschutz</a>
+         </nav>
       </div>
    </footer>
 <script>
