@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-  <link rel="shortcut icon" href="assets/images/logo.png">
+  <link rel="shortcut icon" href="/assets/images/logo.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Laboratoires | Koffi Academy</title>
 <meta name="description" content="Laboratoires pratiques de Koffi Academy : Cloud, Kubernetes, Terraform, Vault, observabilité et IA. DE / FR / EN.">
@@ -163,7 +163,7 @@ a{color:inherit}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
 </head>
 <body>
-<header class="kh"><div class="kh__in"><a class="kh__brand" href="index.html"><span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span><span class="kh__name">Koffi Academy</span></a><nav class="kh__nav"><a href="index.html" data-t="navHome">Accueil</a><span class="kh__drop"><span class="kh__droplabel active" data-t="navCourses">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire" class="active" data-t="navLab">Laboratoires</a><a href="/courses/courses" data-t="navCatalog">Catalogue de cours</a><a href="/idp-demo" data-i18n="navDevPortal">Dev Portal</a></span></span><a href="/blog">Blog</a>
+<header class="kh"><div class="kh__in"><a class="kh__brand" href="/"><span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span><span class="kh__name">Koffi Academy</span></a><nav class="kh__nav"><a href="/" data-t="navHome">Accueil</a><span class="kh__drop"><span class="kh__droplabel active" data-t="navCourses">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire" class="active" data-t="navLab">Laboratoires</a><a href="/courses/courses" data-t="navCatalog">Catalogue de cours</a><a href="/idp-demo" data-i18n="navDevPortal">Dev Portal</a></span></span><a href="/blog">Blog</a>
 <a href="/koffi-profile" data-t="navProfile">Profil</a></nav>
 <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
 </div></header>
@@ -200,8 +200,8 @@ function setLang(l){if(!I[l])return;lang=l;localStorage.setItem('preferred-lang'
 function wire(){document.addEventListener('click',function(e){var lb=e.target.closest('[data-lang-btn]');if(lb){setLang(lb.getAttribute('data-lang-btn'));return;}var f=e.target.closest('[data-filter]');if(f){state[f.getAttribute('data-filter')]=f.getAttribute('data-value');apply();return;}var v=e.target.closest('[data-view]');if(v){state.view=v.getAttribute('data-view');sessionStorage.setItem('labsView',state.view);apply();return;}var cta=e.target.closest('.cta');if(cta&&!cta.getAttribute('href')){var old=cta.getAttribute('data-label')||cta.innerHTML;cta.setAttribute('data-label',old);cta.classList.add('is-pending');cta.innerHTML=I[lang].soon;setTimeout(function(){cta.classList.remove('is-pending');cta.innerHTML=old;},1400);}});var sel=document.getElementById('labsSort');sel.addEventListener('change',function(){state.sort=sel.value;apply();});}
 document.addEventListener('DOMContentLoaded',function(){setStatic();buildCats();wire();apply();});})();
 </script>
-<script src="assets/js/kontakt-popup.js"></script>
-<script src="assets/js/mobile-nav.js"></script>
+<script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
 <script>
 var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
 function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
