@@ -177,12 +177,50 @@ a{color:inherit;text-decoration:none}
      var tg=e.target.closest('.toggle'); if(tg){var inp=document.querySelector(tg.getAttribute('data-target'));if(inp){var sh=inp.type==='password';inp.type=sh?'text':'password';var ic=tg.querySelector('i');ic.className=sh?'fa-solid fa-eye-slash':'fa-solid fa-eye';}return;}
      var fg=e.target.closest('#forgotLink'); if(fg){e.preventDefault();toast(I18N[lang].forgotMsg,'#2563eb');return;}
    });
+   var FIREBASE_VER='10.8.0';
+   var redirectTo=(new URLSearchParams(location.search)).get('redirect')||'/';
+
    document.getElementById('loginForm').addEventListener('submit',function(e){
-     e.preventDefault(); if(!this.checkValidity()){this.reportValidity();return;}
-     var b=this.querySelector('.btn-primary'); b.disabled=true;
-     toast(I18N[lang].okLogin,'#0f8a4f');
-     setTimeout(function(){location.href='index.html';},1500);
+     e.preventDefault();if(!this.checkValidity()){this.reportValidity();return;}
+     var b=this.querySelector('.btn-primary');b.disabled=true;
+     var email=document.getElementById('email').value.trim();
+     var password=document.getElementById('password').value;
+     Promise.all([
+       import('https://www.gstatic.com/firebasejs/'+FIREBASE_VER+'/firebase-app.js'),
+       import('https://www.gstatic.com/firebasejs/'+FIREBASE_VER+'/firebase-auth.js'),
+       import('/assets/js/firebase-config.js')
+     ]).then(function(mods){
+       var fbApp=mods[0].getApps().length?mods[0].getApp():mods[0].initializeApp(mods[2].firebaseConfig);
+       var fbAuth=mods[1].getAuth(fbApp);
+       return mods[1].signInWithEmailAndPassword(fbAuth,email,password);
+     }).then(function(){
+       toast(I18N[lang].okLogin,'#0f8a4f');
+       setTimeout(function(){location.href=redirectTo;},900);
+     }).catch(function(err){
+       b.disabled=false;
+       var msg=lang==='fr'?'E-mail ou mot de passe incorrect.':lang==='en'?'Incorrect email or password.':'E-Mail oder Passwort falsch.';
+       if(err.code==='auth/invalid-email')msg=lang==='fr'?'Adresse e-mail invalide.':lang==='en'?'Invalid email address.':'Ungültige E-Mail-Adresse.';
+       if(err.code==='auth/too-many-requests')msg=lang==='fr'?'Trop de tentatives. Réessayez plus tard.':lang==='en'?'Too many attempts. Try again later.':'Zu viele Versuche. Bitte später erneut.';
+       toast(msg,'#d33545');
+     });
    });
+
+   document.getElementById('forgotLink').addEventListener('click',function(e){
+     e.preventDefault();
+     var email=document.getElementById('email').value.trim();
+     if(!email){toast(lang==='fr'?'Entrez votre e-mail d\'abord.':lang==='en'?'Enter your email first.':'Bitte zuerst E-Mail eingeben.','#d33545');return;}
+     Promise.all([
+       import('https://www.gstatic.com/firebasejs/'+FIREBASE_VER+'/firebase-app.js'),
+       import('https://www.gstatic.com/firebasejs/'+FIREBASE_VER+'/firebase-auth.js'),
+       import('/assets/js/firebase-config.js')
+     ]).then(function(mods){
+       var fbApp=mods[0].getApps().length?mods[0].getApp():mods[0].initializeApp(mods[2].firebaseConfig);
+       var fbAuth=mods[1].getAuth(fbApp);
+       return mods[1].sendPasswordResetEmail(fbAuth,email);
+     }).then(function(){toast(I18N[lang].forgotMsg,'#2563eb');})
+     .catch(function(){toast(I18N[lang].forgotMsg,'#2563eb');});
+   });
+
    applyLang(lang);
    </script>
 </body>
