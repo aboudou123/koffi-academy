@@ -52,13 +52,14 @@ AddDefaultCharset UTF-8
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /
 
-  # Block pages that require a real backend (with or without .html)
-  RewriteRule ^admin/ - [F,L]
-  RewriteRule ^paid-courses/ - [F,L]
-  RewriteRule ^payment/(checkout|bank-transfer-request|paypal-success|paypal-cancel)(\.html)?/?$ - [F,L]
-  RewriteRule ^(dashboard|article|contact)(\.html)?/?$ - [F,L]
+  # Block pages that require a real backend
+  RewriteRule ^admin/ - [F]
+  RewriteRule ^paid-courses/ - [F]
+  RewriteRule ^payment/(checkout|bank-transfer-request|paypal-success|paypal-cancel)(\.html)?$ - [F]
+  RewriteRule ^dashboard(\.html)?$ - [F]
+  RewriteRule ^article(\.html)?$ - [F]
+  RewriteRule ^contact(\.html)?$ - [F]
 
   # Redirect .html URLs → clean URLs (301 permanent)
   RewriteCond %{THE_REQUEST} ^[A-Z]+ /([^?#]*)\.html [NC]
@@ -67,7 +68,7 @@ AddDefaultCharset UTF-8
   # sponsor alias → /pricing
   RewriteRule ^sponsor/?$ /pricing [R=301,L]
 
-  # Serve .html for any clean URL that has no extension and is not a real file/dir
+  # Serve .html file for clean URL requests (no extension)
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^([^.]+)$ $1.html [L]
