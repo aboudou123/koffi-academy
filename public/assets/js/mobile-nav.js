@@ -104,8 +104,8 @@
       events: "Événements",
       sponsor: "Sponsor",
       contact: "Contact",
-      login: "Connexion",
-      register: "Inscription"
+      login: "Se connecter",
+      register: "S'inscrire"
     }
   };
 
@@ -116,7 +116,30 @@
   }
 
   function cleanHref(a) {
-    return (a.getAttribute("href") || "").split(/[?#]/)[0].replace(/\\/g, "/");
+    var href = (a.getAttribute("href") || "").split(/[?#]/)[0].replace(/\\/g, "/");
+    href = href.replace(/\/+$/, "");
+    return href || "/";
+  }
+
+  function normalizePath(path) {
+    path = String(path || "").split(/[?#]/)[0].replace(/\\/g, "/").trim();
+    if (!path || path === "#") return "";
+    if (/^[a-z][a-z0-9+.-]*:/i.test(path) && !/^https?:/i.test(path)) return path;
+    if (/^https?:/i.test(path)) {
+      try { path = new URL(path).pathname; } catch (e) { return path; }
+    }
+    path = path.replace(/^(\.\.\/)+/, "/").replace(/^\.\//, "/").replace(/\.html$/, "").replace(/\/+$/, "");
+    if (!path) path = "/";
+    if (path.charAt(0) !== "/") path = "/" + path;
+    if (path === "/index" || /\/index$/.test(path)) return "/";
+    return path;
+  }
+
+  function isPath(href, paths) {
+    href = normalizePath(href);
+    return paths.some(function (path) {
+      return href === normalizePath(path);
+    });
   }
 
   function inSharedNav(a) {
@@ -143,25 +166,25 @@
     var l = commonLabels[currentLang(lang)];
     document.querySelectorAll(".kh__droplabel,.nm-drop > a").forEach(function (el) {
       var txt = el.textContent.trim();
-      if (/^(Kurse|Cours|Courses)$/.test(txt) || /nav[-.]?courses|navCourses/.test(el.getAttribute("data-i18n") || "")) {
+      if (/^(Kurse|Cours|Course|Courses)$/.test(txt) || /nav[-.]?courses|navCourses/.test(el.getAttribute("data-i18n") || "")) {
         el.textContent = l.courses;
       }
     });
     document.querySelectorAll("a[href]").forEach(function (a) {
       if (!inSharedNav(a)) return;
       var href = cleanHref(a);
-      if (/(^|\/)index\.html$/.test(href)) return text(a, l.home, ["Startseite", "Home", "Accueil"]);
-      if (/(^|\/)laboratoire\.html$/.test(href)) return text(a, l.labs, ["Laboratoire", "Laboratoires", "Labore", "Labs"]);
-      if (/(^|\/)courses\/courses\.html$/.test(href)) return text(a, l.catalog, ["Kurskatalog", "Course catalog", "Course Catalog", "Catalogue de cours"]);
-      if (/(^|\/)idp-demo\.html$/.test(href)) return text(a, l.devPortal, ["Dev Portal"]);
-      if (/(^|\/)blog\.html$/.test(href)) return text(a, l.blog, ["Blog"]);
-      if (/(^|\/)culture\.html$/.test(href)) return text(a, l.culture, ["Culture", "Kultur"]);
-      if (/(^|\/)koffi-profile\.html$/.test(href)) return text(a, a.closest("footer") ? l.profile : l.aboutMe, ["Profil", "Profile", "Über mich", "About me", "About Me", "À propos de moi"]);
-      if (/(^|\/)event\.html$/.test(href)) return text(a, l.events, ["Veranstaltungen", "Events", "Événements"]);
-      if (/(^|\/)(sponsor|pricing)\.html$/.test(href)) return text(a, l.sponsor, ["Sponsor"]);
-      if (/(^|\/)contact\.html$/.test(href)) return text(a, l.contact, ["Kontakt", "Contact"]);
-      if (/(^|\/)login\.html$/.test(href)) return text(a, l.login, ["Anmelden", "Login", "Connexion"]);
-      if (/(^|\/)register\.html$/.test(href)) return text(a, l.register, ["Registrieren", "Register", "Inscription"]);
+      if (isPath(href, ["/", "/index"])) return text(a, l.home, ["Startseite", "Home", "Accueil"]);
+      if (isPath(href, ["/laboratoire"])) return text(a, l.labs, ["Laboratoire", "Laboratoires", "Labore", "Labs"]);
+      if (isPath(href, ["/courses/courses"])) return text(a, l.catalog, ["Kurskatalog", "Course catalog", "Course Catalog", "Catalogue de cours"]);
+      if (isPath(href, ["/idp-demo"])) return text(a, l.devPortal, ["Dev Portal"]);
+      if (isPath(href, ["/blog"])) return text(a, l.blog, ["Blog"]);
+      if (isPath(href, ["/culture"])) return text(a, l.culture, ["Culture", "Kultur"]);
+      if (isPath(href, ["/koffi-profile"])) return text(a, a.closest("footer") ? l.profile : l.aboutMe, ["Profil", "Profile", "Über mich", "About me", "About Me", "À propos de moi"]);
+      if (isPath(href, ["/event"])) return text(a, l.events, ["Veranstaltungen", "Events", "Événements"]);
+      if (isPath(href, ["/sponsor", "/pricing"])) return text(a, l.sponsor, ["Sponsor"]);
+      if (isPath(href, ["/contact"])) return text(a, l.contact, ["Kontakt", "Contact"]);
+      if (isPath(href, ["/login"])) return text(a, l.login, ["Anmelden", "Login", "Connexion", "Se connecter"]);
+      if (isPath(href, ["/register"])) return text(a, l.register, ["Registrieren", "Register", "Inscription", "S'inscrire"]);
     });
   }
 
@@ -177,7 +200,7 @@
   }
 
   function patchLanguageSetters() {
-    ["setLanguage", "setLang", "setHomeLang", "setLabDetailLang", "setLabsLang"].forEach(wrapLanguageSetter);
+    ["setLanguage", "setLang", "setHomeLang", "setLabDetailLang", "setLabsLang", "setCultureLang", "applyLang"].forEach(wrapLanguageSetter);
   }
 
   document.addEventListener("click", function (e) {
