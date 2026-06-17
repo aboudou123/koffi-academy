@@ -26,7 +26,6 @@ jobs:
           SFTP_HOST: ${{ secrets.SFTP_HOST }}
           SFTP_USER: ${{ secrets.SFTP_USER }}
           SFTP_PASS: ${{ secrets.SFTP_PASS }}
-          SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}
         run: bash .github/scripts/deploy-sftp.sh
 
       - name: Summary
