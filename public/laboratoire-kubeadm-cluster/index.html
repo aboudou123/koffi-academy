@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+  <link rel="shortcut icon" href="/assets/images/logo.png">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Installing a Kubernetes Cluster with kubeadm | Laboratoire — Koffi Academy</title>
+   <meta name="description" content="Laboratoire pratique Koffi Academy : montez un cluster Kubernetes de production from scratch avec kubeadm, containerd et le CNI Calico — préparation des nœuds, init du control plane, jonction des workers.">
+   <meta name="theme-color" content="#07294d">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <style>
+:root{--navy:#07294d;--navy-d:#05203f;--ink:#0f1c2e;--accent:#f89035;--k8s:#5b8def;--slate-600:#475569;--slate-500:#64748b;--slate-400:#94a3b8;--slate-300:#cbd5e1;--slate-200:#e2e8f0;--slate-100:#f1f5f9;--slate-50:#f8fafc}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--slate-50);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.kh{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(18,48,79,.98),rgba(9,33,61,.98));backdrop-filter:blur(14px);border-bottom:1px solid rgba(214,160,45,.42);box-shadow:0 14px 36px rgba(2,12,26,.24)}
+.kh__in{max-width:1140px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.kh__brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+.kh__mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f9d77e 0%,#d6a02d 55%,#b97911 100%);display:flex;align-items:center;justify-content:center;color:#07294d;font-size:15px;box-shadow:0 8px 22px rgba(214,160,45,.34)}
+.kh__name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.01em;color:#fff}
+.kh__nav{display:flex;align-items:center;gap:4px}
+.kh__nav a{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);text-decoration:none;padding:8px 14px;border-radius:8px;transition:all .18s}
+.kh__nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.kh__nav a.active{color:#f9d77e;background:rgba(214,160,45,.15)}
+.lang-sw button:hover{color:#fff}.lang-sw button.is-active{background:linear-gradient(135deg,#f9d77e,#d6a02d);color:#07294d}
+.kh__drop{position:relative;display:inline-flex;align-items:center}.kh__droplabel{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);padding:8px 4px 8px 14px;cursor:default}.kh__drop:hover .kh__droplabel{color:#fff}.kh__drop>i{color:rgba(255,255,255,.58);font-size:11px;cursor:pointer;padding:8px 10px 8px 2px}.kh__drop:hover>i{color:#f9d77e}.kh__menu{position:absolute;top:calc(100% + 2px);left:0;min-width:168px;background:#fff;border:1px solid rgba(214,160,45,.28);border-top:3px solid #d6a02d;border-radius:0 0 10px 10px;box-shadow:0 18px 38px rgba(7,41,77,.14);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .2s cubic-bezier(.4,0,.2,1);z-index:70}.kh__drop:hover .kh__menu{opacity:1;visibility:visible;transform:none}.kh__menu a{display:block;padding:9px 12px;border-radius:7px;font-size:14px;font-weight:600;color:rgba(7,41,77,.76)}.kh__menu a:hover{background:rgba(214,160,45,.12);color:#9a6510}.kh__menu a.active{color:#9a6510}
+
+.hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#041a32 0%,#07294d 50%,#0e3d72 85%,#1a5fa0 100%);color:#fff;padding:30px 0 40px}
+.hero__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:48px 48px;opacity:.5;-webkit-mask-image:radial-gradient(ellipse 70% 90% at 30% 0%,#000 40%,transparent 80%);mask-image:radial-gradient(ellipse 70% 90% at 30% 0%,#000 40%,transparent 80%)}
+.hero__glow{position:absolute;top:-30%;right:4%;width:340px;height:340px;background:radial-gradient(circle,rgba(91,141,239,.34),transparent 62%)}
+.hero .wrap{position:relative}
+.crumb{display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.6);margin-bottom:22px;flex-wrap:wrap}
+.crumb a{text-decoration:none;color:rgba(255,255,255,.72)}
+.crumb a:hover{color:#fff}
+.crumb i{font-size:9px;color:rgba(255,255,255,.4)}
+.hero__head{display:flex;gap:20px;align-items:flex-start}
+.hero__head>div{min-width:0;flex:1}
+.hero__badge{width:66px;height:66px;border-radius:16px;background:#fff;display:flex;align-items:center;justify-content:center;padding:13px;box-shadow:0 8px 26px rgba(0,0,0,.3);flex-shrink:0}
+.hero__badge img{width:100%;height:100%;object-fit:contain}
+.hero__cat{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--k8s);margin:0 0 9px}
+.hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:clamp(23px,3vw,32px);line-height:1.14;margin:0 0 15px}
+.hero__meta{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.mchip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:rgba(255,255,255,.92);background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);padding:7px 13px;border-radius:999px}
+.mchip i{font-size:12px;color:var(--accent)}
+.mchip.lvl{color:#7fd0a8}.mchip.lvl i{color:#7fd0a8}
+
+.detail{padding:36px 0 80px}
+.detail .wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:30px;align-items:start}
+.card{background:#fff;border:1px solid var(--slate-200);border-radius:14px;box-shadow:0 6px 22px rgba(7,41,77,.05)}
+.card + .card{margin-top:24px}
+.card__head{display:flex;align-items:center;gap:11px;padding:18px 22px;border-bottom:1px solid var(--slate-100)}
+.card__head i{width:30px;height:30px;border-radius:8px;background:color-mix(in srgb,var(--accent) 14%,#fff);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px}
+.card__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16.5px;font-weight:700;letter-spacing:-.01em;color:var(--navy);margin:0}
+.card__head .tagx{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,#fff);padding:4px 10px;border-radius:999px}
+.card__body{padding:22px}
+
+.player{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#0b1f3a,#0f2c52 60%,#123a6c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:not-allowed}
+.player__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:34px 34px}
+.player__play{position:relative;width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.34);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;backdrop-filter:blur(3px)}
+.player__note{position:relative;font-size:13px;color:rgba(255,255,255,.78);font-weight:500}
+.player__soon{position:absolute;top:14px;right:14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(248,144,53,.9);padding:5px 11px;border-radius:999px}
+.chapters{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column}
+.chapters li{display:flex;align-items:center;gap:13px;padding:11px 4px;border-top:1px solid var(--slate-100);font-size:14px;color:var(--slate-600)}
+.chapters li:first-child{border-top:0}
+.chapters .num{width:26px;height:26px;border-radius:7px;background:var(--slate-100);color:var(--navy);font-family:'JetBrains Mono',monospace;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chapters .ttl{flex:1;color:var(--ink);font-weight:500}
+.chapters .dur{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--slate-400)}
+
+.obj{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:11px 22px}
+.obj li{display:flex;align-items:flex-start;gap:10px;font-size:13.7px;line-height:1.45;color:var(--slate-600)}
+.obj li i{color:#0f8a4f;font-size:12px;margin-top:3px;flex-shrink:0}
+
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{position:relative;padding:0 0 22px 44px;counter-increment:s}
+.steps li:before{content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:9px;background:var(--navy);color:#fff;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center}
+.steps li:after{content:"";position:absolute;left:14px;top:34px;bottom:2px;width:2px;background:var(--slate-200)}
+.steps li:last-child{padding-bottom:0}
+.steps li:last-child:after{display:none}
+.steps h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:var(--navy);margin:4px 0 5px}
+.steps p{margin:0;font-size:13.6px;line-height:1.5;color:var(--slate-600)}
+.steps code,.term__body code{font-family:'JetBrains Mono',monospace}
+.steps code{background:var(--slate-100);border-radius:5px;padding:1px 6px;font-size:12.5px;color:var(--navy)}
+
+.term{background:#0c1a2e;border:1px solid #1b3a5c;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(7,41,77,.18)}
+.term__bar{display:flex;align-items:center;gap:7px;padding:11px 14px;background:#0a1626;border-bottom:1px solid #18324f}
+.term__bar span{width:11px;height:11px;border-radius:50%}
+.term__bar .r{background:#ff5f57}.term__bar .y{background:#febc2e}.term__bar .g{background:#28c840}
+.term__bar em{margin-left:8px;font-family:'JetBrains Mono',monospace;font-style:normal;font-size:12px;color:#6b8cae}
+.term__body{padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.8px;line-height:1.75;color:#cde0f5;overflow-x:auto}
+.term__body .c{color:#5f7fa5}
+.term__body .p{color:#3ee08f}
+.term__body .o{color:#8fb4dd}
+.term__body .k{color:#f8b85f}
+.term__body pre{margin:0;white-space:pre-wrap;word-break:break-word}
+
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.spec__item{display:flex;gap:11px;align-items:flex-start;padding:13px 15px;background:var(--slate-50);border:1px solid var(--slate-100);border-radius:10px}
+.spec__item i{color:var(--accent);font-size:14px;margin-top:2px}
+.spec__item .k{display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--slate-400);margin-bottom:3px}
+.spec__item .v{font-size:13.4px;font-weight:500;color:var(--ink)}
+
+.aside{position:sticky;top:88px;display:flex;flex-direction:column;gap:20px}
+.fiche{background:#fff;border:1px solid var(--slate-200);border-radius:14px;overflow:hidden;box-shadow:0 6px 22px rgba(7,41,77,.06)}
+.fiche__top{background:linear-gradient(135deg,#07294d,#0e3d72);color:#fff;padding:20px 22px}
+.fiche__top h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin:0 0 3px}
+.fiche__top p{margin:0;font-size:12.5px;color:rgba(255,255,255,.66)}
+.fiche__rows{padding:8px 22px 6px}
+.frow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--slate-100);font-size:13.6px}
+.frow:last-child{border-bottom:0}
+.frow i{width:18px;text-align:center;color:var(--accent);font-size:13px}
+.frow .fk{color:var(--slate-500);min-width:88px}
+.frow .fv{margin-left:auto;font-weight:600;color:var(--ink);text-align:right}
+.fiche__pre{padding:0 22px 18px}
+.fiche__pre h4,.fiche__tags h4{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--slate-400);margin:14px 0 9px}
+.fiche__pre ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.fiche__pre li{display:flex;align-items:flex-start;gap:9px;font-size:13.2px;color:var(--slate-600)}
+.fiche__pre li i{color:#0f8a4f;font-size:10px;margin-top:4px}
+.fiche__tags{padding:0 22px 20px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#5a6a82;background:var(--slate-100);border-radius:6px;padding:4px 9px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;border-radius:11px;padding:13px 18px;cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);border:0}
+.btn--primary{background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(248,144,53,.32)}
+.btn--primary:hover{background:#ed7f1f}
+.btn--ghost{background:#fff;color:var(--navy);border:1.5px solid var(--slate-200)}
+.btn--ghost:hover{border-color:var(--navy)}
+.btn.is-pending{background:var(--slate-400)!important;box-shadow:none;pointer-events:none;color:#fff}
+.fiche__cta{padding:0 22px 22px;display:flex;flex-direction:column;gap:10px}
+.soon-hint{font-size:12px;color:var(--slate-400);text-align:center;margin:2px 0 0}
+
+.kf{background:var(--navy-d);color:rgba(255,255,255,.5);padding:26px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.07)}
+.kf p{margin:0;font-size:13px;letter-spacing:.2px}
+.kf strong{color:rgba(7,41,77,.76);font-weight:600}
+
+@media (max-width:980px){.detail .wrap{grid-template-columns:1fr}.aside{position:static;order:-1}.obj{grid-template-columns:1fr}.spec{grid-template-columns:1fr}}
+@media (max-width:600px){.hero__head{flex-direction:column;gap:14px}.kh__name{font-size:15.5px}.kh__nav a{padding:7px 9px;font-size:13px}}
+/*txt-safe*/h1,h2,h3,h4,h5,h6,p,li,figcaption,dt,dd,blockquote{overflow-wrap:break-word;word-wrap:break-word}
+   .kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body>
+   <header class="kh">
+      <div class="kh__in">
+         <a class="kh__brand" href="/">
+            <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+            <span class="kh__name">Koffi Academy</span>
+         </a>
+         <nav class="kh__nav">
+            <a href="/" data-i18n="navHome">Accueil</a>
+            <span class="kh__drop"><span class="kh__droplabel" data-i18n="navCourses">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire" class="active" data-i18n="navLab">Laboratoires</a><a href="/courses/courses.html" data-i18n="navCatalog">Catalogue de cours</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+            <a href="/blog">Blog</a>
+            <a href="/culture.html">Culture</a>
+<a href="/koffi-profile" data-i18n="navProfile">Profil</a>
+         </nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+
+      </div>
+   </header>
+
+   <section class="hero">
+      <span class="hero__grid" aria-hidden="true"></span>
+      <span class="hero__glow" aria-hidden="true"></span>
+      <div class="wrap">
+         <nav class="crumb">
+            <span class="kh__drop"><span class="kh__droplabel" data-i18n="navCourses">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire" data-i18n="navLab">Laboratoires</a><a href="/courses/courses.html" data-i18n="navCatalog">Catalogue de cours</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="/laboratoire">Kubernetes</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Installing a Kubernetes Cluster with kubeadm</span>
+         </nav>
+         <div class="hero__head">
+            <span class="hero__badge">
+               <img src="https://cdn.simpleicons.org/kubernetes" alt="Kubernetes"
+                    onerror="this.outerHTML='<span style=&quot;font-family:JetBrains Mono;font-weight:700;font-size:20px;color:#326CE5&quot;>K8s</span>'">
+            </span>
+            <div>
+               <p class="hero__cat">Kubernetes · CKA</p>
+               <h1>Installing a Kubernetes Cluster with kubeadm</h1>
+               <div class="hero__meta">
+                  <span class="mchip"><i class="fa-solid fa-dharmachakra"></i>Kubernetes</span>
+                  <span class="mchip lvl"><i class="fa-solid fa-signal"></i><span data-i18n="lvl">Intermédiaire</span></span>
+                  <span class="mchip"><i class="fa-regular fa-clock"></i>45 min</span>
+                  <span class="mchip"><i class="fa-solid fa-certificate"></i>Certified Kubernetes Administrator (CKA)</span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <main class="detail">
+      <div class="wrap">
+         <div class="main">
+            <!-- Vidéo -->
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-play"></i>
+                  <h2 data-i18n="vTitle">Vidéo du laboratoire</h2>
+                  <span class="tagx" data-i18n="vTag">6 chapitres · 44 min</span>
+               </div>
+               <div class="card__body">
+                  <div class="player" id="player">
+                     <span class="player__grid" aria-hidden="true"></span>
+                     <span class="player__soon" data-i18n="soon">Bientôt disponible</span>
+                     <span class="player__play"><i class="fa-solid fa-play"></i></span>
+                     <span class="player__note" data-i18n="vNote">La vidéo méthodique sera publiée prochainement.</span>
+                  </div>
+                  <ol class="chapters">
+                     <li><span class="num">01</span><span class="ttl" data-i18n="ch1">Préparation des nœuds et prérequis</span><span class="dur">06:10</span></li>
+                     <li><span class="num">02</span><span class="ttl" data-i18n="ch2">Installer containerd, kubeadm, kubelet, kubectl</span><span class="dur">07:40</span></li>
+                     <li><span class="num">03</span><span class="ttl" data-i18n="ch3">Initialiser le control plane (kubeadm init)</span><span class="dur">08:20</span></li>
+                     <li><span class="num">04</span><span class="ttl" data-i18n="ch4">Configurer kubectl et le CNI Calico</span><span class="dur">07:30</span></li>
+                     <li><span class="num">05</span><span class="ttl" data-i18n="ch5">Joindre les nœuds workers (kubeadm join)</span><span class="dur">07:00</span></li>
+                     <li><span class="num">06</span><span class="ttl" data-i18n="ch6">Vérifier le cluster et déployer un test</span><span class="dur">07:20</span></li>
+                  </ol>
+               </div>
+            </section>
+
+            <!-- Objectifs -->
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-bullseye"></i>
+                  <h2 data-i18n="objTitle">Objectifs d'apprentissage</h2>
+               </div>
+               <div class="card__body">
+                  <ul class="obj">
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o1">Préparer les nœuds : swap, modules noyau et paramètres sysctl.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o2">Installer et configurer le runtime de conteneurs containerd.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o3">Installer kubeadm, kubelet et kubectl à une version épinglée.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o4">Initialiser le control plane avec kubeadm init.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o5">Configurer l'accès kubectl via le kubeconfig admin.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o6">Déployer le plugin réseau Calico (CNI).</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o7">Joindre des nœuds workers au cluster avec un token.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o8">Vérifier l'état des nœuds et des pods système.</span></li>
+                  </ul>
+               </div>
+            </section>
+
+            <!-- Environnement / Sandbox -->
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-terminal"></i>
+                  <h2 data-i18n="envTitle">Environnement virtuel</h2>
+                  <span class="tagx">Sandbox</span>
+               </div>
+               <div class="card__body">
+                  <div class="term">
+                     <div class="term__bar"><span class="r"></span><span class="y"></span><span class="g"></span><em>k8s@cp-1: ~</em></div>
+                     <div class="term__body"><pre><span class="c" data-i18n="t1"># 1 · Préparer le nœud : désactiver le swap + modules noyau</span>
+<span class="p">$</span> sudo swapoff -a
+<span class="p">$</span> sudo modprobe overlay <span class="k">&&</span> sudo modprobe br_netfilter
+
+<span class="c" data-i18n="t2"># 2 · Installer kubeadm, kubelet, kubectl (version épinglée)</span>
+<span class="p">$</span> sudo apt-get install -y kubelet=1.30.* kubeadm=1.30.* kubectl=1.30.*
+<span class="p">$</span> sudo apt-mark hold kubelet kubeadm kubectl
+
+<span class="c" data-i18n="t3"># 3 · Initialiser le control plane</span>
+<span class="p">$</span> sudo kubeadm init <span class="k">--pod-network-cidr</span>=192.168.0.0/16
+<span class="o">Your Kubernetes control-plane has initialized successfully!</span>
+<span class="p">$</span> mkdir -p $HOME/.kube <span class="k">&&</span> sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config
+
+<span class="c" data-i18n="t4"># 4 · Installer le CNI Calico</span>
+<span class="p">$</span> kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27/manifests/calico.yaml
+
+<span class="c" data-i18n="t5"># 5 · Joindre un worker, puis vérifier le cluster</span>
+<span class="p">$</span> sudo kubeadm join 10.0.0.10:6443 <span class="k">--token</span> abcdef.0123456789abcdef <span class="k">--discovery-token-ca-cert-hash</span> sha256:1f3a…
+<span class="p">$</span> kubectl get nodes
+<span class="o">NAME       STATUS   ROLES           AGE   VERSION
+cp-1       Ready    control-plane   3m    v1.30.2
+worker-1   Ready    &lt;none&gt;          1m    v1.30.2</span></pre></div>
+                  </div>
+                  <div class="spec">
+                     <div class="spec__item"><i class="fa-brands fa-ubuntu"></i><div><span class="k" data-i18n="spOs">OS</span><span class="v" data-i18n="spOsV">Ubuntu 22.04 LTS · 3 nœuds</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-cube"></i><div><span class="k" data-i18n="spRuntime">Runtime</span><span class="v">containerd v1.7</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-dharmachakra"></i><div><span class="k" data-i18n="spK8s">Kubernetes</span><span class="v">v1.30 · kubeadm</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-network-wired"></i><div><span class="k" data-i18n="spCni">CNI</span><span class="v">Calico v3.27</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-screwdriver-wrench"></i><div><span class="k" data-i18n="spTools">Outils</span><span class="v">kubectl, kubeadm, helm</span></div></div>
+                     <div class="spec__item"><i class="fa-regular fa-hourglass-half"></i><div><span class="k" data-i18n="spSession">Session</span><span class="v" data-i18n="spSessionV">90 min, réinitialisable</span></div></div>
+                  </div>
+               </div>
+            </section>
+
+            <!-- Étapes -->
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-list-check"></i>
+                  <h2 data-i18n="stepsTitle">Déroulé du laboratoire</h2>
+               </div>
+               <div class="card__body">
+                  <ol class="steps">
+                     <li><h3 data-i18n="s1t">Préparer les nœuds</h3><p data-i18n-html="s1d">Désactivez le swap, chargez <code>overlay</code> et <code>br_netfilter</code>, puis réglez les paramètres <code>sysctl</code> réseau.</p></li>
+                     <li><h3 data-i18n="s2t">Installer containerd</h3><p data-i18n-html="s2d">Installez containerd et activez <code>SystemdCgroup = true</code> dans sa configuration.</p></li>
+                     <li><h3 data-i18n="s3t">Installer les binaires Kubernetes</h3><p data-i18n-html="s3d">Installez <code>kubeadm</code>, <code>kubelet</code> et <code>kubectl</code> à une version épinglée, puis figez-les.</p></li>
+                     <li><h3 data-i18n="s4t">Initialiser le control plane</h3><p data-i18n-html="s4d">Lancez <code>kubeadm init</code> avec <code>--pod-network-cidr</code> adapté au CNI choisi.</p></li>
+                     <li><h3 data-i18n="s5t">Configurer kubectl</h3><p data-i18n-html="s5d">Copiez <code>admin.conf</code> dans <code>~/.kube/config</code> pour piloter le cluster.</p></li>
+                     <li><h3 data-i18n="s6t">Déployer Calico</h3><p data-i18n-html="s6d">Appliquez le manifest Calico et attendez que les pods <code>kube-system</code> soient Ready.</p></li>
+                     <li><h3 data-i18n="s7t">Joindre les workers</h3><p data-i18n-html="s7d">Exécutez <code>kubeadm join</code> avec le token et le hash du certificat sur chaque worker.</p></li>
+                     <li><h3 data-i18n="s8t">Vérifier le cluster</h3><p data-i18n-html="s8d">Contrôlez <code>kubectl get nodes</code> et déployez un nginx de test pour valider le réseau.</p></li>
+                  </ol>
+               </div>
+            </section>
+         </div>
+
+         <!-- Fiche technique -->
+         <aside class="aside">
+            <div class="fiche">
+               <div class="fiche__top">
+                  <h3 data-i18n="fTitle">Fiche technique</h3>
+                  <p data-i18n="fSub">Koffi Academy · Laboratoire pratique</p>
+               </div>
+               <div class="fiche__rows">
+                  <div class="frow"><i class="fa-solid fa-signal"></i><span class="fk" data-i18n="fNiveau">Niveau</span><span class="fv" data-i18n="lvl">Intermédiaire</span></div>
+                  <div class="frow"><i class="fa-regular fa-clock"></i><span class="fk" data-i18n="fDuree">Durée</span><span class="fv">45 min</span></div>
+                  <div class="frow"><i class="fa-solid fa-layer-group"></i><span class="fk" data-i18n="fCat">Catégorie</span><span class="fv">Kubernetes · CKA</span></div>
+                  <div class="frow"><i class="fa-solid fa-certificate"></i><span class="fk" data-i18n="fParcours">Parcours</span><span class="fv">CKA</span></div>
+                  <div class="frow"><i class="fa-solid fa-cube"></i><span class="fk" data-i18n="fFormat">Format</span><span class="fv" data-i18n="fFormatV">Vidéo + Sandbox</span></div>
+               </div>
+               <div class="fiche__pre">
+                  <h4 data-i18n="fPre">Prérequis</h4>
+                  <ul>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="p1">Aisance avec la ligne de commande Linux</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="p2">Bases réseau : IP, sous-réseaux, routage</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="p3">Notions de conteneurs et d'images</span></li>
+                  </ul>
+               </div>
+               <div class="fiche__tags">
+                  <h4 data-i18n="fTags">Tags</h4>
+                  <div class="tags"><span class="tag">kubernetes</span><span class="tag">cka</span><span class="tag">kubeadm</span></div>
+               </div>
+               <div class="fiche__cta">
+                  <a class="btn btn--primary" href="payment/checkout.html?course=k8s-kubeadm&price=30&min=45&title=Installing%20a%20Kubernetes%20Cluster%20with%20kubeadm"><i class="fa-solid fa-lock-open"></i> <span data-i18n="ctaLaunch">Accéder au contenu</span></a>
+                  <a class="btn btn--ghost" href="/laboratoire"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="ctaAll">Tous les laboratoires</span></a>
+                  <p class="soon-hint" data-i18n="hint">Vidéo et sandbox interactifs bientôt disponibles.</p>
+               </div>
+            </div>
+         </aside>
+      </div>
+   </main>
+
+   <footer class="kf">
+      <p>&copy; 2026 <strong>Koffi Academy</strong>. <span data-i18n="fRights">Tous droits réservés.</span></p>
+   </footer>
+
+   <script>
+   (function(){
+     function pending(el,label){
+       var old=el.getAttribute('data-label')||el.innerHTML;
+       el.setAttribute('data-label',old);el.classList.add('is-pending');
+       el.innerHTML=label;
+       setTimeout(function(){el.classList.remove('is-pending');el.innerHTML=old;},1500);
+     }
+     document.querySelectorAll('[data-soon]').forEach(function(b){
+       b.addEventListener('click',function(){var L=(window.I18N_LAB&&window.I18N_LAB[document.documentElement.lang]&&window.I18N_LAB[document.documentElement.lang].soon)||'Bientôt disponible';pending(b,L);});
+     });
+     var p=document.getElementById('player');
+     if(p){p.style.cursor='pointer';p.addEventListener('click',function(){location.href='payment/checkout.html?course=k8s-kubeadm&price=30&min=45&title=Installing%20a%20Kubernetes%20Cluster%20with%20kubeadm';});}
+   })();
+   </script>
+   <script>
+window.I18N_LAB={
+"fr":{"navHome":"Accueil","navCourses":"Cours","navCatalog":"Catalogue de cours","navLab":"Laboratoires","navProfile":"Profil","lvl":"Intermédiaire","vTitle":"Vidéo du laboratoire","vTag":"6 chapitres · 44 min","soon":"Bientôt disponible","vNote":"La vidéo méthodique sera publiée prochainement.","ch1":"Préparation des nœuds et prérequis","ch2":"Installer containerd, kubeadm, kubelet, kubectl","ch3":"Initialiser le control plane (kubeadm init)","ch4":"Configurer kubectl et le CNI Calico","ch5":"Joindre les nœuds workers (kubeadm join)","ch6":"Vérifier le cluster et déployer un test","objTitle":"Objectifs d'apprentissage","o1":"Préparer les nœuds : swap, modules noyau et paramètres sysctl.","o2":"Installer et configurer le runtime de conteneurs containerd.","o3":"Installer kubeadm, kubelet et kubectl à une version épinglée.","o4":"Initialiser le control plane avec kubeadm init.","o5":"Configurer l'accès kubectl via le kubeconfig admin.","o6":"Déployer le plugin réseau Calico (CNI).","o7":"Joindre des nœuds workers au cluster avec un token.","o8":"Vérifier l'état des nœuds et des pods système.","envTitle":"Environnement virtuel","t1":"# 1 · Préparer le nœud : désactiver le swap + modules noyau","t2":"# 2 · Installer kubeadm, kubelet, kubectl (version épinglée)","t3":"# 3 · Initialiser le control plane","t4":"# 4 · Installer le CNI Calico","t5":"# 5 · Joindre un worker, puis vérifier le cluster","spOs":"OS","spOsV":"Ubuntu 22.04 LTS · 3 nœuds","spRuntime":"Runtime","spK8s":"Kubernetes","spCni":"CNI","spTools":"Outils","spSession":"Session","spSessionV":"90 min, réinitialisable","stepsTitle":"Déroulé du laboratoire","s1t":"Préparer les nœuds","s1d":"Désactivez le swap, chargez <code>overlay</code> et <code>br_netfilter</code>, puis réglez les paramètres <code>sysctl</code> réseau.","s2t":"Installer containerd","s2d":"Installez containerd et activez <code>SystemdCgroup = true</code> dans sa configuration.","s3t":"Installer les binaires Kubernetes","s3d":"Installez <code>kubeadm</code>, <code>kubelet</code> et <code>kubectl</code> à une version épinglée, puis figez-les.","s4t":"Initialiser le control plane","s4d":"Lancez <code>kubeadm init</code> avec <code>--pod-network-cidr</code> adapté au CNI choisi.","s5t":"Configurer kubectl","s5d":"Copiez <code>admin.conf</code> dans <code>~/.kube/config</code> pour piloter le cluster.","s6t":"Déployer Calico","s6d":"Appliquez le manifest Calico et attendez que les pods <code>kube-system</code> soient Ready.","s7t":"Joindre les workers","s7d":"Exécutez <code>kubeadm join</code> avec le token et le hash du certificat sur chaque worker.","s8t":"Vérifier le cluster","s8d":"Contrôlez <code>kubectl get nodes</code> et déployez un nginx de test pour valider le réseau.","fTitle":"Fiche technique","fSub":"Koffi Academy · Laboratoire pratique","fNiveau":"Niveau","fDuree":"Durée","fCat":"Catégorie","fParcours":"Parcours","fFormat":"Format","fFormatV":"Vidéo + Sandbox","fPre":"Prérequis","p1":"Aisance avec la ligne de commande Linux","p2":"Bases réseau : IP, sous-réseaux, routage","p3":"Notions de conteneurs et d'images","fTags":"Tags","ctaLaunch":"Accéder au contenu","ctaAll":"Tous les laboratoires","hint":"Vidéo et sandbox interactifs bientôt disponibles.","fRights":"Tous droits réservés."},
+"de":{"navHome":"Startseite","navCourses":"Kurse","navCatalog":"Kurskatalog","navLab":"Labore","navProfile":"Profil","lvl":"Fortgeschritten","vTitle":"Lab-Video","vTag":"6 Kapitel · 44 Min","soon":"Bald verfügbar","vNote":"Das methodische Video wird in Kürze veröffentlicht.","ch1":"Vorbereitung der Knoten und Voraussetzungen","ch2":"containerd, kubeadm, kubelet, kubectl installieren","ch3":"Control Plane initialisieren (kubeadm init)","ch4":"kubectl und Calico-CNI konfigurieren","ch5":"Worker-Knoten beitreten (kubeadm join)","ch6":"Cluster prüfen und Test bereitstellen","objTitle":"Lernziele","o1":"Knoten vorbereiten: Swap, Kernel-Module und sysctl-Parameter.","o2":"Die Container-Runtime containerd installieren und konfigurieren.","o3":"kubeadm, kubelet und kubectl in einer fixierten Version installieren.","o4":"Das Control Plane mit kubeadm init initialisieren.","o5":"kubectl-Zugriff über das Admin-kubeconfig konfigurieren.","o6":"Das Netzwerk-Plugin Calico (CNI) bereitstellen.","o7":"Worker-Knoten mit einem Token dem Cluster hinzufügen.","o8":"Den Status der Knoten und System-Pods überprüfen.","envTitle":"Virtuelle Umgebung","t1":"# 1 · Knoten vorbereiten: Swap deaktivieren + Kernel-Module","t2":"# 2 · kubeadm, kubelet, kubectl installieren (fixierte Version)","t3":"# 3 · Control Plane initialisieren","t4":"# 4 · Calico-CNI installieren","t5":"# 5 · Einen Worker beitreten, dann Cluster prüfen","spOs":"OS","spOsV":"Ubuntu 22.04 LTS · 3 Knoten","spRuntime":"Runtime","spK8s":"Kubernetes","spCni":"CNI","spTools":"Tools","spSession":"Sitzung","spSessionV":"90 Min, zurücksetzbar","stepsTitle":"Ablauf des Labors","s1t":"Knoten vorbereiten","s1d":"Deaktivieren Sie den Swap, laden Sie <code>overlay</code> und <code>br_netfilter</code> und setzen Sie die <code>sysctl</code>-Netzwerkparameter.","s2t":"containerd installieren","s2d":"Installieren Sie containerd und aktivieren Sie <code>SystemdCgroup = true</code> in der Konfiguration.","s3t":"Kubernetes-Binaries installieren","s3d":"Installieren Sie <code>kubeadm</code>, <code>kubelet</code> und <code>kubectl</code> in einer fixierten Version und sperren Sie sie.","s4t":"Control Plane initialisieren","s4d":"Führen Sie <code>kubeadm init</code> mit passendem <code>--pod-network-cidr</code> für das gewählte CNI aus.","s5t":"kubectl konfigurieren","s5d":"Kopieren Sie <code>admin.conf</code> nach <code>~/.kube/config</code>, um den Cluster zu steuern.","s6t":"Calico bereitstellen","s6d":"Wenden Sie das Calico-Manifest an und warten Sie, bis die <code>kube-system</code>-Pods Ready sind.","s7t":"Worker beitreten","s7d":"Führen Sie <code>kubeadm join</code> mit Token und Zertifikat-Hash auf jedem Worker aus.","s8t":"Cluster prüfen","s8d":"Prüfen Sie <code>kubectl get nodes</code> und stellen Sie ein Test-nginx bereit, um das Netzwerk zu validieren.","fTitle":"Technisches Datenblatt","fSub":"Koffi Academy · Praxislabor","fNiveau":"Niveau","fDuree":"Dauer","fCat":"Kategorie","fParcours":"Lernpfad","fFormat":"Format","fFormatV":"Video + Sandbox","fPre":"Voraussetzungen","p1":"Sicherer Umgang mit der Linux-Kommandozeile","p2":"Netzwerkgrundlagen: IP, Subnetze, Routing","p3":"Kenntnisse zu Containern und Images","fTags":"Tags","ctaLaunch":"Inhalt freischalten","ctaAll":"Alle Labore","hint":"Interaktives Video und Sandbox bald verfügbar.","fRights":"Alle Rechte vorbehalten."},
+"en":{"navHome":"Home","navCourses":"Courses","navCatalog":"Course catalog","navLab":"Labs","navProfile":"Profile","lvl":"Intermediate","vTitle":"Lab video","vTag":"6 chapters · 44 min","soon":"Coming soon","vNote":"The methodical video will be published soon.","ch1":"Node preparation and prerequisites","ch2":"Install containerd, kubeadm, kubelet, kubectl","ch3":"Initialize the control plane (kubeadm init)","ch4":"Configure kubectl and the Calico CNI","ch5":"Join worker nodes (kubeadm join)","ch6":"Verify the cluster and deploy a test","objTitle":"Learning objectives","o1":"Prepare the nodes: swap, kernel modules and sysctl parameters.","o2":"Install and configure the containerd container runtime.","o3":"Install kubeadm, kubelet and kubectl at a pinned version.","o4":"Initialize the control plane with kubeadm init.","o5":"Configure kubectl access via the admin kubeconfig.","o6":"Deploy the Calico network plugin (CNI).","o7":"Join worker nodes to the cluster with a token.","o8":"Verify the status of nodes and system pods.","envTitle":"Virtual environment","t1":"# 1 · Prepare the node: disable swap + kernel modules","t2":"# 2 · Install kubeadm, kubelet, kubectl (pinned version)","t3":"# 3 · Initialize the control plane","t4":"# 4 · Install the Calico CNI","t5":"# 5 · Join a worker, then verify the cluster","spOs":"OS","spOsV":"Ubuntu 22.04 LTS · 3 nodes","spRuntime":"Runtime","spK8s":"Kubernetes","spCni":"CNI","spTools":"Tools","spSession":"Session","spSessionV":"90 min, resettable","stepsTitle":"Lab walkthrough","s1t":"Prepare the nodes","s1d":"Disable swap, load <code>overlay</code> and <code>br_netfilter</code>, then set the <code>sysctl</code> networking parameters.","s2t":"Install containerd","s2d":"Install containerd and enable <code>SystemdCgroup = true</code> in its configuration.","s3t":"Install the Kubernetes binaries","s3d":"Install <code>kubeadm</code>, <code>kubelet</code> and <code>kubectl</code> at a pinned version, then hold them.","s4t":"Initialize the control plane","s4d":"Run <code>kubeadm init</code> with a <code>--pod-network-cidr</code> matching the chosen CNI.","s5t":"Configure kubectl","s5d":"Copy <code>admin.conf</code> to <code>~/.kube/config</code> to drive the cluster.","s6t":"Deploy Calico","s6d":"Apply the Calico manifest and wait for the <code>kube-system</code> pods to be Ready.","s7t":"Join the workers","s7d":"Run <code>kubeadm join</code> with the token and certificate hash on each worker.","s8t":"Verify the cluster","s8d":"Check <code>kubectl get nodes</code> and deploy a test nginx to validate networking.","fTitle":"Technical sheet","fSub":"Koffi Academy · Hands-on lab","fNiveau":"Level","fDuree":"Duration","fCat":"Category","fParcours":"Track","fFormat":"Format","fFormatV":"Video + Sandbox","fPre":"Prerequisites","p1":"Comfort with the Linux command line","p2":"Networking basics: IP, subnets, routing","p3":"Container and image basics","fTags":"Tags","ctaLaunch":"Unlock content","ctaAll":"All labs","hint":"Interactive video and sandbox coming soon.","fRights":"All rights reserved."}
+};
+(function(){var I=window.I18N_LAB;var lang=localStorage.getItem("preferred-lang");if(!I[lang])lang="de";function apply(l){if(!I[l])return;lang=l;localStorage.setItem("preferred-lang",l);document.documentElement.lang=l;var d=I[l];document.querySelectorAll("[data-i18n]").forEach(function(el){var k=el.getAttribute("data-i18n");if(d[k]!==undefined)el.textContent=d[k];});document.querySelectorAll("[data-i18n-html]").forEach(function(el){var k=el.getAttribute("data-i18n-html");if(d[k]!==undefined)el.innerHTML=d[k];});document.querySelectorAll("[data-lang-btn]").forEach(function(b){b.classList.toggle("is-active",b.getAttribute("data-lang-btn")===l);});}window.setLabDetailLang=apply;document.addEventListener("click",function(e){var b=e.target.closest("[data-lang-btn]");if(b)apply(b.getAttribute("data-lang-btn"));});document.addEventListener("DOMContentLoaded",function(){apply(lang);});})();
+   </script>
+   <script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

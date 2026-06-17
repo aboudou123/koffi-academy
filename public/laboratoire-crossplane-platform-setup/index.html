@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+  <link rel="shortcut icon" href="/assets/images/logo.png">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Crossplane Platform Setup | Lab &mdash; Koffi Academy</title>
+   <meta name="description" content="Laboratoire pratique Koffi Academy : installez Crossplane sur Kubernetes, configurez un Provider AWS, cr&eacute;ez des Managed Resources, des XRDs, des Compositions et des Claims.">
+   <meta name="theme-color" content="#07294d">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+   <style>
+:root{--navy:#07294d;--navy-d:#05203f;--ink:#0f1c2e;--accent:#f89035;--xp:#0E9A8E;--xp-dim:rgba(14,154,142,.10);--slate-600:#475569;--slate-500:#64748b;--slate-400:#94a3b8;--slate-300:#cbd5e1;--slate-200:#e2e8f0;--slate-100:#f1f5f9;--slate-50:#f8fafc}
+*{box-sizing:border-box}html,body{margin:0;overflow-x:hidden}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--slate-50);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+
+/* Header */
+.kh{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(18,48,79,.98),rgba(9,33,61,.98));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid rgba(214,160,45,.42);box-shadow:0 14px 36px rgba(2,12,26,.24)}
+.kh__in{max-width:1140px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.kh__brand{display:flex;align-items:center;gap:11px}
+.kh__mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f9d77e 0%,#d6a02d 55%,#b97911 100%);display:flex;align-items:center;justify-content:center;color:#07294d;font-size:15px;box-shadow:0 8px 22px rgba(214,160,45,.34)}
+.kh__name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.01em;color:#fff}
+.kh__nav{display:flex;align-items:center;gap:4px}
+.kh__nav a{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);text-decoration:none;padding:8px 14px;border-radius:8px;transition:all .18s}
+.kh__nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.kh__nav a.active{color:#f9d77e;background:rgba(214,160,45,.15)}
+.kh__drop{position:relative;display:inline-flex;align-items:center}
+.kh__droplabel{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);padding:8px 4px 8px 14px;cursor:default}
+.kh__drop:hover .kh__droplabel{color:#fff}
+.kh__drop>i{color:rgba(255,255,255,.58);font-size:11px;cursor:pointer;padding:8px 10px 8px 2px}
+.kh__drop:hover>i{color:#f9d77e}
+.kh__menu{position:absolute;top:calc(100% + 2px);left:0;min-width:168px;background:#fff;border:1px solid rgba(214,160,45,.28);border-top:3px solid #d6a02d;border-radius:0 0 10px 10px;box-shadow:0 18px 38px rgba(7,41,77,.14);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .2s cubic-bezier(.4,0,.2,1);z-index:70}
+.kh__drop:hover .kh__menu{opacity:1;visibility:visible;transform:none}
+.kh__menu a{display:block;padding:9px 12px;border-radius:7px;font-size:14px;font-weight:600;color:rgba(7,41,77,.76)}
+.kh__menu a:hover{background:rgba(214,160,45,.12);color:#9a6510}
+.kh__menu a.active{color:#9a6510}
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#041a32 0%,#07294d 50%,#0e3d72 85%,#1a5fa0 100%);color:#fff;padding:30px 0 40px}
+.hero__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:48px 48px;opacity:.5;-webkit-mask-image:radial-gradient(ellipse 70% 90% at 30% 0%,#000 40%,transparent 80%);mask-image:radial-gradient(ellipse 70% 90% at 30% 0%,#000 40%,transparent 80%)}
+.hero__glow{position:absolute;top:-30%;right:4%;width:340px;height:340px;background:radial-gradient(circle,rgba(14,154,142,.34),transparent 62%)}
+.hero .wrap{position:relative}
+.crumb{display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.6);margin-bottom:22px;flex-wrap:wrap}
+.crumb a{color:rgba(255,255,255,.72)}
+.crumb a:hover{color:#fff}
+.crumb i{font-size:9px;color:rgba(255,255,255,.4)}
+.hero__head{display:flex;gap:20px;align-items:flex-start}
+.hero__head>div{min-width:0;flex:1}
+.hero__badge{width:66px;height:66px;border-radius:16px;background:#fff;display:flex;align-items:center;justify-content:center;padding:13px;box-shadow:0 8px 26px rgba(0,0,0,.3);flex-shrink:0}
+.hero__badge img{width:100%;height:100%;object-fit:contain}
+.hero__cat{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#5eead4;margin:0 0 9px}
+.hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:clamp(23px,3vw,32px);line-height:1.14;margin:0 0 15px}
+.hero__meta{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.mchip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:rgba(255,255,255,.92);background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);padding:7px 13px;border-radius:999px}
+.mchip i{font-size:12px;color:var(--accent)}
+.mchip.lvl{color:#7fd0a8}.mchip.lvl i{color:#7fd0a8}
+.mchip.xp-chip{color:#5eead4}.mchip.xp-chip i{color:#5eead4}
+
+/* Layout */
+.detail{padding:36px 0 80px}
+.detail .wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:30px;align-items:start}
+.card{background:#fff;border:1px solid var(--slate-200);border-radius:14px;box-shadow:0 6px 22px rgba(7,41,77,.05)}
+.card+.card{margin-top:24px}
+.card__head{display:flex;align-items:center;gap:11px;padding:18px 22px;border-bottom:1px solid var(--slate-100)}
+.card__head i{width:30px;height:30px;border-radius:8px;background:color-mix(in srgb,var(--accent) 14%,#fff);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.card__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16.5px;font-weight:700;letter-spacing:-.01em;color:var(--navy);margin:0}
+.card__head .tagx{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,#fff);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.card__body{padding:22px}
+
+/* Video */
+.player{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#0b1f3a,#0f2c52 60%,#123a6c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:not-allowed}
+.player__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:34px 34px}
+.player__play{position:relative;width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.34);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.player__note{position:relative;font-size:13px;color:rgba(255,255,255,.78);font-weight:500}
+.player__soon{position:absolute;top:14px;right:14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(248,144,53,.9);padding:5px 11px;border-radius:999px}
+.chapters{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column}
+.chapters li{display:flex;align-items:center;gap:13px;padding:11px 4px;border-top:1px solid var(--slate-100);font-size:14px;color:var(--slate-600)}
+.chapters li:first-child{border-top:0}
+.chapters .num{width:26px;height:26px;border-radius:7px;background:var(--slate-100);color:var(--navy);font-family:'JetBrains Mono',monospace;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chapters .ttl{flex:1;color:var(--ink);font-weight:500}
+.chapters .dur{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--slate-400)}
+
+/* Objectifs */
+.obj{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:11px 22px}
+.obj li{display:flex;align-items:flex-start;gap:10px;font-size:13.7px;line-height:1.45;color:var(--slate-600)}
+.obj li i{color:#0f8a4f;font-size:12px;margin-top:3px;flex-shrink:0}
+
+/* Concepts */
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-top:4px}
+.concept-card{border:1px solid var(--slate-200);border-radius:12px;padding:18px 16px;background:var(--slate-50);transition:.2s;position:relative;overflow:hidden}
+.concept-card:hover{border-color:rgba(14,154,142,.45);background:#fff;transform:translateY(-3px);box-shadow:0 8px 28px rgba(7,41,77,.1)}
+.concept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0}
+.concept-card.c1::before{background:linear-gradient(90deg,#0E9A8E,#5eead4)}
+.concept-card.c2::before{background:linear-gradient(90deg,#f89035,#fbbf24)}
+.concept-card.c3::before{background:linear-gradient(90deg,#8b5cf6,#a78bfa)}
+.concept-card.c4::before{background:linear-gradient(90deg,#10b981,#34d399)}
+.concept-card.c5::before{background:linear-gradient(90deg,#3b82f6,#60a5fa)}
+.concept-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:15px}
+.c1 .concept-icon{background:rgba(14,154,142,.12);color:#0E9A8E}
+.c2 .concept-icon{background:rgba(248,144,53,.12);color:var(--accent)}
+.c3 .concept-icon{background:rgba(139,92,246,.12);color:#8b5cf6}
+.c4 .concept-icon{background:rgba(16,185,129,.12);color:#10b981}
+.c5 .concept-icon{background:rgba(59,130,246,.12);color:#3b82f6}
+.concept-num{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--slate-400);margin-bottom:4px}
+.concept-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:7px}
+.concept-body{font-size:12.5px;line-height:1.58;color:var(--slate-600)}
+.concept-code{display:inline-flex;align-items:center;margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:6px;border:1px solid var(--slate-200);background:#fff;color:var(--slate-600)}
+
+/* Architecture diagram */
+.arch{display:flex;flex-direction:column;gap:0;margin-top:4px}
+.arch-layer{border-radius:12px;padding:16px 20px;position:relative}
+.arch-layer+.arch-layer{margin-top:6px}
+.arch-arrow{display:flex;justify-content:center;align-items:center;height:20px;color:var(--slate-400);font-size:11px}
+.arch-layer__label{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.arch-layer__name{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;margin-bottom:4px}
+.arch-layer__desc{font-size:12.5px;line-height:1.5}
+.arch-layer__pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.arch-pill{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px}
+.ly-dev{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.22)}
+.ly-dev .arch-layer__label{color:#ef4444}
+.ly-dev .arch-layer__name{color:#b91c1c}
+.ly-dev .arch-layer__desc{color:#7f1d1d}
+.ly-dev .arch-pill{background:rgba(239,68,68,.1);color:#dc2626;border:1px solid rgba(239,68,68,.2)}
+.ly-plat{background:rgba(14,154,142,.08);border:1px solid rgba(14,154,142,.22)}
+.ly-plat .arch-layer__label{color:#0E9A8E}
+.ly-plat .arch-layer__name{color:#065f5a}
+.ly-plat .arch-layer__desc{color:#064e48}
+.ly-plat .arch-pill{background:rgba(14,154,142,.1);color:#0d8a7e;border:1px solid rgba(14,154,142,.2)}
+.ly-prov{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.22)}
+.ly-prov .arch-layer__label{color:#3b82f6}
+.ly-prov .arch-layer__name{color:#1d4ed8}
+.ly-prov .arch-layer__desc{color:#1e3a8a}
+.ly-prov .arch-pill{background:rgba(59,130,246,.1);color:#2563eb;border:1px solid rgba(59,130,246,.2)}
+.ly-cloud{background:rgba(248,144,53,.08);border:1px solid rgba(248,144,53,.22)}
+.ly-cloud .arch-layer__label{color:#f89035}
+.ly-cloud .arch-layer__name{color:#9a3412}
+.ly-cloud .arch-layer__desc{color:#7c2d12}
+.ly-cloud .arch-pill{background:rgba(248,144,53,.1);color:#ea580c;border:1px solid rgba(248,144,53,.2)}
+
+/* Terminal */
+.term{background:#0c1a2e;border:1px solid #1b3a5c;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(7,41,77,.18)}
+.term+.term{margin-top:18px}
+.term__bar{display:flex;align-items:center;gap:7px;padding:11px 14px;background:#0a1626;border-bottom:1px solid #18324f}
+.term__bar span{width:11px;height:11px;border-radius:50%}
+.term__bar .r{background:#ff5f57}.term__bar .y{background:#febc2e}.term__bar .g{background:#28c840}
+.term__bar em{margin-left:8px;font-family:'JetBrains Mono',monospace;font-style:normal;font-size:12px;color:#6b8cae}
+.term__body{padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75;color:#cde0f5;overflow-x:auto}
+.term__body .c{color:#5f7fa5}
+.term__body .p{color:#3ee08f}
+.term__body .o{color:#8fb4dd}
+.term__body .k{color:#f8b85f}
+.term__body .s{color:#a5f3fc}
+.term__body .ok{color:#4ade80;font-weight:600}
+.term__body pre{margin:0;white-space:pre-wrap;word-break:break-word}
+
+/* Spec */
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.spec__item{display:flex;gap:11px;align-items:flex-start;padding:13px 15px;background:var(--slate-50);border:1px solid var(--slate-100);border-radius:10px}
+.spec__item i{color:var(--accent);font-size:14px;margin-top:2px;flex-shrink:0}
+.spec__item .k{display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--slate-400);margin-bottom:3px}
+.spec__item .v{font-size:13.4px;font-weight:500;color:var(--ink)}
+
+/* Steps */
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{position:relative;padding:0 0 26px 48px;counter-increment:s}
+.steps li:before{content:counter(s);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:9px;background:var(--xp);color:#fff;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center}
+.steps li:after{content:"";position:absolute;left:15px;top:36px;bottom:2px;width:2px;background:var(--slate-200)}
+.steps li:last-child{padding-bottom:0}
+.steps li:last-child:after{display:none}
+.steps h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:var(--navy);margin:4px 0 6px}
+.steps p{margin:0;font-size:13.6px;line-height:1.55;color:var(--slate-600)}
+.steps .step-note{margin-top:8px;padding:10px 14px;background:var(--xp-dim);border-left:3px solid var(--xp);border-radius:0 8px 8px 0;font-size:12.8px;color:#065f5a;line-height:1.5}
+.steps code{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--slate-100);border-radius:5px;padding:1px 6px;color:var(--navy)}
+
+/* Validation */
+.validate{display:grid;gap:10px;margin-top:4px}
+.validate__row{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--slate-200);border-radius:10px;background:#fff;font-size:13.5px;color:var(--slate-600)}
+.validate__row i{color:#0f8a4f;font-size:14px;margin-top:2px;flex-shrink:0}
+.validate__row code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--slate-100);border-radius:4px;padding:1px 5px;color:var(--navy)}
+
+/* Aside */
+.aside{position:sticky;top:88px;display:flex;flex-direction:column;gap:20px}
+.fiche{background:#fff;border:1px solid var(--slate-200);border-radius:14px;overflow:hidden;box-shadow:0 6px 22px rgba(7,41,77,.06)}
+.fiche__top{background:linear-gradient(135deg,#07294d,#0e4d48);color:#fff;padding:20px 22px}
+.fiche__top h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin:0 0 3px}
+.fiche__top p{margin:0;font-size:12.5px;color:rgba(255,255,255,.66)}
+.fiche__rows{padding:8px 22px 6px}
+.frow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--slate-100);font-size:13.6px}
+.frow:last-child{border-bottom:0}
+.frow i{width:18px;text-align:center;color:var(--accent);font-size:13px;flex-shrink:0}
+.frow .fk{color:var(--slate-500);min-width:88px}
+.frow .fv{margin-left:auto;font-weight:600;color:var(--ink);text-align:right}
+.fiche__pre{padding:0 22px 18px}
+.fiche__pre h4,.fiche__tags h4{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--slate-400);margin:14px 0 9px}
+.fiche__pre ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.fiche__pre li{display:flex;align-items:flex-start;gap:9px;font-size:13.2px;color:var(--slate-600)}
+.fiche__pre li i{color:#0f8a4f;font-size:10px;margin-top:4px;flex-shrink:0}
+.fiche__tags{padding:0 22px 20px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#5a6a82;background:var(--slate-100);border-radius:6px;padding:4px 9px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;border-radius:11px;padding:13px 18px;cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);border:0;text-decoration:none}
+.btn--primary{background:var(--xp);color:#fff;box-shadow:0 8px 22px rgba(14,154,142,.30)}
+.btn--primary:hover{background:#0d8a7e}
+.btn--ghost{background:#fff;color:var(--navy);border:1.5px solid var(--slate-200)}
+.btn--ghost:hover{border-color:var(--navy)}
+.fiche__cta{padding:0 22px 22px;display:flex;flex-direction:column;gap:10px}
+.soon-hint{font-size:12px;color:var(--slate-400);text-align:center;margin:2px 0 0}
+
+/* Related labs card */
+.related-lab{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--slate-100);text-decoration:none}
+.related-lab:first-of-type{border-top:0}
+.related-lab__badge{width:36px;height:36px;border-radius:8px;background:var(--xp-dim);display:flex;align-items:center;justify-content:center;color:var(--xp);font-size:14px;flex-shrink:0}
+.related-lab__txt{flex:1;min-width:0}
+.related-lab__name{font-size:13px;font-weight:600;color:var(--navy);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.related-lab__dur{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--slate-400)}
+.related-lab:hover .related-lab__name{color:var(--xp)}
+
+/* Footer */
+.kf{background:var(--navy-d);color:rgba(255,255,255,.5);padding:26px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.07)}
+.kf p{margin:0;font-size:13px;letter-spacing:.2px}
+.kf strong{color:rgba(255,255,255,.18);font-weight:600}
+
+/* Responsive */
+@media(max-width:980px){
+  .detail .wrap{grid-template-columns:1fr}
+  .aside{position:static;order:-1}
+  .obj{grid-template-columns:1fr}
+  .spec{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .hero__head{flex-direction:column;gap:14px}
+  .concept-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .concept-grid{grid-template-columns:1fr}
+  .kh__name{font-size:15.5px}
+  .kh__nav a{padding:7px 9px;font-size:13px}
+}
+.kh__svg{width:62%;height:62%;display:block}
+/*txt-safe*/h1,h2,h3,h4,h5,h6,p,li,figcaption,dt,dd,blockquote{overflow-wrap:break-word;word-wrap:break-word}
+   </style>
+</head>
+<body>
+
+<header class="kh">
+  <div class="kh__in">
+    <a class="kh__brand" href="/">
+      <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" class="kh__svg" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+      <span class="kh__name">Koffi Academy</span>
+    </a>
+    <nav class="kh__nav" aria-label="Navigation principale">
+      <a href="/" data-i18n="navHome">Accueil</a>
+      <span class="kh__drop"><span class="kh__droplabel" data-i18n="navCourses">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire" class="active" data-i18n="navLab">Laboratoires</a><a href="/courses/courses.html" data-i18n="navCatalog">Catalogue</a><a href="/idp-demo.html" data-i18n="navDevPortal">Dev Portal</a></span></span>
+      <a href="/blog">Blog</a>
+      <a href="/culture.html">Culture</a>
+      <a href="/koffi-profile" data-i18n="navProfile">Profil</a>
+    </nav>
+    <div class="kl-drop" id="klDrop">
+      <button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false">
+        <span class="fi fi-de" id="klFlag"></span>
+        <span class="kl-code" id="klCode">DE</span>
+        <i class="fas fa-chevron-down kl-caret"></i>
+      </button>
+      <div class="kl-panel" role="menu">
+        <button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button>
+        <button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button>
+        <button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Fran&ccedil;ais</span><span class="kl-opt-code">FR</span></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <span class="hero__grid" aria-hidden="true"></span>
+  <span class="hero__glow" aria-hidden="true"></span>
+  <div class="wrap">
+    <nav class="crumb" aria-label="Fil d&rsquo;Ariane">
+      <a href="/laboratoire" data-i18n="navLab">Laboratoires</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="/laboratoire">Platform Engineering</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>Setting Up Your Crossplane Platform</span>
+    </nav>
+    <div class="hero__head">
+      <span class="hero__badge">
+        <img src="https://cdn.jsdelivr.net/gh/cncf/artwork/projects/crossplane/icon/color/crossplane-icon-color.svg" alt="Crossplane"
+             onerror="this.outerHTML='&lt;span style=&quot;font-family:JetBrains Mono;font-weight:700;font-size:20px;color:#0E9A8E&quot;&gt;CP&lt;/span&gt;'">
+      </span>
+      <div>
+        <p class="hero__cat">Platform Engineering &middot; Crossplane 101</p>
+        <h1>Setting Up Your Crossplane Platform</h1>
+        <div class="hero__meta">
+          <span class="mchip xp-chip"><i class="fa-solid fa-layer-group"></i>Crossplane</span>
+          <span class="mchip lvl"><i class="fa-solid fa-signal"></i><span data-i18n="lvl">D&eacute;butant</span></span>
+          <span class="mchip"><i class="fa-regular fa-clock"></i>120 min</span>
+          <span class="mchip"><i class="fa-solid fa-graduation-cap"></i><span data-i18n="parent">Crossplane 101</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main class="detail">
+  <div class="wrap">
+    <div class="main">
+
+      <!-- VIDEO -->
+      <section class="card">
+        <div class="card__head">
+          <i class="fa-solid fa-play"></i>
+          <h2 data-i18n="vTitle">Vid&eacute;o du laboratoire</h2>
+          <span class="tagx" data-i18n="vTag">7 chapitres &middot; 112 min</span>
+        </div>
+        <div class="card__body">
+          <div class="player" id="player">
+            <span class="player__grid" aria-hidden="true"></span>
+            <span class="player__soon" data-i18n="soon">Bient&ocirc;t disponible</span>
+            <span class="player__play"><i class="fa-solid fa-play"></i></span>
+            <span class="player__note" data-i18n="vNote">La vid&eacute;o m&eacute;thodique sera publi&eacute;e prochainement.</span>
+          </div>
+          <ol class="chapters">
+            <li><span class="num">01</span><span class="ttl" data-i18n="ch1">Introduction &agrave; Crossplane &mdash; concepts &amp; architecture</span><span class="dur">12:00</span></li>
+            <li><span class="num">02</span><span class="ttl" data-i18n="ch2">Pr&eacute;parer l'environnement : minikube + kubectl + Helm</span><span class="dur">10:30</span></li>
+            <li><span class="num">03</span><span class="ttl" data-i18n="ch3">Installer Crossplane via Helm et v&eacute;rifier les pods</span><span class="dur">14:00</span></li>
+            <li><span class="num">04</span><span class="ttl" data-i18n="ch4">Configurer le Provider AWS (ProviderConfig + Credentials)</span><span class="dur">20:00</span></li>
+            <li><span class="num">05</span><span class="ttl" data-i18n="ch5">Cr&eacute;er une premi&egrave;re Managed Resource (Bucket S3)</span><span class="dur">18:00</span></li>
+            <li><span class="num">06</span><span class="ttl" data-i18n="ch6">D&eacute;finir un XRD et une Composition</span><span class="dur">22:00</span></li>
+            <li><span class="num">07</span><span class="ttl" data-i18n="ch7">Cr&eacute;er un Claim et valider le cycle complet</span><span class="dur">15:30</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- OBJECTIFS -->
+      <section class="card">
+        <div class="card__head">
+          <i class="fa-solid fa-bullseye"></i>
+          <h2 data-i18n="objTitle">Objectifs d'apprentissage</h2>
+        </div>
+        <div class="card__body">
+          <ul class="obj">
+            <li><i class="fa-solid fa-check"></i><span data-i18n="o1">Comprendre l'architecture Crossplane : Control Plane, Provider, MR, XR, XRC.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="o2">Installer Crossplane via Helm sur un cluster Kubernetes local (minikube).</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="o3">Installer et configurer un Provider AWS avec ses credentials.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="o4">Cr&eacute;er et observer une Managed Resource (Bucket S3) dans AWS.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="o5">D&eacute;finir un CompositeResourceDefinition (XRD) avec un sch&eacute;ma OpenAPI.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="o6">Construire une Composition qui orchestre plusieurs Managed Resources.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="o7">Cr&eacute;er un Claim (XRC) en tant qu'utilisateur de la plateforme.</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="o8">D&eacute;boguer les ressources Crossplane avec kubectl describe et les &eacute;v&eacute;nements.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- CONCEPTS -->
+      <section class="card">
+        <div class="card__head">
+          <i class="fa-solid fa-shapes"></i>
+          <h2 data-i18n="conceptTitle">Concepts cl&eacute;s Crossplane</h2>
+        </div>
+        <div class="card__body">
+          <div class="concept-grid">
+            <div class="concept-card c1">
+              <div class="concept-icon"><i class="fa-solid fa-cubes"></i></div>
+              <div class="concept-num">01</div>
+              <div class="concept-title" data-i18n="concept1Title">Provider</div>
+              <div class="concept-body" data-i18n="concept1Body">Composant qui parle &agrave; un cloud (AWS, GCP, Azure). Il expose des CRDs pour chaque ressource cloud sous-jacente.</div>
+              <span class="concept-code">provider-aws-s3</span>
+            </div>
+            <div class="concept-card c2">
+              <div class="concept-icon"><i class="fa-solid fa-box"></i></div>
+              <div class="concept-num">02</div>
+              <div class="concept-title" data-i18n="concept2Title">Managed Resource</div>
+              <div class="concept-body" data-i18n="concept2Body">Repr&eacute;sentation 1:1 d'une ressource cloud r&eacute;elle. Cr&eacute;er un <em>Bucket</em> Crossplane cr&eacute;e un vrai bucket S3.</div>
+              <span class="concept-code">Bucket.s3.aws.crossplane.io</span>
+            </div>
+            <div class="concept-card c3">
+              <div class="concept-icon"><i class="fa-solid fa-layer-group"></i></div>
+              <div class="concept-num">03</div>
+              <div class="concept-title" data-i18n="concept3Title">XRD &amp; XR</div>
+              <div class="concept-body" data-i18n="concept3Body">Le CompositeResourceDefinition d&eacute;finit un nouveau type API. La Composite Resource en est une instance cluster-scoped.</div>
+              <span class="concept-code">XPostgreSQLInstance</span>
+            </div>
+            <div class="concept-card c4">
+              <div class="concept-icon"><i class="fa-solid fa-code-branch"></i></div>
+              <div class="concept-num">04</div>
+              <div class="concept-title" data-i18n="concept4Title">Composition</div>
+              <div class="concept-body" data-i18n="concept4Body">D&eacute;finit comment un XR est impl&eacute;ment&eacute; : quelles MRs cr&eacute;er, quels patches appliquer.</div>
+              <span class="concept-code">Composition.apiextensions.v1</span>
+            </div>
+            <div class="concept-card c5">
+              <div class="concept-icon"><i class="fa-solid fa-user"></i></div>
+              <div class="concept-num">05</div>
+              <div class="concept-title" data-i18n="concept5Title">Claim (XRC)</div>
+              <div class="concept-body" data-i18n="concept5Body">Vue namespace-scoped pour les d&eacute;veloppeurs. Un Claim &laquo;&nbsp;r&eacute;serve&nbsp;&raquo; un XR sans exposer la complexit&eacute; cloud.</div>
+              <span class="concept-code">PostgreSQLInstance (claim)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ARCHITECTURE -->
+      <section class="card">
+        <div class="card__head">
+          <i class="fa-solid fa-sitemap"></i>
+          <h2 data-i18n="archTitle">Architecture du lab</h2>
+        </div>
+        <div class="card__body">
+          <div class="arch">
+            <div class="arch-layer ly-dev">
+              <div class="arch-layer__label" data-i18n="archL1Label">Developer</div>
+              <div class="arch-layer__name" data-i18n="archL1Name">Team A &mdash; Namespace team-a</div>
+              <div class="arch-layer__desc" data-i18n="archL1Desc">Cr&eacute;e un Claim (PostgreSQLInstance) sans conna&icirc;tre les d&eacute;tails cloud</div>
+              <div class="arch-layer__pills"><span class="arch-pill">kubectl apply -f claim.yaml</span></div>
+            </div>
+            <div class="arch-arrow"><i class="fa-solid fa-arrow-down"></i> Crossplane reconcile</div>
+            <div class="arch-layer ly-plat">
+              <div class="arch-layer__label" data-i18n="archL2Label">Platform Layer</div>
+              <div class="arch-layer__name" data-i18n="archL2Name">Crossplane Control Plane</div>
+              <div class="arch-layer__desc" data-i18n="archL2Desc">XRD + Composition &rarr; Composite Resource (XR). Crossplane orchestre les Managed Resources d&eacute;finies.</div>
+              <div class="arch-layer__pills"><span class="arch-pill">XRD</span><span class="arch-pill">Composition</span><span class="arch-pill">XR</span></div>
+            </div>
+            <div class="arch-arrow"><i class="fa-solid fa-arrow-down"></i> AWS Provider</div>
+            <div class="arch-layer ly-prov">
+              <div class="arch-layer__label" data-i18n="archL3Label">Provider Layer</div>
+              <div class="arch-layer__name" data-i18n="archL3Name">Provider AWS v1.x</div>
+              <div class="arch-layer__desc" data-i18n="archL3Desc">Traduit les Managed Resources en appels API AWS. G&egrave;re le cycle de vie et la d&eacute;rive (drift).</div>
+              <div class="arch-layer__pills"><span class="arch-pill">Bucket</span><span class="arch-pill">RDSInstance</span><span class="arch-pill">IAMRole</span></div>
+            </div>
+            <div class="arch-arrow"><i class="fa-solid fa-arrow-down"></i> API calls</div>
+            <div class="arch-layer ly-cloud">
+              <div class="arch-layer__label" data-i18n="archL4Label">Cloud</div>
+              <div class="arch-layer__name" data-i18n="archL4Name">Amazon Web Services</div>
+              <div class="arch-layer__desc" data-i18n="archL4Desc">Infrastructure r&eacute;elle : S3, RDS, IAM, VPC. Crossplane maintient l'&eacute;tat d&eacute;sir&eacute; en continu.</div>
+              <div class="arch-layer__pills"><span class="arch-pill">S3</span><span class="arch-pill">RDS</span><span class="arch-pill">IAM</span><span class="arch-pill">VPC</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ENVIRONNEMENT -->
+      <section class="card">
+        <div class="card__head">
+          <i class="fa-solid fa-terminal"></i>
+          <h2 data-i18n="envTitle">Environnement &amp; apercu</h2>
+          <span class="tagx">minikube</span>
+        </div>
+        <div class="card__body">
+          <div class="term">
+            <div class="term__bar"><span class="r"></span><span class="y"></span><span class="g"></span><em>platform@crossplane-lab: ~</em></div>
+            <div class="term__body"><pre><span class="c"># 1 &middot; D&eacute;marrer minikube et v&eacute;rifier</span>
+<span class="p">$</span> minikube start --cpus=2 --memory=4096
+<span class="o">Done! kubectl is now configured to use "minikube"</span>
+
+<span class="c"># 2 &middot; Installer Crossplane via Helm</span>
+<span class="p">$</span> helm repo add crossplane-stable https://charts.crossplane.io/stable
+<span class="p">$</span> helm install crossplane crossplane-stable/crossplane \
+    --namespace crossplane-system --create-namespace
+<span class="p">$</span> kubectl get pods -n crossplane-system
+<span class="ok">NAME                                       READY   STATUS    AGE
+crossplane-7d8f9b6c4d-x2k8p                1/1     Running   45s
+crossplane-rbac-manager-5f9c7d9bb6-lqt9v   1/1     Running   44s</span>
+
+<span class="c"># 3 &middot; Installer le Provider AWS (famille S3)</span>
+<span class="p">$</span> cat &lt;&lt;'EOF' | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-s3
+spec:
+  package: xpkg.upbound.io/upbound/provider-aws-s3:v1.14.0
+EOF
+<span class="p">$</span> kubectl get providers
+<span class="ok">NAME               INSTALLED   HEALTHY   PACKAGE                         AGE
+provider-aws-s3    True        True      ...provider-aws-s3:v1.14.0       2m</span>
+
+<span class="c"># 4 &middot; Cr&eacute;er un Bucket S3 (Managed Resource)</span>
+<span class="p">$</span> kubectl apply -f bucket.yaml
+<span class="p">$</span> kubectl get bucket mon-lab-bucket
+<span class="ok">NAME              READY   SYNCED   EXTERNAL-NAME     AGE
+mon-lab-bucket    True    True     mon-lab-bucket    38s</span>
+
+<span class="c"># 5 &middot; Cr&eacute;er un Claim via l'abstraction XRD/Composition</span>
+<span class="p">$</span> kubectl apply -f claim.yaml -n team-a
+<span class="p">$</span> kubectl get postgresqlinstance -n team-a
+<span class="ok">NAME           READY   CONNECTION-SECRET   AGE
+my-postgres    True    my-postgres-conn    1m</span></pre></div>
+          </div>
+          <div class="spec">
+            <div class="spec__item"><i class="fa-brands fa-docker"></i><div><span class="k" data-i18n="spEnv">Environnement</span><span class="v">minikube v1.32 &middot; Kubernetes v1.30</span></div></div>
+            <div class="spec__item"><i class="fa-solid fa-cube"></i><div><span class="k">Crossplane</span><span class="v">v1.17 (Helm)</span></div></div>
+            <div class="spec__item"><i class="fa-brands fa-aws"></i><div><span class="k">Provider</span><span class="v">provider-aws-s3 v1.14</span></div></div>
+            <div class="spec__item"><i class="fa-solid fa-screwdriver-wrench"></i><div><span class="k" data-i18n="spTools">Outils</span><span class="v">kubectl, helm, up CLI</span></div></div>
+            <div class="spec__item"><i class="fa-solid fa-memory"></i><div><span class="k" data-i18n="spRam">RAM requis</span><span class="v">4 Go minikube</span></div></div>
+            <div class="spec__item"><i class="fa-regular fa-hourglass-half"></i><div><span class="k" data-i18n="spSession">Session</span><span class="v" data-i18n="spSessionV">120 min, r&eacute;initialisable</span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ETAPES -->
+      <section class="card">
+        <div class="card__head">
+          <i class="fa-solid fa-list-check"></i>
+          <h2 data-i18n="stepsTitle">D&eacute;roul&eacute; du laboratoire</h2>
+        </div>
+        <div class="card__body">
+          <ol class="steps">
+            <li>
+              <h3 data-i18n="s1t">Pr&eacute;parer l'environnement</h3>
+              <p data-i18n-html="s1d">D&eacute;marrez <code>minikube</code> avec au moins 4 Go de RAM et 2 vCPUs. V&eacute;rifiez que <code>kubectl</code> et <code>helm</code> sont install&eacute;s et pointent vers le bon contexte.</p>
+              <p class="step-note" data-i18n="s1note">Le lab fonctionne aussi sur kind ou k3d. Minikube est recommand&eacute; pour sa simplicit&eacute;.</p>
+            </li>
+            <li>
+              <h3 data-i18n="s2t">Installer Crossplane</h3>
+              <p data-i18n-html="s2d">Ajoutez le repo Helm <code>crossplane-stable</code>, installez Crossplane dans le namespace <code>crossplane-system</code> et attendez que les 2 pods (<code>crossplane</code> et <code>crossplane-rbac-manager</code>) soient <em>Running</em>.</p>
+            </li>
+            <li>
+              <h3 data-i18n="s3t">Installer le Provider AWS</h3>
+              <p data-i18n-html="s3d">Appliquez un manifest <code>Provider</code> pointant vers <code>provider-aws-s3</code>. Crossplane t&eacute;l&eacute;charge le package OCI et installe les CRDs AWS S3 dans le cluster (environs 90 secondes).</p>
+            </li>
+            <li>
+              <h3 data-i18n="s4t">Configurer les credentials AWS</h3>
+              <p data-i18n-html="s4d">Cr&eacute;ez un Secret Kubernetes contenant votre Access Key et Secret Key AWS, puis liez-le au Provider via un <code>ProviderConfig</code> utilisant <code>source: Secret</code>.</p>
+              <p class="step-note" data-i18n="s4note">En production, utilisez le provider d'identit&eacute; IRSA (IAM Role for Service Account) ou Upbound Cloud Credentials &mdash; &eacute;vitez les credentials statiques.</p>
+            </li>
+            <li>
+              <h3 data-i18n="s5t">Cr&eacute;er une Managed Resource S3</h3>
+              <p data-i18n-html="s5d">Appliquez un manifest <code>Bucket</code> (genre <code>s3.aws.crossplane.io/v1beta1</code>) avec <code>forProvider.region: eu-central-1</code>. Observez la cr&eacute;ation dans la console AWS et v&eacute;rifiez les conditions READY et SYNCED.</p>
+            </li>
+            <li>
+              <h3 data-i18n="s6t">D&eacute;finir un XRD et une Composition</h3>
+              <p data-i18n-html="s6d">Cr&eacute;ez un <code>CompositeResourceDefinition</code> nommant une ressource <em>XStorageBucket</em> avec son Claim <em>StorageBucket</em>. Puis cr&eacute;ez une <code>Composition</code> qui orchestre une <code>Bucket</code> MR &agrave; partir de l'XR, avec un patch pour injecter le nom depuis le Claim.</p>
+            </li>
+            <li>
+              <h3 data-i18n="s7t">Cr&eacute;er un Claim et valider</h3>
+              <p data-i18n-html="s7d">Dans le namespace <code>team-a</code>, appliquez un <code>StorageBucket</code> Claim. Crossplane cr&eacute;e automatiquement l'XR et la Bucket MR correspondante. V&eacute;rifiez avec <code>kubectl get managed</code> et <code>kubectl describe storagebucket</code>.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- VALIDATION -->
+      <section class="card">
+        <div class="card__head">
+          <i class="fa-solid fa-circle-check"></i>
+          <h2 data-i18n="valTitle">Points de validation</h2>
+        </div>
+        <div class="card__body">
+          <div class="validate">
+            <div class="validate__row"><i class="fa-solid fa-check"></i><span data-i18n-html="v1">Tous les pods <code>crossplane-system</code> sont en &eacute;tat <code>Running</code>.</span></div>
+            <div class="validate__row"><i class="fa-solid fa-check"></i><span data-i18n-html="v2">Le Provider <code>provider-aws-s3</code> affiche <code>INSTALLED=True</code> et <code>HEALTHY=True</code>.</span></div>
+            <div class="validate__row"><i class="fa-solid fa-check"></i><span data-i18n-html="v3">La Managed Resource <code>Bucket</code> affiche <code>READY=True</code> et <code>SYNCED=True</code>.</span></div>
+            <div class="validate__row"><i class="fa-solid fa-check"></i><span data-i18n-html="v4">Le bucket existe r&eacute;ellement dans la console AWS (ou localstack) avec les bons tags.</span></div>
+            <div class="validate__row"><i class="fa-solid fa-check"></i><span data-i18n-html="v5">Le Claim <code>StorageBucket</code> dans <code>team-a</code> est <code>READY=True</code> et bound &agrave; un XR.</span></div>
+            <div class="validate__row"><i class="fa-solid fa-check"></i><span data-i18n-html="v6"><code>kubectl get managed</code> liste toutes les MRs avec leur statut SYNCED.</span></div>
+            <div class="validate__row"><i class="fa-solid fa-check"></i><span data-i18n-html="v7">Modifier le Claim (ex. changer un tag) se propage automatiquement &agrave; la ressource cloud.</span></div>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /.main -->
+
+    <!-- ASIDE -->
+    <aside class="aside">
+      <div class="fiche">
+        <div class="fiche__top">
+          <h3 data-i18n="fTitle">Fiche technique</h3>
+          <p data-i18n="fSub">Koffi Academy &middot; Laboratoire pratique</p>
+        </div>
+        <div class="fiche__rows">
+          <div class="frow"><i class="fa-solid fa-signal"></i><span class="fk" data-i18n="fNiveau">Niveau</span><span class="fv" data-i18n="lvl">D&eacute;butant</span></div>
+          <div class="frow"><i class="fa-regular fa-clock"></i><span class="fk" data-i18n="fDuree">Dur&eacute;e</span><span class="fv">120 min</span></div>
+          <div class="frow"><i class="fa-solid fa-layer-group"></i><span class="fk" data-i18n="fCat">Cat&eacute;gorie</span><span class="fv">Platform Engineering</span></div>
+          <div class="frow"><i class="fa-solid fa-graduation-cap"></i><span class="fk" data-i18n="fParcours">Parcours</span><span class="fv" data-i18n="parent">Crossplane 101</span></div>
+          <div class="frow"><i class="fa-solid fa-cube"></i><span class="fk" data-i18n="fFormat">Format</span><span class="fv" data-i18n="fFormatV">Vid&eacute;o + Sandbox</span></div>
+          <div class="frow"><i class="fa-brands fa-aws"></i><span class="fk">Provider</span><span class="fv">AWS S3 v1.14</span></div>
+        </div>
+        <div class="fiche__pre">
+          <h4 data-i18n="fPre">Pr&eacute;requis</h4>
+          <ul>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="p1">Kubernetes : kubectl, namespaces, pods</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="p2">Helm : helm install, helm upgrade</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="p3">Notions YAML et CRDs Kubernetes</span></li>
+            <li><i class="fa-solid fa-check"></i><span data-i18n="p4">Compte AWS (ou LocalStack pour &eacute;viter les co&ucirc;ts)</span></li>
+          </ul>
+        </div>
+        <div class="fiche__tags">
+          <h4 data-i18n="fTags">Tags</h4>
+          <div class="tags">
+            <span class="tag">crossplane</span>
+            <span class="tag">kubernetes</span>
+            <span class="tag">platform</span>
+            <span class="tag">iac</span>
+            <span class="tag">aws</span>
+            <span class="tag">cncf</span>
+          </div>
+        </div>
+        <div class="fiche__cta">
+          <a class="btn btn--primary" href="payment/checkout.html?course=crossplane-setup&amp;price=35&amp;min=120&amp;title=Setting%20Up%20Your%20Crossplane%20Platform" id="ctaBtn"><i class="fa-solid fa-lock-open"></i> <span data-i18n="ctaLaunch">Acc&eacute;der au contenu</span></a>
+          <a class="btn btn--ghost" href="/laboratoire"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="ctaAll">Tous les laboratoires</span></a>
+          <p class="soon-hint" data-i18n="hint">Vid&eacute;o et sandbox interactifs bient&ocirc;t disponibles.</p>
+        </div>
+      </div>
+
+      <!-- Related labs -->
+      <div class="fiche">
+        <div class="fiche__rows">
+          <h4 class="fiche__pre h4" data-i18n="relTitle">Labs associ&eacute;s</h4>
+          <a class="related-lab" href="free-courses/crossplane-101.html">
+            <span class="related-lab__badge"><i class="fa-solid fa-book-open"></i></span>
+            <span class="related-lab__txt">
+              <span class="related-lab__name">Crossplane 101 &mdash; Cours complet</span>
+              <span class="related-lab__dur">6 modules</span>
+            </span>
+          </a>
+          <a class="related-lab" href="/laboratoire">
+            <span class="related-lab__badge"><i class="fa-brands fa-aws"></i></span>
+            <span class="related-lab__txt">
+              <span class="related-lab__name">AWS Playground</span>
+              <span class="related-lab__dur">180 min &middot; Sandbox</span>
+            </span>
+          </a>
+          <a class="related-lab" href="free-courses/terraform-beginners.html">
+            <span class="related-lab__badge"><i class="fa-solid fa-layer-group"></i></span>
+            <span class="related-lab__txt">
+              <span class="related-lab__name">Terraform Fundamentals</span>
+              <span class="related-lab__dur">8 modules</span>
+            </span>
+          </a>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</main>
+
+<footer class="kf">
+  <p>&copy; 2026 <strong>Koffi Academy</strong>. <span data-i18n="fRights">Tous droits r&eacute;serv&eacute;s.</span></p>
+</footer>
+
+<script>
+window.I18N_LAB={
+"fr":{"navHome":"Accueil","navCourses":"Cours","navCatalog":"Catalogue","navLab":"Laboratoires","navProfile":"Profil","parent":"Crossplane 101","lvl":"Débutant","vTitle":"Vidéo du laboratoire","vTag":"7 chapitres · 112 min","soon":"Bientôt disponible","vNote":"La vidéo méthodique sera publiée prochainement.","ch1":"Introduction à Crossplane — concepts & architecture","ch2":"Préparer l’environnement : minikube + kubectl + Helm","ch3":"Installer Crossplane via Helm et vérifier les pods","ch4":"Configurer le Provider AWS (ProviderConfig + Credentials)","ch5":"Créer une première Managed Resource (Bucket S3)","ch6":"Définir un XRD et une Composition","ch7":"Créer un Claim et valider le cycle complet","objTitle":"Objectifs d’apprentissage","o1":"Comprendre l’architecture Crossplane : Control Plane, Provider, MR, XR, XRC.","o2":"Installer Crossplane via Helm sur un cluster Kubernetes local (minikube).","o3":"Installer et configurer un Provider AWS avec ses credentials.","o4":"Créer et observer une Managed Resource (Bucket S3) dans AWS.","o5":"Définir un CompositeResourceDefinition (XRD) avec un schéma OpenAPI.","o6":"Construire une Composition qui orchestre plusieurs Managed Resources.","o7":"Créer un Claim (XRC) en tant qu’utilisateur de la plateforme.","o8":"Déboguer les ressources Crossplane avec kubectl describe et les événements.","conceptTitle":"Concepts clés Crossplane","concept1Title":"Provider","concept1Body":"Composant qui parle à un cloud (AWS, GCP, Azure). Il expose des CRDs pour chaque ressource cloud sous-jacente.","concept2Title":"Managed Resource","concept2Body":"Représentation 1:1 d’une ressource cloud réelle. Créer un Bucket Crossplane crée un vrai bucket S3.","concept3Title":"XRD & XR","concept3Body":"Le CompositeResourceDefinition définit un nouveau type API. La Composite Resource en est une instance cluster-scoped.","concept4Title":"Composition","concept4Body":"Définit comment un XR est implémenté : quelles MRs créer, quels patches appliquer.","concept5Title":"Claim (XRC)","concept5Body":"Vue namespace-scoped pour les développeurs. Un Claim réserve un XR sans exposer la complexité cloud.","archTitle":"Architecture du lab","archL1Label":"Developer","archL1Name":"Team A — Namespace team-a","archL1Desc":"Crée un Claim (PostgreSQLInstance) sans connaître les détails cloud","archL2Label":"Platform Layer","archL2Name":"Crossplane Control Plane","archL2Desc":"XRD + Composition → Composite Resource (XR). Crossplane orchestre les Managed Resources définies.","archL3Label":"Provider Layer","archL3Name":"Provider AWS v1.x","archL3Desc":"Traduit les Managed Resources en appels API AWS. Gère le cycle de vie et la dérive (drift).","archL4Label":"Cloud","archL4Name":"Amazon Web Services","archL4Desc":"Infrastructure réelle : S3, RDS, IAM, VPC. Crossplane maintient l’état désiré en continu.","envTitle":"Environnement & aperçu","spEnv":"Environnement","spTools":"Outils","spRam":"RAM requis","spSession":"Session","spSessionV":"120 min, réinitialisable","stepsTitle":"Déroulé du laboratoire","s1t":"Préparer l’environnement","s1d":"Démarrez <code>minikube</code> avec au moins 4 Go de RAM et 2 vCPUs. Vérifiez que <code>kubectl</code> et <code>helm</code> sont installés et pointent vers le bon contexte.","s1note":"Le lab fonctionne aussi sur kind ou k3d. Minikube est recommandé pour sa simplicité.","s2t":"Installer Crossplane","s2d":"Ajoutez le repo Helm <code>crossplane-stable</code>, installez Crossplane dans le namespace <code>crossplane-system</code> et attendez que les 2 pods soient <em>Running</em>.","s3t":"Installer le Provider AWS","s3d":"Appliquez un manifest <code>Provider</code> pointant vers <code>provider-aws-s3</code>. Crossplane télécharge le package OCI et installe les CRDs AWS S3 dans le cluster.","s4t":"Configurer les credentials AWS","s4d":"Créez un Secret Kubernetes contenant votre Access Key et Secret Key AWS, puis liez-le au Provider via un <code>ProviderConfig</code> utilisant <code>source: Secret</code>.","s4note":"En production, utilisez IRSA (IAM Role for Service Account) ou Upbound Cloud Credentials — évitez les credentials statiques.","s5t":"Créer une Managed Resource S3","s5d":"Appliquez un manifest <code>Bucket</code> avec <code>forProvider.region: eu-central-1</code>. Observez la création dans la console AWS et vérifiez les conditions READY et SYNCED.","s6t":"Définir un XRD et une Composition","s6d":"Créez un <code>CompositeResourceDefinition</code> nommant une ressource <em>XStorageBucket</em> avec son Claim <em>StorageBucket</em>. Puis créez une <code>Composition</code> qui orchestre une <code>Bucket</code> MR.","s7t":"Créer un Claim et valider","s7d":"Dans le namespace <code>team-a</code>, appliquez un <code>StorageBucket</code> Claim. Vérifiez avec <code>kubectl get managed</code> et <code>kubectl describe storagebucket</code>.","valTitle":"Points de validation","v1":"Tous les pods <code>crossplane-system</code> sont en état <code>Running</code>.","v2":"Le Provider <code>provider-aws-s3</code> affiche <code>INSTALLED=True</code> et <code>HEALTHY=True</code>.","v3":"La Managed Resource <code>Bucket</code> affiche <code>READY=True</code> et <code>SYNCED=True</code>.","v4":"Le bucket existe réellement dans la console AWS avec les bons tags.","v5":"Le Claim <code>StorageBucket</code> dans <code>team-a</code> est <code>READY=True</code> et bound à un XR.","v6":"<code>kubectl get managed</code> liste toutes les MRs avec leur statut SYNCED.","v7":"Modifier le Claim (ex. changer un tag) se propage automatiquement à la ressource cloud.","fTitle":"Fiche technique","fSub":"Koffi Academy · Laboratoire pratique","fNiveau":"Niveau","fDuree":"Durée","fCat":"Catégorie","fParcours":"Parcours","fFormat":"Format","fFormatV":"Vidéo + Sandbox","fPre":"Prérequis","p1":"Kubernetes : kubectl, namespaces, pods","p2":"Helm : helm install, helm upgrade","p3":"Notions YAML et CRDs Kubernetes","p4":"Compte AWS (ou LocalStack pour éviter les coûts)","fTags":"Tags","relTitle":"Labs associés","ctaLaunch":"Accéder au contenu","ctaAll":"Tous les laboratoires","hint":"Vidéo et sandbox interactifs bientôt disponibles.","fRights":"Tous droits réservés."},
+"de":{"navHome":"Startseite","navCourses":"Kurse","navCatalog":"Kurskatalog","navLab":"Labore","navProfile":"Profil","parent":"Crossplane 101","lvl":"Anfänger","vTitle":"Lab-Video","vTag":"7 Kapitel · 112 Min","soon":"Bald verfügbar","vNote":"Das methodische Video wird in Kürze veröffentlicht.","ch1":"Einführung in Crossplane — Konzepte & Architektur","ch2":"Umgebung vorbereiten: minikube + kubectl + Helm","ch3":"Crossplane via Helm installieren und Pods prüfen","ch4":"AWS Provider konfigurieren (ProviderConfig + Credentials)","ch5":"Erste Managed Resource erstellen (S3 Bucket)","ch6":"XRD und Composition definieren","ch7":"Claim erstellen und vollständigen Zyklus validieren","objTitle":"Lernziele","o1":"Die Crossplane-Architektur verstehen: Control Plane, Provider, MR, XR, XRC.","o2":"Crossplane via Helm auf einem lokalen Kubernetes-Cluster (minikube) installieren.","o3":"Einen AWS Provider mit seinen Credentials installieren und konfigurieren.","o4":"Eine Managed Resource (S3 Bucket) in AWS erstellen und beobachten.","o5":"Ein CompositeResourceDefinition (XRD) mit einem OpenAPI-Schema definieren.","o6":"Eine Composition erstellen, die mehrere Managed Resources orchestriert.","o7":"Als Plattformnutzer einen Claim (XRC) erstellen.","o8":"Crossplane-Ressourcen mit kubectl describe und Events debuggen.","conceptTitle":"Crossplane Schlußkonzepte","concept1Title":"Provider","concept1Body":"Komponente, die mit einer Cloud (AWS, GCP, Azure) kommuniziert und CRDs für jede Cloud-Ressource bereitstellt.","concept2Title":"Managed Resource","concept2Body":"1:1-Abbild einer echten Cloud-Ressource. Ein Crossplane Bucket erstellt einen echten S3 Bucket.","concept3Title":"XRD & XR","concept3Body":"Das CompositeResourceDefinition definiert einen neuen API-Typ. Die Composite Resource ist eine cluster-scoped Instanz.","concept4Title":"Composition","concept4Body":"Definiert wie ein XR implementiert wird: welche MRs erstellt und welche Patches angewendet werden.","concept5Title":"Claim (XRC)","concept5Body":"Namespace-scoped Sicht für Entwickler. Ein Claim reserviert einen XR ohne Cloud-Komplexität offenzulegen.","archTitle":"Lab-Architektur","archL1Label":"Developer","archL1Name":"Team A — Namespace team-a","archL1Desc":"Erstellt einen Claim ohne Cloud-Details zu kennen","archL2Label":"Platform Layer","archL2Name":"Crossplane Control Plane","archL2Desc":"XRD + Composition → Composite Resource (XR). Crossplane orchestriert definierte MRs.","archL3Label":"Provider Layer","archL3Name":"Provider AWS v1.x","archL3Desc":"Wandelt MRs in AWS API-Aufrufe um. Verwaltet Lebenszyklus und Drift-Erkennung.","archL4Label":"Cloud","archL4Name":"Amazon Web Services","archL4Desc":"Echte Infrastruktur: S3, RDS, IAM, VPC. Crossplane hält den Desired State kontinuierlich aufrecht.","envTitle":"Umgebung & Vorschau","spEnv":"Umgebung","spTools":"Tools","spRam":"RAM-Bedarf","spSession":"Sitzung","spSessionV":"120 Min, zurücksetzbar","stepsTitle":"Ablauf des Labors","s1t":"Umgebung vorbereiten","s1d":"Starten Sie <code>minikube</code> mit mindestens 4 GB RAM und 2 vCPUs. Prüfen Sie, dass <code>kubectl</code> und <code>helm</code> installiert und auf den richtigen Kontext zeigen.","s1note":"Das Lab funktioniert auch mit kind oder k3d. Minikube wird wegen seiner Einfachheit empfohlen.","s2t":"Crossplane installieren","s2d":"Fügen Sie das Helm-Repo <code>crossplane-stable</code> hinzu, installieren Sie Crossplane im Namespace <code>crossplane-system</code> und warten Sie, bis die 2 Pods <em>Running</em> sind.","s3t":"AWS Provider installieren","s3d":"Wenden Sie ein <code>Provider</code>-Manifest für <code>provider-aws-s3</code> an. Crossplane lädt das OCI-Paket herunter und installiert die AWS S3 CRDs im Cluster.","s4t":"AWS Credentials konfigurieren","s4d":"Erstellen Sie ein Kubernetes Secret mit Access Key und Secret Key, und binden Sie es über eine <code>ProviderConfig</code> mit <code>source: Secret</code> an den Provider.","s4note":"In der Produktion: IRSA (IAM Role for Service Account) oder Upbound Cloud Credentials verwenden — keine statischen Credentials.","s5t":"Managed Resource S3 erstellen","s5d":"Wenden Sie ein <code>Bucket</code>-Manifest mit <code>forProvider.region: eu-central-1</code> an. Beobachten Sie die Erstellung in der AWS-Konsole und prüfen Sie READY und SYNCED.","s6t":"XRD und Composition definieren","s6d":"Erstellen Sie ein <code>CompositeResourceDefinition</code> für eine Ressource <em>XStorageBucket</em> mit dem Claim <em>StorageBucket</em>. Dann eine <code>Composition</code>, die eine <code>Bucket</code> MR orchestriert.","s7t":"Claim erstellen und validieren","s7d":"Im Namespace <code>team-a</code> wenden Sie einen <code>StorageBucket</code> Claim an. Überprüfen Sie mit <code>kubectl get managed</code> und <code>kubectl describe storagebucket</code>.","valTitle":"Validierungspunkte","v1":"Alle Pods in <code>crossplane-system</code> haben den Status <code>Running</code>.","v2":"Der Provider <code>provider-aws-s3</code> zeigt <code>INSTALLED=True</code> und <code>HEALTHY=True</code>.","v3":"Die Managed Resource <code>Bucket</code> zeigt <code>READY=True</code> und <code>SYNCED=True</code>.","v4":"Der Bucket existiert wirklich in der AWS-Konsole mit den richtigen Tags.","v5":"Der Claim <code>StorageBucket</code> in <code>team-a</code> ist <code>READY=True</code> und an einen XR gebunden.","v6":"<code>kubectl get managed</code> listet alle MRs mit ihrem SYNCED-Status.","v7":"Eine Änderung am Claim (z.B. ein Tag) wird automatisch an die Cloud-Ressource weitergegeben.","fTitle":"Technisches Datenblatt","fSub":"Koffi Academy · Praxislabor","fNiveau":"Niveau","fDuree":"Dauer","fCat":"Kategorie","fParcours":"Lernpfad","fFormat":"Format","fFormatV":"Video + Sandbox","fPre":"Voraussetzungen","p1":"Kubernetes: kubectl, Namespaces, Pods","p2":"Helm: helm install, helm upgrade","p3":"YAML- und CRD-Kenntnisse","p4":"AWS-Konto (oder LocalStack, um Kosten zu vermeiden)","fTags":"Tags","relTitle":"Verwandte Labs","ctaLaunch":"Inhalt freischalten","ctaAll":"Alle Labore","hint":"Interaktives Video und Sandbox bald verfügbar.","fRights":"Alle Rechte vorbehalten."},
+"en":{"navHome":"Home","navCourses":"Courses","navCatalog":"Course catalog","navLab":"Labs","navProfile":"Profile","parent":"Crossplane 101","lvl":"Beginner","vTitle":"Lab video","vTag":"7 chapters · 112 min","soon":"Coming soon","vNote":"The methodical video will be published soon.","ch1":"Introduction to Crossplane — concepts & architecture","ch2":"Prepare the environment: minikube + kubectl + Helm","ch3":"Install Crossplane via Helm and verify pods","ch4":"Configure the AWS Provider (ProviderConfig + Credentials)","ch5":"Create your first Managed Resource (S3 Bucket)","ch6":"Define an XRD and a Composition","ch7":"Create a Claim and validate the full cycle","objTitle":"Learning objectives","o1":"Understand the Crossplane architecture: Control Plane, Provider, MR, XR, XRC.","o2":"Install Crossplane via Helm on a local Kubernetes cluster (minikube).","o3":"Install and configure an AWS Provider with credentials.","o4":"Create and observe a Managed Resource (S3 Bucket) in AWS.","o5":"Define a CompositeResourceDefinition (XRD) with an OpenAPI schema.","o6":"Build a Composition that orchestrates multiple Managed Resources.","o7":"Create a Claim (XRC) as a platform user.","o8":"Debug Crossplane resources with kubectl describe and events.","conceptTitle":"Key Crossplane Concepts","concept1Title":"Provider","concept1Body":"Component that talks to a cloud (AWS, GCP, Azure). It exposes CRDs for each underlying cloud resource.","concept2Title":"Managed Resource","concept2Body":"1:1 representation of a real cloud resource. Creating a Crossplane Bucket creates a real S3 bucket.","concept3Title":"XRD & XR","concept3Body":"The CompositeResourceDefinition defines a new API type. The Composite Resource is a cluster-scoped instance.","concept4Title":"Composition","concept4Body":"Defines how an XR is implemented: which MRs to create, which patches to apply.","concept5Title":"Claim (XRC)","concept5Body":"Namespace-scoped view for developers. A Claim reserves an XR without exposing cloud complexity.","archTitle":"Lab architecture","archL1Label":"Developer","archL1Name":"Team A — Namespace team-a","archL1Desc":"Creates a Claim without knowing cloud details","archL2Label":"Platform Layer","archL2Name":"Crossplane Control Plane","archL2Desc":"XRD + Composition → Composite Resource (XR). Crossplane orchestrates defined Managed Resources.","archL3Label":"Provider Layer","archL3Name":"Provider AWS v1.x","archL3Desc":"Translates Managed Resources into AWS API calls. Manages lifecycle and drift detection.","archL4Label":"Cloud","archL4Name":"Amazon Web Services","archL4Desc":"Real infrastructure: S3, RDS, IAM, VPC. Crossplane continuously maintains desired state.","envTitle":"Environment & preview","spEnv":"Environment","spTools":"Tools","spRam":"RAM required","spSession":"Session","spSessionV":"120 min, resettable","stepsTitle":"Lab walkthrough","s1t":"Prepare the environment","s1d":"Start <code>minikube</code> with at least 4 GB RAM and 2 vCPUs. Verify that <code>kubectl</code> and <code>helm</code> are installed and pointing to the right context.","s1note":"The lab also works with kind or k3d. Minikube is recommended for its simplicity.","s2t":"Install Crossplane","s2d":"Add the <code>crossplane-stable</code> Helm repo, install Crossplane in the <code>crossplane-system</code> namespace and wait until the 2 pods are <em>Running</em>.","s3t":"Install the AWS Provider","s3d":"Apply a <code>Provider</code> manifest pointing to <code>provider-aws-s3</code>. Crossplane downloads the OCI package and installs the AWS S3 CRDs in the cluster.","s4t":"Configure AWS credentials","s4d":"Create a Kubernetes Secret with your Access Key and Secret Key, then bind it to the Provider via a <code>ProviderConfig</code> using <code>source: Secret</code>.","s4note":"In production, use IRSA (IAM Role for Service Account) or Upbound Cloud Credentials — avoid static credentials.","s5t":"Create an S3 Managed Resource","s5d":"Apply a <code>Bucket</code> manifest with <code>forProvider.region: eu-central-1</code>. Observe the creation in the AWS console and verify the READY and SYNCED conditions.","s6t":"Define an XRD and a Composition","s6d":"Create a <code>CompositeResourceDefinition</code> for a resource <em>XStorageBucket</em> with its Claim <em>StorageBucket</em>. Then create a <code>Composition</code> that orchestrates a <code>Bucket</code> MR.","s7t":"Create a Claim and validate","s7d":"In namespace <code>team-a</code>, apply a <code>StorageBucket</code> Claim. Verify with <code>kubectl get managed</code> and <code>kubectl describe storagebucket</code>.","valTitle":"Validation checkpoints","v1":"All pods in <code>crossplane-system</code> are in <code>Running</code> state.","v2":"Provider <code>provider-aws-s3</code> shows <code>INSTALLED=True</code> and <code>HEALTHY=True</code>.","v3":"Managed Resource <code>Bucket</code> shows <code>READY=True</code> and <code>SYNCED=True</code>.","v4":"The bucket actually exists in the AWS console with the correct tags.","v5":"The <code>StorageBucket</code> Claim in <code>team-a</code> is <code>READY=True</code> and bound to an XR.","v6":"<code>kubectl get managed</code> lists all MRs with their SYNCED status.","v7":"Modifying the Claim (e.g. changing a tag) propagates automatically to the cloud resource.","fTitle":"Technical sheet","fSub":"Koffi Academy · Hands-on lab","fNiveau":"Level","fDuree":"Duration","fCat":"Category","fParcours":"Track","fFormat":"Format","fFormatV":"Video + Sandbox","fPre":"Prerequisites","p1":"Kubernetes: kubectl, namespaces, pods","p2":"Helm: helm install, helm upgrade","p3":"YAML and Kubernetes CRD basics","p4":"AWS account (or LocalStack to avoid costs)","fTags":"Tags","relTitle":"Related labs","ctaLaunch":"Unlock content","ctaAll":"All labs","hint":"Interactive video and sandbox coming soon.","fRights":"All rights reserved."}
+};
+(function(){
+  var I=window.I18N_LAB;
+  var lang=localStorage.getItem("preferred-lang");
+  if(!I[lang])lang="de";
+  function apply(l){
+    if(!I[l])return;
+    lang=l;
+    localStorage.setItem("preferred-lang",l);
+    document.documentElement.lang=l;
+    var d=I[l];
+    document.querySelectorAll("[data-i18n]").forEach(function(el){var k=el.getAttribute("data-i18n");if(d[k]!==undefined)el.textContent=d[k];});
+    document.querySelectorAll("[data-i18n-html]").forEach(function(el){var k=el.getAttribute("data-i18n-html");if(d[k]!==undefined)el.innerHTML=d[k];});
+  }
+  window.setLabDetailLang=apply;
+  document.addEventListener("DOMContentLoaded",function(){apply(lang);});
+})();
+</script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+var p=document.getElementById('player');
+if(p){p.style.cursor='pointer';p.addEventListener('click',function(){location.href='payment/checkout.html?course=crossplane-setup&price=35&min=120&title=Setting%20Up%20Your%20Crossplane%20Platform';});}
+</script>
+<script src="/assets/js/mobile-nav.js"></script>
+</body>
+</html>
