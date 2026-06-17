@@ -26,6 +26,7 @@ jobs:
           SFTP_HOST: ${{ secrets.SFTP_HOST }}
           SFTP_USER: ${{ secrets.SFTP_USER }}
           SFTP_PASS: ${{ secrets.SFTP_PASS }}
+          # SFTP_REMOTE_PATH supprimé — chemin hardcodé dans deploy-sftp.sh
         run: bash .github/scripts/deploy-sftp.sh
 
       - name: Summary

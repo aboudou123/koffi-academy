@@ -12,8 +12,9 @@ if [ ${#missing[@]} -gt 0 ]; then
   exit 1
 fi
 
-# ── Chemin distant (one.com : www/ confirmé par ls diagnostic) ────────────────
-REMOTE="www/"
+# ── Chemin distant ────────────────────────────────────────────────────────────
+# Sur one.com : webroots/by-route/lingenieur.de_/ est la racine web confirmée
+REMOTE="webroots/by-route/lingenieur.de_/"
 
 echo "Hôte   : ${SFTP_HOST}"
 echo "User   : ${SFTP_USER}"
@@ -26,21 +27,19 @@ lftp -u "${SFTP_USER},${SFTP_PASS}" "sftp://${SFTP_HOST}:22" << 'LFTP_DIAG'
 set sftp:auto-confirm yes
 set net:timeout 15
 ls
-echo "--- Contenu de www/ ---"
-ls www/
 bye
 LFTP_DIAG
 echo "================================"
 echo ""
 
 # ── Transfert ─────────────────────────────────────────────────────────────────
-echo "Déploiement de public/ → www/ ..."
-lftp -u "${SFTP_USER},${SFTP_PASS}" "sftp://${SFTP_HOST}:22" << 'LFTP_DEPLOY'
+echo "Déploiement de public/ → ${REMOTE} ..."
+lftp -u "${SFTP_USER},${SFTP_PASS}" "sftp://${SFTP_HOST}:22" << LFTP_DEPLOY
 set sftp:auto-confirm yes
 set net:timeout 30
 set net:max-retries 3
 set net:reconnect-interval-base 5
-mirror --reverse --delete --verbose ./public/ www/
+mirror --reverse --delete --verbose ./public/ ${REMOTE}
 bye
 LFTP_DEPLOY
 
