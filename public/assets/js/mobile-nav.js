@@ -9,6 +9,10 @@
   var st = document.createElement("style"); st.textContent =
     ".nav-burger{display:none;background:transparent;border:0;cursor:pointer;padding:6px 9px;line-height:1;border-radius:8px;color:#07294d;font-size:22px}" +
     ".nav-burger:hover{background:#f1f5f9}" +
+    ".kh__burger{display:none;background:transparent;border:0;cursor:pointer;padding:6px 9px;line-height:1;border-radius:8px;color:#fff;font-size:22px}" +
+    ".kh__burger:before{content:\"\\2630\";font-family:Arial,sans-serif;font-weight:700;line-height:1}" +
+    ".kh__burger i{display:none}" +
+    ".kh__burger:hover{background:rgba(255,255,255,.12)}" +
     "@media(max-width:860px){" +
       ".nav-burger{display:inline-flex;align-items:center;justify-content:center}" +
       ".navbar .wrap{position:relative}" +
@@ -18,6 +22,24 @@
       ".navbar .nav-menu .nm-drop{flex-direction:column;align-items:stretch}" +
       ".navbar .nav-menu .nm-drop>i{display:none}" +
       ".navbar .nav-menu .nm-menu{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:0;padding:0 0 4px 16px}" +
+      ".kh__burger{display:inline-flex!important;align-items:center;justify-content:center;flex-shrink:0}" +
+      ".kh .kh__in{position:relative;gap:10px}" +
+      ".kh .kh__brand{min-width:0}" +
+      ".kh .kh__name{white-space:normal;line-height:1.15}" +
+      ".kh .kh__nav{position:absolute!important;top:calc(100% + 1px)!important;left:0!important;right:0!important;display:none!important;flex-direction:column!important;align-items:stretch!important;gap:0!important;background:#0a2240!important;border-top:2px solid rgba(214,160,45,.5)!important;padding:8px 14px 16px!important;box-shadow:0 24px 50px rgba(0,0,0,.55)!important;z-index:80!important}" +
+      ".kh .kh__nav.is-open{display:flex!important}" +
+      ".kh .kh__nav>a{display:block;padding:14px 12px!important;font-size:15.5px!important;font-weight:600;color:rgba(255,255,255,.9)!important;border-radius:9px;border-bottom:1px solid rgba(255,255,255,.06);white-space:normal}" +
+      ".kh .kh__nav>a:hover,.kh .kh__nav>a:active{background:rgba(255,255,255,.08)!important;color:#fff!important}" +
+      ".kh .kh__nav>a.active{color:#f9d77e!important;background:rgba(214,160,45,.12)!important}" +
+      ".kh .kh__nav .kh__drop{display:flex!important;flex-direction:column!important;align-items:stretch!important;border-bottom:1px solid rgba(255,255,255,.06)}" +
+      ".kh .kh__nav .kh__droplabel{padding:14px 12px!important;font-size:15.5px!important;font-weight:600;color:rgba(255,255,255,.9)!important;white-space:normal}" +
+      ".kh .kh__nav .kh__drop>i{display:none!important}" +
+      ".kh .kh__nav .kh__menu{position:static!important;opacity:1!important;visibility:visible!important;transform:none!important;background:rgba(255,255,255,.05)!important;border:0!important;border-left:2px solid rgba(214,160,45,.5)!important;border-radius:0 0 8px 8px!important;box-shadow:none!important;padding:4px 0 8px 12px!important;min-width:0!important;margin-bottom:6px!important;transition:none!important}" +
+      ".kh .kh__nav .kh__menu a{display:block;padding:11px 12px!important;font-size:14.5px!important;font-weight:600;color:rgba(255,255,255,.85)!important;border-radius:7px;text-decoration:none;white-space:normal}" +
+      ".kh .kh__nav .kh__menu a:hover,.kh .kh__nav .kh__menu a:active{background:rgba(255,255,255,.09)!important;color:#fff!important}" +
+      ".kh .kh__nav .kh__menu a.active{color:#f9d77e!important}" +
+      ".kh .kh__nav .kh__auth{display:flex!important;gap:10px;margin:12px 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.10)}" +
+      ".kh .kh__nav .kh__login,.kh .kh__nav .kh__btn{flex:1;text-align:center;padding:11px 12px!important;font-size:14.5px!important}" +
     "}" +
     ":where(a,button,input,select,textarea,[tabindex],.chip,.lab-cta,.btn,.kh__nav a,.seg button,.kl-opt,.kl-btn):focus-visible{outline:2px solid #f89035;outline-offset:2px;border-radius:6px}" +
     "button:disabled,.btn:disabled,[aria-disabled=\"true\"]{opacity:.55;cursor:not-allowed}";
