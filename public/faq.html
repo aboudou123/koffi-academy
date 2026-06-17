@@ -4,10 +4,10 @@
       <!-- Required meta tags -->
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <link rel="stylesheet" href="assets/css/style.css">
-      <link rel="stylesheet" href="assets/css/responsive.css">
+      <link rel="stylesheet" href="/assets/css/style.css">
+      <link rel="stylesheet" href="/assets/css/responsive.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-      <link rel="shortcut icon" href="assets/images/logo.png">
+      <link rel="shortcut icon" href="/assets/images/logo.png">
       <title>Leitfaden zur Backstage Kubernetes-Integration</title>
       <meta name="Keywords" content="Backstage, Kubernetes, IDP, Internal Developer Platform, Spotify, Uffizzi, DevOps">
       <meta name="Description" content="Backstage ist ein beliebtes Softwareprojekt des Teams von Spotify, das es Organisationen ermöglicht, ein Entwicklerportal aufzubauen.">
@@ -25,34 +25,62 @@
       <meta property="og:image" content="assets/images/meta-banner.jpg">
       <meta property="og:image:secure_url" content="assets/images/meta-banner.jpg">
       <style>
-         .idp-content h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #1a1a1a; }
-         .idp-content h2 { font-size: 1.8rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #2c3e50; }
-         .idp-content h3 { font-size: 1.4rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #34495e; }
+         /* ── Typographie ── */
+         .idp-content h1 { font-size: 2.2rem; margin-bottom: 0.5rem; color: #1a1a1a; overflow-wrap: break-word; word-break: break-word; hyphens: manual; }
+         .idp-content h2 { font-size: 1.65rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #2c3e50; overflow-wrap: break-word; word-break: break-word; hyphens: manual; }
+         .idp-content h3 { font-size: 1.3rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #34495e; overflow-wrap: break-word; word-break: break-word; hyphens: manual; }
+         .idp-content p { overflow-wrap: break-word; }
          .idp-content .meta { color: #666; font-size: 0.9rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
          .idp-content .meta-author { font-weight: 500; color: #3498db; }
          .idp-content .read-time { display: inline-block; background: #e8f4fd; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.85rem; margin-left: 1rem; }
-         .idp-content table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.95rem; }
-         .idp-content th { background: #2c3e50; color: white; padding: 1rem; text-align: left; }
-         .idp-content td { padding: 1rem; border: 1px solid #ddd; vertical-align: top; }
-         .idp-content tr:nth-child(even) { background: #f8f9fa; }
+
+         /* ── Tableau ── */
+         .idp-content .table-scroll { overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0; }
+         .idp-content table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin: 0; min-width: 480px; }
+         .idp-content th { background: #2c3e50; color: #fff; padding: 0.85rem 1rem; text-align: left; font-size: 0.82rem; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+         .idp-content td { padding: 0.9rem 1rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; font-size: 0.93rem; line-height: 1.55; }
+         .idp-content tbody tr:last-child td { border-bottom: 0; }
+         .idp-content tr:nth-child(even) td { background: #f8f9fa; }
          .idp-content .summary-table { margin: 2rem 0; }
-         .idp-content .summary-table th { background: #2c3e50; }
+
+         /* Tableau carte sur très petit écran */
+         @media (max-width: 540px) {
+            .idp-content .table-scroll { border: none; border-radius: 0; }
+            .idp-content table { min-width: 0; }
+            .idp-content thead { display: none; }
+            .idp-content tbody tr { display: block; border: 1px solid #dde3ec; border-radius: 10px; margin-bottom: 12px; overflow: hidden; background: #fff; box-shadow: 0 1px 4px rgba(7,41,77,.07); }
+            .idp-content tbody td { display: block; border-bottom: 1px solid #eef1f6; padding: 10px 14px; }
+            .idp-content tbody td::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: #7a8a9b; margin-bottom: 4px; }
+            .idp-content tbody td:last-child { border-bottom: 0; }
+            .idp-content tbody tr:nth-child(even) td { background: #fff; }
+         }
+
+         /* ── Autres éléments ── */
          .idp-content blockquote { background: #f8f9fa; border-left: 4px solid #3498db; padding: 1.5rem; margin: 2rem 0; font-style: italic; border-radius: 0 8px 8px 0; }
          .idp-content .cta { background: #2c3e50; color: white; padding: 2rem; border-radius: 8px; text-align: center; margin: 3rem 0 1rem; }
          .idp-content .cta a { color: #3498db; font-weight: bold; text-decoration: none; }
          .idp-content .cta a:hover { text-decoration: underline; }
          .idp-content ul, .idp-content ol { margin: 1rem 0; padding-left: 1.5rem; }
          .idp-content li { margin-bottom: 0.25rem; }
-         .idp-content .code-block { background: #2d2d2d; color: #f8f8f2; padding: 1rem; border-radius: 8px; font-family: monospace; margin: 1rem 0; overflow-x: auto; }
-         .idp-content .image-placeholder { background: #f0f0f0; border: 2px dashed #3498db; padding: 2rem; text-align: center; margin: 2rem 0; border-radius: 8px; color: #666; font-weight: bold; }
-         .idp-content .guide-chapters { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0; }
-         .idp-content .guide-chapter { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #3498db; }
-         .idp-content .guide-chapter h4 { margin-top: 0; color: #2c3e50; }
-         .idp-content .guide-chapter a { color: #3498db; text-decoration: none; }
+         .idp-content .code-block { background: #1e2a3a; color: #e2e8f0; padding: 1rem 1.2rem; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.85rem; margin: 1rem 0; overflow-x: auto; white-space: pre; line-height: 1.6; }
+         .idp-content .image-placeholder { background: #f0f4f8; border: 2px dashed #93b8d4; padding: 2rem; text-align: center; margin: 2rem 0; border-radius: 8px; color: #5a7a95; font-weight: 600; font-size: 0.9rem; }
+         .idp-content .guide-chapters { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 2rem 0; }
+         .idp-content .guide-chapter { background: #f8f9fa; padding: 1.25rem 1.5rem; border-radius: 8px; border-left: 4px solid #3498db; }
+         .idp-content .guide-chapter h4 { margin-top: 0; color: #2c3e50; font-size: 0.95rem; }
+         .idp-content .guide-chapter a { color: #3498db; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
          .idp-content .guide-chapter a:hover { text-decoration: underline; }
+
+         /* ── Responsive mobile ── */
          @media (max-width: 768px) {
-            .idp-content h1 { font-size: 2rem; }
-            .idp-content h2 { font-size: 1.5rem; }
+            .idp-content h1 { font-size: 1.65rem; line-height: 1.25; }
+            .idp-content h2 { font-size: 1.35rem; }
+            .idp-content h3 { font-size: 1.15rem; }
+            .idp-content .guide-chapters { grid-template-columns: 1fr; }
+            .idp-content .code-block { font-size: 0.8rem; padding: 0.8rem 1rem; }
+         }
+         @media (max-width: 480px) {
+            .idp-content h1 { font-size: 1.4rem; }
+            .idp-content h2 { font-size: 1.2rem; }
          }
       .kl-drop{position:relative;flex-shrink:0}
 .kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
@@ -86,7 +114,7 @@
 .simple-footer-bottom p{margin:0;font-size:12px;color:rgba(255,255,255,.42);letter-spacing:.2px}
 .simple-footer-bottom a{color:rgba(255,255,255,.62)}
 .simple-footer-bottom a:hover{color:#ffc600}
-</style><link rel="stylesheet" href="assets/css/modern-header.css"/>
+</style><link rel="stylesheet" href="/assets/css/modern-header.css"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
 </head>
    <body>
@@ -99,12 +127,12 @@
          <!-- header -->
          <header class="kh">
 <div class="kh__in">
-<a class="kh__brand" href="index.html">
+<a class="kh__brand" href="/">
 <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
 <span class="kh__name">Koffi Academy</span>
 </a>
 <nav class="kh__nav">
-<a href="index.html">Startseite</a>
+<a href="/">Startseite</a>
 <span class="kh__drop"><span class=" kh__droplabel">Kurse</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire">Laboratoire</a><a href="/courses/courses">Kurskatalog</a><a href="/idp-demo" data-i18n="navDevPortal">Dev Portal</a></span></span>
 <a href="/blog">Blog</a>
 <a href="/culture">Culture</a>
@@ -120,7 +148,7 @@
          <!-- breadcrumb -->
          <section class="breadcrumb-area">
             <div class="breadcrumb-shape">
-               <img src="assets/images/slider-bottom-pattern.png" alt="Form">
+               <img src="/assets/images/slider-bottom-pattern.png" alt="Form">
             </div>
             <div class="container">
                <div class="row">
@@ -140,7 +168,7 @@
                      <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12">
                         <div class="blog-post wow fadeInUp center" data-wow-delay="0.1s">
                            <div class="blog-post-images">
-                              <img src="assets/images/blog/blog1.jpg" alt="Backstage Kubernetes Integration">
+                              <img src="/assets/images/blog/blog1.jpg" alt="Backstage Kubernetes Integration">
                            </div>
                            <div class="post-content">
                               <div class="post-social">
@@ -164,6 +192,7 @@
                                  
                                  <div class="summary-table">
                                     <h3>Zusammenfassung der wichtigsten Konzepte</h3>
+                                    <div class="table-scroll">
                                     <table>
                                        <thead>
                                           <tr>
@@ -173,27 +202,28 @@
                                        </thead>
                                        <tbody>
                                           <tr>
-                                             <td><strong>Was ist Backstage?</strong></td>
-                                             <td>Backstage ist ein Projekt, das es Organisationen ermöglicht, ihre Software-Ökosysteme in einem einzigen Tool zu vereinheitlichen. Backstage bietet eine zentrale Anlaufstelle für Entwickler, um Software und Infrastruktur anderer Teams zu nutzen.</td>
+                                             <td data-label="Abschnitt"><strong>Was ist Backstage?</strong></td>
+                                             <td data-label="Beschreibung">Backstage ist ein Projekt, das es Organisationen ermöglicht, ihre Software-Ökosysteme in einem einzigen Tool zu vereinheitlichen. Backstage bietet eine zentrale Anlaufstelle für Entwickler, um Software und Infrastruktur anderer Teams zu nutzen.</td>
                                           </tr>
                                           <tr>
-                                             <td><strong>Backstage-Integration für Kubernetes</strong></td>
-                                             <td>Backstage bietet native Integrationsmöglichkeiten mit Kubernetes, die es Entwicklern ermöglichen, Informationen zum Anwendungsstatus von Kubernetes direkt in der Backstage-Oberfläche anzuzeigen.</td>
+                                             <td data-label="Abschnitt"><strong>Backstage-Integration für Kubernetes</strong></td>
+                                             <td data-label="Beschreibung">Backstage bietet native Integrationsmöglichkeiten mit Kubernetes, die es Entwicklern ermöglichen, Informationen zum Anwendungsstatus von Kubernetes direkt in der Backstage-Oberfläche anzuzeigen.</td>
                                           </tr>
                                           <tr>
-                                             <td><strong>Ephemere Umgebungen mit Backstage und Uffizzi</strong></td>
-                                             <td>Die Plattform von Uffizzi bietet ephemere Umgebungen, die mit Backstage integriert werden können, sodass Entwickler einfach Testumgebungen für ihre Software nutzen können. *Hinweis - Uffizzi ist der Anbieter von ephemeren Umgebungen für das Backstage-Projekt.</td>
+                                             <td data-label="Abschnitt"><strong>Ephemere Umgebungen mit Backstage und Uffizzi</strong></td>
+                                             <td data-label="Beschreibung">Die Plattform von Uffizzi bietet ephemere Umgebungen, die mit Backstage integriert werden können, sodass Entwickler einfach Testumgebungen für ihre Software nutzen können.</td>
                                           </tr>
                                           <tr>
-                                             <td><strong>Erste Schritte mit Backstage für Kubernetes</strong></td>
-                                             <td>Die Installation des Backstage Node.js-Pakets und der Kubernetes-Plugins kann in nur wenigen Schritten durchgeführt werden.</td>
+                                             <td data-label="Abschnitt"><strong>Erste Schritte mit Backstage für Kubernetes</strong></td>
+                                             <td data-label="Beschreibung">Die Installation des Backstage Node.js-Pakets und der Kubernetes-Plugins kann in nur wenigen Schritten durchgeführt werden.</td>
                                           </tr>
                                           <tr>
-                                             <td><strong>Installation der Backstage Kubernetes-Plugins</strong></td>
-                                             <td>Die Kubernetes-Plugins ermöglichen es Backstage, sich mit einem oder mehreren Kubernetes-Clustern zu verbinden, um Cluster-Informationen über die Backstage-Oberfläche für den Entwickler zugänglich zu machen. Dies ermöglicht es Entwicklern, relevante Informationen anzuzeigen, ohne sich manuell authentifizieren und mit Clustern verbinden zu müssen.</td>
+                                             <td data-label="Abschnitt"><strong>Installation der Backstage Kubernetes-Plugins</strong></td>
+                                             <td data-label="Beschreibung">Die Kubernetes-Plugins ermöglichen es Backstage, sich mit einem oder mehreren Kubernetes-Clustern zu verbinden, um Cluster-Informationen über die Backstage-Oberfläche für den Entwickler zugänglich zu machen.</td>
                                           </tr>
                                        </tbody>
                                     </table>
+                                    </div>
                                  </div>
                                  
                                  <h2>Was ist Backstage?</h2>
@@ -451,7 +481,7 @@
                                  </div>
                                  <div class="post-meta">
                                     <ul>
-                                       <li><a href="/koffi-profile"><img src="assets/images/testimonial/1.jpg" alt="Autor"> Redaktion</a></li>
+                                       <li><a href="/koffi-profile"><img src="/assets/images/testimonial/1.jpg" alt="Autor"> Redaktion</a></li>
                                        <li><span class="post-time">30. April 2026</span></li>
                                     </ul>
                                  </div>
@@ -473,7 +503,7 @@
                                        <li>
                                           <div class="post-item">
                                              <div class="post-img">
-                                                <a href="/blog-detail"><img src="assets/images/blog/blog2.jpg" alt="DevOps Best Practices"></a>
+                                                <a href="/blog-detail"><img src="/assets/images/blog/blog2.jpg" alt="DevOps Best Practices"></a>
                                              </div>
                                              <div class="post-info">
                                                 <h4><a href="/blog-detail">DevOps Best Practices 2026</a></h4>
@@ -484,7 +514,7 @@
                                        <li>
                                           <div class="post-item">
                                              <div class="post-img">
-                                                <a href="/blog-detail"><img src="assets/images/blog/blog3.jpg" alt="Kubernetes Guide"></a>
+                                                <a href="/blog-detail"><img src="/assets/images/blog/blog3.jpg" alt="Kubernetes Guide"></a>
                                              </div>
                                              <div class="post-info">
                                                 <h4><a href="/blog-detail">Kubernetes für Einsteiger</a></h4>
@@ -495,7 +525,7 @@
                                        <li>
                                           <div class="post-item">
                                              <div class="post-img">
-                                                <a href="/blog-detail"><img src="assets/images/blog/blog4.jpg" alt="Internal Developer Platform"></a>
+                                                <a href="/blog-detail"><img src="/assets/images/blog/blog4.jpg" alt="Internal Developer Platform"></a>
                                              </div>
                                              <div class="post-info">
                                                 <h4><a href="/blog-detail">Internal Developer Platform Grundlagen</a></h4>
@@ -557,7 +587,7 @@
          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
             <h3>Navigation</h3>
             <ul>
-               <li><i class="fas fa-chevron-right lead-icon"></i><a href="index.html">Startseite</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/">Startseite</a></li>
                <li><i class="fas fa-chevron-right lead-icon"></i><a href="/laboratoire">Laboratoire</a></li><li><i class="fas fa-chevron-right lead-icon"></i><a href="/courses/courses">Kurskatalog</a></li>
                <li><i class="fas fa-chevron-right lead-icon"></i><a href="/blog">Blog</a></li>
                <li><i class="fas fa-chevron-right lead-icon"></i><a href="/event">Veranstaltungen</a></li>
@@ -569,28 +599,28 @@
             <ul>
                <li><i class="fas fa-chevron-right lead-icon"></i><a href="/about">Ueber uns</a></li>
                <li><i class="fas fa-chevron-right lead-icon"></i><a href="/faq">Haeufige Fragen</a></li>
-               <li><i class="fas fa-chevron-right lead-icon"></i><a href="contact.html">Kontakt &amp; Support</a></li>
+               <li><i class="fas fa-chevron-right lead-icon"></i><a href="/contact.html">Kontakt &amp; Support</a></li>
             </ul>
          </div>
       </div>
       <div class="simple-footer-bottom">
-         <p>Copyright &copy; 2026 <a href="index.html">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
+         <p>Copyright &copy; 2026 <a href="/">Koffi Academy</a> &mdash; Alle Rechte vorbehalten.</p>
       </div>
    </div>
 <div style="border-top:1px solid rgba(255,255,255,.08);padding:10px 0"><div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px"><span style="font-size:12px;color:rgba(255,255,255,.35)">© 2026 Koffi Academy</span><div style="display:flex;align-items:center;gap:14px"><a href="/impressum" style="font-size:12px;color:rgba(255,255,255,.45);font-weight:500;transition:color .15s">Impressum</a><span style="color:rgba(255,255,255,.2);font-size:10px">·</span><a href="/datenschutz" style="font-size:12px;color:rgba(255,255,255,.45);font-weight:500;transition:color .15s">Datenschutz</a></div></div></div>
 </footer>
          <!-- footer -->
       </div>
-      <script src="assets/js/jquery.min.js"></script>
-      <script src="assets/js/bootstrap.min.js"></script>
-      <script src="assets/js/jquery.fancybox.min.js"></script>
-      <script src="assets/js/owl.carousel.min.js"></script>
-      <script src="assets/js/isotope.pkgd.min.js"></script>
-      <script src="assets/js/wow.min.js"></script>
-      <script src="assets/js/custom.js"></script>
-   <script src="assets/js/kontakt-popup.js"></script>
-<script src="assets/js/announce.js"></script>
-<script src="assets/js/mobile-nav.js"></script>
+      <script src="/assets/js/jquery.min.js"></script>
+      <script src="/assets/js/bootstrap.min.js"></script>
+      <script src="/assets/js/jquery.fancybox.min.js"></script>
+      <script src="/assets/js/owl.carousel.min.js"></script>
+      <script src="/assets/js/isotope.pkgd.min.js"></script>
+      <script src="/assets/js/wow.min.js"></script>
+      <script src="/assets/js/custom.js"></script>
+   <script src="/assets/js/kontakt-popup.js"></script>
+<script src="/assets/js/announce.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
 <script>
 var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
 function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
