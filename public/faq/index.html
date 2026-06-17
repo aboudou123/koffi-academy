@@ -60,7 +60,7 @@
 .art-grid{max-width:1160px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 308px;gap:32px;align-items:start}
 
 /* ── Main card ── */
-.art-main{background:#fff;border-radius:18px;box-shadow:0 4px 28px rgba(7,41,77,.09),0 1px 6px rgba(7,41,77,.05);padding:46px 52px;margin-top:-40px}
+.art-main{background:#fff;border-radius:18px;box-shadow:0 4px 28px rgba(7,41,77,.09),0 1px 6px rgba(7,41,77,.05);padding:46px 52px;margin-top:-40px;min-width:0}
 
 /* ── Sidebar ── */
 .art-sidebar{margin-top:-40px}
@@ -191,16 +191,36 @@
 
 /* ── Responsive ── */
 @media(max-width:940px){
-  .art-grid{grid-template-columns:1fr}
+  .art-grid{grid-template-columns:1fr;padding:0 18px}
   .art-toc{position:static;display:none}
-  .art-main{padding:30px 26px;margin-top:-28px}
+  .art-main{padding:30px 26px;margin-top:-28px;overflow-x:hidden}
+  .art-fig{margin:22px -26px}
+  .art-fig svg,.art-fig img{max-width:100%;height:auto;display:block}
   .art-sidebar{margin-top:0}
 }
+@media(max-width:700px){
+  .art-hero__inner{padding:0 18px}
+  .art-hero__title{font-size:clamp(1.55rem,5.5vw,2rem);letter-spacing:-.018em}
+  .art-hero__meta{gap:10px}
+  .art-date-badge{margin-left:0;width:100%}
+  .art-grid{padding:0 12px}
+}
 @media(max-width:600px){
-  .art-hero{padding:40px 0 68px}
-  .art-main{padding:22px 18px;border-radius:14px;margin-top:-22px}
+  .art-hero{padding:36px 0 60px}
+  .art-hero__inner{padding:0 16px}
+  .art-main{padding:20px 16px;border-radius:14px;margin-top:-20px}
+  .art-fig{margin:16px -16px;border-radius:10px}
+  .art-fig svg,.art-fig img{max-width:100%;height:auto;display:block}
   .ch-grid{grid-template-columns:1fr}
-  .idp-content h2{font-size:1.28rem}
+  .idp-content h2{font-size:1.2rem;gap:8px}
+  .idp-content p{max-width:100%}
+  .code-wrap{margin:16px 0;border-radius:10px}
+  .code-body{padding:14px 14px;font-size:12.5px}
+  .art-cta-box{padding:26px 20px;border-radius:14px}
+  .art-cta-btn{padding:.72rem 1.6rem;font-size:.88rem;width:100%;justify-content:center}
+  .art-author-bar{gap:10px}
+  .art-author-av{width:44px;height:44px;font-size:17px}
+  .art-share{gap:8px}
 }
 /* ── Utility ── */
 .icon-gold{color:#f9d77e}
