@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="de">
    <head>
       <!-- Required meta tags -->
@@ -25,9 +25,11 @@
       <meta property="og:image" content="assets/images/meta-banner.jpg">
       <meta property="og:image:secure_url" content="assets/images/meta-banner.jpg">
       <style>
-         .idp-content h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #1a1a1a; }
-         .idp-content h2 { font-size: 1.8rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #2c3e50; }
-         .idp-content h3 { font-size: 1.4rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #34495e; }
+         /* ── Typographie ── */
+         .idp-content h1 { font-size: 2.2rem; margin-bottom: 0.5rem; color: #1a1a1a; overflow-wrap: break-word; word-break: break-word; hyphens: manual; }
+         .idp-content h2 { font-size: 1.65rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #2c3e50; overflow-wrap: break-word; word-break: break-word; hyphens: manual; }
+         .idp-content h3 { font-size: 1.3rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #34495e; overflow-wrap: break-word; word-break: break-word; hyphens: manual; }
+         .idp-content p { overflow-wrap: break-word; }
          .idp-content .meta { color: #666; font-size: 0.9rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
          .idp-content .inhaltsverzeichnis { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; }
          .idp-content .inhaltsverzeichnis h3 { margin-top: 0; color: #2c3e50; }
@@ -35,31 +37,56 @@
          .idp-content .inhaltsverzeichnis li { margin-bottom: 0.5rem; }
          .idp-content .inhaltsverzeichnis a { color: #3498db; text-decoration: none; }
          .idp-content .inhaltsverzeichnis a:hover { text-decoration: underline; }
-         .idp-content table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.95rem; }
-         .idp-content th { background: #2c3e50; color: white; padding: 1rem; text-align: left; }
-         .idp-content td { padding: 1rem; border: 1px solid #ddd; vertical-align: top; }
-         .idp-content tr:nth-child(even) { background: #f8f9fa; }
+
+         /* ── Tableaux ── */
+         .idp-content .table-scroll { overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0; }
+         .idp-content table { width: 100%; border-collapse: collapse; font-size: 0.93rem; margin: 0; min-width: 480px; }
+         .idp-content th { background: #2c3e50; color: #fff; padding: 0.85rem 1rem; text-align: left; font-size: 0.82rem; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+         .idp-content td { padding: 0.9rem 1rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; line-height: 1.55; }
+         .idp-content tbody tr:last-child td { border-bottom: 0; }
+         .idp-content tr:nth-child(even) td { background: #f8f9fa; }
+
+         /* Developer-table (3 colonnes) — devient cartes sur mobile */
+         .idp-content .developer-table { min-width: 600px; }
+         .idp-content .developer-table th { width: 33.33%; }
+         .idp-content .developer-table ul { margin: 0.5rem 0; padding-left: 1.2rem; }
+
+         /* Carte mobile ≤ 640px */
+         @media (max-width: 640px) {
+            .idp-content .table-scroll { border: none; border-radius: 0; }
+            .idp-content table, .idp-content .developer-table { min-width: 0; display: block; overflow-x: visible; }
+            .idp-content thead { display: none; }
+            .idp-content tbody, .idp-content tr { display: block; }
+            .idp-content tbody tr { border: 1px solid #dde3ec; border-radius: 10px; margin-bottom: 12px; overflow: hidden; background: #fff; box-shadow: 0 1px 4px rgba(7,41,77,.07); }
+            .idp-content td { display: block; border-bottom: 1px solid #eef1f6; padding: 10px 14px; }
+            .idp-content td::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: #7a8a9b; margin-bottom: 4px; }
+            .idp-content td:last-child { border-bottom: 0; }
+            .idp-content tr:nth-child(even) td { background: #fff; }
+         }
+
+         /* ── Autres ── */
          .idp-content blockquote { background: #f8f9fa; border-left: 4px solid #3498db; padding: 1.5rem; margin: 2rem 0; font-style: italic; border-radius: 0 8px 8px 0; }
          .idp-content .cta { background: #2c3e50; color: white; padding: 2rem; border-radius: 8px; text-align: center; margin: 3rem 0 1rem; }
          .idp-content .cta a { color: #3498db; font-weight: bold; text-decoration: none; }
          .idp-content .cta a:hover { text-decoration: underline; }
          .idp-content ul, .idp-content ol { margin: 1rem 0; padding-left: 1.5rem; }
          .idp-content li { margin-bottom: 0.25rem; }
-         .idp-content .developer-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
-         .idp-content .developer-table th { background: #2c3e50; color: white; padding: 1rem; text-align: left; width: 33.33%; }
-         .idp-content .developer-table td { padding: 1rem; border: 1px solid #ddd; vertical-align: top; }
-         .idp-content .developer-table ul { margin: 0.5rem 0; padding-left: 1.2rem; }
-         .idp-content .stats { display: flex; justify-content: space-around; margin: 2rem 0; text-align: center; }
-         .idp-content .stat-item { flex: 1; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; margin: 0 0.5rem; }
-         .idp-content .stat-number { font-size: 2.5rem; font-weight: bold; color: #2c3e50; display: block; }
+         .idp-content .stats { display: flex; justify-content: space-around; margin: 2rem 0; text-align: center; flex-wrap: wrap; gap: 0.5rem; }
+         .idp-content .stat-item { flex: 1; min-width: 120px; padding: 1.5rem 1rem; background: #f8f9fa; border-radius: 8px; }
+         .idp-content .stat-number { font-size: 2.2rem; font-weight: bold; color: #2c3e50; display: block; }
          .idp-content .stat-label { font-size: 0.9rem; color: #666; }
+
+         /* ── Responsive mobile ── */
          @media (max-width: 768px) {
+            .idp-content h1 { font-size: 1.65rem; line-height: 1.25; }
+            .idp-content h2 { font-size: 1.35rem; }
+            .idp-content h3 { font-size: 1.15rem; }
             .idp-content .stats { flex-direction: column; }
-            .idp-content .stat-item { margin: 0.5rem 0; }
-            .idp-content .developer-table, .idp-content .developer-table thead, .idp-content .developer-table tbody, .idp-content .developer-table th, .idp-content .developer-table td, .idp-content .developer-table tr { display: block; }
-            .idp-content .developer-table th { display: none; }
-            .idp-content .developer-table td { display: block; width: 100%; box-sizing: border-box; margin-bottom: 1rem; border: 1px solid #ddd; }
-            .idp-content .developer-table td:before { content: attr(data-label); font-weight: bold; display: block; margin-bottom: 0.5rem; color: #2c3e50; }
+            .idp-content .stat-item { margin: 0; }
+         }
+         @media (max-width: 480px) {
+            .idp-content h1 { font-size: 1.4rem; }
+            .idp-content h2 { font-size: 1.2rem; }
          }
       .kl-drop{position:relative;flex-shrink:0}
 .kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
@@ -216,7 +243,7 @@
                                  </ul>
 
                                  <h3>Ergebnisse nach der Implementierung:</h3>
-                                 <table>
+                                 <div class="table-scroll"><table>
                                     <thead>
                                        <tr>
                                           <th>Aspekt</th>
@@ -226,39 +253,39 @@
                                     </thead>
                                     <tbody>
                                        <tr>
-                                          <td><strong>Deployment-Zeit</strong></td>
-                                          <td>4–6 Wochen</td>
-                                          <td>1–3 Tage</td>
+                                          <td data-label="Aspekt"><strong>Deployment-Zeit</strong></td>
+                                          <td data-label="Vorher">4–6 Wochen</td>
+                                          <td data-label="Nachher">1–3 Tage</td>
                                        </tr>
                                        <tr>
-                                          <td><strong>Compliance-Audit-Aufwand</strong></td>
-                                          <td>Hoch, manuell, fehleranfällig</td>
+                                          <td data-label="Aspekt"><strong>Compliance-Audit-Aufwand</strong></td>
+                                          <td data-label="Vorher">Hoch, manuell, fehleranfällig</td>
                                           <td>Reduktion um 40–70 % (automatisierte Dokumentation und Audits)</td>
                                        </tr>
                                        <tr>
-                                          <td><strong>Kosten (jährlich)</strong></td>
+                                          <td data-label="Aspekt"><strong>Kosten (jährlich)</strong></td>
                                           <td>30–40 % höhere Betriebskosten durch manuelle Prozesse</td>
                                           <td>Senkung der Betriebskosten um ca. 25–30 % durch Zentralisierung und Automatisierung</td>
                                        </tr>
                                        <tr>
-                                          <td><strong>Check Mark Reduzierte Bereitstellungszeiten</strong></td>
+                                          <td data-label="Ergebnis"><strong>Reduzierte Bereitstellungszeiten</strong></td>
                                           <td colspan="2">Die Zeit für die Bereitstellung neuer Anwendungen verkürzte sich von mehreren Wochen auf wenige Tage.</td>
                                        </tr>
                                        <tr>
-                                          <td><strong>Check Mark Erhöhte Effizienz</strong></td>
+                                          <td data-label="Ergebnis"><strong>Erhöhte Effizienz</strong></td>
                                           <td colspan="2">Durch Automatisierung und Standardisierung konnten manuelle Fehler reduziert und die Ressourcennutzung optimiert werden.</td>
                                        </tr>
                                        <tr>
-                                          <td><strong>Check Mark Verbesserte Compliance</strong></td>
+                                          <td data-label="Ergebnis"><strong>Verbesserte Compliance</strong></td>
                                           <td colspan="2">Durch integrierte Sicherheits- und Compliance-Checks konnte die Einhaltung regulatorischer Anforderungen sichergestellt werden.</td>
                                        </tr>
                                     </tbody>
-                                 </table>
+                                 </table></div>
                                  <p>Dieses Beispiel zeigt, wie ein Unternehmen im KRITIS-Umfeld durch die Implementierung einer IDP erhebliche Verbesserungen in Effizienz, Geschwindigkeit und Compliance erzielen kann.</p>
 
                                  <h2 id="nicht-nur-fuer-entwickler">Internal Developer Platforms sind nicht nur für Entwickler</h2>
                                  
-                                 <table class="developer-table">
+                                 <div class="table-scroll"><table class="developer-table">
                                     <thead>
                                        <tr>
                                           <th>Entwickler</th>
@@ -320,7 +347,7 @@
                                           </td>
                                        </tr>
                                     </tbody>
-                                 </table>
+                                 </table></div>
 
                                  <blockquote>
                                     „Die Entscheidung eine Plattform aufzubauen, war zweifelsohne richtig. [Unsere IDP] hat für eine skalierbare Effizienz gesorgt, die es unseren Entwicklern ermöglicht, sich auf die Entwicklung der besten Produkte zu konzentrieren. Wir können uns nicht vorstellen, ohne diese Plattform das gleiche Wachstum zu erreichen.“ 

@@ -245,3 +245,26 @@
 @media (max-width: 600px) {
   .kh__name { font-size: 15.5px; }
 }
+
+/* ── Global responsive text — empêche les coupures de mots sur mobile ── */
+@media (max-width: 860px) {
+  h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: manual;
+  }
+  p, li, td, th {
+    overflow-wrap: break-word;
+  }
+  /* Images jamais plus larges que leur conteneur */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  /* Tables scrollables globalement si pas déjà wrappées */
+  table:not(.cmp-table):not(.go-table):not([class*="table"]) {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+}
