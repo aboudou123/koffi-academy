@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Leitfaden zur Backstage — Internal Developer Portal | Koffi Academy</title>
+<meta name="description" content="Vollständiger Leitfaden zu Backstage: Deployment, Service Catalog, Software Templates, TechDocs und Keycloak-Authentifizierung.">
+<meta name="theme-color" content="#07294d">
+<link rel="shortcut icon" href="/assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{
+  --bg:#050f1e;
+  --panel:#0a1a2e;
+  --teal:#199484;
+  --teal-l:rgba(25,148,132,.18);
+  --line:rgba(255,255,255,.09);
+  --text:#f1f5f9;
+  --muted:#64748b;
+  --soft:#94a3b8;
+  --gold:#ffc600;
+}
+*,::after,::before{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text)}
+body{font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* ── Nav ── */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(5,15,30,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  padding:0 24px;height:54px;
+  display:flex;align-items:center;gap:14px;
+}
+.nav__logo{display:flex;align-items:center;gap:10px}
+.nav__mark{
+  width:32px;height:32px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(135deg,#f9d77e,#d6a02d 55%,#b97911);
+  display:grid;place-items:center;
+}
+.nav__mark svg{width:62%;height:62%;display:block}
+.nav__name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;color:#fff}
+.nav__spacer{flex:1}
+.nav__back{
+  display:inline-flex;align-items:center;gap:7px;
+  color:var(--soft);font-size:13px;font-weight:500;
+  padding:6px 12px;border-radius:7px;transition:.15s;
+}
+.nav__back:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav__back i{font-size:11px}
+
+/* ── Hero ── */
+.hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#050f1e 0%,#08203a 55%,#0c2e50 100%);
+  padding:70px 24px 80px;text-align:center;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+.hero__glow{
+  position:absolute;top:-60px;right:8%;width:380px;height:380px;border-radius:50%;
+  background:radial-gradient(circle,rgba(25,148,132,.45),transparent 62%);
+  pointer-events:none;
+}
+.hero__glow2{
+  position:absolute;bottom:-80px;left:4%;width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(3,105,161,.3),transparent 65%);
+  pointer-events:none;
+}
+.hero__inner{position:relative;max-width:720px;margin:0 auto}
+.hero__label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--teal);border:1px solid rgba(25,148,132,.35);
+  background:rgba(25,148,132,.1);padding:6px 14px;border-radius:999px;
+  margin-bottom:22px;
+}
+.hero__title{
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;
+  font-size:clamp(32px,6vw,52px);line-height:1.08;letter-spacing:-.02em;
+  color:#fff;margin-bottom:10px;
+}
+.hero__title span{color:var(--teal)}
+.hero__sub{font-size:clamp(15px,2vw,17px);color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:28px;max-width:560px;margin-left:auto;margin-right:auto}
+.hero__tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.hero__tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12.5px;font-weight:600;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);
+  padding:6px 13px;border-radius:999px;color:rgba(255,255,255,.7);
+}
+.hero__tag i{font-size:11px;color:var(--teal)}
+
+/* ── Wrap ── */
+.wrap{max-width:860px;margin:0 auto;padding:0 24px}
+
+/* ── Section title ── */
+.sec-title{
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;
+  font-size:clamp(20px,3vw,26px);letter-spacing:-.02em;
+  color:#fff;margin-bottom:6px;
+}
+.sec-sub{font-size:14px;color:var(--soft);margin-bottom:28px;line-height:1.6}
+
+/* ── Overview cards ── */
+.overview{padding:56px 0}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.ov-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:20px;display:flex;flex-direction:column;gap:10px;
+  transition:.2s;
+}
+.ov-card:hover{border-color:rgba(25,148,132,.4);transform:translateY(-2px)}
+.ov-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:grid;place-items:center;
+  background:var(--teal-l);color:var(--teal);font-size:16px;
+}
+.ov-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#fff}
+.ov-desc{font-size:12.5px;color:var(--soft);line-height:1.55}
+
+/* ── Modules ── */
+.modules{padding:0 0 64px}
+.module{
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  margin-bottom:20px;background:var(--panel);
+}
+.module__head{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 20px;cursor:pointer;
+  border-bottom:1px solid transparent;
+  transition:.15s;
+}
+.module__head:hover{background:rgba(255,255,255,.03)}
+.module.is-open .module__head{border-bottom-color:var(--line)}
+.module__num{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;
+  background:var(--teal-l);
+  font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
+  color:var(--teal);
+}
+.module__info{flex:1;min-width:0}
+.module__name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#fff}
+.module__meta{font-size:12px;color:var(--muted);margin-top:3px}
+.module__arrow{color:var(--muted);font-size:12px;flex-shrink:0;transition:transform .18s}
+.module.is-open .module__arrow{transform:rotate(180deg)}
+.module__body{display:none;padding:20px}
+.module.is-open .module__body{display:block}
+.step-list{display:flex;flex-direction:column;gap:14px}
+.step-item{
+  display:flex;gap:14px;align-items:flex-start;
+}
+.step-dot{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;margin-top:1px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  font-size:11px;font-weight:700;color:var(--soft);
+}
+.step-text{}
+.step-text h4{font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:4px}
+.step-text p{font-size:13px;color:var(--soft);line-height:1.6}
+.step-text code{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;
+  background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.12);
+  padding:1px 6px;border-radius:4px;color:#a8fff0;
+}
+.codebox{
+  margin-top:10px;background:#060c18;border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:12px 14px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  line-height:1.65;color:#e2e8f0;overflow-x:auto;white-space:pre;
+}
+.codebox .c{color:#4ade80}
+.codebox .k{color:#60a5fa}
+.codebox .s{color:#fbbf24}
+
+/* ── Labs CTA ── */
+.labs-cta{
+  background:linear-gradient(135deg,rgba(25,148,132,.14),rgba(25,148,132,.06));
+  border:1px solid rgba(25,148,132,.3);border-radius:14px;
+  padding:28px 24px;margin-bottom:64px;
+}
+.labs-cta h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:8px}
+.labs-cta p{font-size:14px;color:var(--soft);margin-bottom:18px;line-height:1.6}
+.labs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.lab-link{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(25,148,132,.1);border:1px solid rgba(25,148,132,.25);
+  padding:12px 14px;border-radius:10px;color:var(--teal);font-size:13px;font-weight:600;
+  transition:.15s;
+}
+.lab-link:hover{background:rgba(25,148,132,.18);border-color:rgba(25,148,132,.5)}
+.lab-link i{font-size:13px;flex-shrink:0}
+
+/* ── Footer ── */
+.foot{
+  border-top:1px solid var(--line);padding:24px;
+  text-align:center;font-size:12.5px;color:var(--muted);
+}
+.foot a{color:var(--soft)}
+.foot a:hover{color:#fff}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  .hero{padding:48px 20px 56px}
+  .hero__tags{gap:6px}
+  .hero__tag{font-size:11.5px;padding:5px 10px}
+  .overview,.modules{padding-left:0;padding-right:0}
+  .module__body{padding:16px}
+  .labs-cta{padding:20px 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="nav">
+  <a class="nav__logo" href="/">
+    <span class="nav__mark">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="26" cy="9" r="2.7" fill="#07294d"/>
+        <circle cx="26" cy="31" r="2.7" fill="#07294d"/>
+        <circle cx="15" cy="20" r="2.2" fill="#07294d"/>
+      </svg>
+    </span>
+    <span class="nav__name">Koffi Academy</span>
+  </a>
+  <div class="nav__spacer"></div>
+  <a class="nav__back" href="/laboratoire">
+    <i class="fa-solid fa-arrow-left"></i>Laboratoires
+  </a>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero__glow"></div>
+  <div class="hero__glow2"></div>
+  <div class="hero__inner">
+    <div class="hero__label">
+      <i class="fa-solid fa-layer-group"></i>Developer Experience · Backstage 101
+    </div>
+    <h1 class="hero__title">Leitfaden zur<br><span>Backstage</span></h1>
+    <p class="hero__sub">
+      Internal Developer Portal von Grund auf: Deployment, Service Catalog, Software Templates, TechDocs und Keycloak-Authentifizierung.
+    </p>
+    <div class="hero__tags">
+      <span class="hero__tag"><i class="fa-solid fa-signal"></i>Fortgeschritten</span>
+      <span class="hero__tag"><i class="fa-regular fa-clock"></i>90–180 min</span>
+      <span class="hero__tag"><i class="fa-solid fa-certificate"></i>CNCF</span>
+      <span class="hero__tag"><i class="fa-brands fa-node-js"></i>Node.js</span>
+      <span class="hero__tag"><i class="fa-solid fa-dharmachakra"></i>Kubernetes</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── Overview ── -->
+<div class="wrap">
+  <section class="overview">
+    <div class="sec-title">Was Sie lernen werden</div>
+    <p class="sec-sub">Dieser Leitfaden deckt den kompletten Lebenszyklus eines internen Entwicklerportals ab.</p>
+    <div class="ov-grid">
+      <div class="ov-card">
+        <div class="ov-icon"><i class="fa-solid fa-server"></i></div>
+        <div class="ov-name">Backstage Deployment</div>
+        <div class="ov-desc">Installation on Kubernetes mit Helm, Konfiguration von app-config und erster Start.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="ov-name">Service Catalog</div>
+        <div class="ov-desc">Registrierung von Diensten, Komponenten und Ressourcen im Backstage-Katalog.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <div class="ov-name">Software Templates</div>
+        <div class="ov-desc">Scaffolder-Templates erstellen: automatisierte Projekt-Initialisierung für Entwickler.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon"><i class="fa-solid fa-book"></i></div>
+        <div class="ov-name">TechDocs</div>
+        <div class="ov-desc">Dokumentation as Code mit MkDocs direkt im Portal veröffentlichen.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="ov-name">Keycloak Auth</div>
+        <div class="ov-desc">OIDC-Authentifizierung mit Keycloak konfigurieren und absichern.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon"><i class="fa-solid fa-plug"></i></div>
+        <div class="ov-name">Plugins & API</div>
+        <div class="ov-desc">Backstage-Plugins installieren und die Backend-API für eigene Erweiterungen nutzen.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Modules ── -->
+  <section class="modules">
+    <div class="sec-title">Lernpfad</div>
+    <p class="sec-sub">Folgen Sie den Modulen der Reihe nach oder springen Sie zum gewünschten Thema.</p>
+
+    <!-- Module 1 -->
+    <div class="module is-open">
+      <div class="module__head" onclick="toggleModule(this)">
+        <div class="module__num">1</div>
+        <div class="module__info">
+          <div class="module__name">Backstage installieren &amp; konfigurieren</div>
+          <div class="module__meta">3 Schritte · ~45 min</div>
+        </div>
+        <i class="fa-solid fa-chevron-down module__arrow"></i>
+      </div>
+      <div class="module__body">
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-dot">1</div>
+            <div class="step-text">
+              <h4>Voraussetzungen prüfen</h4>
+              <p>Node.js ≥ 18, Yarn, Docker und ein laufendes Kubernetes-Cluster (minikube oder kubeadm) werden benötigt.</p>
+              <div class="codebox"><span class="k">node</span> <span class="s">--version</span>  <span class="c"># ≥ 18</span>
+<span class="k">yarn</span> <span class="s">--version</span>
+<span class="k">kubectl</span> cluster-info</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot">2</div>
+            <div class="step-text">
+              <h4>Backstage App erstellen</h4>
+              <p>Mit dem offiziellen CLI eine neue Backstage-Instanz anlegen und in das Verzeichnis wechseln.</p>
+              <div class="codebox"><span class="k">npx</span> @backstage/create-app@latest
+<span class="k">cd</span> my-backstage-app
+<span class="k">yarn</span> dev</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot">3</div>
+            <div class="step-text">
+              <h4>app-config.yaml anpassen</h4>
+              <p>Basis-URL, Datenbankverbindung (PostgreSQL) und GitHub-Integration in <code>app-config.yaml</code> konfigurieren.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module 2 -->
+    <div class="module">
+      <div class="module__head" onclick="toggleModule(this)">
+        <div class="module__num">2</div>
+        <div class="module__info">
+          <div class="module__name">Service Catalog einrichten</div>
+          <div class="module__meta">4 Schritte · ~30 min</div>
+        </div>
+        <i class="fa-solid fa-chevron-down module__arrow"></i>
+      </div>
+      <div class="module__body">
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-dot">1</div>
+            <div class="step-text">
+              <h4>catalog-info.yaml erstellen</h4>
+              <p>Jede Komponente (Service, Bibliothek, Website) wird durch eine <code>catalog-info.yaml</code> beschrieben.</p>
+              <div class="codebox">apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: my-service
+  annotations:
+    github.com/project-slug: <span class="s">org/my-service</span>
+spec:
+  type: service
+  lifecycle: production
+  owner: team-platform</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot">2</div>
+            <div class="step-text">
+              <h4>GitHub Discovery aktivieren</h4>
+              <p>Backstage automatisch alle Repositories einer Organisation scannen lassen.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot">3</div>
+            <div class="step-text">
+              <h4>Beziehungen definieren</h4>
+              <p>DependsOn, ownedBy und partOf setzen, um Abhängigkeiten sichtbar zu machen.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot">4</div>
+            <div class="step-text">
+              <h4>Catalog-UI validieren</h4>
+              <p>Im Backstage-Portal überprüfen, ob alle Entities korrekt erkannt und angezeigt werden.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module 3 -->
+    <div class="module">
+      <div class="module__head" onclick="toggleModule(this)">
+        <div class="module__num">3</div>
+        <div class="module__info">
+          <div class="module__name">Software Templates &amp; Scaffolder</div>
+          <div class="module__meta">3 Schritte · ~45 min</div>
+        </div>
+        <i class="fa-solid fa-chevron-down module__arrow"></i>
+      </div>
+      <div class="module__body">
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-dot">1</div>
+            <div class="step-text">
+              <h4>Template-Struktur verstehen</h4>
+              <p>Ein Software Template besteht aus einer <code>template.yaml</code> und einem <code>skeleton/</code>-Verzeichnis mit Vorlagendateien.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot">2</div>
+            <div class="step-text">
+              <h4>Node.js-Service-Template erstellen</h4>
+              <p>Formularfelder (Parameter), Aktionen (fetch, publish, catalog:register) und den Skeleton kombinieren.</p>
+              <div class="codebox">steps:
+  - id: fetch
+    name: Fetch Template
+    action: fetch:template
+    input:
+      url: ./skeleton
+  - id: publish
+    name: Publish to GitHub
+    action: publish:github
+  - id: register
+    name: Register in Catalog
+    action: catalog:register</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot">3</div>
+            <div class="step-text">
+              <h4>Template testen</h4>
+              <p>Im Backstage-Portal "Create" öffnen, Template auswählen, Formular ausfüllen und das automatisch erstellte Repository prüfen.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module 4 -->
+    <div class="module">
+      <div class="module__head" onclick="toggleModule(this)">
+        <div class="module__num">4</div>
+        <div class="module__info">
+          <div class="module__name">Keycloak Authentifizierung</div>
+          <div class="module__meta">3 Schritte · ~30 min</div>
+        </div>
+        <i class="fa-solid fa-chevron-down module__arrow"></i>
+      </div>
+      <div class="module__body">
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-dot">1</div>
+            <div class="step-text">
+              <h4>Keycloak-Realm einrichten</h4>
+              <p>Einen Realm, einen Client (OIDC) und Benutzergruppen in Keycloak konfigurieren.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot">2</div>
+            <div class="step-text">
+              <h4>Backstage OIDC-Provider konfigurieren</h4>
+              <p>Client-ID und Secret in <code>app-config.yaml</code> eintragen und den Keycloak-Provider aktivieren.</p>
+              <div class="codebox">auth:
+  providers:
+    oidc:
+      development:
+        metadataUrl: <span class="s">https://keycloak.example.com/realms/backstage/.well-known/openid-configuration</span>
+        clientId: <span class="s">${KEYCLOAK_CLIENT_ID}</span>
+        clientSecret: <span class="s">${KEYCLOAK_CLIENT_SECRET}</span></div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot">3</div>
+            <div class="step-text">
+              <h4>Sign-In-Resolver implementieren</h4>
+              <p>Benutzer aus dem Keycloak-Token mit Catalog-Entities verknüpfen und Gastmodus deaktivieren.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Labs CTA ── -->
+  <div class="labs-cta">
+    <h2>Verwandte Labore</h2>
+    <p>Vertiefen Sie Ihr Wissen mit diesen praktischen Backstage-Laboren aus dem Koffi Academy Katalog.</p>
+    <div class="labs-grid">
+      <a class="lab-link" href="/laboratoire">
+        <i class="fa-solid fa-flask"></i>Build Your First Template
+      </a>
+      <a class="lab-link" href="/laboratoire">
+        <i class="fa-solid fa-flask"></i>Keycloak Auth für Backstage
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ── -->
+<footer class="foot">
+  <p>&copy; 2026 <strong>Koffi Academy</strong> · <a href="/impressum">Impressum</a> · <a href="/datenschutz">Datenschutz</a></p>
+</footer>
+
+<script>
+function toggleModule(head){
+  var mod = head.parentElement;
+  mod.classList.toggle('is-open');
+}
+</script>
+</body>
+</html>

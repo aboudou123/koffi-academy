@@ -127,36 +127,80 @@ button{cursor:pointer}
 .help-body{padding:16px;color:var(--soft);font-size:13.5px;line-height:1.58}
 .hint{border-left:3px solid var(--teal);background:rgba(32,211,182,.08);padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0}
 .hidden{display:none!important}
+/* ── FAB (visible on mobile only) ── */
+.inst-fab{
+  display:none;
+  position:fixed;bottom:20px;right:20px;z-index:45;
+  align-items:center;gap:8px;
+  background:var(--teal);color:#071a2f;
+  border:0;border-radius:999px;
+  padding:12px 20px;font-size:13px;font-weight:700;
+  font-family:inherit;
+  box-shadow:0 8px 28px rgba(32,211,182,.42);
+  transition:.16s;
+}
+.inst-fab:active{transform:scale(.96)}
+
+/* ── ≤1080 px: stack vertically ── */
 @media(max-width:1080px){
   .lab-main{grid-template-columns:1fr}
   .workspace{border-right:0}
-  .instructions{border-top:1px solid var(--line)}
   .terminal-output{max-height:none}
 }
-@media(max-width:720px){
-  .labbar{align-items:flex-start;flex-direction:column}
-  .brand{width:100%}
-  .brand__text{flex:1;max-width:calc(100vw - 76px)}
-  .brand__title{display:block;max-width:100%}
-  .actions{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .topbtn{width:100%;font-size:12px;padding:8px 10px;white-space:normal}
-  .topbtn--ai{grid-column:1/-1}
+
+/* ── ≤768 px: instructions becomes full-screen overlay ── */
+@media(max-width:768px){
+  /* Compact header */
+  .labbar{padding:8px 12px;gap:8px;flex-wrap:wrap}
+  .brand__k{display:none}
+  .brand__title{font-size:15px}
+  .labbar__spacer{display:none}
+  .actions{order:3;width:100%;display:flex;flex-wrap:wrap;gap:6px}
+  .topbtn{font-size:11.5px;padding:7px 10px;gap:5px;min-height:32px}
+  /* Hide "Hide Instructions" from nav — FAB handles it */
+  #toggleInstructions{display:none}
+  .topbtn--ai{flex:1}
+
+  /* Workspace fills available height */
+  .lab-main{display:flex;flex-direction:column}
+  .workspace{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .work-surface{flex:1;min-height:0;overflow:hidden}
+  .terminal-output{
+    height:calc(100svh - 220px);
+    min-height:260px;max-height:none;
+    overflow:auto;
+  }
+
+  /* Instructions: slide-up full-screen overlay */
+  .instructions{
+    position:fixed;inset:0;
+    z-index:50;
+    display:flex!important; /* override .is-hidden display:none on mobile */
+    flex-direction:column;
+    transform:translateY(100%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    border-top:0;
+    overflow-y:auto;
+  }
+  .instructions:not(.is-hidden){transform:translateY(0)}
+
+  /* FAB: show when instructions are hidden */
+  .inst-fab{display:inline-flex}
+  .inst-fab.is-gone{display:none}
+
+  /* Dataset */
   .dataset-grid{grid-template-columns:1fr}
-  .dataset-editor{border-right:0;border-bottom:1px solid var(--line);min-height:360px}
-  .dataset-side{display:block}
+  .dataset-editor{border-right:0;border-bottom:1px solid var(--line);min-height:260px}
+
+  /* Text */
   .lab-title{font-size:26px}
-  .step h3{font-size:19px}
-  .work-tabs{overflow:auto}
+  .step h3{font-size:18px}
+  .lab-sub,.step__body{overflow-wrap:break-word;font-size:14px}
+  .work-tabs{overflow-x:auto}
   .tab{white-space:nowrap}
-  .lab-sub,.step__body{overflow-wrap:break-word}
-}
-@media(max-width:480px){
-  .actions{display:flex;flex-direction:column;align-items:stretch}
-  .topbtn,.topbtn--ai{grid-column:auto;width:100%}
-  .brand__title{font-size:16px}
-  .terminal-output,.code-editor,.dataset-editor{font-size:12.5px;padding:16px}
-  .instructions__body{padding:16px 14px 24px}
-  .runbar{align-items:flex-start;flex-direction:column}
+  .runbar{align-items:flex-start;flex-direction:column;gap:8px}
+  .runbar__actions{width:100%;justify-content:flex-start}
+  .instructions__body{padding:16px 14px 28px}
 }
   </style>
 </head>
@@ -289,6 +333,11 @@ button{cursor:pointer}
     </aside>
   </main>
 </div>
+
+<!-- FAB: opens instructions overlay on mobile -->
+<button type="button" class="inst-fab" id="instFab" aria-label="Ouvrir les instructions">
+  <i class="fa-solid fa-book-open"></i> Instructions
+</button>
 
 <section class="help-panel" id="helpPanel" aria-label="Lab assistant">
   <div class="help-head">
@@ -620,16 +669,24 @@ button{cursor:pointer}
   codeEditor.addEventListener("input", saveCode);
   datasetEditor.addEventListener("input", updateDatasetMetrics);
   document.getElementById("progressBtn").addEventListener("click", function(){ document.getElementById("instructions").scrollIntoView({behavior:"smooth",block:"start"}); });
+  var instPanel = document.getElementById("instructions");
+  var instFab   = document.getElementById("instFab");
+
+  function showInstructions(){
+    instPanel.classList.remove("is-hidden");
+    instFab.classList.add("is-gone");
+    document.getElementById("toggleInstructions").innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hide Instructions';
+  }
   function hideInstructions(){
-    document.getElementById("instructions").classList.toggle("is-hidden", true);
+    instPanel.classList.add("is-hidden");
+    instFab.classList.remove("is-gone");
     document.getElementById("toggleInstructions").innerHTML = '<i class="fa-solid fa-eye"></i> Show Instructions';
   }
   document.getElementById("closeInstructions").addEventListener("click", hideInstructions);
   document.getElementById("toggleInstructions").addEventListener("click", function(){
-    var panel = document.getElementById("instructions");
-    var hidden = panel.classList.toggle("is-hidden");
-    this.innerHTML = hidden ? '<i class="fa-solid fa-eye"></i> Show Instructions' : '<i class="fa-solid fa-eye-slash"></i> Hide Instructions';
+    instPanel.classList.contains("is-hidden") ? showInstructions() : hideInstructions();
   });
+  instFab.addEventListener("click", showInstructions);
   document.getElementById("openHelp").addEventListener("click", function(){ document.getElementById("helpPanel").classList.add("is-open"); });
   document.getElementById("closeHelp").addEventListener("click", function(){ document.getElementById("helpPanel").classList.remove("is-open"); });
   document.getElementById("nextHint").addEventListener("click", function(){
