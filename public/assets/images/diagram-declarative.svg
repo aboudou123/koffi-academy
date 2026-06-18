@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" width="800" height="420" font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f9fafb"/>
+      <stop offset="100%" stop-color="#eef5ff"/>
+    </linearGradient>
+    <linearGradient id="imperGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef2f2"/>
+      <stop offset="100%" stop-color="#fff5f5"/>
+    </linearGradient>
+    <linearGradient id="declGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#f0f9ff"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#07294d" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="420" fill="url(#bgGrad)" rx="22"/>
+
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-size="20" font-weight="900" fill="#07294d">Deklarativ vs. Imperativ – Ein visueller Vergleich</text>
+
+  <!-- ── LEFT PANEL: Imperativ ── -->
+  <rect x="28" y="60" width="358" height="334" rx="20" fill="white" filter="url(#cardShadow)"/>
+  <!-- color bar -->
+  <rect x="28" y="60" width="358" height="10" rx="20" fill="#EF4444"/>
+  <rect x="28" y="65" width="358" height="5" fill="#EF4444"/>
+
+  <!-- Header -->
+  <text x="207" y="98" text-anchor="middle" font-size="17" font-weight="800" fill="#EF4444">⚙ Imperativ: WIE</text>
+  <text x="207" y="116" text-anchor="middle" font-size="11.5" fill="#6B7280">Schritt-für-Schritt-Befehle — nicht idempotent</text>
+
+  <!-- Code area -->
+  <rect x="48" y="128" width="318" height="244" rx="12" fill="url(#imperGrad)" stroke="#fecaca" stroke-width="1.2"/>
+
+  <text x="64" y="152" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#9CA3AF"># 1. VPC erstellen</text>
+  <text x="64" y="170" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#EF4444">aws ec2 create-vpc \</text>
+  <text x="64" y="186" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">  --cidr-block 10.0.0.0/16</text>
+
+  <text x="64" y="210" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#9CA3AF"># 2. Subnet erstellen</text>
+  <text x="64" y="228" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#EF4444">aws ec2 create-subnet \</text>
+  <text x="64" y="244" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">  --vpc-id vpc-0abc123 \</text>
+  <text x="64" y="260" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">  --cidr-block 10.0.1.0/24</text>
+
+  <text x="64" y="284" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#9CA3AF"># 3. Security Group ...</text>
+  <text x="64" y="300" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#EF4444">aws ec2 create-security-group \</text>
+  <text x="64" y="316" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">  --group-name taskflow-sg \</text>
+  <text x="64" y="332" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">  --vpc-id vpc-0abc123 ...</text>
+
+  <text x="64" y="358" font-size="11.5" font-family="'SFMono-Regular', Consolas, monospace" fill="#9CA3AF">&#9888; 20+ manuelle Befehle insgesamt</text>
+
+  <!-- ── RIGHT PANEL: Deklarativ ── -->
+  <rect x="414" y="60" width="358" height="334" rx="20" fill="white" filter="url(#cardShadow)"/>
+  <!-- color bar -->
+  <rect x="414" y="60" width="358" height="10" rx="20" fill="#3B82F6"/>
+  <rect x="414" y="65" width="358" height="5" fill="#3B82F6"/>
+
+  <!-- Header -->
+  <text x="593" y="98" text-anchor="middle" font-size="17" font-weight="800" fill="#3B82F6">✦ Deklarativ: WAS</text>
+  <text x="593" y="116" text-anchor="middle" font-size="11.5" fill="#6B7280">Gewünschter Endzustand — Terraform findet den Weg</text>
+
+  <!-- Code area -->
+  <rect x="434" y="128" width="318" height="244" rx="12" fill="url(#declGrad)" stroke="#bfdbfe" stroke-width="1.2"/>
+
+  <text x="450" y="152" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#9CA3AF"># main.tf — eine einzige Datei</text>
+  <text x="450" y="172" font-size="12" font-family="'SFMono-Regular', Consolas, monospace">
+    <tspan fill="#7c3aed">resource</tspan><tspan fill="#374151"> </tspan><tspan fill="#0f766e">"aws_vpc"</tspan><tspan fill="#374151"> </tspan><tspan fill="#0f766e">"main"</tspan><tspan fill="#374151"> {</tspan>
+  </text>
+  <text x="450" y="189" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">  cidr_block = "10.0.0.0/16"</text>
+  <text x="450" y="206" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">}</text>
+
+  <text x="450" y="226" font-size="12" font-family="'SFMono-Regular', Consolas, monospace">
+    <tspan fill="#7c3aed">resource</tspan><tspan fill="#374151"> </tspan><tspan fill="#0f766e">"aws_subnet"</tspan><tspan fill="#374151"> </tspan><tspan fill="#0f766e">"main"</tspan><tspan fill="#374151"> {</tspan>
+  </text>
+  <text x="450" y="243" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">  vpc_id = aws_vpc.main.id</text>
+  <text x="450" y="260" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">  cidr_block = "10.0.1.0/24"</text>
+  <text x="450" y="277" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">}</text>
+
+  <text x="450" y="297" font-size="12" font-family="'SFMono-Regular', Consolas, monospace">
+    <tspan fill="#7c3aed">resource</tspan><tspan fill="#374151"> </tspan><tspan fill="#0f766e">"aws_security_group"</tspan><tspan fill="#374151"> </tspan><tspan fill="#0f766e">"sg"</tspan><tspan fill="#374151"> {</tspan>
+  </text>
+  <text x="450" y="314" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">  vpc_id = aws_vpc.main.id</text>
+  <text x="450" y="331" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">  ...</text>
+  <text x="450" y="348" font-size="12" font-family="'SFMono-Regular', Consolas, monospace" fill="#374151">}</text>
+
+  <text x="450" y="358" font-size="11.5" font-family="'SFMono-Regular', Consolas, monospace" fill="#3B82F6">&#10003; terraform apply — fertig</text>
+</svg>
