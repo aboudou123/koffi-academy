@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 370" width="800" height="370" font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0f4ff"/>
+      <stop offset="100%" stop-color="#eef5ff"/>
+    </linearGradient>
+    <filter id="sh" x="-8%" y="-8%" width="116%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#07294d" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="370" fill="url(#bg)" rx="20"/>
+
+  <!-- Title -->
+  <text x="400" y="44" text-anchor="middle" font-size="18" font-weight="900" fill="#07294d">Die 5 Kernvorteile von Infrastructure as Code</text>
+
+  <!-- ═══ CARD 1: Reproduzierbarkeit ═══ -->
+  <rect x="30" y="60" width="140" height="178" rx="13" fill="white" filter="url(#sh)"/>
+  <rect x="30" y="60" width="140" height="50" rx="13" fill="#1d4ed8"/>
+  <rect x="30" y="97" width="140" height="13" fill="#1d4ed8"/>
+  <text x="100" y="94" text-anchor="middle" font-size="26" font-weight="900" fill="white">1</text>
+  <text x="100" y="132" text-anchor="middle" font-size="12" font-weight="800" fill="#07294d">Reproduzier-</text>
+  <text x="100" y="149" text-anchor="middle" font-size="12" font-weight="800" fill="#07294d">barkeit</text>
+  <text x="100" y="171" text-anchor="middle" font-size="10" fill="#6B7280">Identische</text>
+  <text x="100" y="185" text-anchor="middle" font-size="10" fill="#6B7280">Umgebungen bei</text>
+  <text x="100" y="199" text-anchor="middle" font-size="10" fill="#6B7280">jedem Deployment</text>
+  <!-- bottom accent line -->
+  <rect x="60" y="226" width="80" height="3" rx="2" fill="#1d4ed8" opacity="0.35"/>
+
+  <!-- ═══ CARD 2: Versionskontrolle ═══ -->
+  <rect x="180" y="60" width="140" height="178" rx="13" fill="white" filter="url(#sh)"/>
+  <rect x="180" y="60" width="140" height="50" rx="13" fill="#0369a1"/>
+  <rect x="180" y="97" width="140" height="13" fill="#0369a1"/>
+  <text x="250" y="94" text-anchor="middle" font-size="26" font-weight="900" fill="white">2</text>
+  <text x="250" y="132" text-anchor="middle" font-size="12" font-weight="800" fill="#07294d">Versions-</text>
+  <text x="250" y="149" text-anchor="middle" font-size="12" font-weight="800" fill="#07294d">kontrolle</text>
+  <text x="250" y="171" text-anchor="middle" font-size="10" fill="#6B7280">Git-History</text>
+  <text x="250" y="185" text-anchor="middle" font-size="10" fill="#6B7280">für jede</text>
+  <text x="250" y="199" text-anchor="middle" font-size="10" fill="#6B7280">&#196;nderung</text>
+  <rect x="210" y="226" width="80" height="3" rx="2" fill="#0369a1" opacity="0.35"/>
+
+  <!-- ═══ CARD 3: Zusammenarbeit ═══ -->
+  <rect x="330" y="60" width="140" height="178" rx="13" fill="white" filter="url(#sh)"/>
+  <rect x="330" y="60" width="140" height="50" rx="13" fill="#0f766e"/>
+  <rect x="330" y="97" width="140" height="13" fill="#0f766e"/>
+  <text x="400" y="94" text-anchor="middle" font-size="26" font-weight="900" fill="white">3</text>
+  <text x="400" y="132" text-anchor="middle" font-size="12" font-weight="800" fill="#07294d">Zusammen-</text>
+  <text x="400" y="149" text-anchor="middle" font-size="12" font-weight="800" fill="#07294d">arbeit</text>
+  <text x="400" y="171" text-anchor="middle" font-size="10" fill="#6B7280">Teams arbeiten</text>
+  <text x="400" y="185" text-anchor="middle" font-size="10" fill="#6B7280">parallel an</text>
+  <text x="400" y="199" text-anchor="middle" font-size="10" fill="#6B7280">derselben Basis</text>
+  <rect x="360" y="226" width="80" height="3" rx="2" fill="#0f766e" opacity="0.35"/>
+
+  <!-- ═══ CARD 4: Dokumentation als Code ═══ -->
+  <rect x="480" y="60" width="140" height="178" rx="13" fill="white" filter="url(#sh)"/>
+  <rect x="480" y="60" width="140" height="50" rx="13" fill="#b45309"/>
+  <rect x="480" y="97" width="140" height="13" fill="#b45309"/>
+  <text x="550" y="94" text-anchor="middle" font-size="26" font-weight="900" fill="white">4</text>
+  <text x="550" y="132" text-anchor="middle" font-size="12" font-weight="800" fill="#07294d">Dokumentation</text>
+  <text x="550" y="149" text-anchor="middle" font-size="12" font-weight="800" fill="#07294d">als Code</text>
+  <text x="550" y="171" text-anchor="middle" font-size="10" fill="#6B7280">Infrastruktur</text>
+  <text x="550" y="185" text-anchor="middle" font-size="10" fill="#6B7280">dokumentiert</text>
+  <text x="550" y="199" text-anchor="middle" font-size="10" fill="#6B7280">sich selbst</text>
+  <rect x="510" y="226" width="80" height="3" rx="2" fill="#b45309" opacity="0.35"/>
+
+  <!-- ═══ CARD 5: Automatisierung &amp; Speed ═══ -->
+  <rect x="630" y="60" width="140" height="178" rx="13" fill="white" filter="url(#sh)"/>
+  <rect x="630" y="60" width="140" height="50" rx="13" fill="#7c3aed"/>
+  <rect x="630" y="97" width="140" height="13" fill="#7c3aed"/>
+  <text x="700" y="94" text-anchor="middle" font-size="26" font-weight="900" fill="white">5</text>
+  <text x="700" y="132" text-anchor="middle" font-size="12" font-weight="800" fill="#07294d">Automatisierung</text>
+  <text x="700" y="149" text-anchor="middle" font-size="12" font-weight="800" fill="#07294d">&amp; Speed</text>
+  <text x="700" y="171" text-anchor="middle" font-size="10" fill="#6B7280">Minuten statt</text>
+  <text x="700" y="185" text-anchor="middle" font-size="10" fill="#6B7280">Stunden f&#252;r</text>
+  <text x="700" y="199" text-anchor="middle" font-size="10" fill="#6B7280">Deployments</text>
+  <rect x="660" y="226" width="80" height="3" rx="2" fill="#7c3aed" opacity="0.35"/>
+
+  <!-- Summary bar -->
+  <rect x="28" y="254" width="744" height="86" rx="14" fill="#07294d" filter="url(#sh)"/>
+  <text x="400" y="291" text-anchor="middle" font-size="13" font-weight="700" fill="#ffc600">Jeder Vorteil baut auf dem vorherigen auf &#8211;</text>
+  <text x="400" y="312" text-anchor="middle" font-size="12.5" fill="white">zusammen bilden sie das Fundament moderner Infrastruktur-Verwaltung</text>
+</svg>
