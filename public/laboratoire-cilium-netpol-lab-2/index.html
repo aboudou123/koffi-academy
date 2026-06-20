@@ -273,8 +273,9 @@ echo "Backend IP: $BACKEND_IP"</pre></div>
         <article class="step" data-step="deny">
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Créer la politique default-deny</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s2b">Créez une politique qui refuse tout l'ingress par défaut. On utilise une NetworkPolicy Kubernetes standard, que Cilium applique. Dans l'onglet <strong>Policies</strong>, enregistrez ceci comme <code>default-deny.yaml</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcDeny">apiVersion: networking.k8s.io/v1
+            <span data-i18n="s2b">Créez une politique qui refuse tout l'ingress par défaut (NetworkPolicy Kubernetes standard, appliquée par Cilium). Le plus simple : créez le fichier directement dans le <strong>Terminal</strong> via un here-document (ou collez le manifeste dans l'onglet <strong>Policies</strong> sous <code>default-deny.yaml</code>) :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcDeny">cat > /root/cilium/policies/default-deny.yaml &lt;&lt; 'EOF'
+apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default-deny-ingress
@@ -282,7 +283,8 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress</pre></div>
+  - Ingress
+EOF</pre></div>
             <div class="note" data-i18n="s2note">Note : un <code>podSelector</code> vide sélectionne tous les pods du namespace, et déclarer <code>Ingress</code> sans règle crée une baseline « tout refuser ». Cilium l'applique, et des règles d'autorisation (CiliumNetworkPolicy) pourront ensuite ouvrir le trafic voulu.</div>
             <span data-i18n="s2apply">Appliquez la politique dans le <strong>Terminal</strong> :</span>
             <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/cilium/policies/default-deny.yaml</pre></div>
@@ -303,6 +305,9 @@ spec:
             <span data-i18n="s4b">Testez que le trafic est maintenant bloqué :</span>
             <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http://$BACKEND_IP || echo "Connection blocked as expected"</pre></div>
             <span data-i18n="s4b2">La connexion doit expirer ou échouer : la baseline default-deny fonctionne.</span>
+            <span data-i18n="s4b3">Vérifications additionnelles : l'ingress est bloqué dans les deux sens, mais le trafic sortant (egress) reste autorisé :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl exec -n policy-demo deploy/backend -- curl -s --connect-timeout 5 http://10.0.0.28 || echo "Backend cannot reach frontend"
+kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http://google.com || echo "Outbound blocked?"</pre></div>
           </div>
         </article>
 
@@ -363,7 +368,7 @@ window.I18N = {
     "s1b2":"Testez la connexion du frontend vers le backend :",
     "s1b3":"Vous devez voir la page d'accueil nginx : la connectivité fonctionne.",
     "s2h":"Étape 2 · Créer la politique default-deny",
-    "s2b":"Créez une politique qui refuse tout l'ingress par défaut. On utilise une NetworkPolicy Kubernetes standard, que Cilium applique. Dans l'onglet <strong>Policies</strong>, enregistrez ceci comme <code>default-deny.yaml</code> :",
+    "s2b":"Créez une politique qui refuse tout l'ingress par défaut (NetworkPolicy Kubernetes standard, appliquée par Cilium). Le plus simple : créez le fichier directement dans le <strong>Terminal</strong> via un here-document (ou collez le manifeste dans l'onglet <strong>Policies</strong> sous <code>default-deny.yaml</code>) :",
     "s2note":"Note : un <code>podSelector</code> vide sélectionne tous les pods du namespace, et déclarer <code>Ingress</code> sans règle crée une baseline « tout refuser ». Cilium l'applique, et des règles d'autorisation (CiliumNetworkPolicy) pourront ensuite ouvrir le trafic voulu.",
     "s2apply":"Appliquez la politique dans le <strong>Terminal</strong> :",
     "s3h":"Étape 3 · Vérifier que la politique est appliquée",
@@ -371,6 +376,7 @@ window.I18N = {
     "s4h":"Étape 4 · Tester la connectivité après la politique",
     "s4b":"Testez que le trafic est maintenant bloqué :",
     "s4b2":"La connexion doit expirer ou échouer : la baseline default-deny fonctionne.",
+    "s4b3":"Vérifications additionnelles : l'ingress est bloqué dans les deux sens, mais le trafic sortant (egress) reste autorisé :",
     "critH":"Critères de réussite",
     "c1":"Connectivité initiale vérifiée (frontend → backend).","c2":"Politique default-deny appliquée.","c3":"Le trafic entre pods est bloqué.",
     "trH":"Dépannage","trB":"Si le trafic n'est pas bloqué, confirmez que la politique existe et inspectez-la :","trB2":"Vérifiez aussi que <code>$BACKEND_IP</code> est bien défini (Étape 1) avant de retester.",
@@ -404,7 +410,7 @@ window.I18N = {
     "s1b2":"Testen Sie die Verbindung von Frontend zu Backend:",
     "s1b3":"Sie sollten die nginx-Willkommensseite sehen: die Konnektivität funktioniert.",
     "s2h":"Schritt 2 · Die Default-Deny-Policy erstellen",
-    "s2b":"Erstellen Sie eine Policy, die standardmäßig allen Ingress ablehnt. Wir nutzen eine Standard-Kubernetes-NetworkPolicy, die Cilium durchsetzt. Speichern Sie im Reiter <strong>Policies</strong> dies als <code>default-deny.yaml</code>:",
+    "s2b":"Erstellen Sie eine Policy, die standardmäßig allen Ingress ablehnt (Standard-Kubernetes-NetworkPolicy, von Cilium durchgesetzt). Am einfachsten: erstellen Sie die Datei direkt im <strong>Terminal</strong> per Here-Document (oder fügen Sie das Manifest im Reiter <strong>Policies</strong> als <code>default-deny.yaml</code> ein):",
     "s2note":"Hinweis: Ein leerer <code>podSelector</code> wählt alle Pods des Namespace, und <code>Ingress</code> ohne Regel erzeugt eine „Alles-ablehnen\"-Baseline. Cilium setzt sie durch; Allow-Regeln (CiliumNetworkPolicy) können danach gezielt Traffic öffnen.",
     "s2apply":"Wenden Sie die Policy im <strong>Terminal</strong> an:",
     "s3h":"Schritt 3 · Prüfen, dass die Policy angewendet ist",
@@ -412,6 +418,7 @@ window.I18N = {
     "s4h":"Schritt 4 · Konnektivität nach der Policy testen",
     "s4b":"Testen Sie, dass der Traffic nun blockiert ist:",
     "s4b2":"Die Verbindung muss ablaufen oder fehlschlagen: die Default-Deny-Baseline funktioniert.",
+    "s4b3":"Zusätzliche Prüfungen: der Ingress ist in beide Richtungen blockiert, der ausgehende Traffic (Egress) bleibt jedoch erlaubt:",
     "critH":"Erfolgskriterien",
     "c1":"Anfängliche Konnektivität verifiziert (Frontend → Backend).","c2":"Default-Deny-Policy angewendet.","c3":"Der Traffic zwischen Pods ist blockiert.",
     "trH":"Fehlerbehebung","trB":"Wenn der Traffic nicht blockiert ist, bestätigen Sie, dass die Policy existiert, und inspizieren Sie sie:","trB2":"Prüfen Sie auch, dass <code>$BACKEND_IP</code> gesetzt ist (Schritt 1), bevor Sie erneut testen.",
@@ -445,7 +452,7 @@ window.I18N = {
     "s1b2":"Test connectivity from frontend to backend:",
     "s1b3":"You should see the nginx welcome page: connectivity works.",
     "s2h":"Step 2 · Create the default-deny policy",
-    "s2b":"Create a policy that denies all ingress by default. We use a standard Kubernetes NetworkPolicy, which Cilium enforces. In the <strong>Policies</strong> tab, save this as <code>default-deny.yaml</code>:",
+    "s2b":"Create a policy that denies all ingress by default (standard Kubernetes NetworkPolicy, enforced by Cilium). Easiest: create the file directly in the <strong>Terminal</strong> with a here-document (or paste the manifest in the <strong>Policies</strong> tab as <code>default-deny.yaml</code>):",
     "s2note":"Note: an empty <code>podSelector</code> selects all pods in the namespace, and declaring <code>Ingress</code> with no rule creates a deny-all baseline. Cilium enforces it; allow rules (CiliumNetworkPolicy) can then selectively open traffic.",
     "s2apply":"Apply the policy in the <strong>Terminal</strong>:",
     "s3h":"Step 3 · Verify the policy is applied",
@@ -453,6 +460,7 @@ window.I18N = {
     "s4h":"Step 4 · Test connectivity after the policy",
     "s4b":"Test that traffic is now blocked:",
     "s4b2":"The connection must time out or fail: the default-deny baseline works.",
+    "s4b3":"Additional checks: ingress is blocked both ways, but outbound (egress) traffic is still allowed:",
     "critH":"Success criteria",
     "c1":"Initial connectivity verified (frontend → backend).","c2":"Default-deny policy applied.","c3":"Traffic between pods is blocked.",
     "trH":"Troubleshooting","trB":"If traffic is not blocked, confirm the policy exists and inspect it:","trB2":"Also check that <code>$BACKEND_IP</code> is set (Step 1) before testing again.",
@@ -479,7 +487,8 @@ window.I18N = {
   "use strict";
 
   var DD = "policies/default-deny.yaml";
-  var BACKEND_IP = "10.0.2.41";
+  var BACKEND_IP = "10.0.0.214";
+  var FRONTEND_IP = "10.0.0.28";
 
   var I = window.I18N;
   var lang = localStorage.getItem("preferred-lang");
@@ -528,9 +537,10 @@ window.I18N = {
   function ddReady(){ return (FS[DD]||"").indexOf("default-deny-ingress")!==-1 || (FS[DD]||"").indexOf("kind: NetworkPolicy")!==-1; }
 
   function printNginx(){
-    ["<!DOCTYPE html>","<html>","<head><title>Welcome to nginx!</title></head>","<body>",
-     "<h1>Welcome to nginx!</h1>","<p>If you see this page, the nginx web server is working.</p>",
-     "</body>","</html>"].forEach(function(l){ print(l,"line-muted"); });
+    ["<!DOCTYPE html>","<html>","<head>","<title>Welcome to nginx!</title>","</head>","<body>",
+     "<h1>Welcome to nginx!</h1>",
+     "<p>If you see this page, the nginx web server is successfully installed and working.</p>",
+     "<p><em>Thank you for using nginx.</em></p>","</body>","</html>"].forEach(function(l){ print(l,"line-muted"); });
   }
 
   function expand(s){ return s.replace(/\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?/g, function(_,n){ return (vars[n]!==undefined)?vars[n]:""; }); }
@@ -565,8 +575,11 @@ window.I18N = {
 
     // kubectl exec ... curl
     if(parts[1]==="exec" && /curl/.test(line)){
-      var m=line.match(/https?:\/\/(\S+)/); var ip=m?m[1]:"";
-      if(!ip){ print(t("noIp"),"line-error"); print(t("noIpHint"),"line-warn"); return false; }
+      var m=line.match(/https?:\/\/([^\s\/]+)/); var host=m?m[1]:"";
+      if(!host){ print(t("noIp"),"line-error"); print(t("noIpHint"),"line-warn"); return false; }
+      if(host==="localhost"||host==="127.0.0.1"){ printNginx(); return true; }
+      var external = /\./.test(host) && !/^10\.0\.0\./.test(host);
+      if(external){ print("HTTP/1.1 301 Moved Permanently","line-muted"); print("Location: https://"+host+"/","line-muted"); return true; }
       if(denyApplied){ connBlocked=true; setStep("after",true); return false; }
       printNginx(); connBefore=true; setStep("before",true); return true;
     }
@@ -580,24 +593,27 @@ window.I18N = {
     if(verb==="get" && /(networkpolicies|networkpolicy|netpol)/.test(parts[2]||"")){
       if(!denyApplied){ print(t("noNp"),"line-warn"); return true; }
       print("NAME                   POD-SELECTOR   AGE");
-      print("default-deny-ingress   <none>         12s");
+      print("default-deny-ingress   {}             5s");
       verified=true; setStep("verify",true); return true;
     }
     if(verb==="describe" && /(networkpolicy|netpol)/.test(parts[2]||"")){
       if(!denyApplied){ print(t("noNp"),"line-warn"); return true; }
       print("Name:         default-deny-ingress");
       print("Namespace:    policy-demo");
+      print("Labels:       <none>");
+      print("Annotations:  <none>");
       print("Spec:");
-      print("  PodSelector:     <none> (selects all pods)");
+      print("  PodSelector:     <none> (Allowing the specific traffic to all pods in this namespace)");
       print("  Allowing ingress traffic:");
-      print("    <none> (Selected pods are isolated for ingress)");
+      print("    <none> (Selected pods are isolated for ingress connectivity)");
+      print("  Not affecting egress traffic");
       print("  Policy Types: Ingress");
       return true;
     }
     if(verb==="get" && /(pods?|po)$/.test(parts[2]||"")){
       print("NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE");
-      print("frontend-6f8c9d4b7-x2k9p     1/1     Running   0          6m    10.0.1.23     worker-1");
-      print("backend-7d9f5c8a6-q4m2t      1/1     Running   0          6m    10.0.2.41     worker-2");
+      print("frontend-6f8c9d4b7-x2k9p     1/1     Running   0          6m    10.0.0.28     worker-1");
+      print("backend-7d9f5c8a6-q4m2t      1/1     Running   0          6m    10.0.0.214    worker-2");
       return true;
     }
     print(t("kNF"),"line-error"); return false;
@@ -623,11 +639,21 @@ window.I18N = {
   }
 
   function runScript(text){
-    text.replace(/\r/g,"").split("\n").forEach(function(line){
-      if(line.trim()===""){ return; }
-      print(document.getElementById("termPrompt").textContent+" "+line,"line-cmd");
-      handle(line);
-    });
+    var lines=text.replace(/\r/g,"").split("\n"); var i=0;
+    while(i<lines.length){
+      var line=lines[i];
+      var hd=line.match(/^\s*cat\s*>\s*(\S+)\s*<<\s*['"]?([A-Za-z0-9_]+)['"]?\s*$/);
+      if(hd){
+        print(document.getElementById("termPrompt").textContent+" "+line,"line-cmd");
+        var path=hd[1], delim=hd[2], body=[]; i++;
+        while(i<lines.length && lines[i].trim()!==delim){ body.push(lines[i]); i++; }
+        i++;
+        var f=resolve(path)||path; FS[f]=body.join("\n")+"\n"; if(f===DD) editor.value=FS[DD];
+        continue;
+      }
+      if(line.trim()===""){ i++; continue; }
+      print(document.getElementById("termPrompt").textContent+" "+line,"line-cmd"); handle(line); i++;
+    }
   }
 
   document.getElementById("terminalForm").addEventListener("submit", function(e){
