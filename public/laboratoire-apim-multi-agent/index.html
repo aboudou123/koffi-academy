@@ -64,6 +64,11 @@ a{color:inherit}
 .chapters .num{width:26px;height:26px;border-radius:7px;background:var(--slate-100);color:var(--navy);font-family:'JetBrains Mono',monospace;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .chapters .ttl{flex:1;color:var(--ink);font-weight:500}
 .chapters .dur{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--slate-400)}
+.chapters a.chlink{display:flex;align-items:center;gap:13px;width:100%;color:inherit;text-decoration:none;border-radius:9px;padding:3px 7px;margin:-3px -7px;transition:.16s}
+.chapters a.chlink:hover{background:var(--slate-50)}
+.chapters a.chlink:hover .ttl{color:var(--accent)}
+.chapters .chgo{color:var(--slate-300);font-size:12px;margin-left:2px;transition:.16s}
+.chapters a.chlink:hover .chgo{color:var(--accent);transform:translateX(2px)}
 .obj{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:11px 22px}
 .obj li{display:flex;align-items:flex-start;gap:10px;font-size:13.7px;line-height:1.45;color:var(--slate-600)}
 .obj li i{color:#0f8a4f;font-size:12px;margin-top:3px;flex-shrink:0}
@@ -207,11 +212,11 @@ a{color:inherit}
                      <span class="player__note" data-i18n="vNote">La vidéo méthodique sera publiée prochainement.</span>
                   </div>
                   <ol class="chapters">
-                     <li><span class="num">01</span><span class="ttl" data-i18n="ch1">Re-provisionnement & déploiement Lab 1 + Lab 2 sur AKS</span><span class="dur">28 min</span></li>
-                     <li><span class="num">02</span><span class="ttl" data-i18n="ch2">Serveur MCP GitHub officiel + fixture locale</span><span class="dur">22 min</span></li>
-                     <li><span class="num">03</span><span class="ttl" data-i18n="ch3">Supervisor multi-agents : plan → approve → apply</span><span class="dur">26 min</span></li>
-                     <li><span class="num">04</span><span class="ttl" data-i18n="ch4">Mode dry-run & validation humaine</span><span class="dur">22 min</span></li>
-                     <li><span class="num">05</span><span class="ttl" data-i18n="ch5">Flux self-service de bout en bout + Azure Front Door</span><span class="dur">22 min</span></li>
+                     <li><a class="chlink" href="/laboratoire-apim-multi-agent-lab"><span class="num">01</span><span class="ttl" data-i18n="ch1">Re-provisionnement &amp; déploiement Lab 1 + Lab 2 sur AKS</span><span class="dur">28 min</span><i class="fa-solid fa-chevron-right chgo"></i></a></li>
+                     <li><a class="chlink" href="/laboratoire-apim-multi-agent-lab-2"><span class="num">02</span><span class="ttl" data-i18n="ch2">Serveur MCP GitHub officiel + fixture locale</span><span class="dur">22 min</span><i class="fa-solid fa-chevron-right chgo"></i></a></li>
+                     <li><a class="chlink" href="/laboratoire-apim-multi-agent-lab-3"><span class="num">03</span><span class="ttl" data-i18n="ch3">Supervisor multi-agents : plan → approve → apply</span><span class="dur">26 min</span><i class="fa-solid fa-chevron-right chgo"></i></a></li>
+                     <li><a class="chlink" href="/laboratoire-apim-multi-agent-lab-4"><span class="num">04</span><span class="ttl" data-i18n="ch4">Mode dry-run &amp; validation humaine</span><span class="dur">22 min</span><i class="fa-solid fa-chevron-right chgo"></i></a></li>
+                     <li><a class="chlink" href="/laboratoire-apim-multi-agent-lab-5"><span class="num">05</span><span class="ttl" data-i18n="ch5">Flux self-service de bout en bout + Azure Front Door</span><span class="dur">22 min</span><i class="fa-solid fa-chevron-right chgo"></i></a></li>
                   </ol>
                </div>
             </section>
