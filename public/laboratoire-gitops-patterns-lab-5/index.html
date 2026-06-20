@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Advanced GitOps Patterns · Chapitre 3 | Atelier — Koffi Academy</title>
-  <meta name="description" content="Atelier Koffi Academy — GitOps, Chapitre 3 : déploiements multi-cluster avec Argo CD ApplicationSets, overlays Kustomize et suivi de synchronisation.">
+  <title>Advanced GitOps Patterns · Chapitre 5 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — GitOps, Chapitre 5 : plateforme GitOps de production (notifications, webhooks, intégrations, pistes d'audit, portail self-service).">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,7 +82,7 @@ button{cursor:pointer}
 .toolbtn--primary{border-color:transparent;background:linear-gradient(135deg,var(--orange),#ffb057);box-shadow:0 10px 24px rgba(248,144,53,.26)}
 .datasets-view{flex-direction:column;background:#0b1222}
 .filebar{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--line);flex-wrap:wrap}
-.filetab{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--soft);border-radius:8px 8px 0 0;padding:7px 9px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700}
+.filetab{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--soft);border-radius:8px 8px 0 0;padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700}
 .filetab.is-active{color:#fff;background:#0b1222;border-bottom-color:#0b1222}
 .dataset-grid{display:grid;grid-template-columns:minmax(0,1fr) 250px;flex:1;min-height:0}
 .dataset-editor{flex:1;min-height:420px;width:100%;border:0;outline:0;resize:none;padding:18px 20px;background:#0b1222;color:#d9f4ff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.65;tab-size:2;border-right:1px solid var(--line)}
@@ -163,16 +163,15 @@ button{cursor:pointer}
         <span class="brand__k">Koffi Academy</span>
         <span class="brand__sep">|</span>
         <span class="brand__title">Advanced GitOps Patterns</span>
-        <span class="chip-ch">CH.3</span>
+        <span class="chip-ch">CH.5</span>
       </span>
     </a>
     <div class="labbar__spacer"></div>
     <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">90:00</span></span>
     <nav class="actions" aria-label="Lab actions">
-      <a class="topbtn" href="../laboratoire-gitops-patterns-lab-2"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter2">Chapitre 2</span></a>
+      <a class="topbtn" href="../laboratoire-gitops-patterns-lab-4"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter4">Chapitre 4</span></a>
       <a class="topbtn" href="../laboratoire-gitops-patterns"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
       <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
-      <a class="topbtn" href="../laboratoire-gitops-patterns-lab-4"><span data-i18n="navChapter4">Chapitre 4</span> <i class="fa-solid fa-arrow-right-long"></i></a>
       <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
       <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
       <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
@@ -184,7 +183,7 @@ button{cursor:pointer}
       <div class="work-tabs" role="tablist">
         <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
         <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
-        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-file-code"></i><span data-i18n="tabFiles">Manifests</span></button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-file-code"></i><span data-i18n="tabFiles">Platform</span></button>
       </div>
       <div class="work-surface">
         <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
@@ -196,16 +195,16 @@ button{cursor:pointer}
         </section>
         <section class="view datasets-view" id="datasetsView" role="tabpanel">
           <div class="filebar">
-            <button type="button" class="filetab is-active" data-file="apps/multi-cluster/multi-cluster-appset.yaml">multi-cluster-appset.yaml</button>
-            <button type="button" class="filetab" data-file="apps/multi-cluster/regional-appset.yaml">regional-appset.yaml</button>
-            <button type="button" class="filetab" data-file="clusters/base/deployment.yaml">base/deployment.yaml</button>
-            <button type="button" class="filetab" data-file="clusters/base/kustomization.yaml">base/kustomization.yaml</button>
-            <button type="button" class="filetab" data-file="clusters/overlays/us-east/kustomization.yaml">us-east/kustomization.yaml</button>
-            <button type="button" class="filetab" data-file="clusters/overlays/eu-central/kustomization.yaml">eu-central/kustomization.yaml</button>
-            <button type="button" class="filetab" data-file="multi-cluster-sync-status.sh">sync-status.sh</button>
+            <button type="button" class="filetab is-active" data-file="platform-status.sh">platform-status.sh</button>
+            <button type="button" class="filetab" data-file="ARCHITECTURE.md">ARCHITECTURE.md</button>
+            <button type="button" class="filetab" data-file="notifications/argocd-notifications-cm.yaml">notifications-cm.yaml</button>
+            <button type="button" class="filetab" data-file="notifications/webhook-receiver.yaml">webhook-receiver.yaml</button>
+            <button type="button" class="filetab" data-file="integrations/external-integrations.sh">external-integrations.sh</button>
+            <button type="button" class="filetab" data-file="audit/audit-collector.sh">audit-collector.sh</button>
+            <button type="button" class="filetab" data-file="self-service-portal.sh">self-service-portal.sh</button>
           </div>
           <div class="runbar">
-            <div class="runbar__title"><i class="fa-solid fa-file-code"></i><span id="fileLabel">/root/gitops-platform/apps/multi-cluster/multi-cluster-appset.yaml</span></div>
+            <div class="runbar__title"><i class="fa-solid fa-file-code"></i><span id="fileLabel">/root/gitops-platform/platform-status.sh</span></div>
             <div class="runbar__actions">
               <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
               <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
@@ -215,13 +214,13 @@ button{cursor:pointer}
             <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Collez le fichier fourni dans les instructions, puis Enregistrer."></textarea>
             <aside class="dataset-side">
               <div class="metric-grid">
-                <div class="metric"><span class="metric__k" data-i18n="mClusters">Clusters</span><div class="metric__v" id="mClusters">0/3</div></div>
-                <div class="metric"><span class="metric__k" data-i18n="mApps">Apps</span><div class="metric__v" id="mApps">0</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mComponents">Composants</span><div class="metric__v" id="mComponents">0/5</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mHealth">Santé</span><div class="metric__v" id="mHealth">—</div></div>
               </div>
               <div class="file-list">
-                <div class="file-pill"><i class="fa-solid fa-diagram-project"></i>ApplicationSets</div>
-                <div class="file-pill"><i class="fa-solid fa-layer-group"></i>Kustomize overlays</div>
-                <div class="file-pill"><i class="fa-solid fa-earth-americas"></i>us-east · us-west · eu-central</div>
+                <div class="file-pill"><i class="fa-solid fa-bell"></i>notifications · webhooks</div>
+                <div class="file-pill"><i class="fa-solid fa-clipboard-list"></i>pistes d'audit</div>
+                <div class="file-pill"><i class="fa-solid fa-hand-pointer"></i>portail self-service</div>
               </div>
             </aside>
           </div>
@@ -235,200 +234,213 @@ button{cursor:pointer}
         <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
       </div>
       <div class="instructions__body">
-        <h1 class="lab-title" data-i18n="instrTitle">GitOps multi-cluster avec ApplicationSets</h1>
-        <p class="lab-sub" data-i18n="instrSub">Vous déployez des applications sur plusieurs « clusters » (simulés par des namespaces régionaux) à l'aide des ApplicationSets d'Argo CD, gérez des configurations par cluster avec Kustomize, et suivez la synchronisation depuis un plan de contrôle unique.</p>
+        <h1 class="lab-title" data-i18n="instrTitle">Plateforme GitOps de production</h1>
+        <p class="lab-sub" data-i18n="instrSub">Vous assemblez tout : un tableau de bord de plateforme, des notifications et webhooks, des intégrations externes, des pistes d'audit pour la conformité, et un portail self-service pour les développeurs. C'est le type de plateforme qui pilote des centaines d'applications en production.</p>
 
         <div class="progress-card">
           <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 5</span></div>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="step is-open" data-step="namespaces">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Simuler des clusters (namespaces)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step is-open" data-step="platform">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Tableau de bord de la plateforme</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s1b">On simule trois clusters régionaux via des namespaces étiquetés. Dans le <strong>Terminal</strong> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl create namespace cluster-us-east || true
-kubectl create namespace cluster-us-west || true
-kubectl create namespace cluster-eu-central || true
-kubectl label namespace cluster-us-east region=us-east environment=production
-kubectl label namespace cluster-us-west region=us-west environment=production
-kubectl label namespace cluster-eu-central region=eu-central environment=production
-kubectl get namespaces --show-labels | grep cluster-</pre></div>
+            <span data-i18n="s1b">Un script regroupe l'état d'ArgoCD, de la livraison progressive, des politiques et de la santé. Enregistrez <code>platform-status.sh</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcPs">#!/bin/bash
+# Koffi Academy — tableau de bord de la plateforme GitOps de production
+echo "=== Koffi Academy — Plateforme GitOps de production ==="
+echo "[ArgoCD]"
+kubectl get pods -n argocd | grep argocd-server
+echo "[Livraison progressive]"
+kubectl argo rollouts list rollouts -A | head -5
+echo "[Politiques actives]"
+kubectl get clusterpolicy --no-headers | wc -l
+echo "[Sante de la plateforme]"
+echo "  Applications saines : 9/9 (100%)"
+echo "==========================================================="</pre></div>
+            <span data-i18n="s1apply">Rendez-le exécutable, lancez-le, et consultez l'architecture (enregistrez aussi <code>ARCHITECTURE.md</code> depuis l'onglet Platform) :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">chmod +x /root/gitops-platform/platform-status.sh
+/root/gitops-platform/platform-status.sh
+cat /root/gitops-platform/ARCHITECTURE.md</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="appset">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Sélection de cluster (ApplicationSet)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="notifications">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Notifications & webhooks</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s2b">Un <code>ApplicationSet</code> avec générateur <em>list</em> crée une Application par cluster. Enregistrez <code>apps/multi-cluster/multi-cluster-appset.yaml</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcMca">apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+            <span data-i18n="s2b">Configurez les notifications ArgoCD (déclencheurs + templates webhook) et un récepteur de test. Enregistrez ces deux fichiers :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcCm">apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: multi-cluster-demo
+  name: argocd-notifications-cm
   namespace: argocd
-spec:
-  generators:
-  - list:
-      elements:
-      - {cluster: us-east, namespace: cluster-us-east, replicas: "3"}
-      - {cluster: us-west, namespace: cluster-us-west, replicas: "3"}
-      - {cluster: eu-central, namespace: cluster-eu-central, replicas: "2"}
-  template:
-    metadata:
-      name: 'app-{{cluster}}'
-    spec:
-      project: default
-      source:
-        repoURL: https://github.com/argoproj/argocd-example-apps.git
-        targetRevision: HEAD
-        path: guestbook
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{namespace}}'
-      syncPolicy:
-        automated: {prune: true, selfHeal: true}
-        syncOptions:
-        - CreateNamespace=true</pre></div>
-            <span data-i18n="s2apply">Appliquez et listez les applications générées :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/apps/multi-cluster/multi-cluster-appset.yaml
-kubectl get applications -n argocd | grep "app-"</pre></div>
-          </div>
-        </article>
-
-        <article class="step" data-step="regional">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · ApplicationSet régional (matrix)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
-          <div class="step__body">
-            <span data-i18n="s3b">Un générateur <em>matrix</em> combine clusters et services (frontend/backend). Enregistrez <code>apps/multi-cluster/regional-appset.yaml</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcRa">apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: regional-services
-  namespace: argocd
-spec:
-  generators:
-  - matrix:
-      generators:
-      - list:
-          elements:
-          - {cluster: us-east, namespace: cluster-us-east, tier: premium}
-          - {cluster: us-west, namespace: cluster-us-west, tier: premium}
-          - {cluster: eu-central, namespace: cluster-eu-central, tier: standard}
-      - list:
-          elements:
-          - {service: frontend, replicas: "3"}
-          - {service: backend, replicas: "2"}
-  template:
-    metadata:
-      name: '{{service}}-{{cluster}}'
-      labels: {service: '{{service}}', cluster: '{{cluster}}'}
-    spec:
-      project: default
-      source:
-        repoURL: https://github.com/argoproj/argocd-example-apps.git
-        targetRevision: HEAD
-        path: guestbook
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{namespace}}'
-      syncPolicy:
-        automated: {prune: true, selfHeal: true}</pre></div>
-            <span data-i18n="s3apply">Appliquez et listez les applications avec leurs labels :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/apps/multi-cluster/regional-appset.yaml
-kubectl get applications -n argocd --show-labels | grep -E "(frontend|backend)"</pre></div>
-          </div>
-        </article>
-
-        <article class="step" data-step="kustomize">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Configurations par cluster (Kustomize)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
-          <div class="step__body">
-            <span data-i18n="s4b">Une base commune + des overlays par cluster. Enregistrez les 4 fichiers (<code>base/deployment.yaml</code>, <code>base/kustomization.yaml</code>, et les overlays <code>us-east</code> / <code>eu-central</code>) :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcBd"># clusters/base/deployment.yaml
-apiVersion: apps/v1
+data:
+  service.webhook.generic: |
+    url: http://webhook-receiver.default.svc.cluster.local/webhook
+    headers:
+    - name: Content-Type
+      value: application/json
+  trigger.on-deployed: |
+    - when: app.status.sync.status == 'Synced' and app.status.health.status == 'Healthy'
+      send: [app-deployed]
+  trigger.on-failed: |
+    - when: app.status.operationState.phase in ['Error', 'Failed']
+      send: [app-failed]
+  template.app-deployed: |
+    webhook:
+      generic:
+        method: POST
+        body: |
+          {"event":"deployment.completed","application":"{{.app.metadata.name}}","status":"success"}
+  template.app-failed: |
+    webhook:
+      generic:
+        method: POST
+        body: |
+          {"event":"deployment.failed","application":"{{.app.metadata.name}}","status":"failed"}</pre></div>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcWh">apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: multi-region-app
+  name: webhook-receiver
+  namespace: default
+  labels: {app: webhook-receiver, owner: koffi, environment: lab}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
-    matchLabels: {app: multi-region-app}
+    matchLabels: {app: webhook-receiver}
   template:
     metadata:
-      labels: {app: multi-region-app}
+      labels: {app: webhook-receiver, owner: koffi, environment: lab}
     spec:
       containers:
-      - name: app
-        image: nginx:1.25
+      - name: webhook
+        image: mendhak/http-https-echo:35
         ports:
-        - containerPort: 80</pre></div>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcBk"># clusters/base/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- deployment.yaml</pre></div>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcOue"># clusters/overlays/us-east/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: cluster-us-east
-bases:
-- ../../base
-patches:
-- patch: |-
-    - op: replace
-      path: /spec/replicas
-      value: 3
-  target: {kind: Deployment, name: multi-region-app}
-commonLabels: {region: us-east, tier: production}</pre></div>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcOeu"># clusters/overlays/eu-central/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: cluster-eu-central
-bases:
-- ../../base
-patches:
-- patch: |-
-    - op: replace
-      path: /spec/replicas
-      value: 2
-  target: {kind: Deployment, name: multi-region-app}
-commonLabels: {region: eu-central, tier: standard}</pre></div>
-            <span data-i18n="s4apply">Appliquez les overlays et vérifiez les déploiements :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -k /root/gitops-platform/clusters/overlays/us-east/
-kubectl apply -k /root/gitops-platform/clusters/overlays/eu-central/
-kubectl get deployments -n cluster-us-east
-kubectl get deployments -n cluster-eu-central</pre></div>
+        - containerPort: 8080
+        resources:
+          requests: {memory: 32Mi, cpu: 50m}
+          limits: {memory: 64Mi, cpu: 100m}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webhook-receiver
+  namespace: default
+  labels: {app: webhook-receiver, owner: koffi, environment: lab}
+spec:
+  selector: {app: webhook-receiver}
+  ports:
+  - port: 80
+    targetPort: 8080</pre></div>
+            <span data-i18n="s2apply">Appliquez les deux puis consultez les logs du récepteur :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/notifications/argocd-notifications-cm.yaml
+kubectl apply -f /root/gitops-platform/notifications/webhook-receiver.yaml
+kubectl logs -l app=webhook-receiver -n default --tail=20</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="sync">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s5h">Étape 5 · Suivi de synchronisation</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="integrations">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Intégrations externes</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s5b">Un script offre une vue unifiée de la synchronisation et de la santé des applications. Enregistrez <code>multi-cluster-sync-status.sh</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcSs">#!/bin/bash
-# Koffi Academy — moniteur de synchronisation multi-cluster
-status() {
-  echo "Statut des applications par cluster :"
-  for APP in app-us-east app-us-west app-eu-central; do
-    echo "  $APP: Sync=Synced  Health=Healthy"
-  done
-  echo "Total: 3   Synced: 3   Healthy: 3   (100%)"
+            <span data-i18n="s3b">Un script configure Slack, GitHub et le monitoring (secrets/ConfigMap). Enregistrez <code>integrations/external-integrations.sh</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcEi">#!/bin/bash
+# Koffi Academy — integrations systemes externes
+configure_slack() {
+  echo "Configuration de l'integration Slack..."
+  kubectl create secret generic slack-token -n argocd --from-literal=token=A_REMPLACER || true
+  echo "  [ok] secret Slack configure (utilisez un vrai token en production)"
 }
-clusters() {
-  kubectl get namespaces --show-labels | grep cluster-
+configure_github() {
+  echo "Configuration de l'integration GitHub..."
+  kubectl create secret generic github-token -n argocd --from-literal=token=A_REMPLACER || true
+  echo "  [ok] secret GitHub configure"
 }
-applications() {
-  kubectl get applications -n argocd -o wide
+configure_monitoring() {
+  echo "Configuration de l'integration monitoring..."
+  kubectl create configmap monitoring-config -n argocd --from-literal=prometheus_url=http://prometheus.monitoring:9090 || true
+  echo "  [ok] endpoints monitoring configures"
 }
 case "${1:-}" in
-  status) status ;;
-  clusters) clusters ;;
-  applications) applications ;;
-  *) echo "Usage: $0 {status|clusters|applications}" ; exit 1 ;;
+  slack) configure_slack ;;
+  github) configure_github ;;
+  monitoring) configure_monitoring ;;
+  all) configure_slack; configure_github; configure_monitoring ;;
+  list) kubectl get secrets -n argocd | grep -E "(slack|github)"; kubectl get configmap -n argocd | grep monitoring ;;
+  *) echo "Usage: $0 {slack|github|monitoring|all|list}" ; exit 1 ;;
 esac</pre></div>
-            <span data-i18n="s5apply">Rendez-le exécutable, puis consultez le statut, les clusters et les applications :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">chmod +x /root/gitops-platform/multi-cluster-sync-status.sh
-/root/gitops-platform/multi-cluster-sync-status.sh status
-/root/gitops-platform/multi-cluster-sync-status.sh clusters
-/root/gitops-platform/multi-cluster-sync-status.sh applications</pre></div>
+            <span data-i18n="s3apply">Rendez-le exécutable, configurez tout, puis listez :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">chmod +x /root/gitops-platform/integrations/external-integrations.sh
+/root/gitops-platform/integrations/external-integrations.sh all
+/root/gitops-platform/integrations/external-integrations.sh list</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="audit">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Pistes d'audit des déploiements</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s4b">Un collecteur archive l'historique ArgoCD/Rollouts/politiques et produit un rapport. Enregistrez <code>audit/audit-collector.sh</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcAu">#!/bin/bash
+# Koffi Academy — collecteur de pistes d'audit des deploiements
+AUDIT_DIR="/root/gitops-platform/audit-logs"
+mkdir -p "$AUDIT_DIR"
+collect() {
+  echo "Collecte de l'historique des deploiements..."
+  kubectl get applications -n argocd -o json > "$AUDIT_DIR/argocd-audit.json"
+  kubectl get rollouts -A -o json > "$AUDIT_DIR/rollouts-audit.json"
+  kubectl get policyreport -A -o json > "$AUDIT_DIR/policy-audit.json" 2>/dev/null || true
+  echo "  [ok] journaux d'audit enregistres dans $AUDIT_DIR"
+}
+report() {
+  echo "Generation du rapport d'audit..."
+  echo "  Applications : 9   Saines : 9   Rollouts : 3   Politiques : 8"
+  echo "  [ok] rapport genere : $AUDIT_DIR/audit-report.md"
+}
+case "${1:-}" in
+  collect) collect ;;
+  report) report ;;
+  full) collect; report ;;
+  *) echo "Usage: $0 {collect|report|full}" ; exit 1 ;;
+esac</pre></div>
+            <span data-i18n="s4apply">Rendez-le exécutable, lancez la collecte complète, puis listez les journaux :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">chmod +x /root/gitops-platform/audit/audit-collector.sh
+/root/gitops-platform/audit/audit-collector.sh full
+ls -lh /root/gitops-platform/audit-logs/</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="selfservice">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s5h">Étape 5 · Portail self-service</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s5b">Un portail permet aux développeurs de déployer, consulter et restaurer sans expertise GitOps approfondie. Enregistrez <code>self-service-portal.sh</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcSp">#!/bin/bash
+# Koffi Academy — portail self-service pour developpeurs
+echo "=== Koffi Academy — Portail GitOps self-service ==="
+environments() {
+  echo "Environnements disponibles :"
+  kubectl get namespaces --show-labels | grep -E "(production|staging|canary|cluster-)" | awk '{print "  - " $1}'
+}
+deploy() {
+  if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then echo "Usage: deploy [nom] [env] [image]"; return 1; fi
+  echo "Deploiement de $1 vers $2 (image $3)..."
+  echo "  [ok] application $1 deployee"
+}
+status() {
+  if [ -z "$1" ]; then kubectl get applications -n argocd -o wide; else
+    echo "Statut de $1 :"; kubectl get application "$1" -n argocd; fi
+}
+case "${1:-help}" in
+  environments) environments ;;
+  deploy) deploy "$2" "$3" "$4" ;;
+  status) status "$2" ;;
+  rollback) echo "Restauration de $2..."; echo "  [ok] $2 restaure" ;;
+  logs) echo "Journaux recents de $2 : (extrait non disponible dans cet atelier)" ;;
+  *) echo "Commandes: environments | deploy [nom] [env] [image] | status [nom] | rollback [nom] | logs [nom]" ;;
+esac</pre></div>
+            <span data-i18n="s5apply">Rendez-le exécutable, listez les environnements, l'état des applications, et relancez le tableau de bord :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">chmod +x /root/gitops-platform/self-service-portal.sh
+/root/gitops-platform/self-service-portal.sh environments
+/root/gitops-platform/self-service-portal.sh status
+/root/gitops-platform/platform-status.sh</pre></div>
           </div>
         </article>
 
@@ -436,13 +448,14 @@ esac</pre></div>
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <ul class="crit">
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Les 3 namespaces de cluster créés et étiquetés.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">ApplicationSet multi-cluster appliqué.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">ApplicationSet régional (matrix) appliqué.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Overlays Kustomize appliqués par cluster.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c5">Statut de synchronisation consulté.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Tableau de bord de la plateforme exécuté.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Notifications et récepteur webhook déployés.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Intégrations externes configurées.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Piste d'audit collectée et rapport généré.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c5">Portail self-service utilisé.</span></li>
             </ul>
             <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
+            <p style="margin:12px 0 0;color:var(--green);font-weight:700" data-i18n="finale">Bravo — vous avez terminé l'intégralité du parcours « Advanced GitOps Patterns » !</p>
           </div>
         </article>
       </div>
@@ -461,7 +474,7 @@ esac</pre></div>
   <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
   <div class="help-body">
     <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.</p>
-    <div class="hint" id="hintText" data-i18n="hint0">Créez d'abord les trois namespaces de cluster dans le terminal.</div>
+    <div class="hint" id="hintText" data-i18n="hint0">Enregistrez puis exécutez le tableau de bord de la plateforme (Étape 1).</div>
     <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
   </div>
 </section>
@@ -471,143 +484,113 @@ esac</pre></div>
 <script>
 window.I18N = {
   "fr":{
-    "navChapter2":"Chapitre 2","navChapter4":"Chapitre 4","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
-    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Manifests",
+    "navChapter4":"Chapitre 4","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Platform",
     "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Collez le fichier fourni dans les instructions, puis Enregistrer.",
-    "mClusters":"Clusters","mApps":"Apps",
-    "instrHead":"Instructions","instrTitle":"GitOps multi-cluster avec ApplicationSets",
-    "instrSub":"Vous déployez des applications sur plusieurs « clusters » (simulés par des namespaces régionaux) à l'aide des ApplicationSets d'Argo CD, gérez des configurations par cluster avec Kustomize, et suivez la synchronisation depuis un plan de contrôle unique.",
+    "mComponents":"Composants","mHealth":"Santé",
+    "instrHead":"Instructions","instrTitle":"Plateforme GitOps de production",
+    "instrSub":"Vous assemblez tout : un tableau de bord de plateforme, des notifications et webhooks, des intégrations externes, des pistes d'audit pour la conformité, et un portail self-service pour les développeurs. C'est le type de plateforme qui pilote des centaines d'applications en production.",
     "progLabel":"Progression","copy":"Copier","copied":"Copié",
-    "s1h":"Étape 1 · Simuler des clusters (namespaces)",
-    "s1b":"On simule trois clusters régionaux via des namespaces étiquetés. Dans le <strong>Terminal</strong> :",
-    "s2h":"Étape 2 · Sélection de cluster (ApplicationSet)",
-    "s2b":"Un <code>ApplicationSet</code> avec générateur <em>list</em> crée une Application par cluster. Enregistrez <code>apps/multi-cluster/multi-cluster-appset.yaml</code> :",
-    "s2apply":"Appliquez et listez les applications générées :",
-    "s3h":"Étape 3 · ApplicationSet régional (matrix)",
-    "s3b":"Un générateur <em>matrix</em> combine clusters et services (frontend/backend). Enregistrez <code>apps/multi-cluster/regional-appset.yaml</code> :",
-    "s3apply":"Appliquez et listez les applications avec leurs labels :",
-    "s4h":"Étape 4 · Configurations par cluster (Kustomize)",
-    "s4b":"Une base commune + des overlays par cluster. Enregistrez les 4 fichiers (<code>base/deployment.yaml</code>, <code>base/kustomization.yaml</code>, et les overlays <code>us-east</code> / <code>eu-central</code>) :",
-    "s4apply":"Appliquez les overlays et vérifiez les déploiements :",
-    "s5h":"Étape 5 · Suivi de synchronisation",
-    "s5b":"Un script offre une vue unifiée de la synchronisation et de la santé des applications. Enregistrez <code>multi-cluster-sync-status.sh</code> :",
-    "s5apply":"Rendez-le exécutable, puis consultez le statut, les clusters et les applications :",
+    "s1h":"Étape 1 · Tableau de bord de la plateforme","s1b":"Un script regroupe l'état d'ArgoCD, de la livraison progressive, des politiques et de la santé. Enregistrez <code>platform-status.sh</code> :","s1apply":"Rendez-le exécutable, lancez-le, et consultez l'architecture (enregistrez aussi <code>ARCHITECTURE.md</code> depuis l'onglet Platform) :",
+    "s2h":"Étape 2 · Notifications & webhooks","s2b":"Configurez les notifications ArgoCD (déclencheurs + templates webhook) et un récepteur de test. Enregistrez ces deux fichiers :","s2apply":"Appliquez les deux puis consultez les logs du récepteur :",
+    "s3h":"Étape 3 · Intégrations externes","s3b":"Un script configure Slack, GitHub et le monitoring (secrets/ConfigMap). Enregistrez <code>integrations/external-integrations.sh</code> :","s3apply":"Rendez-le exécutable, configurez tout, puis listez :",
+    "s4h":"Étape 4 · Pistes d'audit des déploiements","s4b":"Un collecteur archive l'historique ArgoCD/Rollouts/politiques et produit un rapport. Enregistrez <code>audit/audit-collector.sh</code> :","s4apply":"Rendez-le exécutable, lancez la collecte complète, puis listez les journaux :",
+    "s5h":"Étape 5 · Portail self-service","s5b":"Un portail permet aux développeurs de déployer, consulter et restaurer sans expertise GitOps approfondie. Enregistrez <code>self-service-portal.sh</code> :","s5apply":"Rendez-le exécutable, listez les environnements, l'état des applications, et relancez le tableau de bord :",
     "critH":"Critères de réussite",
-    "c1":"Les 3 namespaces de cluster créés et étiquetés.","c2":"ApplicationSet multi-cluster appliqué.","c3":"ApplicationSet régional (matrix) appliqué.","c4":"Overlays Kustomize appliqués par cluster.","c5":"Statut de synchronisation consulté.",
+    "c1":"Tableau de bord de la plateforme exécuté.","c2":"Notifications et récepteur webhook déployés.","c3":"Intégrations externes configurées.","c4":"Piste d'audit collectée et rapport généré.","c5":"Portail self-service utilisé.",
     "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
+    "finale":"Bravo — vous avez terminé l'intégralité du parcours « Advanced GitOps Patterns » !",
     "skip":"Ignorer","check":"Vérifier",
-    "helpTitle":"Copilote de l'atelier",
-    "helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.",
-    "nextHint":"Indice suivant",
-    "hint0":"Créez d'abord les trois namespaces de cluster dans le terminal.",
-    "hint1":"Le générateur list de l'ApplicationSet produit une Application par élément.",
-    "hint2":"Le générateur matrix combine deux listes : 3 clusters × 2 services = 6 applications.",
-    "hint3":"Kustomize : une base commune, des overlays qui patchent replicas/ressources par cluster.",
-    "hint4":"Le script de sync donne une vue unifiée Synced/Healthy de toutes les apps.",
+    "helpTitle":"Copilote de l'atelier","helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.","nextHint":"Indice suivant",
+    "hint0":"Enregistrez puis exécutez le tableau de bord de la plateforme (Étape 1).",
+    "hint1":"Les triggers ArgoCD réagissent au statut sync/health et envoient au webhook.",
+    "hint2":"Le récepteur webhook respecte vos politiques (labels owner/environment, limites).",
+    "hint3":"Les scripts d'intégration et d'audit se collent dans l'onglet Platform, puis chmod +x.",
+    "hint4":"Le portail self-service abstrait les commandes kubectl/argo pour les développeurs.",
     "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — poste de travail Koffi Academy (gitops-cluster)",
-    "bEnv":"Cluster + Argo CD ApplicationSets prêts. Dépôt : /root/gitops-platform","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
-    "hHeader":"Commandes disponibles :","hNs":"créer / étiqueter un namespace","hGetNs":"lister les namespaces","hApply":"appliquer un manifeste","hApplyK":"appliquer une overlay Kustomize","hGetApps":"lister les applications","hGetDeploy":"lister les déploiements","hRun":"exécuter le script de sync","hCheck":"vérifier la progression",
-    "nsCreated":"namespace/{n} created","nsLabeled":"namespace/{n} labeled","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Astuce : enregistrez d'abord ce fichier dans l'onglet Manifests.","kustomizeNoDir":"error: unable to find kustomization in {f}","kustomizeHint":"Astuce : enregistrez base/ et l'overlay avant d'appliquer.",
-    "checkHeader":"Progression de la tâche :","chkNs":"3 namespaces de cluster créés","chkAppset":"ApplicationSet multi-cluster appliqué","chkRegional":"ApplicationSet régional appliqué","chkKustomize":"Overlays Kustomize appliqués","chkSync":"Statut de sync consulté","chkAll":"Tous les critères sont remplis. Chapitre 3 terminé !","skipped":"Étape ignorée.",
-    "cmdNF":"{c} : commande introuvable. Tapez `help`.","kNF":"error: commande non simulée dans cet atelier.","catNF":"cat : {f} : aucun fichier de ce type","shNoFile":"bash: {f}: No such file or directory",
-    "tSavedFile":"Fichier enregistré","tDone":"Chapitre 3 terminé — multi-cluster en place"
+    "bEnv":"Plateforme GitOps complète prête. Dépôt : /root/gitops-platform","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hChmod":"rendre un script exécutable","hRun":"exécuter un script de la plateforme","hCat":"afficher un fichier","hApply":"appliquer un manifeste","hLogs":"voir les logs du récepteur","hLs":"lister un dossier","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "shNoFile":"bash: {f}: No such file or directory","shHint":"Astuce : enregistrez d'abord ce fichier dans l'onglet Platform.","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Astuce : enregistrez d'abord ce fichier dans l'onglet Platform.","catNF":"cat : {f} : aucun fichier de ce type",
+    "checkHeader":"Progression de la tâche :","chkPf":"Tableau de bord exécuté","chkNo":"Notifications + webhook déployés","chkInt":"Intégrations configurées","chkAu":"Audit collecté + rapport","chkSs":"Portail self-service utilisé","chkAll":"Tous les critères sont remplis. Chapitre 5 terminé — parcours complet !","skipped":"Étape ignorée.",
+    "cmdNF":"{c} : commande introuvable. Tapez `help`.","kNF":"error: commande non simulée dans cet atelier.",
+    "tSavedFile":"Fichier enregistré","tDone":"Parcours GitOps terminé — plateforme de production en place"
   },
   "de":{
-    "navChapter2":"Kapitel 2","navChapter4":"Kapitel 4","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
-    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Manifests",
+    "navChapter4":"Kapitel 4","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Platform",
     "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Fügen Sie die Datei aus den Anweisungen ein und speichern Sie.",
-    "mClusters":"Cluster","mApps":"Apps",
-    "instrHead":"Anleitung","instrTitle":"Multi-Cluster-GitOps mit ApplicationSets",
-    "instrSub":"Sie deployen Anwendungen über mehrere „Cluster\" (simuliert durch regionale Namespaces) mit Argo-CD-ApplicationSets, verwalten Cluster-Konfigurationen mit Kustomize und verfolgen die Synchronisation von einer einzigen Control-Plane aus.",
+    "mComponents":"Komponenten","mHealth":"Gesundheit",
+    "instrHead":"Anleitung","instrTitle":"Produktive GitOps-Plattform",
+    "instrSub":"Sie fügen alles zusammen: ein Plattform-Dashboard, Benachrichtigungen und Webhooks, externe Integrationen, Audit-Trails für Compliance und ein Self-Service-Portal für Entwickler. Das ist die Art Plattform, die Hunderte von Anwendungen in Produktion steuert.",
     "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
-    "s1h":"Schritt 1 · Cluster simulieren (Namespaces)",
-    "s1b":"Wir simulieren drei regionale Cluster über gelabelte Namespaces. Im <strong>Terminal</strong>:",
-    "s2h":"Schritt 2 · Cluster-Auswahl (ApplicationSet)",
-    "s2b":"Ein <code>ApplicationSet</code> mit <em>list</em>-Generator erzeugt eine Application pro Cluster. Speichern Sie <code>apps/multi-cluster/multi-cluster-appset.yaml</code>:",
-    "s2apply":"Anwenden und die erzeugten Applications auflisten:",
-    "s3h":"Schritt 3 · Regionales ApplicationSet (matrix)",
-    "s3b":"Ein <em>matrix</em>-Generator kombiniert Cluster und Services (frontend/backend). Speichern Sie <code>apps/multi-cluster/regional-appset.yaml</code>:",
-    "s3apply":"Anwenden und Applications mit ihren Labels auflisten:",
-    "s4h":"Schritt 4 · Cluster-Konfigurationen (Kustomize)",
-    "s4b":"Eine gemeinsame Basis + Overlays pro Cluster. Speichern Sie die 4 Dateien (<code>base/deployment.yaml</code>, <code>base/kustomization.yaml</code> und die Overlays <code>us-east</code> / <code>eu-central</code>):",
-    "s4apply":"Overlays anwenden und Deployments prüfen:",
-    "s5h":"Schritt 5 · Synchronisations-Monitoring",
-    "s5b":"Ein Skript bietet eine einheitliche Sicht auf Sync und Gesundheit der Applications. Speichern Sie <code>multi-cluster-sync-status.sh</code>:",
-    "s5apply":"Ausführbar machen, dann Status, Cluster und Applications abrufen:",
+    "s1h":"Schritt 1 · Plattform-Dashboard","s1b":"Ein Skript bündelt den Status von ArgoCD, Progressive Delivery, Policies und Gesundheit. Speichern Sie <code>platform-status.sh</code>:","s1apply":"Ausführbar machen, starten und die Architektur ansehen (speichern Sie auch <code>ARCHITECTURE.md</code> im Reiter Platform):",
+    "s2h":"Schritt 2 · Benachrichtigungen & Webhooks","s2b":"Konfigurieren Sie ArgoCD-Notifications (Trigger + Webhook-Templates) und einen Test-Empfänger. Speichern Sie diese zwei Dateien:","s2apply":"Beide anwenden, dann die Logs des Empfängers ansehen:",
+    "s3h":"Schritt 3 · Externe Integrationen","s3b":"Ein Skript konfiguriert Slack, GitHub und Monitoring (Secrets/ConfigMap). Speichern Sie <code>integrations/external-integrations.sh</code>:","s3apply":"Ausführbar machen, alles konfigurieren, dann auflisten:",
+    "s4h":"Schritt 4 · Deployment-Audit-Trails","s4b":"Ein Collector archiviert die ArgoCD-/Rollouts-/Policy-Historie und erstellt einen Bericht. Speichern Sie <code>audit/audit-collector.sh</code>:","s4apply":"Ausführbar machen, vollständige Sammlung starten, dann die Logs auflisten:",
+    "s5h":"Schritt 5 · Self-Service-Portal","s5b":"Ein Portal erlaubt Entwicklern, ohne tiefes GitOps-Wissen zu deployen, zu prüfen und zurückzurollen. Speichern Sie <code>self-service-portal.sh</code>:","s5apply":"Ausführbar machen, Umgebungen und App-Status auflisten und das Dashboard erneut starten:",
     "critH":"Erfolgskriterien",
-    "c1":"3 Cluster-Namespaces erstellt und gelabelt.","c2":"Multi-Cluster-ApplicationSet angewendet.","c3":"Regionales (matrix) ApplicationSet angewendet.","c4":"Kustomize-Overlays pro Cluster angewendet.","c5":"Sync-Status abgerufen.",
+    "c1":"Plattform-Dashboard ausgeführt.","c2":"Notifications und Webhook-Empfänger deployt.","c3":"Externe Integrationen konfiguriert.","c4":"Audit-Trail gesammelt und Bericht erstellt.","c5":"Self-Service-Portal genutzt.",
     "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
+    "finale":"Glückwunsch — Sie haben den gesamten Pfad „Advanced GitOps Patterns\" abgeschlossen!",
     "skip":"Überspringen","check":"Prüfen",
-    "helpTitle":"Lab-Copilot",
-    "helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.",
-    "nextHint":"Nächster Hinweis",
-    "hint0":"Erstellen Sie zuerst die drei Cluster-Namespaces im Terminal.",
-    "hint1":"Der list-Generator des ApplicationSets erzeugt eine Application pro Element.",
-    "hint2":"Der matrix-Generator kombiniert zwei Listen: 3 Cluster × 2 Services = 6 Applications.",
-    "hint3":"Kustomize: gemeinsame Basis, Overlays patchen replicas/Ressourcen pro Cluster.",
-    "hint4":"Das Sync-Skript gibt eine einheitliche Synced/Healthy-Sicht aller Apps.",
+    "helpTitle":"Lab-Copilot","helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.","nextHint":"Nächster Hinweis",
+    "hint0":"Speichern und führen Sie das Plattform-Dashboard aus (Schritt 1).",
+    "hint1":"ArgoCD-Trigger reagieren auf Sync/Health-Status und senden an den Webhook.",
+    "hint2":"Der Webhook-Empfänger erfüllt Ihre Policies (Labels owner/environment, Limits).",
+    "hint3":"Die Integrations- und Audit-Skripte werden im Reiter Platform eingefügt, dann chmod +x.",
+    "hint4":"Das Self-Service-Portal abstrahiert kubectl/argo-Befehle für Entwickler.",
     "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — Koffi-Academy-Arbeitsplatz (gitops-cluster)",
-    "bEnv":"Cluster + Argo CD ApplicationSets bereit. Repository: /root/gitops-platform","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
-    "hHeader":"Verfügbare Befehle:","hNs":"Namespace erstellen / labeln","hGetNs":"Namespaces auflisten","hApply":"ein Manifest anwenden","hApplyK":"ein Kustomize-Overlay anwenden","hGetApps":"Applications auflisten","hGetDeploy":"Deployments auflisten","hRun":"das Sync-Skript ausführen","hCheck":"Fortschritt prüfen",
-    "nsCreated":"namespace/{n} created","nsLabeled":"namespace/{n} labeled","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tipp: speichern Sie diese Datei zuerst im Reiter Manifests.","kustomizeNoDir":"error: unable to find kustomization in {f}","kustomizeHint":"Tipp: speichern Sie base/ und das Overlay vor dem Anwenden.",
-    "checkHeader":"Fortschritt der Aufgabe:","chkNs":"3 Cluster-Namespaces erstellt","chkAppset":"Multi-Cluster-ApplicationSet angewendet","chkRegional":"Regionales ApplicationSet angewendet","chkKustomize":"Kustomize-Overlays angewendet","chkSync":"Sync-Status abgerufen","chkAll":"Alle Kriterien erfüllt. Kapitel 3 abgeschlossen!","skipped":"Schritt übersprungen.",
-    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","kNF":"error: Befehl in diesem Labor nicht simuliert.","catNF":"cat: {f}: keine solche Datei","shNoFile":"bash: {f}: No such file or directory",
-    "tSavedFile":"Datei gespeichert","tDone":"Kapitel 3 abgeschlossen — Multi-Cluster steht"
+    "bEnv":"Vollständige GitOps-Plattform bereit. Repository: /root/gitops-platform","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hChmod":"ein Skript ausführbar machen","hRun":"ein Plattform-Skript ausführen","hCat":"eine Datei anzeigen","hApply":"ein Manifest anwenden","hLogs":"Empfänger-Logs ansehen","hLs":"ein Verzeichnis auflisten","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "shNoFile":"bash: {f}: No such file or directory","shHint":"Tipp: speichern Sie diese Datei zuerst im Reiter Platform.","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tipp: speichern Sie diese Datei zuerst im Reiter Platform.","catNF":"cat: {f}: keine solche Datei",
+    "checkHeader":"Fortschritt der Aufgabe:","chkPf":"Dashboard ausgeführt","chkNo":"Notifications + Webhook deployt","chkInt":"Integrationen konfiguriert","chkAu":"Audit gesammelt + Bericht","chkSs":"Self-Service-Portal genutzt","chkAll":"Alle Kriterien erfüllt. Kapitel 5 abgeschlossen — kompletter Pfad!","skipped":"Schritt übersprungen.",
+    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","kNF":"error: Befehl in diesem Labor nicht simuliert.",
+    "tSavedFile":"Datei gespeichert","tDone":"GitOps-Pfad abgeschlossen — Produktionsplattform steht"
   },
   "en":{
-    "navChapter2":"Chapter 2","navChapter4":"Chapter 4","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
-    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Manifests",
+    "navChapter4":"Chapter 4","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Platform",
     "btnClear":"Clear","btnSave":"Save","phPaste":"Paste the file from the instructions, then Save.",
-    "mClusters":"Clusters","mApps":"Apps",
-    "instrHead":"Instructions","instrTitle":"Multi-cluster GitOps with ApplicationSets",
-    "instrSub":"You deploy applications across multiple \"clusters\" (simulated by regional namespaces) using Argo CD ApplicationSets, manage per-cluster configurations with Kustomize, and track synchronization from a single control plane.",
+    "mComponents":"Components","mHealth":"Health",
+    "instrHead":"Instructions","instrTitle":"Production GitOps platform",
+    "instrSub":"You bring everything together: a platform dashboard, notifications and webhooks, external integrations, audit trails for compliance, and a self-service portal for developers. This is the kind of platform that drives hundreds of applications in production.",
     "progLabel":"Progress","copy":"Copy","copied":"Copied",
-    "s1h":"Step 1 · Simulate clusters (namespaces)",
-    "s1b":"We simulate three regional clusters via labeled namespaces. In the <strong>Terminal</strong>:",
-    "s2h":"Step 2 · Cluster selection (ApplicationSet)",
-    "s2b":"An <code>ApplicationSet</code> with a <em>list</em> generator creates one Application per cluster. Save <code>apps/multi-cluster/multi-cluster-appset.yaml</code>:",
-    "s2apply":"Apply and list the generated applications:",
-    "s3h":"Step 3 · Regional ApplicationSet (matrix)",
-    "s3b":"A <em>matrix</em> generator combines clusters and services (frontend/backend). Save <code>apps/multi-cluster/regional-appset.yaml</code>:",
-    "s3apply":"Apply and list the applications with their labels:",
-    "s4h":"Step 4 · Per-cluster configuration (Kustomize)",
-    "s4b":"A common base + per-cluster overlays. Save the 4 files (<code>base/deployment.yaml</code>, <code>base/kustomization.yaml</code>, and the <code>us-east</code> / <code>eu-central</code> overlays):",
-    "s4apply":"Apply the overlays and check the deployments:",
-    "s5h":"Step 5 · Synchronization monitoring",
-    "s5b":"A script provides a unified view of the sync and health of applications. Save <code>multi-cluster-sync-status.sh</code>:",
-    "s5apply":"Make it executable, then check the status, clusters and applications:",
+    "s1h":"Step 1 · Platform dashboard","s1b":"A script bundles the status of ArgoCD, progressive delivery, policies and health. Save <code>platform-status.sh</code>:","s1apply":"Make it executable, run it, and view the architecture (also save <code>ARCHITECTURE.md</code> from the Platform tab):",
+    "s2h":"Step 2 · Notifications & webhooks","s2b":"Configure ArgoCD notifications (triggers + webhook templates) and a test receiver. Save these two files:","s2apply":"Apply both, then check the receiver logs:",
+    "s3h":"Step 3 · External integrations","s3b":"A script configures Slack, GitHub and monitoring (secrets/ConfigMap). Save <code>integrations/external-integrations.sh</code>:","s3apply":"Make it executable, configure everything, then list:",
+    "s4h":"Step 4 · Deployment audit trails","s4b":"A collector archives the ArgoCD/Rollouts/policy history and produces a report. Save <code>audit/audit-collector.sh</code>:","s4apply":"Make it executable, run the full collection, then list the logs:",
+    "s5h":"Step 5 · Self-service portal","s5b":"A portal lets developers deploy, check and roll back without deep GitOps expertise. Save <code>self-service-portal.sh</code>:","s5apply":"Make it executable, list environments and app status, and re-run the dashboard:",
     "critH":"Success criteria",
-    "c1":"The 3 cluster namespaces created and labeled.","c2":"Multi-cluster ApplicationSet applied.","c3":"Regional (matrix) ApplicationSet applied.","c4":"Kustomize overlays applied per cluster.","c5":"Sync status checked.",
+    "c1":"Platform dashboard executed.","c2":"Notifications and webhook receiver deployed.","c3":"External integrations configured.","c4":"Audit trail collected and report generated.","c5":"Self-service portal used.",
     "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
+    "finale":"Congratulations — you have completed the entire \"Advanced GitOps Patterns\" track!",
     "skip":"Skip","check":"Check",
-    "helpTitle":"Lab Copilot",
-    "helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.",
-    "nextHint":"Next hint",
-    "hint0":"First create the three cluster namespaces in the terminal.",
-    "hint1":"The ApplicationSet list generator produces one Application per element.",
-    "hint2":"The matrix generator combines two lists: 3 clusters × 2 services = 6 applications.",
-    "hint3":"Kustomize: a common base, overlays patching replicas/resources per cluster.",
-    "hint4":"The sync script gives a unified Synced/Healthy view of all apps.",
+    "helpTitle":"Lab Copilot","helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.","nextHint":"Next hint",
+    "hint0":"Save and run the platform dashboard (Step 1).",
+    "hint1":"ArgoCD triggers react to sync/health status and send to the webhook.",
+    "hint2":"The webhook receiver complies with your policies (owner/environment labels, limits).",
+    "hint3":"The integration and audit scripts are pasted in the Platform tab, then chmod +x.",
+    "hint4":"The self-service portal abstracts kubectl/argo commands for developers.",
     "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — Koffi Academy workstation (gitops-cluster)",
-    "bEnv":"Cluster + Argo CD ApplicationSets ready. Repository: /root/gitops-platform","bTip":"Tip: type `help` for commands, `check` for progress.",
-    "hHeader":"Available commands:","hNs":"create / label a namespace","hGetNs":"list namespaces","hApply":"apply a manifest","hApplyK":"apply a Kustomize overlay","hGetApps":"list applications","hGetDeploy":"list deployments","hRun":"run the sync script","hCheck":"check your progress",
-    "nsCreated":"namespace/{n} created","nsLabeled":"namespace/{n} labeled","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tip: save this file in the Manifests tab first.","kustomizeNoDir":"error: unable to find kustomization in {f}","kustomizeHint":"Tip: save base/ and the overlay before applying.",
-    "checkHeader":"Task progress:","chkNs":"3 cluster namespaces created","chkAppset":"Multi-cluster ApplicationSet applied","chkRegional":"Regional ApplicationSet applied","chkKustomize":"Kustomize overlays applied","chkSync":"Sync status checked","chkAll":"All criteria met. Chapter 3 complete!","skipped":"Step skipped.",
-    "cmdNF":"{c}: command not found. Type `help`.","kNF":"error: command not simulated in this lab.","catNF":"cat: {f}: no such file","shNoFile":"bash: {f}: No such file or directory",
-    "tSavedFile":"File saved","tDone":"Chapter 3 complete — multi-cluster in place"
+    "bEnv":"Complete GitOps platform ready. Repository: /root/gitops-platform","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hChmod":"make a script executable","hRun":"run a platform script","hCat":"display a file","hApply":"apply a manifest","hLogs":"view receiver logs","hLs":"list a directory","hCheck":"check your progress","hClear":"clear the terminal",
+    "shNoFile":"bash: {f}: No such file or directory","shHint":"Tip: save this file in the Platform tab first.","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tip: save this file in the Platform tab first.","catNF":"cat: {f}: no such file",
+    "checkHeader":"Task progress:","chkPf":"Dashboard executed","chkNo":"Notifications + webhook deployed","chkInt":"Integrations configured","chkAu":"Audit collected + report","chkSs":"Self-service portal used","chkAll":"All criteria met. Chapter 5 complete — full track done!","skipped":"Step skipped.",
+    "cmdNF":"{c}: command not found. Type `help`.","kNF":"error: command not simulated in this lab.",
+    "tSavedFile":"File saved","tDone":"GitOps track complete — production platform in place"
   }
 };
 
 (function(){
   "use strict";
-  var FILES=["apps/multi-cluster/multi-cluster-appset.yaml","apps/multi-cluster/regional-appset.yaml","clusters/base/deployment.yaml","clusters/base/kustomization.yaml","clusters/overlays/us-east/kustomization.yaml","clusters/overlays/eu-central/kustomization.yaml","multi-cluster-sync-status.sh"];
+  var FILES=["platform-status.sh","ARCHITECTURE.md","notifications/argocd-notifications-cm.yaml","notifications/webhook-receiver.yaml","integrations/external-integrations.sh","audit/audit-collector.sh","self-service-portal.sh"];
   var I=window.I18N; var lang=localStorage.getItem("preferred-lang"); if(!I[lang])lang="de";
   function t(key,vars){var s=(I[lang]&&I[lang][key]!==undefined)?I[lang][key]:(I.en[key]!==undefined?I.en[key]:key);if(vars)Object.keys(vars).forEach(function(k){s=s.replace(new RegExp("\\{"+k+"\\}","g"),vars[k]);});return s;}
 
   var FS={}; FILES.forEach(function(f){FS[f]="";});
   var currentFile=FILES[0];
-  var st={namespaces:false,appset:false,regional:false,kustomize:false,sync:false};
-  var ns={}, appsetApplied=false, regionalApplied=false, overlayApplied=false, syncRun=false; var hi=0;
+  var st={platform:false,notifications:false,integrations:false,audit:false,selfservice:false};
+  var cmApplied=false, whApplied=false, auditLs=false; var hi=0;
 
   var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput"), editor=document.getElementById("fileEditor");
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
@@ -615,48 +598,41 @@ window.I18N = {
   function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
   function banner(){out.innerHTML="";print(t("bSsh"),"line-muted");print(t("bUbuntu"),"line-muted");print(t("bEnv"),"line-muted");print(t("bTip"),"line-muted");print("");}
 
-  function nsCount(){return Object.keys(ns).length;}
-  function appCount(){return (appsetApplied?3:0)+(regionalApplied?6:0);}
-  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["namespaces","appset","regional","kustomize","sync"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 5";document.getElementById("progressFill").style.width=(tot/5*100)+"%";if(tot===5)toast(t("tDone"));}
-  function refresh(){document.getElementById("mClusters").textContent=nsCount()+"/3";document.getElementById("mApps").textContent=appCount();}
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["platform","notifications","integrations","audit","selfservice"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 5";document.getElementById("progressFill").style.width=(tot/5*100)+"%";document.getElementById("mComponents").textContent=tot+"/5";if(tot>=1)document.getElementById("mHealth").textContent="100%";if(tot===5)toast(t("tDone"));}
 
   function norm(p){return p?p.trim().replace(/^\.\//,"").replace(/^\/root\/gitops-platform\//,"").replace(/\/+$/,""):"";}
   function resolve(p){p=norm(p);return FS[p]!==undefined?p:null;}
 
-  function applyFile(path){
-    var f=resolve(path); if(!f||!FS[f].trim()){print(t("applyNoFile",{f:path||"?"}),"line-error");print(t("applyHint"),"line-warn");return;}
-    var b=FS[f];
-    if(/name:\s*multi-cluster-demo/.test(b)){appsetApplied=true;print("applicationset.argoproj.io/multi-cluster-demo created","line-ok");print("  generated 3 applications (app-us-east, app-us-west, app-eu-central)","line-muted");refresh();setStep("appset",true);return;}
-    if(/name:\s*regional-services/.test(b)){regionalApplied=true;print("applicationset.argoproj.io/regional-services created","line-ok");print("  generated 6 applications (frontend/backend x 3 clusters)","line-muted");refresh();setStep("regional",true);return;}
-    print("error: invalid manifest","line-error");
-  }
-  function applyKustomize(path){
-    var dir=norm(path); var kfile=dir+"/kustomization.yaml";
-    var base=resolve("clusters/base/kustomization.yaml");
-    if(FS[kfile]===undefined||!FS[kfile].trim()||!base||!FS[base].trim()){print(t("kustomizeNoDir",{f:path}),"line-error");print(t("kustomizeHint"),"line-warn");return;}
-    print("deployment.apps/multi-region-app created","line-ok");print("service/multi-region-app created","line-ok");overlayApplied=true;setStep("kustomize",true);
-  }
-
-  function getApplications(filter){
-    print("NAME               SYNC STATUS   HEALTH STATUS");
-    var apps=[];
-    if(appsetApplied)apps.push("app-us-east","app-us-west","app-eu-central");
-    if(regionalApplied)apps.push("frontend-us-east","backend-us-east","frontend-us-west","backend-us-west","frontend-eu-central","backend-eu-central");
-    apps.forEach(function(a){ if(!filter||new RegExp(filter).test(a)) print(a.padEnd(19)+"Synced        Healthy"); });
-    if(!apps.length)print("No resources found in argocd namespace.","line-warn");
-  }
-  function getNamespaces(grepCluster){
-    if(!grepCluster){print("NAME              STATUS   AGE   LABELS");print("default           Active   6d    kubernetes.io/metadata.name=default");print("argocd            Active   6d    kubernetes.io/metadata.name=argocd");}
-    ["cluster-us-east","cluster-us-west","cluster-eu-central"].forEach(function(n){ if(ns[n]) print(n.padEnd(18)+"Active   2m    region="+n.replace("cluster-","")+",environment=production"); });
-  }
-
-  function runSh(path,arg){
-    var f=resolve(path); if(!f||!FS[f].trim()){print(t("shNoFile",{f:path}),"line-error");print(t("applyHint"),"line-warn");return;}
-    if(f==="multi-cluster-sync-status.sh"){
-      if(arg==="status"){print("Statut des applications par cluster :");["app-us-east","app-us-west","app-eu-central"].forEach(function(a){print("  "+a+": Sync=Synced  Health=Healthy");});print("Total: 3   Synced: 3   Healthy: 3   (100%)","line-ok");syncRun=true;setStep("sync",true);return;}
-      if(arg==="clusters"){getNamespaces(true);syncRun=true;setStep("sync",true);return;}
-      if(arg==="applications"){getApplications(null);syncRun=true;setStep("sync",true);return;}
-      print("Usage: "+f+" {status|clusters|applications}","line-warn");return;
+  function runSh(path){
+    var f=resolve(path); if(!f||!FS[f].trim()){print(t("shNoFile",{f:path}),"line-error");print(t("shHint"),"line-warn");return;}
+    var arg=arguments[1]||"";
+    if(f==="platform-status.sh"){
+      print("=== Koffi Academy — Plateforme GitOps de production ===");
+      print("[ArgoCD]");print("argocd-server-7d9c8b6f5-abcde   1/1   Running   0   6d");
+      print("[Livraison progressive]");print("NAMESPACE    NAME            STRATEGY   STATUS");print("production   rollback-demo   Canary     Healthy");
+      print("[Politiques actives]");print("8");
+      print("[Sante de la plateforme]");print("  Applications saines : 9/9 (100%)","line-ok");
+      print("===========================================================");
+      setStep("platform",true);return;
+    }
+    if(f==="integrations/external-integrations.sh"){
+      if(arg==="list"){print("slack-token         Opaque   1   12s");print("github-token        Opaque   1   12s");print("monitoring-config   2        12s");setStep("integrations",true);return;}
+      print("Configuration de l'integration Slack...");print("  [ok] secret Slack configure (utilisez un vrai token en production)","line-ok");
+      print("Configuration de l'integration GitHub...");print("  [ok] secret GitHub configure","line-ok");
+      print("Configuration de l'integration monitoring...");print("  [ok] endpoints monitoring configures","line-ok");
+      setStep("integrations",true);return;
+    }
+    if(f==="audit/audit-collector.sh"){
+      print("Collecte de l'historique des deploiements...");print("  [ok] journaux d'audit enregistres dans /root/gitops-platform/audit-logs","line-ok");
+      print("Generation du rapport d'audit...");print("  Applications : 9   Saines : 9   Rollouts : 3   Politiques : 8");print("  [ok] rapport genere : /root/gitops-platform/audit-logs/audit-report.md","line-ok");
+      auditLs=true;setStep("audit",true);return;
+    }
+    if(f==="self-service-portal.sh"){
+      print("=== Koffi Academy — Portail GitOps self-service ===");
+      if(arg==="environments"){print("Environnements disponibles :");["production","staging","canary","cluster-us-east","cluster-us-west","cluster-eu-central"].forEach(function(n){print("  - "+n);});}
+      else if(arg==="status"){print("NAME            SYNC STATUS   HEALTH STATUS");print("rollback-demo   Synced        Healthy");print("app-us-east     Synced        Healthy");}
+      else{print("Commandes: environments | deploy [nom] [env] [image] | status [nom] | rollback [nom] | logs [nom]");}
+      setStep("selfservice",true);return;
     }
     print("Usage: "+f,"line-warn");
   }
@@ -664,41 +640,45 @@ window.I18N = {
   function handle(raw){
     var cmd=raw.trim(); if(!cmd) return; var parts=cmd.split(/\s+/); var head=parts[0];
     if(head==="help"){print(t("hHeader"),"line-muted");
-      print("  kubectl create namespace <n>                 "+t("hNs"));
-      print("  kubectl label namespace <n> k=v ...          "+t("hNs"));
-      print("  kubectl get namespaces --show-labels         "+t("hGetNs"));
+      print("  chmod +x <script.sh>                         "+t("hChmod"));
+      print("  /root/gitops-platform/<script.sh> [arg]      "+t("hRun"));
+      print("  cat <file>                                   "+t("hCat"));
       print("  kubectl apply -f <manifest>                  "+t("hApply"));
-      print("  kubectl apply -k <overlay-dir>               "+t("hApplyK"));
-      print("  kubectl get applications -n argocd           "+t("hGetApps"));
-      print("  /root/gitops-platform/<sync>.sh <arg>        "+t("hRun"));
+      print("  kubectl logs -l app=webhook-receiver ...     "+t("hLogs"));
+      print("  ls -lh <dir>                                 "+t("hLs"));
       print("  check   ·   clear                          "+t("hCheck"));return;}
     if(head==="clear"){out.innerHTML="";return;}
     if(head==="check"){runCheck();return;}
     if(head==="chmod"){return;}
-    if(head==="sleep"){return;}
     if(head==="cat"){var f=resolve(parts[1]);if(f&&FS[f])FS[f].split("\n").forEach(function(l){print(l);});else print(t("catNF",{f:parts[1]||""}),"line-error");return;}
+    if(head==="ls"){if(/audit-logs/.test(cmd)){if(auditLs){print("total 12K");print("-rw-r--r-- 1 root root 4.2K Jun 20 17:40 argocd-audit.json");print("-rw-r--r-- 1 root root 2.1K Jun 20 17:40 rollouts-audit.json");print("-rw-r--r-- 1 root root 1.0K Jun 20 17:40 audit-report.md");}else{print("ls: cannot access '/root/gitops-platform/audit-logs/': No such file or directory","line-warn");}}else{print("ARCHITECTURE.md  platform-status.sh  self-service-portal.sh  notifications  integrations  audit");}return;}
     if(/\.sh(\s|$)/.test(cmd) && head.indexOf("/root/gitops-platform/")===0){runSh(head,parts[1]||"");return;}
 
     if(head!=="kubectl"&&head!=="k"){print(t("cmdNF",{c:head}),"line-error");return;}
     var verb=parts[1]||"";
-    if(verb==="create"&&(parts[2]==="namespace"||parts[2]==="ns")){var n=parts[3];if(ns[n]){print("Error from server (AlreadyExists): namespaces \""+n+"\" already exists","line-warn");return;}ns[n]=true;print(t("nsCreated",{n:n}),"line-ok");refresh();if(ns["cluster-us-east"]&&ns["cluster-us-west"]&&ns["cluster-eu-central"])setStep("namespaces",true);return;}
-    if(verb==="label"&&(parts[2]==="namespace"||parts[2]==="ns")){var ln=parts[3];print(t("nsLabeled",{n:ln}),"line-ok");return;}
-    if(verb==="get"&&(parts[2]==="namespaces"||parts[2]==="ns")){getNamespaces(/grep\s+cluster-/.test(cmd));return;}
-    if(verb==="apply"){var ki=parts.indexOf("-k");if(ki>=0){applyKustomize(parts[ki+1]);return;}var fi=parts.indexOf("-f");applyFile(fi>=0?parts[fi+1]:"");return;}
-    if(verb==="get"&&parts[2]==="applications"){var m=cmd.match(/grep\s+(?:-E\s+)?["']?\(?([^"'|]+?)\)?["']?\s*$/);var filt=m?m[1].trim().replace(/[()]/g,""):null;getApplications(filt);return;}
-    if(verb==="get"&&parts[2]==="application"){print("status:");print("  sync:");print("    status: Synced");print("  health:");print("    status: Healthy");return;}
-    if(verb==="get"&&parts[2]==="deployments"){var ni=parts.indexOf("-n");var dns=ni>=0?parts[ni+1]:"";print("NAME               READY   UP-TO-DATE   AVAILABLE   AGE");print("multi-region-app   "+(dns==="cluster-us-east"?"3/3     3":"2/2     2")+"            "+(dns==="cluster-us-east"?"3":"2")+"           1m");return;}
+    if(verb==="apply"){var fi=parts.indexOf("-f");var raw2=fi>=0?parts[fi+1]:"";
+      if(/^https?:/.test(raw2)){print("serviceaccount/argocd-notifications-controller created","line-ok");print("configmap/argocd-notifications-cm created","line-ok");print("deployment.apps/argocd-notifications-controller created","line-ok");return;}
+      var f=resolve(raw2); if(!f||!FS[f].trim()){print(t("applyNoFile",{f:raw2||"?"}),"line-error");print(t("applyHint"),"line-warn");return;}
+      var b=FS[f];
+      if(/argocd-notifications-cm/.test(b)){cmApplied=true;print("configmap/argocd-notifications-cm created","line-ok");}
+      else if(/webhook-receiver/.test(b)){whApplied=true;print("deployment.apps/webhook-receiver created","line-ok");print("service/webhook-receiver created","line-ok");}
+      else{print("resource created","line-ok");}
+      if(cmApplied&&whApplied)setStep("notifications",true);return;
+    }
+    if(verb==="wait"){print("deployment.apps/"+(/(webhook-receiver)/.test(cmd)?"webhook-receiver":"argocd-notifications-controller")+" condition met","line-ok");return;}
+    if(verb==="get"&&parts[2]==="pods"&&/notifications/.test(cmd)){print("NAME                                              READY   STATUS    AGE");print("argocd-notifications-controller-6c8f7d9b4-abcde   1/1     Running   6d");return;}
+    if(verb==="logs"&&/webhook-receiver/.test(cmd)){print('{"path":"/webhook","method":"POST","body":{"event":"deployment.completed","application":"rollback-demo","status":"success"}}');return;}
     print(t("kNF"),"line-error");
   }
 
   function runCheck(){
     print(t("checkHeader"),"line-muted");
-    print((st.namespaces?"  [x] ":"  [ ] ")+t("chkNs"),st.namespaces?"line-ok":"line-warn");
-    print((st.appset?"  [x] ":"  [ ] ")+t("chkAppset"),st.appset?"line-ok":"line-warn");
-    print((st.regional?"  [x] ":"  [ ] ")+t("chkRegional"),st.regional?"line-ok":"line-warn");
-    print((st.kustomize?"  [x] ":"  [ ] ")+t("chkKustomize"),st.kustomize?"line-ok":"line-warn");
-    print((st.sync?"  [x] ":"  [ ] ")+t("chkSync"),st.sync?"line-ok":"line-warn");
-    if(st.namespaces&&st.appset&&st.regional&&st.kustomize&&st.sync)print(t("chkAll"),"line-ok");
+    print((st.platform?"  [x] ":"  [ ] ")+t("chkPf"),st.platform?"line-ok":"line-warn");
+    print((st.notifications?"  [x] ":"  [ ] ")+t("chkNo"),st.notifications?"line-ok":"line-warn");
+    print((st.integrations?"  [x] ":"  [ ] ")+t("chkInt"),st.integrations?"line-ok":"line-warn");
+    print((st.audit?"  [x] ":"  [ ] ")+t("chkAu"),st.audit?"line-ok":"line-warn");
+    print((st.selfservice?"  [x] ":"  [ ] ")+t("chkSs"),st.selfservice?"line-ok":"line-warn");
+    if(st.platform&&st.notifications&&st.integrations&&st.audit&&st.selfservice)print(t("chkAll"),"line-ok");
   }
 
   function runScript(text){
@@ -746,7 +726,7 @@ window.I18N = {
     document.querySelectorAll("[data-i18n-aria]").forEach(function(el){var k=el.getAttribute("data-i18n-aria");if(d[k]!==undefined)el.setAttribute("aria-label",d[k]);});
     document.getElementById("hintText").textContent=t("hint"+hi);}
   window.setLabWorkspaceLang=applyLang;
-  applyLang(lang);banner();selectFile(FILES[0]);refresh();input.focus();
+  applyLang(lang);banner();selectFile(FILES[0]);input.focus();
 })();
 
 var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Advanced GitOps Patterns · Chapitre 3 | Atelier — Koffi Academy</title>
-  <meta name="description" content="Atelier Koffi Academy — GitOps, Chapitre 3 : déploiements multi-cluster avec Argo CD ApplicationSets, overlays Kustomize et suivi de synchronisation.">
+  <title>Advanced GitOps Patterns · Chapitre 4 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — GitOps, Chapitre 4 : policy-as-code avec Kyverno (sécurité, coûts, conformité, prévention de la dérive).">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,7 +82,7 @@ button{cursor:pointer}
 .toolbtn--primary{border-color:transparent;background:linear-gradient(135deg,var(--orange),#ffb057);box-shadow:0 10px 24px rgba(248,144,53,.26)}
 .datasets-view{flex-direction:column;background:#0b1222}
 .filebar{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--line);flex-wrap:wrap}
-.filetab{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--soft);border-radius:8px 8px 0 0;padding:7px 9px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700}
+.filetab{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--soft);border-radius:8px 8px 0 0;padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700}
 .filetab.is-active{color:#fff;background:#0b1222;border-bottom-color:#0b1222}
 .dataset-grid{display:grid;grid-template-columns:minmax(0,1fr) 250px;flex:1;min-height:0}
 .dataset-editor{flex:1;min-height:420px;width:100%;border:0;outline:0;resize:none;padding:18px 20px;background:#0b1222;color:#d9f4ff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.65;tab-size:2;border-right:1px solid var(--line)}
@@ -163,16 +163,16 @@ button{cursor:pointer}
         <span class="brand__k">Koffi Academy</span>
         <span class="brand__sep">|</span>
         <span class="brand__title">Advanced GitOps Patterns</span>
-        <span class="chip-ch">CH.3</span>
+        <span class="chip-ch">CH.4</span>
       </span>
     </a>
     <div class="labbar__spacer"></div>
     <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">90:00</span></span>
     <nav class="actions" aria-label="Lab actions">
-      <a class="topbtn" href="../laboratoire-gitops-patterns-lab-2"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter2">Chapitre 2</span></a>
+      <a class="topbtn" href="../laboratoire-gitops-patterns-lab-3"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter3">Chapitre 3</span></a>
       <a class="topbtn" href="../laboratoire-gitops-patterns"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
       <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
-      <a class="topbtn" href="../laboratoire-gitops-patterns-lab-4"><span data-i18n="navChapter4">Chapitre 4</span> <i class="fa-solid fa-arrow-right-long"></i></a>
+      <a class="topbtn" href="../laboratoire-gitops-patterns-lab-5"><span data-i18n="navChapter5">Chapitre 5</span> <i class="fa-solid fa-arrow-right-long"></i></a>
       <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
       <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
       <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
@@ -184,7 +184,7 @@ button{cursor:pointer}
       <div class="work-tabs" role="tablist">
         <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
         <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
-        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-file-code"></i><span data-i18n="tabFiles">Manifests</span></button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-file-shield"></i><span data-i18n="tabFiles">Policies</span></button>
       </div>
       <div class="work-surface">
         <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
@@ -196,32 +196,33 @@ button{cursor:pointer}
         </section>
         <section class="view datasets-view" id="datasetsView" role="tabpanel">
           <div class="filebar">
-            <button type="button" class="filetab is-active" data-file="apps/multi-cluster/multi-cluster-appset.yaml">multi-cluster-appset.yaml</button>
-            <button type="button" class="filetab" data-file="apps/multi-cluster/regional-appset.yaml">regional-appset.yaml</button>
-            <button type="button" class="filetab" data-file="clusters/base/deployment.yaml">base/deployment.yaml</button>
-            <button type="button" class="filetab" data-file="clusters/base/kustomization.yaml">base/kustomization.yaml</button>
-            <button type="button" class="filetab" data-file="clusters/overlays/us-east/kustomization.yaml">us-east/kustomization.yaml</button>
-            <button type="button" class="filetab" data-file="clusters/overlays/eu-central/kustomization.yaml">eu-central/kustomization.yaml</button>
-            <button type="button" class="filetab" data-file="multi-cluster-sync-status.sh">sync-status.sh</button>
+            <button type="button" class="filetab is-active" data-file="policies/security/require-resource-limits.yaml">require-resource-limits</button>
+            <button type="button" class="filetab" data-file="policies/security/block-privileged.yaml">block-privileged</button>
+            <button type="button" class="filetab" data-file="policies/cost/limit-container-resources.yaml">limit-resources</button>
+            <button type="button" class="filetab" data-file="policies/cost/require-pdb.yaml">require-pdb</button>
+            <button type="button" class="filetab" data-file="policies/compliance/require-labels.yaml">require-labels</button>
+            <button type="button" class="filetab" data-file="policies/compliance/namespace-naming.yaml">namespace-naming</button>
+            <button type="button" class="filetab" data-file="policies/drift-prevention/prevent-manual-changes.yaml">prevent-manual</button>
+            <button type="button" class="filetab" data-file="policies/drift-prevention/auto-label-gitops.yaml">auto-label</button>
           </div>
           <div class="runbar">
-            <div class="runbar__title"><i class="fa-solid fa-file-code"></i><span id="fileLabel">/root/gitops-platform/apps/multi-cluster/multi-cluster-appset.yaml</span></div>
+            <div class="runbar__title"><i class="fa-solid fa-file-shield"></i><span id="fileLabel">/root/gitops-platform/policies/security/require-resource-limits.yaml</span></div>
             <div class="runbar__actions">
               <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
               <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
             </div>
           </div>
           <div class="dataset-grid">
-            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Collez le fichier fourni dans les instructions, puis Enregistrer."></textarea>
+            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Collez la politique fournie dans les instructions, puis Enregistrer."></textarea>
             <aside class="dataset-side">
               <div class="metric-grid">
-                <div class="metric"><span class="metric__k" data-i18n="mClusters">Clusters</span><div class="metric__v" id="mClusters">0/3</div></div>
-                <div class="metric"><span class="metric__k" data-i18n="mApps">Apps</span><div class="metric__v" id="mApps">0</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mPolicies">Policies</span><div class="metric__v" id="mPolicies">0/8</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mKyverno">Kyverno</span><div class="metric__v" id="mKyverno">—</div></div>
               </div>
               <div class="file-list">
-                <div class="file-pill"><i class="fa-solid fa-diagram-project"></i>ApplicationSets</div>
-                <div class="file-pill"><i class="fa-solid fa-layer-group"></i>Kustomize overlays</div>
-                <div class="file-pill"><i class="fa-solid fa-earth-americas"></i>us-east · us-west · eu-central</div>
+                <div class="file-pill"><i class="fa-solid fa-shield-halved"></i>sécurité · coûts</div>
+                <div class="file-pill"><i class="fa-solid fa-scale-balanced"></i>conformité</div>
+                <div class="file-pill"><i class="fa-solid fa-lock"></i>prévention de la dérive</div>
               </div>
             </aside>
           </div>
@@ -235,200 +236,264 @@ button{cursor:pointer}
         <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
       </div>
       <div class="instructions__body">
-        <h1 class="lab-title" data-i18n="instrTitle">GitOps multi-cluster avec ApplicationSets</h1>
-        <p class="lab-sub" data-i18n="instrSub">Vous déployez des applications sur plusieurs « clusters » (simulés par des namespaces régionaux) à l'aide des ApplicationSets d'Argo CD, gérez des configurations par cluster avec Kustomize, et suivez la synchronisation depuis un plan de contrôle unique.</p>
+        <h1 class="lab-title" data-i18n="instrTitle">Policy-as-Code avec Kyverno</h1>
+        <p class="lab-sub" data-i18n="instrSub">Vous appliquez des politiques Kyverno pour faire respecter la sécurité, la maîtrise des coûts, la conformité et la prévention de la dérive sur toute la plateforme GitOps. Les politiques valident, mutent et génèrent automatiquement les ressources Kubernetes.</p>
 
         <div class="progress-card">
           <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 5</span></div>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="step is-open" data-step="namespaces">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Simuler des clusters (namespaces)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step is-open" data-step="kyverno">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Vérifier et configurer Kyverno</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s1b">On simule trois clusters régionaux via des namespaces étiquetés. Dans le <strong>Terminal</strong> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl create namespace cluster-us-east || true
-kubectl create namespace cluster-us-west || true
-kubectl create namespace cluster-eu-central || true
-kubectl label namespace cluster-us-east region=us-east environment=production
-kubectl label namespace cluster-us-west region=us-west environment=production
-kubectl label namespace cluster-eu-central region=eu-central environment=production
-kubectl get namespaces --show-labels | grep cluster-</pre></div>
+            <span data-i18n="s1b">Kyverno est déjà installé. Vérifiez-le et activez le reporting des politiques dans le <strong>Terminal</strong> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl get pods -n kyverno
+kubectl create configmap kyverno-metrics -n kyverno --from-literal=namespaces='default,production,staging,canary' || true
+kubectl get configmap kyverno-metrics -n kyverno</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="appset">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Sélection de cluster (ApplicationSet)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="security">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Politiques de sécurité</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s2b">Un <code>ApplicationSet</code> avec générateur <em>list</em> crée une Application par cluster. Enregistrez <code>apps/multi-cluster/multi-cluster-appset.yaml</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcMca">apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+            <span data-i18n="s2b">Imposez des limites de ressources et bloquez les conteneurs privilégiés. Enregistrez ces deux <code>ClusterPolicy</code> dans l'onglet <strong>Policies</strong> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcP1">apiVersion: kyverno.io/v1
+kind: ClusterPolicy
 metadata:
-  name: multi-cluster-demo
-  namespace: argocd
+  name: require-resource-limits
+  annotations:
+    policies.kyverno.io/title: Require Resource Limits
+    policies.kyverno.io/category: Security
+    policies.kyverno.io/severity: high
 spec:
-  generators:
-  - list:
-      elements:
-      - {cluster: us-east, namespace: cluster-us-east, replicas: "3"}
-      - {cluster: us-west, namespace: cluster-us-west, replicas: "3"}
-      - {cluster: eu-central, namespace: cluster-eu-central, replicas: "2"}
-  template:
-    metadata:
-      name: 'app-{{cluster}}'
-    spec:
-      project: default
-      source:
-        repoURL: https://github.com/argoproj/argocd-example-apps.git
-        targetRevision: HEAD
-        path: guestbook
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{namespace}}'
-      syncPolicy:
-        automated: {prune: true, selfHeal: true}
-        syncOptions:
-        - CreateNamespace=true</pre></div>
-            <span data-i18n="s2apply">Appliquez et listez les applications générées :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/apps/multi-cluster/multi-cluster-appset.yaml
-kubectl get applications -n argocd | grep "app-"</pre></div>
-          </div>
-        </article>
-
-        <article class="step" data-step="regional">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · ApplicationSet régional (matrix)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
-          <div class="step__body">
-            <span data-i18n="s3b">Un générateur <em>matrix</em> combine clusters et services (frontend/backend). Enregistrez <code>apps/multi-cluster/regional-appset.yaml</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcRa">apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+  validationFailureAction: Enforce
+  background: true
+  rules:
+  - name: check-resource-limits
+    match:
+      any:
+      - resources:
+          kinds: [Pod]
+    validate:
+      message: "All containers must have CPU and memory limits defined"
+      pattern:
+        spec:
+          containers:
+          - resources:
+              limits:
+                memory: "?*"
+                cpu: "?*"</pre></div>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcP2">apiVersion: kyverno.io/v1
+kind: ClusterPolicy
 metadata:
-  name: regional-services
-  namespace: argocd
+  name: block-privileged-containers
+  annotations:
+    policies.kyverno.io/title: Block Privileged Containers
+    policies.kyverno.io/category: Security
+    policies.kyverno.io/severity: critical
 spec:
-  generators:
-  - matrix:
-      generators:
-      - list:
-          elements:
-          - {cluster: us-east, namespace: cluster-us-east, tier: premium}
-          - {cluster: us-west, namespace: cluster-us-west, tier: premium}
-          - {cluster: eu-central, namespace: cluster-eu-central, tier: standard}
-      - list:
-          elements:
-          - {service: frontend, replicas: "3"}
-          - {service: backend, replicas: "2"}
-  template:
-    metadata:
-      name: '{{service}}-{{cluster}}'
-      labels: {service: '{{service}}', cluster: '{{cluster}}'}
-    spec:
-      project: default
-      source:
-        repoURL: https://github.com/argoproj/argocd-example-apps.git
-        targetRevision: HEAD
-        path: guestbook
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{namespace}}'
-      syncPolicy:
-        automated: {prune: true, selfHeal: true}</pre></div>
-            <span data-i18n="s3apply">Appliquez et listez les applications avec leurs labels :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/apps/multi-cluster/regional-appset.yaml
-kubectl get applications -n argocd --show-labels | grep -E "(frontend|backend)"</pre></div>
+  validationFailureAction: Enforce
+  background: true
+  rules:
+  - name: check-privileged
+    match:
+      any:
+      - resources:
+          kinds: [Pod]
+    validate:
+      message: "Privileged containers are not allowed"
+      pattern:
+        spec:
+          containers:
+          - =(securityContext):
+              =(privileged): false</pre></div>
+            <span data-i18n="s2apply">Appliquez les deux, puis testez avec un pod non conforme (doit être bloqué) :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/policies/security/require-resource-limits.yaml
+kubectl apply -f /root/gitops-platform/policies/security/block-privileged.yaml
+kubectl run test-no-limits --image=nginx:1.25 -n production --dry-run=server</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="kustomize">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Configurations par cluster (Kustomize)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="cost">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Politiques d'optimisation des coûts</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s4b">Une base commune + des overlays par cluster. Enregistrez les 4 fichiers (<code>base/deployment.yaml</code>, <code>base/kustomization.yaml</code>, et les overlays <code>us-east</code> / <code>eu-central</code>) :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcBd"># clusters/base/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
+            <span data-i18n="s3b">Plafonnez les ressources et exigez un PodDisruptionBudget pour les déploiements à plusieurs répliques. Enregistrez :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcP3">apiVersion: kyverno.io/v1
+kind: ClusterPolicy
 metadata:
-  name: multi-region-app
+  name: limit-container-resources
+  annotations:
+    policies.kyverno.io/title: Limit Container Resources
+    policies.kyverno.io/category: Cost Optimization
+    policies.kyverno.io/severity: medium
 spec:
-  replicas: 2
-  selector:
-    matchLabels: {app: multi-region-app}
-  template:
-    metadata:
-      labels: {app: multi-region-app}
-    spec:
-      containers:
-      - name: app
-        image: nginx:1.25
-        ports:
-        - containerPort: 80</pre></div>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcBk"># clusters/base/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- deployment.yaml</pre></div>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcOue"># clusters/overlays/us-east/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: cluster-us-east
-bases:
-- ../../base
-patches:
-- patch: |-
-    - op: replace
-      path: /spec/replicas
-      value: 3
-  target: {kind: Deployment, name: multi-region-app}
-commonLabels: {region: us-east, tier: production}</pre></div>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcOeu"># clusters/overlays/eu-central/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: cluster-eu-central
-bases:
-- ../../base
-patches:
-- patch: |-
-    - op: replace
-      path: /spec/replicas
-      value: 2
-  target: {kind: Deployment, name: multi-region-app}
-commonLabels: {region: eu-central, tier: standard}</pre></div>
-            <span data-i18n="s4apply">Appliquez les overlays et vérifiez les déploiements :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -k /root/gitops-platform/clusters/overlays/us-east/
-kubectl apply -k /root/gitops-platform/clusters/overlays/eu-central/
-kubectl get deployments -n cluster-us-east
-kubectl get deployments -n cluster-eu-central</pre></div>
+  validationFailureAction: Enforce
+  background: true
+  rules:
+  - name: check-cpu-limit
+    match:
+      any:
+      - resources:
+          kinds: [Pod]
+    validate:
+      message: "Container CPU limit must not exceed 2 cores"
+      foreach:
+      - list: "request.object.spec.containers"
+        deny:
+          conditions:
+            any:
+            - key: "{{ element.resources.limits.cpu }}"
+              operator: GreaterThan
+              value: "2000m"</pre></div>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcP4">apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-pdb-for-deployments
+  annotations:
+    policies.kyverno.io/title: Require PodDisruptionBudget
+    policies.kyverno.io/category: Reliability
+    policies.kyverno.io/severity: medium
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+  - name: check-pdb-exists
+    match:
+      any:
+      - resources:
+          kinds: [Deployment]
+    preconditions:
+      all:
+      - key: "{{ request.object.spec.replicas }}"
+        operator: GreaterThanOrEquals
+        value: 3
+    validate:
+      message: "Deployments with 3+ replicas should have a PodDisruptionBudget"
+      deny: {}</pre></div>
+            <span data-i18n="s3apply">Appliquez puis listez ces politiques :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/policies/cost/limit-container-resources.yaml
+kubectl apply -f /root/gitops-platform/policies/cost/require-pdb.yaml
+kubectl get clusterpolicy | grep -E "(limit-container|require-pdb)"</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="sync">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s5h">Étape 5 · Suivi de synchronisation</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="compliance">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Politiques de conformité</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s5b">Un script offre une vue unifiée de la synchronisation et de la santé des applications. Enregistrez <code>multi-cluster-sync-status.sh</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcSs">#!/bin/bash
-# Koffi Academy — moniteur de synchronisation multi-cluster
-status() {
-  echo "Statut des applications par cluster :"
-  for APP in app-us-east app-us-west app-eu-central; do
-    echo "  $APP: Sync=Synced  Health=Healthy"
-  done
-  echo "Total: 3   Synced: 3   Healthy: 3   (100%)"
-}
-clusters() {
-  kubectl get namespaces --show-labels | grep cluster-
-}
-applications() {
-  kubectl get applications -n argocd -o wide
-}
-case "${1:-}" in
-  status) status ;;
-  clusters) clusters ;;
-  applications) applications ;;
-  *) echo "Usage: $0 {status|clusters|applications}" ; exit 1 ;;
-esac</pre></div>
-            <span data-i18n="s5apply">Rendez-le exécutable, puis consultez le statut, les clusters et les applications :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">chmod +x /root/gitops-platform/multi-cluster-sync-status.sh
-/root/gitops-platform/multi-cluster-sync-status.sh status
-/root/gitops-platform/multi-cluster-sync-status.sh clusters
-/root/gitops-platform/multi-cluster-sync-status.sh applications</pre></div>
+            <span data-i18n="s4b">Imposez des labels standard et une convention de nommage des namespaces. Enregistrez :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcP5">apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-standard-labels
+  annotations:
+    policies.kyverno.io/title: Require Standard Labels
+    policies.kyverno.io/category: Compliance
+    policies.kyverno.io/severity: medium
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+  - name: check-required-labels
+    match:
+      any:
+      - resources:
+          kinds: [Deployment, Service, ConfigMap]
+    validate:
+      message: "Resources must have app, owner, and environment labels"
+      pattern:
+        metadata:
+          labels:
+            app: "?*"
+            owner: "?*"
+            environment: "?*"</pre></div>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcP6">apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: namespace-naming-convention
+  annotations:
+    policies.kyverno.io/title: Namespace Naming Convention
+    policies.kyverno.io/category: Compliance
+    policies.kyverno.io/severity: low
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+  - name: check-namespace-name
+    match:
+      any:
+      - resources:
+          kinds: [Namespace]
+    validate:
+      message: "Namespace name must start with team-, project-, cluster-, or be a system namespace"
+      deny:
+        conditions:
+          all:
+          - key: "{{ request.object.metadata.name }}"
+            operator: AllNotIn
+            value: ["team-*", "project-*", "cluster-*"]</pre></div>
+            <span data-i18n="s4apply">Appliquez puis vérifiez :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/policies/compliance/require-labels.yaml
+kubectl apply -f /root/gitops-platform/policies/compliance/namespace-naming.yaml
+kubectl get clusterpolicy | grep -E "(require-standard|namespace-naming)"</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="drift">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s5h">Étape 5 · Prévention de la dérive</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s5b">Exigez une annotation de suivi GitOps en production/staging, et auto-étiquetez les ressources gérées. Enregistrez :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcP7">apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: prevent-manual-changes
+  annotations:
+    policies.kyverno.io/title: Prevent Manual Changes
+    policies.kyverno.io/category: GitOps
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Audit
+  background: false
+  rules:
+  - name: require-gitops-annotation
+    match:
+      any:
+      - resources:
+          kinds: [Deployment, StatefulSet, DaemonSet]
+          namespaces: [production, staging]
+    validate:
+      message: "Resources in production/staging must have an argocd tracking-id annotation"
+      pattern:
+        metadata:
+          annotations:
+            argocd.argoproj.io/tracking-id: "?*"</pre></div>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcP8">apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: auto-label-gitops-resources
+  annotations:
+    policies.kyverno.io/title: Auto-Label GitOps Resources
+    policies.kyverno.io/category: GitOps
+    policies.kyverno.io/severity: low
+spec:
+  background: true
+  rules:
+  - name: add-gitops-labels
+    match:
+      any:
+      - resources:
+          kinds: [Deployment, Service, ConfigMap]
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          labels:
+            +(managed-by): gitops
+            +(gitops-platform): koffi</pre></div>
+            <span data-i18n="s5apply">Appliquez, puis affichez toutes les politiques et le rapport de conformité :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/policies/drift-prevention/prevent-manual-changes.yaml
+kubectl apply -f /root/gitops-platform/policies/drift-prevention/auto-label-gitops.yaml
+kubectl get clusterpolicy
+kubectl get policyreport -A</pre></div>
           </div>
         </article>
 
@@ -436,11 +501,11 @@ esac</pre></div>
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <ul class="crit">
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Les 3 namespaces de cluster créés et étiquetés.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">ApplicationSet multi-cluster appliqué.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">ApplicationSet régional (matrix) appliqué.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Overlays Kustomize appliqués par cluster.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c5">Statut de synchronisation consulté.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Kyverno vérifié et reporting activé.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Politiques de sécurité appliquées et testées.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Politiques de coûts appliquées.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Politiques de conformité appliquées.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c5">Politiques anti-dérive appliquées.</span></li>
             </ul>
             <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
           </div>
@@ -461,7 +526,7 @@ esac</pre></div>
   <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
   <div class="help-body">
     <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.</p>
-    <div class="hint" id="hintText" data-i18n="hint0">Créez d'abord les trois namespaces de cluster dans le terminal.</div>
+    <div class="hint" id="hintText" data-i18n="hint0">Vérifiez d'abord Kyverno et activez le reporting (Étape 1).</div>
     <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
   </div>
 </section>
@@ -471,143 +536,111 @@ esac</pre></div>
 <script>
 window.I18N = {
   "fr":{
-    "navChapter2":"Chapitre 2","navChapter4":"Chapitre 4","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
-    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Manifests",
-    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Collez le fichier fourni dans les instructions, puis Enregistrer.",
-    "mClusters":"Clusters","mApps":"Apps",
-    "instrHead":"Instructions","instrTitle":"GitOps multi-cluster avec ApplicationSets",
-    "instrSub":"Vous déployez des applications sur plusieurs « clusters » (simulés par des namespaces régionaux) à l'aide des ApplicationSets d'Argo CD, gérez des configurations par cluster avec Kustomize, et suivez la synchronisation depuis un plan de contrôle unique.",
+    "navChapter3":"Chapitre 3","navChapter5":"Chapitre 5","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Policies",
+    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Collez la politique fournie dans les instructions, puis Enregistrer.",
+    "mPolicies":"Policies","mKyverno":"Kyverno",
+    "instrHead":"Instructions","instrTitle":"Policy-as-Code avec Kyverno",
+    "instrSub":"Vous appliquez des politiques Kyverno pour faire respecter la sécurité, la maîtrise des coûts, la conformité et la prévention de la dérive sur toute la plateforme GitOps. Les politiques valident, mutent et génèrent automatiquement les ressources Kubernetes.",
     "progLabel":"Progression","copy":"Copier","copied":"Copié",
-    "s1h":"Étape 1 · Simuler des clusters (namespaces)",
-    "s1b":"On simule trois clusters régionaux via des namespaces étiquetés. Dans le <strong>Terminal</strong> :",
-    "s2h":"Étape 2 · Sélection de cluster (ApplicationSet)",
-    "s2b":"Un <code>ApplicationSet</code> avec générateur <em>list</em> crée une Application par cluster. Enregistrez <code>apps/multi-cluster/multi-cluster-appset.yaml</code> :",
-    "s2apply":"Appliquez et listez les applications générées :",
-    "s3h":"Étape 3 · ApplicationSet régional (matrix)",
-    "s3b":"Un générateur <em>matrix</em> combine clusters et services (frontend/backend). Enregistrez <code>apps/multi-cluster/regional-appset.yaml</code> :",
-    "s3apply":"Appliquez et listez les applications avec leurs labels :",
-    "s4h":"Étape 4 · Configurations par cluster (Kustomize)",
-    "s4b":"Une base commune + des overlays par cluster. Enregistrez les 4 fichiers (<code>base/deployment.yaml</code>, <code>base/kustomization.yaml</code>, et les overlays <code>us-east</code> / <code>eu-central</code>) :",
-    "s4apply":"Appliquez les overlays et vérifiez les déploiements :",
-    "s5h":"Étape 5 · Suivi de synchronisation",
-    "s5b":"Un script offre une vue unifiée de la synchronisation et de la santé des applications. Enregistrez <code>multi-cluster-sync-status.sh</code> :",
-    "s5apply":"Rendez-le exécutable, puis consultez le statut, les clusters et les applications :",
+    "s1h":"Étape 1 · Vérifier et configurer Kyverno","s1b":"Kyverno est déjà installé. Vérifiez-le et activez le reporting des politiques dans le <strong>Terminal</strong> :",
+    "s2h":"Étape 2 · Politiques de sécurité","s2b":"Imposez des limites de ressources et bloquez les conteneurs privilégiés. Enregistrez ces deux <code>ClusterPolicy</code> dans l'onglet <strong>Policies</strong> :","s2apply":"Appliquez les deux, puis testez avec un pod non conforme (doit être bloqué) :",
+    "s3h":"Étape 3 · Politiques d'optimisation des coûts","s3b":"Plafonnez les ressources et exigez un PodDisruptionBudget pour les déploiements à plusieurs répliques. Enregistrez :","s3apply":"Appliquez puis listez ces politiques :",
+    "s4h":"Étape 4 · Politiques de conformité","s4b":"Imposez des labels standard et une convention de nommage des namespaces. Enregistrez :","s4apply":"Appliquez puis vérifiez :",
+    "s5h":"Étape 5 · Prévention de la dérive","s5b":"Exigez une annotation de suivi GitOps en production/staging, et auto-étiquetez les ressources gérées. Enregistrez :","s5apply":"Appliquez, puis affichez toutes les politiques et le rapport de conformité :",
     "critH":"Critères de réussite",
-    "c1":"Les 3 namespaces de cluster créés et étiquetés.","c2":"ApplicationSet multi-cluster appliqué.","c3":"ApplicationSet régional (matrix) appliqué.","c4":"Overlays Kustomize appliqués par cluster.","c5":"Statut de synchronisation consulté.",
+    "c1":"Kyverno vérifié et reporting activé.","c2":"Politiques de sécurité appliquées et testées.","c3":"Politiques de coûts appliquées.","c4":"Politiques de conformité appliquées.","c5":"Politiques anti-dérive appliquées.",
     "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
     "skip":"Ignorer","check":"Vérifier",
-    "helpTitle":"Copilote de l'atelier",
-    "helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.",
-    "nextHint":"Indice suivant",
-    "hint0":"Créez d'abord les trois namespaces de cluster dans le terminal.",
-    "hint1":"Le générateur list de l'ApplicationSet produit une Application par élément.",
-    "hint2":"Le générateur matrix combine deux listes : 3 clusters × 2 services = 6 applications.",
-    "hint3":"Kustomize : une base commune, des overlays qui patchent replicas/ressources par cluster.",
-    "hint4":"Le script de sync donne une vue unifiée Synced/Healthy de toutes les apps.",
+    "helpTitle":"Copilote de l'atelier","helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.","nextHint":"Indice suivant",
+    "hint0":"Vérifiez d'abord Kyverno et activez le reporting (Étape 1).",
+    "hint1":"validationFailureAction: Enforce bloque la ressource ; Audit ne fait que reporter.",
+    "hint2":"Le pattern \"?*\" exige qu'un champ soit présent et non vide.",
+    "hint3":"Le test --dry-run=server passe par les webhooks Kyverno et sera bloqué.",
+    "hint4":"mutate avec +(label) ajoute le label sans écraser l'existant.",
     "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — poste de travail Koffi Academy (gitops-cluster)",
-    "bEnv":"Cluster + Argo CD ApplicationSets prêts. Dépôt : /root/gitops-platform","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
-    "hHeader":"Commandes disponibles :","hNs":"créer / étiqueter un namespace","hGetNs":"lister les namespaces","hApply":"appliquer un manifeste","hApplyK":"appliquer une overlay Kustomize","hGetApps":"lister les applications","hGetDeploy":"lister les déploiements","hRun":"exécuter le script de sync","hCheck":"vérifier la progression",
-    "nsCreated":"namespace/{n} created","nsLabeled":"namespace/{n} labeled","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Astuce : enregistrez d'abord ce fichier dans l'onglet Manifests.","kustomizeNoDir":"error: unable to find kustomization in {f}","kustomizeHint":"Astuce : enregistrez base/ et l'overlay avant d'appliquer.",
-    "checkHeader":"Progression de la tâche :","chkNs":"3 namespaces de cluster créés","chkAppset":"ApplicationSet multi-cluster appliqué","chkRegional":"ApplicationSet régional appliqué","chkKustomize":"Overlays Kustomize appliqués","chkSync":"Statut de sync consulté","chkAll":"Tous les critères sont remplis. Chapitre 3 terminé !","skipped":"Étape ignorée.",
-    "cmdNF":"{c} : commande introuvable. Tapez `help`.","kNF":"error: commande non simulée dans cet atelier.","catNF":"cat : {f} : aucun fichier de ce type","shNoFile":"bash: {f}: No such file or directory",
-    "tSavedFile":"Fichier enregistré","tDone":"Chapitre 3 terminé — multi-cluster en place"
+    "bEnv":"Cluster + Kyverno prêts. Dépôt : /root/gitops-platform","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hGetPods":"voir les pods Kyverno","hCm":"créer le ConfigMap de reporting","hApply":"appliquer une politique","hRun":"tester un pod (dry-run)","hGetCp":"lister les ClusterPolicy","hReport":"rapport de conformité","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "cmCreated":"configmap/kyverno-metrics created","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Astuce : enregistrez d'abord cette politique dans l'onglet Policies.","cpCreated":"clusterpolicy.kyverno.io/{n} created","blocked":"Error from server: admission webhook \"validate.kyverno.svc-fail\" denied the request:","blockedMsg":"  policy require-resource-limits/check-resource-limits fail: All containers must have CPU and memory limits defined","noPol":"No resources found",
+    "checkHeader":"Progression de la tâche :","chkKy":"Kyverno vérifié + reporting","chkSec":"Politiques de sécurité appliquées","chkCost":"Politiques de coûts appliquées","chkComp":"Politiques de conformité appliquées","chkDrift":"Politiques anti-dérive appliquées","chkAll":"Tous les critères sont remplis. Chapitre 4 terminé !","skipped":"Étape ignorée.",
+    "cmdNF":"{c} : commande introuvable. Tapez `help`.","kNF":"error: commande non simulée dans cet atelier.","catNF":"cat : {f} : aucun fichier de ce type",
+    "tSavedFile":"Politique enregistrée","tDone":"Chapitre 4 terminé — gouvernance par les politiques en place"
   },
   "de":{
-    "navChapter2":"Kapitel 2","navChapter4":"Kapitel 4","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
-    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Manifests",
-    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Fügen Sie die Datei aus den Anweisungen ein und speichern Sie.",
-    "mClusters":"Cluster","mApps":"Apps",
-    "instrHead":"Anleitung","instrTitle":"Multi-Cluster-GitOps mit ApplicationSets",
-    "instrSub":"Sie deployen Anwendungen über mehrere „Cluster\" (simuliert durch regionale Namespaces) mit Argo-CD-ApplicationSets, verwalten Cluster-Konfigurationen mit Kustomize und verfolgen die Synchronisation von einer einzigen Control-Plane aus.",
+    "navChapter3":"Kapitel 3","navChapter5":"Kapitel 5","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Policies",
+    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Fügen Sie die Policy aus den Anweisungen ein und speichern Sie.",
+    "mPolicies":"Policies","mKyverno":"Kyverno",
+    "instrHead":"Anleitung","instrTitle":"Policy-as-Code mit Kyverno",
+    "instrSub":"Sie wenden Kyverno-Policies an, um Sicherheit, Kostenkontrolle, Compliance und Drift-Prävention auf der gesamten GitOps-Plattform durchzusetzen. Die Policies validieren, mutieren und generieren automatisch Kubernetes-Ressourcen.",
     "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
-    "s1h":"Schritt 1 · Cluster simulieren (Namespaces)",
-    "s1b":"Wir simulieren drei regionale Cluster über gelabelte Namespaces. Im <strong>Terminal</strong>:",
-    "s2h":"Schritt 2 · Cluster-Auswahl (ApplicationSet)",
-    "s2b":"Ein <code>ApplicationSet</code> mit <em>list</em>-Generator erzeugt eine Application pro Cluster. Speichern Sie <code>apps/multi-cluster/multi-cluster-appset.yaml</code>:",
-    "s2apply":"Anwenden und die erzeugten Applications auflisten:",
-    "s3h":"Schritt 3 · Regionales ApplicationSet (matrix)",
-    "s3b":"Ein <em>matrix</em>-Generator kombiniert Cluster und Services (frontend/backend). Speichern Sie <code>apps/multi-cluster/regional-appset.yaml</code>:",
-    "s3apply":"Anwenden und Applications mit ihren Labels auflisten:",
-    "s4h":"Schritt 4 · Cluster-Konfigurationen (Kustomize)",
-    "s4b":"Eine gemeinsame Basis + Overlays pro Cluster. Speichern Sie die 4 Dateien (<code>base/deployment.yaml</code>, <code>base/kustomization.yaml</code> und die Overlays <code>us-east</code> / <code>eu-central</code>):",
-    "s4apply":"Overlays anwenden und Deployments prüfen:",
-    "s5h":"Schritt 5 · Synchronisations-Monitoring",
-    "s5b":"Ein Skript bietet eine einheitliche Sicht auf Sync und Gesundheit der Applications. Speichern Sie <code>multi-cluster-sync-status.sh</code>:",
-    "s5apply":"Ausführbar machen, dann Status, Cluster und Applications abrufen:",
+    "s1h":"Schritt 1 · Kyverno prüfen und konfigurieren","s1b":"Kyverno ist bereits installiert. Prüfen Sie es und aktivieren Sie das Policy-Reporting im <strong>Terminal</strong>:",
+    "s2h":"Schritt 2 · Sicherheits-Policies","s2b":"Erzwingen Sie Ressourcenlimits und blockieren Sie privilegierte Container. Speichern Sie diese zwei <code>ClusterPolicy</code> im Reiter <strong>Policies</strong>:","s2apply":"Wenden Sie beide an und testen Sie mit einem nicht-konformen Pod (muss blockiert werden):",
+    "s3h":"Schritt 3 · Kostenoptimierungs-Policies","s3b":"Begrenzen Sie Ressourcen und fordern Sie ein PodDisruptionBudget für Deployments mit mehreren Replicas. Speichern Sie:","s3apply":"Anwenden und diese Policies auflisten:",
+    "s4h":"Schritt 4 · Compliance-Policies","s4b":"Erzwingen Sie Standard-Labels und eine Namespace-Namenskonvention. Speichern Sie:","s4apply":"Anwenden und prüfen:",
+    "s5h":"Schritt 5 · Drift-Prävention","s5b":"Fordern Sie eine GitOps-Tracking-Annotation in Production/Staging und labeln Sie verwaltete Ressourcen automatisch. Speichern Sie:","s5apply":"Anwenden, dann alle Policies und den Compliance-Report anzeigen:",
     "critH":"Erfolgskriterien",
-    "c1":"3 Cluster-Namespaces erstellt und gelabelt.","c2":"Multi-Cluster-ApplicationSet angewendet.","c3":"Regionales (matrix) ApplicationSet angewendet.","c4":"Kustomize-Overlays pro Cluster angewendet.","c5":"Sync-Status abgerufen.",
+    "c1":"Kyverno geprüft und Reporting aktiviert.","c2":"Sicherheits-Policies angewendet und getestet.","c3":"Kosten-Policies angewendet.","c4":"Compliance-Policies angewendet.","c5":"Anti-Drift-Policies angewendet.",
     "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
     "skip":"Überspringen","check":"Prüfen",
-    "helpTitle":"Lab-Copilot",
-    "helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.",
-    "nextHint":"Nächster Hinweis",
-    "hint0":"Erstellen Sie zuerst die drei Cluster-Namespaces im Terminal.",
-    "hint1":"Der list-Generator des ApplicationSets erzeugt eine Application pro Element.",
-    "hint2":"Der matrix-Generator kombiniert zwei Listen: 3 Cluster × 2 Services = 6 Applications.",
-    "hint3":"Kustomize: gemeinsame Basis, Overlays patchen replicas/Ressourcen pro Cluster.",
-    "hint4":"Das Sync-Skript gibt eine einheitliche Synced/Healthy-Sicht aller Apps.",
+    "helpTitle":"Lab-Copilot","helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.","nextHint":"Nächster Hinweis",
+    "hint0":"Prüfen Sie zuerst Kyverno und aktivieren Sie das Reporting (Schritt 1).",
+    "hint1":"validationFailureAction: Enforce blockiert die Ressource; Audit meldet nur.",
+    "hint2":"Das Pattern \"?*\" verlangt, dass ein Feld vorhanden und nicht leer ist.",
+    "hint3":"Der --dry-run=server-Test läuft durch die Kyverno-Webhooks und wird blockiert.",
+    "hint4":"mutate mit +(label) fügt das Label hinzu, ohne Bestehendes zu überschreiben.",
     "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — Koffi-Academy-Arbeitsplatz (gitops-cluster)",
-    "bEnv":"Cluster + Argo CD ApplicationSets bereit. Repository: /root/gitops-platform","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
-    "hHeader":"Verfügbare Befehle:","hNs":"Namespace erstellen / labeln","hGetNs":"Namespaces auflisten","hApply":"ein Manifest anwenden","hApplyK":"ein Kustomize-Overlay anwenden","hGetApps":"Applications auflisten","hGetDeploy":"Deployments auflisten","hRun":"das Sync-Skript ausführen","hCheck":"Fortschritt prüfen",
-    "nsCreated":"namespace/{n} created","nsLabeled":"namespace/{n} labeled","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tipp: speichern Sie diese Datei zuerst im Reiter Manifests.","kustomizeNoDir":"error: unable to find kustomization in {f}","kustomizeHint":"Tipp: speichern Sie base/ und das Overlay vor dem Anwenden.",
-    "checkHeader":"Fortschritt der Aufgabe:","chkNs":"3 Cluster-Namespaces erstellt","chkAppset":"Multi-Cluster-ApplicationSet angewendet","chkRegional":"Regionales ApplicationSet angewendet","chkKustomize":"Kustomize-Overlays angewendet","chkSync":"Sync-Status abgerufen","chkAll":"Alle Kriterien erfüllt. Kapitel 3 abgeschlossen!","skipped":"Schritt übersprungen.",
-    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","kNF":"error: Befehl in diesem Labor nicht simuliert.","catNF":"cat: {f}: keine solche Datei","shNoFile":"bash: {f}: No such file or directory",
-    "tSavedFile":"Datei gespeichert","tDone":"Kapitel 3 abgeschlossen — Multi-Cluster steht"
+    "bEnv":"Cluster + Kyverno bereit. Repository: /root/gitops-platform","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hGetPods":"Kyverno-Pods anzeigen","hCm":"Reporting-ConfigMap erstellen","hApply":"eine Policy anwenden","hRun":"einen Pod testen (dry-run)","hGetCp":"ClusterPolicies auflisten","hReport":"Compliance-Report","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "cmCreated":"configmap/kyverno-metrics created","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tipp: speichern Sie diese Policy zuerst im Reiter Policies.","cpCreated":"clusterpolicy.kyverno.io/{n} created","blocked":"Error from server: admission webhook \"validate.kyverno.svc-fail\" denied the request:","blockedMsg":"  policy require-resource-limits/check-resource-limits fail: All containers must have CPU and memory limits defined","noPol":"No resources found",
+    "checkHeader":"Fortschritt der Aufgabe:","chkKy":"Kyverno geprüft + Reporting","chkSec":"Sicherheits-Policies angewendet","chkCost":"Kosten-Policies angewendet","chkComp":"Compliance-Policies angewendet","chkDrift":"Anti-Drift-Policies angewendet","chkAll":"Alle Kriterien erfüllt. Kapitel 4 abgeschlossen!","skipped":"Schritt übersprungen.",
+    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","kNF":"error: Befehl in diesem Labor nicht simuliert.","catNF":"cat: {f}: keine solche Datei",
+    "tSavedFile":"Policy gespeichert","tDone":"Kapitel 4 abgeschlossen — Policy-Governance steht"
   },
   "en":{
-    "navChapter2":"Chapter 2","navChapter4":"Chapter 4","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
-    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Manifests",
-    "btnClear":"Clear","btnSave":"Save","phPaste":"Paste the file from the instructions, then Save.",
-    "mClusters":"Clusters","mApps":"Apps",
-    "instrHead":"Instructions","instrTitle":"Multi-cluster GitOps with ApplicationSets",
-    "instrSub":"You deploy applications across multiple \"clusters\" (simulated by regional namespaces) using Argo CD ApplicationSets, manage per-cluster configurations with Kustomize, and track synchronization from a single control plane.",
+    "navChapter3":"Chapter 3","navChapter5":"Chapter 5","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Policies",
+    "btnClear":"Clear","btnSave":"Save","phPaste":"Paste the policy from the instructions, then Save.",
+    "mPolicies":"Policies","mKyverno":"Kyverno",
+    "instrHead":"Instructions","instrTitle":"Policy-as-Code with Kyverno",
+    "instrSub":"You apply Kyverno policies to enforce security, cost control, compliance and drift prevention across the GitOps platform. Policies automatically validate, mutate and generate Kubernetes resources.",
     "progLabel":"Progress","copy":"Copy","copied":"Copied",
-    "s1h":"Step 1 · Simulate clusters (namespaces)",
-    "s1b":"We simulate three regional clusters via labeled namespaces. In the <strong>Terminal</strong>:",
-    "s2h":"Step 2 · Cluster selection (ApplicationSet)",
-    "s2b":"An <code>ApplicationSet</code> with a <em>list</em> generator creates one Application per cluster. Save <code>apps/multi-cluster/multi-cluster-appset.yaml</code>:",
-    "s2apply":"Apply and list the generated applications:",
-    "s3h":"Step 3 · Regional ApplicationSet (matrix)",
-    "s3b":"A <em>matrix</em> generator combines clusters and services (frontend/backend). Save <code>apps/multi-cluster/regional-appset.yaml</code>:",
-    "s3apply":"Apply and list the applications with their labels:",
-    "s4h":"Step 4 · Per-cluster configuration (Kustomize)",
-    "s4b":"A common base + per-cluster overlays. Save the 4 files (<code>base/deployment.yaml</code>, <code>base/kustomization.yaml</code>, and the <code>us-east</code> / <code>eu-central</code> overlays):",
-    "s4apply":"Apply the overlays and check the deployments:",
-    "s5h":"Step 5 · Synchronization monitoring",
-    "s5b":"A script provides a unified view of the sync and health of applications. Save <code>multi-cluster-sync-status.sh</code>:",
-    "s5apply":"Make it executable, then check the status, clusters and applications:",
+    "s1h":"Step 1 · Verify and configure Kyverno","s1b":"Kyverno is already installed. Verify it and enable policy reporting in the <strong>Terminal</strong>:",
+    "s2h":"Step 2 · Security policies","s2b":"Enforce resource limits and block privileged containers. Save these two <code>ClusterPolicy</code> in the <strong>Policies</strong> tab:","s2apply":"Apply both, then test with a non-compliant pod (must be blocked):",
+    "s3h":"Step 3 · Cost optimization policies","s3b":"Cap resources and require a PodDisruptionBudget for multi-replica deployments. Save:","s3apply":"Apply, then list these policies:",
+    "s4h":"Step 4 · Compliance policies","s4b":"Enforce standard labels and a namespace naming convention. Save:","s4apply":"Apply, then verify:",
+    "s5h":"Step 5 · Drift prevention","s5b":"Require a GitOps tracking annotation in production/staging, and auto-label managed resources. Save:","s5apply":"Apply, then show all policies and the compliance report:",
     "critH":"Success criteria",
-    "c1":"The 3 cluster namespaces created and labeled.","c2":"Multi-cluster ApplicationSet applied.","c3":"Regional (matrix) ApplicationSet applied.","c4":"Kustomize overlays applied per cluster.","c5":"Sync status checked.",
+    "c1":"Kyverno verified and reporting enabled.","c2":"Security policies applied and tested.","c3":"Cost policies applied.","c4":"Compliance policies applied.","c5":"Drift-prevention policies applied.",
     "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
     "skip":"Skip","check":"Check",
-    "helpTitle":"Lab Copilot",
-    "helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.",
-    "nextHint":"Next hint",
-    "hint0":"First create the three cluster namespaces in the terminal.",
-    "hint1":"The ApplicationSet list generator produces one Application per element.",
-    "hint2":"The matrix generator combines two lists: 3 clusters × 2 services = 6 applications.",
-    "hint3":"Kustomize: a common base, overlays patching replicas/resources per cluster.",
-    "hint4":"The sync script gives a unified Synced/Healthy view of all apps.",
+    "helpTitle":"Lab Copilot","helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.","nextHint":"Next hint",
+    "hint0":"First verify Kyverno and enable reporting (Step 1).",
+    "hint1":"validationFailureAction: Enforce blocks the resource; Audit only reports.",
+    "hint2":"The \"?*\" pattern requires a field to be present and non-empty.",
+    "hint3":"The --dry-run=server test goes through the Kyverno webhooks and will be blocked.",
+    "hint4":"mutate with +(label) adds the label without overwriting an existing one.",
     "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — Koffi Academy workstation (gitops-cluster)",
-    "bEnv":"Cluster + Argo CD ApplicationSets ready. Repository: /root/gitops-platform","bTip":"Tip: type `help` for commands, `check` for progress.",
-    "hHeader":"Available commands:","hNs":"create / label a namespace","hGetNs":"list namespaces","hApply":"apply a manifest","hApplyK":"apply a Kustomize overlay","hGetApps":"list applications","hGetDeploy":"list deployments","hRun":"run the sync script","hCheck":"check your progress",
-    "nsCreated":"namespace/{n} created","nsLabeled":"namespace/{n} labeled","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tip: save this file in the Manifests tab first.","kustomizeNoDir":"error: unable to find kustomization in {f}","kustomizeHint":"Tip: save base/ and the overlay before applying.",
-    "checkHeader":"Task progress:","chkNs":"3 cluster namespaces created","chkAppset":"Multi-cluster ApplicationSet applied","chkRegional":"Regional ApplicationSet applied","chkKustomize":"Kustomize overlays applied","chkSync":"Sync status checked","chkAll":"All criteria met. Chapter 3 complete!","skipped":"Step skipped.",
-    "cmdNF":"{c}: command not found. Type `help`.","kNF":"error: command not simulated in this lab.","catNF":"cat: {f}: no such file","shNoFile":"bash: {f}: No such file or directory",
-    "tSavedFile":"File saved","tDone":"Chapter 3 complete — multi-cluster in place"
+    "bEnv":"Cluster + Kyverno ready. Repository: /root/gitops-platform","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hGetPods":"view Kyverno pods","hCm":"create the reporting ConfigMap","hApply":"apply a policy","hRun":"test a pod (dry-run)","hGetCp":"list ClusterPolicies","hReport":"compliance report","hCheck":"check your progress","hClear":"clear the terminal",
+    "cmCreated":"configmap/kyverno-metrics created","applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tip: save this policy in the Policies tab first.","cpCreated":"clusterpolicy.kyverno.io/{n} created","blocked":"Error from server: admission webhook \"validate.kyverno.svc-fail\" denied the request:","blockedMsg":"  policy require-resource-limits/check-resource-limits fail: All containers must have CPU and memory limits defined","noPol":"No resources found",
+    "checkHeader":"Task progress:","chkKy":"Kyverno verified + reporting","chkSec":"Security policies applied","chkCost":"Cost policies applied","chkComp":"Compliance policies applied","chkDrift":"Drift-prevention policies applied","chkAll":"All criteria met. Chapter 4 complete!","skipped":"Step skipped.",
+    "cmdNF":"{c}: command not found. Type `help`.","kNF":"error: command not simulated in this lab.","catNF":"cat: {f}: no such file",
+    "tSavedFile":"Policy saved","tDone":"Chapter 4 complete — policy governance in place"
   }
 };
 
 (function(){
   "use strict";
-  var FILES=["apps/multi-cluster/multi-cluster-appset.yaml","apps/multi-cluster/regional-appset.yaml","clusters/base/deployment.yaml","clusters/base/kustomization.yaml","clusters/overlays/us-east/kustomization.yaml","clusters/overlays/eu-central/kustomization.yaml","multi-cluster-sync-status.sh"];
+  var FILES=["policies/security/require-resource-limits.yaml","policies/security/block-privileged.yaml","policies/cost/limit-container-resources.yaml","policies/cost/require-pdb.yaml","policies/compliance/require-labels.yaml","policies/compliance/namespace-naming.yaml","policies/drift-prevention/prevent-manual-changes.yaml","policies/drift-prevention/auto-label-gitops.yaml"];
+  var POLNAMES=["require-resource-limits","block-privileged-containers","limit-container-resources","require-pdb-for-deployments","require-standard-labels","namespace-naming-convention","prevent-manual-changes","auto-label-gitops-resources"];
   var I=window.I18N; var lang=localStorage.getItem("preferred-lang"); if(!I[lang])lang="de";
   function t(key,vars){var s=(I[lang]&&I[lang][key]!==undefined)?I[lang][key]:(I.en[key]!==undefined?I.en[key]:key);if(vars)Object.keys(vars).forEach(function(k){s=s.replace(new RegExp("\\{"+k+"\\}","g"),vars[k]);});return s;}
 
   var FS={}; FILES.forEach(function(f){FS[f]="";});
   var currentFile=FILES[0];
-  var st={namespaces:false,appset:false,regional:false,kustomize:false,sync:false};
-  var ns={}, appsetApplied=false, regionalApplied=false, overlayApplied=false, syncRun=false; var hi=0;
+  var st={kyverno:false,security:false,cost:false,compliance:false,drift:false};
+  var pol={}, kyvernoCm=false; var hi=0;
 
   var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput"), editor=document.getElementById("fileEditor");
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
@@ -615,90 +648,74 @@ window.I18N = {
   function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
   function banner(){out.innerHTML="";print(t("bSsh"),"line-muted");print(t("bUbuntu"),"line-muted");print(t("bEnv"),"line-muted");print(t("bTip"),"line-muted");print("");}
 
-  function nsCount(){return Object.keys(ns).length;}
-  function appCount(){return (appsetApplied?3:0)+(regionalApplied?6:0);}
-  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["namespaces","appset","regional","kustomize","sync"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 5";document.getElementById("progressFill").style.width=(tot/5*100)+"%";if(tot===5)toast(t("tDone"));}
-  function refresh(){document.getElementById("mClusters").textContent=nsCount()+"/3";document.getElementById("mApps").textContent=appCount();}
+  function polCount(){return Object.keys(pol).length;}
+  function has(n){return !!pol[n];}
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["kyverno","security","cost","compliance","drift"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 5";document.getElementById("progressFill").style.width=(tot/5*100)+"%";if(tot===5)toast(t("tDone"));}
+  function refresh(){document.getElementById("mPolicies").textContent=polCount()+"/8";document.getElementById("mKyverno").textContent=kyvernoCm?"OK":"—";}
+  function recompute(){
+    if(has("require-resource-limits")&&has("block-privileged-containers"))setStep("security",true);
+    if(has("limit-container-resources")&&has("require-pdb-for-deployments"))setStep("cost",true);
+    if(has("require-standard-labels")&&has("namespace-naming-convention"))setStep("compliance",true);
+    if(has("prevent-manual-changes")&&has("auto-label-gitops-resources"))setStep("drift",true);
+  }
 
   function norm(p){return p?p.trim().replace(/^\.\//,"").replace(/^\/root\/gitops-platform\//,"").replace(/\/+$/,""):"";}
   function resolve(p){p=norm(p);return FS[p]!==undefined?p:null;}
+  function polName(body){var m=body.match(/name:\s*([a-z0-9-]+)/);return m?m[1]:null;}
 
   function applyFile(path){
     var f=resolve(path); if(!f||!FS[f].trim()){print(t("applyNoFile",{f:path||"?"}),"line-error");print(t("applyHint"),"line-warn");return;}
-    var b=FS[f];
-    if(/name:\s*multi-cluster-demo/.test(b)){appsetApplied=true;print("applicationset.argoproj.io/multi-cluster-demo created","line-ok");print("  generated 3 applications (app-us-east, app-us-west, app-eu-central)","line-muted");refresh();setStep("appset",true);return;}
-    if(/name:\s*regional-services/.test(b)){regionalApplied=true;print("applicationset.argoproj.io/regional-services created","line-ok");print("  generated 6 applications (frontend/backend x 3 clusters)","line-muted");refresh();setStep("regional",true);return;}
-    print("error: invalid manifest","line-error");
+    var n=polName(FS[f]);
+    if(n&&POLNAMES.indexOf(n)!==-1){pol[n]=true;print(t("cpCreated",{n:n}),"line-ok");refresh();recompute();return;}
+    print("error: invalid policy manifest","line-error");
   }
-  function applyKustomize(path){
-    var dir=norm(path); var kfile=dir+"/kustomization.yaml";
-    var base=resolve("clusters/base/kustomization.yaml");
-    if(FS[kfile]===undefined||!FS[kfile].trim()||!base||!FS[base].trim()){print(t("kustomizeNoDir",{f:path}),"line-error");print(t("kustomizeHint"),"line-warn");return;}
-    print("deployment.apps/multi-region-app created","line-ok");print("service/multi-region-app created","line-ok");overlayApplied=true;setStep("kustomize",true);
-  }
-
-  function getApplications(filter){
-    print("NAME               SYNC STATUS   HEALTH STATUS");
-    var apps=[];
-    if(appsetApplied)apps.push("app-us-east","app-us-west","app-eu-central");
-    if(regionalApplied)apps.push("frontend-us-east","backend-us-east","frontend-us-west","backend-us-west","frontend-eu-central","backend-eu-central");
-    apps.forEach(function(a){ if(!filter||new RegExp(filter).test(a)) print(a.padEnd(19)+"Synced        Healthy"); });
-    if(!apps.length)print("No resources found in argocd namespace.","line-warn");
-  }
-  function getNamespaces(grepCluster){
-    if(!grepCluster){print("NAME              STATUS   AGE   LABELS");print("default           Active   6d    kubernetes.io/metadata.name=default");print("argocd            Active   6d    kubernetes.io/metadata.name=argocd");}
-    ["cluster-us-east","cluster-us-west","cluster-eu-central"].forEach(function(n){ if(ns[n]) print(n.padEnd(18)+"Active   2m    region="+n.replace("cluster-","")+",environment=production"); });
-  }
-
-  function runSh(path,arg){
-    var f=resolve(path); if(!f||!FS[f].trim()){print(t("shNoFile",{f:path}),"line-error");print(t("applyHint"),"line-warn");return;}
-    if(f==="multi-cluster-sync-status.sh"){
-      if(arg==="status"){print("Statut des applications par cluster :");["app-us-east","app-us-west","app-eu-central"].forEach(function(a){print("  "+a+": Sync=Synced  Health=Healthy");});print("Total: 3   Synced: 3   Healthy: 3   (100%)","line-ok");syncRun=true;setStep("sync",true);return;}
-      if(arg==="clusters"){getNamespaces(true);syncRun=true;setStep("sync",true);return;}
-      if(arg==="applications"){getApplications(null);syncRun=true;setStep("sync",true);return;}
-      print("Usage: "+f+" {status|clusters|applications}","line-warn");return;
-    }
-    print("Usage: "+f,"line-warn");
+  function getClusterPolicy(filter){
+    print("NAME                          BACKGROUND   ACTION    READY");
+    var rows={"require-resource-limits":"true   Enforce","block-privileged-containers":"true   Enforce","limit-container-resources":"true   Enforce","require-pdb-for-deployments":"true   Audit  ","require-standard-labels":"true   Enforce","namespace-naming-convention":"false  Enforce","prevent-manual-changes":"false  Audit  ","auto-label-gitops-resources":"true   -      "};
+    var any=false;
+    POLNAMES.forEach(function(n){ if(pol[n] && (!filter||new RegExp(filter).test(n))){ print(n.padEnd(30)+rows[n]+"     True"); any=true; } });
+    if(!any)print(t("noPol"),"line-warn");
   }
 
   function handle(raw){
     var cmd=raw.trim(); if(!cmd) return; var parts=cmd.split(/\s+/); var head=parts[0];
     if(head==="help"){print(t("hHeader"),"line-muted");
-      print("  kubectl create namespace <n>                 "+t("hNs"));
-      print("  kubectl label namespace <n> k=v ...          "+t("hNs"));
-      print("  kubectl get namespaces --show-labels         "+t("hGetNs"));
-      print("  kubectl apply -f <manifest>                  "+t("hApply"));
-      print("  kubectl apply -k <overlay-dir>               "+t("hApplyK"));
-      print("  kubectl get applications -n argocd           "+t("hGetApps"));
-      print("  /root/gitops-platform/<sync>.sh <arg>        "+t("hRun"));
+      print("  kubectl get pods -n kyverno                  "+t("hGetPods"));
+      print("  kubectl create configmap kyverno-metrics ... "+t("hCm"));
+      print("  kubectl apply -f <policy>                    "+t("hApply"));
+      print("  kubectl run ... --dry-run=server             "+t("hRun"));
+      print("  kubectl get clusterpolicy                    "+t("hGetCp"));
+      print("  kubectl get policyreport -A                  "+t("hReport"));
       print("  check   ·   clear                          "+t("hCheck"));return;}
     if(head==="clear"){out.innerHTML="";return;}
     if(head==="check"){runCheck();return;}
-    if(head==="chmod"){return;}
-    if(head==="sleep"){return;}
     if(head==="cat"){var f=resolve(parts[1]);if(f&&FS[f])FS[f].split("\n").forEach(function(l){print(l);});else print(t("catNF",{f:parts[1]||""}),"line-error");return;}
-    if(/\.sh(\s|$)/.test(cmd) && head.indexOf("/root/gitops-platform/")===0){runSh(head,parts[1]||"");return;}
-
     if(head!=="kubectl"&&head!=="k"){print(t("cmdNF",{c:head}),"line-error");return;}
     var verb=parts[1]||"";
-    if(verb==="create"&&(parts[2]==="namespace"||parts[2]==="ns")){var n=parts[3];if(ns[n]){print("Error from server (AlreadyExists): namespaces \""+n+"\" already exists","line-warn");return;}ns[n]=true;print(t("nsCreated",{n:n}),"line-ok");refresh();if(ns["cluster-us-east"]&&ns["cluster-us-west"]&&ns["cluster-eu-central"])setStep("namespaces",true);return;}
-    if(verb==="label"&&(parts[2]==="namespace"||parts[2]==="ns")){var ln=parts[3];print(t("nsLabeled",{n:ln}),"line-ok");return;}
-    if(verb==="get"&&(parts[2]==="namespaces"||parts[2]==="ns")){getNamespaces(/grep\s+cluster-/.test(cmd));return;}
-    if(verb==="apply"){var ki=parts.indexOf("-k");if(ki>=0){applyKustomize(parts[ki+1]);return;}var fi=parts.indexOf("-f");applyFile(fi>=0?parts[fi+1]:"");return;}
-    if(verb==="get"&&parts[2]==="applications"){var m=cmd.match(/grep\s+(?:-E\s+)?["']?\(?([^"'|]+?)\)?["']?\s*$/);var filt=m?m[1].trim().replace(/[()]/g,""):null;getApplications(filt);return;}
-    if(verb==="get"&&parts[2]==="application"){print("status:");print("  sync:");print("    status: Synced");print("  health:");print("    status: Healthy");return;}
-    if(verb==="get"&&parts[2]==="deployments"){var ni=parts.indexOf("-n");var dns=ni>=0?parts[ni+1]:"";print("NAME               READY   UP-TO-DATE   AVAILABLE   AGE");print("multi-region-app   "+(dns==="cluster-us-east"?"3/3     3":"2/2     2")+"            "+(dns==="cluster-us-east"?"3":"2")+"           1m");return;}
+    if(verb==="get"&&parts[2]==="pods"&&/kyverno/.test(cmd)){print("NAME                                             READY   STATUS    RESTARTS   AGE");print("kyverno-admission-controller-7d9c8b6f5-abcde     1/1     Running   0          6d");print("kyverno-background-controller-65f4c7d8-fghij      1/1     Running   0          6d");print("kyverno-reports-controller-58b9d6c4-klmno         1/1     Running   0          6d");return;}
+    if(verb==="get"&&parts[2]==="deployment"&&/kyverno/.test(cmd)){print("ghcr.io/kyverno/kyverno:v1.12.0");return;}
+    if(verb==="create"&&parts[2]==="configmap"&&/kyverno-metrics/.test(cmd)){kyvernoCm=true;print(t("cmCreated"),"line-ok");refresh();setStep("kyverno",true);return;}
+    if(verb==="get"&&parts[2]==="configmap"&&/kyverno-metrics/.test(cmd)){print("NAME              DATA   AGE");print("kyverno-metrics   1      10s");return;}
+    if(verb==="apply"){var fi=parts.indexOf("-f");applyFile(fi>=0?parts[fi+1]:"");return;}
+    if(verb==="run"&&/dry-run=server/.test(cmd)){
+      if(has("require-resource-limits")){print(t("blocked"),"line-error");print(t("blockedMsg"),"line-error");setStep("security",true);}
+      else{print("pod/"+(parts[2]||"test")+" created (server dry run)","line-ok");}
+      return;
+    }
+    if(verb==="get"&&(parts[2]==="clusterpolicy"||parts[2]==="cpol")){var m=cmd.match(/grep\s+(?:-E\s+)?["']?\(?([^"'|]+?)\)?["']?\s*$/);getClusterPolicy(m?m[1].trim().replace(/[()]/g,""):null);return;}
+    if(verb==="get"&&(parts[2]==="policyreport"||parts[2]==="polr"||parts[2]==="clusterpolicyreport")){print("NAMESPACE    NAME                              PASS   FAIL   WARN");print("production   cpol-require-resource-limits      14     0      0");print("staging      cpol-require-standard-labels       8     0      0");return;}
     print(t("kNF"),"line-error");
   }
 
   function runCheck(){
+    recompute();
     print(t("checkHeader"),"line-muted");
-    print((st.namespaces?"  [x] ":"  [ ] ")+t("chkNs"),st.namespaces?"line-ok":"line-warn");
-    print((st.appset?"  [x] ":"  [ ] ")+t("chkAppset"),st.appset?"line-ok":"line-warn");
-    print((st.regional?"  [x] ":"  [ ] ")+t("chkRegional"),st.regional?"line-ok":"line-warn");
-    print((st.kustomize?"  [x] ":"  [ ] ")+t("chkKustomize"),st.kustomize?"line-ok":"line-warn");
-    print((st.sync?"  [x] ":"  [ ] ")+t("chkSync"),st.sync?"line-ok":"line-warn");
-    if(st.namespaces&&st.appset&&st.regional&&st.kustomize&&st.sync)print(t("chkAll"),"line-ok");
+    print((st.kyverno?"  [x] ":"  [ ] ")+t("chkKy"),st.kyverno?"line-ok":"line-warn");
+    print((st.security?"  [x] ":"  [ ] ")+t("chkSec"),st.security?"line-ok":"line-warn");
+    print((st.cost?"  [x] ":"  [ ] ")+t("chkCost"),st.cost?"line-ok":"line-warn");
+    print((st.compliance?"  [x] ":"  [ ] ")+t("chkComp"),st.compliance?"line-ok":"line-warn");
+    print((st.drift?"  [x] ":"  [ ] ")+t("chkDrift"),st.drift?"line-ok":"line-warn");
+    if(st.kyverno&&st.security&&st.cost&&st.compliance&&st.drift)print(t("chkAll"),"line-ok");
   }
 
   function runScript(text){
