@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Build LLM Evaluation Pipeline | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier pratique Koffi Academy : construisez et validez un jeu d'évaluation pour mesurer la qualité des réponses d'un LLM, directement dans un terminal guidé. DE / FR / EN.">
+  <meta name="theme-color" content="#071a2f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+  <style>
+:root{
+  --bg:#07111f;--panel:#10182b;--panel-2:#151e34;--panel-3:#1c2740;
+  --line:rgba(255,255,255,.11);--muted:#94a3b8;--soft:#c8d4e4;--text:#f7fbff;
+  --navy:#07294d;--teal:#20d3b6;--green:#54e39a;--amber:#f8b85f;--orange:#f89035;
+  --blue:#71a7ff;--danger:#ff6b6b;--shadow:0 24px 80px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);overflow-x:hidden}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,textarea,input{font:inherit}
+button{cursor:pointer}
+.lab-shell{width:100%;max-width:100%;min-height:100vh;display:flex;flex-direction:column;overflow:hidden;background:
+  radial-gradient(circle at 20% -10%,rgba(32,211,182,.18),transparent 28%),
+  radial-gradient(circle at 88% 4%,rgba(248,144,53,.18),transparent 30%),
+  linear-gradient(135deg,#08111f 0%,#0b1730 52%,#09101e 100%)}
+.topline{height:4px;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));opacity:.95}
+.labbar{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(10,17,31,.88);backdrop-filter:blur(18px);position:sticky;top:0;z-index:30}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand__mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#f9d77e,#d6a02d 55%,#b97911);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(214,160,45,.30);flex-shrink:0}
+.brand__mark svg{width:62%;height:62%;display:block}
+.brand__text{min-width:0;display:flex;align-items:center;gap:10px}
+.brand__k{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#fff;white-space:nowrap}
+.brand__sep{color:rgba(255,255,255,.3);font-size:16px}
+.brand__title{font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.labbar__spacer{flex:1}
+.lab-timer{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#fff;background:rgba(32,211,182,.12);border:1px solid rgba(32,211,182,.32);border-radius:999px;padding:7px 13px}
+.lab-timer i{color:var(--teal);font-size:12px}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
+.topbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:rgba(255,255,255,.9);border-radius:8px;padding:8px 13px;font-weight:700;font-size:13px;line-height:1.15;transition:.16s}
+.topbtn:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.28)}
+.topbtn--ai{background:linear-gradient(135deg,#6d73ff,#8468ff);border-color:rgba(255,255,255,.12);box-shadow:0 10px 28px rgba(109,115,255,.24)}
+.topbtn--ai:hover{filter:brightness(1.06)}
+/* language selector */
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 12px 7px 9px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+.lab-main{width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1.42fr) minmax(360px,.82fr);gap:0;flex:1;min-height:0}
+.workspace{min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--line);background:rgba(7,12,22,.54)}
+.work-tabs{display:flex;align-items:center;gap:2px;padding:0 14px;background:rgba(255,255,255,.05);border-bottom:1px solid var(--line);min-height:44px}
+.work-tabs__reload{margin-right:6px;border:0;background:transparent;color:var(--soft);font-size:14px;padding:6px}
+.work-tabs__reload:hover{color:#fff}
+.tab{position:relative;border:0;background:transparent;color:rgba(255,255,255,.72);display:inline-flex;align-items:center;gap:8px;padding:13px 14px;font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;transition:.16s}
+.tab.is-active{color:#fff}
+.tab.is-active:after{content:"";position:absolute;left:10px;right:10px;bottom:0;height:2px;background:var(--teal);border-radius:999px}
+.work-surface{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr)}
+.view{display:none;min-height:0}
+.view.is-active{display:flex}
+.terminal-view{flex-direction:column;background:#0d0f12}
+.terminal-output{flex:1;min-height:360px;max-height:calc(100vh - 160px);overflow:auto;padding:20px 22px;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.62;color:#e8edf2;white-space:pre-wrap;word-break:break-word}
+.terminal-output .line-muted{color:#8ea3b8}
+.terminal-output .line-ok{color:#52ef9f}
+.terminal-output .line-warn{color:#ffce73}
+.terminal-output .line-error{color:#ff7d7d}
+.terminal-output .line-cmd{color:#fff}
+.terminal-output .prompt{color:#8cf0ce}
+.terminal-inputbar{display:flex;align-items:center;gap:10px;border-top:1px solid #23262b;background:#0a0c0f;padding:12px 16px}
+.terminal-prompt{font-family:'JetBrains Mono',monospace;font-size:13px;color:#8cf0ce;white-space:nowrap}
+.terminal-input{flex:1;border:0;outline:0;background:transparent;color:#fff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;min-width:0}
+.runbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:rgba(10,17,31,.88);border-bottom:1px solid var(--line)}
+.runbar__title{display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--soft);min-width:0}
+.runbar__title i{color:var(--teal)}
+.runbar__title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.runbar__actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.toolbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.07);color:#fff;border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:800;transition:.16s}
+.toolbtn:hover{background:rgba(255,255,255,.13)}
+.toolbtn--primary{border-color:transparent;background:linear-gradient(135deg,var(--orange),#ffb057);box-shadow:0 10px 24px rgba(248,144,53,.26)}
+.toolbtn--primary:hover{filter:brightness(1.04)}
+.datasets-view{flex-direction:column;background:#0b1222}
+.filebar{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--line)}
+.filetab{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--soft);border-radius:8px 8px 0 0;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+.filetab.is-active{color:#fff;background:#0b1222;border-bottom-color:#0b1222}
+.dataset-grid{display:grid;grid-template-columns:minmax(0,1fr) 270px;flex:1;min-height:0}
+.dataset-editor{flex:1;min-height:420px;width:100%;border:0;outline:0;resize:none;padding:18px 20px;background:#0b1222;color:#d9f4ff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.65;tab-size:2;border-right:1px solid var(--line)}
+.dataset-editor::selection{background:rgba(32,211,182,.28)}
+.dataset-side{padding:18px;background:rgba(255,255,255,.035);overflow:auto}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.metric{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:10px;padding:12px}
+.metric__k{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.metric__v{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-top:3px}
+.file-list{display:grid;gap:8px}
+.file-pill{display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.06);border-radius:10px;padding:10px 11px;color:var(--soft);font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.file-pill i{color:var(--amber)}
+.instructions{min-width:0;background:linear-gradient(180deg,rgba(20,28,49,.97),rgba(15,21,38,.98));display:flex;flex-direction:column;min-height:0}
+.instructions.is-hidden{display:none}
+.instructions__head{display:flex;align-items:center;gap:12px;padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.instructions__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;margin:0;letter-spacing:-.01em}
+.instructions__head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:20px;line-height:1;padding:4px;border-radius:7px}
+.instructions__head button:hover{background:rgba(255,255,255,.10)}
+.instructions__body{min-width:0;overflow:auto;padding:20px 18px 28px}
+.lab-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;line-height:1.14;font-weight:800;letter-spacing:-.02em;margin:0 0 12px;color:#fff}
+.lab-sub{font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.78);margin:0 0 20px}
+.progress-card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:12px;padding:14px 15px;margin-bottom:18px}
+.progress-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.progress-row span:first-child{font-size:12px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.08em}
+.progress-row span:last-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:#fff}
+.progress-track{height:8px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));border-radius:999px;transition:width .25s}
+.step{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.step__top{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none}
+.step__check{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:transparent;flex-shrink:0;font-size:12px}
+.step.is-done .step__check{background:rgba(84,227,154,.16);border-color:rgba(84,227,154,.42);color:var(--green)}
+.step h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;line-height:1.22;font-weight:800;letter-spacing:-.01em;margin:0;color:#fff;flex:1}
+.step__chev{color:var(--soft);font-size:13px;transition:transform .2s}
+.step.is-open .step__chev{transform:rotate(90deg)}
+.step__body{display:none;border-top:1px solid rgba(255,255,255,.10);padding:16px 18px 18px;color:rgba(255,255,255,.82);font-size:13.8px;line-height:1.62}
+.step.is-open .step__body{display:block}
+.step__body code{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:#06090f;border:1px solid rgba(255,255,255,.10);border-radius:6px;padding:2px 6px;color:#a8fff0}
+.codewrap{position:relative;margin:12px 0 0}
+.copybtn{position:absolute;top:8px;right:8px;z-index:2;border:1px solid rgba(255,255,255,.18);background:rgba(20,28,49,.92);color:#cfe;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:800;letter-spacing:.02em;transition:.16s}
+.copybtn:hover{background:rgba(32,211,182,.18);border-color:rgba(32,211,182,.5)}
+.copybtn.is-copied{color:var(--green);border-color:rgba(84,227,154,.5)}
+.codebox{max-width:100%;margin:0;border:1px solid rgba(255,255,255,.12);background:#050505;border-radius:10px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12.2px;line-height:1.62;color:#eaf2ff;overflow:auto;white-space:pre}
+.crit{list-style:none;margin:6px 0 0;padding:0}
+.crit li{display:flex;align-items:flex-start;gap:10px;padding:7px 0;font-size:13.5px;color:rgba(255,255,255,.84)}
+.crit li i{color:var(--green);font-size:12px;margin-top:3px;flex-shrink:0}
+.help-panel{position:fixed;right:18px;bottom:18px;width:min(420px,calc(100vw - 36px));background:#10182b;border:1px solid rgba(255,255,255,.15);box-shadow:var(--shadow);border-radius:14px;overflow:hidden;z-index:60;display:none}
+.help-panel.is-open{display:block}
+.help-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:linear-gradient(135deg,#202b50,#2c3562);border-bottom:1px solid var(--line)}
+.help-head h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;margin:0}
+.help-head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:18px;border-radius:7px;padding:4px}
+.help-body{padding:16px;color:var(--soft);font-size:13.5px;line-height:1.58}
+.hint{border-left:3px solid var(--teal);background:rgba(32,211,182,.08);padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0;color:#dff}
+.inst-fab{display:none;position:fixed;bottom:20px;right:20px;z-index:45;align-items:center;gap:8px;background:var(--teal);color:#071a2f;border:0;border-radius:999px;padding:12px 20px;font-size:13px;font-weight:700;font-family:inherit;box-shadow:0 8px 28px rgba(32,211,182,.42);transition:.16s}
+.inst-fab:active{transform:scale(.96)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#0f1830;border:1px solid rgba(32,211,182,.4);color:#eafffb;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:80}
+.toast.is-on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:1080px){.lab-main{grid-template-columns:1fr}.workspace{border-right:0}.terminal-output{max-height:none}}
+@media(max-width:768px){
+  .labbar{padding:8px 12px;gap:8px;flex-wrap:wrap}.brand__title{display:none}.labbar__spacer{display:none}
+  .actions{order:3;width:100%;display:flex;flex-wrap:wrap;gap:6px}.topbtn{font-size:11.5px;padding:7px 10px;gap:5px;min-height:32px}
+  #toggleInstructions{display:none}.topbtn--ai{flex:1}
+  .lab-main{display:flex;flex-direction:column}.workspace{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .work-surface{flex:1;min-height:0;overflow:hidden}
+  .terminal-output{height:calc(100svh - 220px);min-height:260px;max-height:none;overflow:auto}
+  .instructions{position:fixed;inset:0;z-index:50;display:flex!important;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+  .instructions:not(.is-hidden){transform:translateY(0)}
+  .inst-fab{display:inline-flex}.inst-fab.is-gone{display:none}
+  .dataset-grid{grid-template-columns:1fr}.dataset-editor{border-right:0;border-bottom:1px solid var(--line);min-height:260px}
+  .lab-title{font-size:23px}.work-tabs{overflow-x:auto}.tab{white-space:nowrap}
+  .runbar{align-items:flex-start;flex-direction:column;gap:8px}.runbar__actions{width:100%;justify-content:flex-start}
+}
+  </style>
+</head>
+<body>
+<div class="lab-shell">
+  <div class="topline"></div>
+  <header class="labbar">
+    <a class="brand" href="../laboratoire">
+      <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+      <span class="brand__text">
+        <span class="brand__k">Koffi Academy</span>
+        <span class="brand__sep">|</span>
+        <span class="brand__title">Build LLM Evaluation Pipeline</span>
+      </span>
+    </a>
+    <div class="labbar__spacer"></div>
+    <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">55:00</span></span>
+    <nav class="actions" aria-label="Lab actions">
+      <a class="topbtn" href="../laboratoire-llm-eval"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
+      <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="navBack">Retour aux labos</span></a>
+      <a class="topbtn" href="../laboratoire-llm-eval-lab-2"><span data-i18n="navChapter2">Chapitre 2</span> <i class="fa-solid fa-arrow-right-long"></i></a>
+      <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
+      <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
+      <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+    </nav>
+  </header>
+
+  <main class="lab-main">
+    <section class="workspace" aria-label="Workspace">
+      <div class="work-tabs" role="tablist">
+        <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
+        <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-database"></i>Datasets</button>
+      </div>
+      <div class="work-surface">
+        <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
+          <div class="terminal-output" id="terminalOutput" aria-live="polite"></div>
+          <form class="terminal-inputbar" id="terminalForm">
+            <span class="terminal-prompt" id="termPrompt">koffi@llm-eval:~$</span>
+            <input class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" data-i18n-aria="termAria" aria-label="Terminal command" autofocus>
+          </form>
+        </section>
+
+        <section class="view datasets-view" id="datasetsView" role="tabpanel">
+          <div class="filebar">
+            <button type="button" class="filetab is-active" data-file="datasets/kubernetes_eval.json">kubernetes_eval.json</button>
+            <button type="button" class="filetab" data-file="validate_dataset.py">validate_dataset.py</button>
+          </div>
+          <div class="runbar">
+            <div class="runbar__title"><i class="fa-solid fa-database"></i><span id="fileLabel">datasets/kubernetes_eval.json</span></div>
+            <div class="runbar__actions">
+              <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
+              <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
+            </div>
+          </div>
+          <div class="dataset-grid">
+            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Collez ici le contenu fourni dans les instructions, puis cliquez sur Enregistrer."></textarea>
+            <aside class="dataset-side">
+              <div class="metric-grid">
+                <div class="metric"><span class="metric__k" data-i18n="mEntries">Entrées</span><div class="metric__v" id="mItems">0</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mIds">IDs uniques</span><div class="metric__v" id="mIds">0</div></div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><span class="metric__k" data-i18n="mCats">Catégories</span><div class="metric__v" id="mCats">0</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mKw">Mots-clés/Q</span><div class="metric__v" id="mKw">0</div></div>
+              </div>
+              <div class="file-list">
+                <div class="file-pill"><i class="fa-solid fa-database"></i>datasets/kubernetes_eval.json</div>
+                <div class="file-pill"><i class="fa-brands fa-python"></i>validate_dataset.py</div>
+                <div class="file-pill"><i class="fa-solid fa-folder"></i>venv/ · Python 3.11</div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="instructions" id="instructions">
+      <div class="instructions__head">
+        <h2 data-i18n="instrHead">Instructions</h2>
+        <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
+      </div>
+      <div class="instructions__body">
+        <h1 class="lab-title" data-i18n="instrTitle">Construire le jeu d'évaluation</h1>
+        <p class="lab-sub" data-i18n="instrSub">Dans cet atelier, vous assemblez un petit jeu de données de référence (« golden set ») pour mesurer la qualité des réponses d'un LLM sur Kubernetes, puis vous écrivez et exécutez un script qui en vérifie la structure — le tout dans le terminal à gauche.</p>
+
+        <div class="progress-card">
+          <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <article class="step is-open" data-step="dataset">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Créer le dossier et le jeu de données</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s1b">Tout se passe dans le <strong>Terminal</strong> à gauche. Cliquez sur « Copier », collez le bloc dans le terminal et appuyez sur Entrée. Il crée le dossier de travail, écrit le fichier <code>kubernetes_eval.json</code> via un « here-document » (<code>cat &lt;&lt; EOF</code>), puis liste le dossier pour vérifier.</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcDataset">mkdir -p /root/evaluation/datasets
+
+cat > /root/evaluation/datasets/kubernetes_eval.json &lt;&lt; 'EOF'
+[
+  {
+    "id": "k8s-eval-01",
+    "question": "How can I stream the logs of a running pod in real time?",
+    "reference_answer": "Run kubectl logs &lt;pod&gt; -f. The -f flag follows the log output live, much like tail -f.",
+    "expected_keywords": ["kubectl", "logs", "-f"],
+    "category": "observability",
+    "difficulty": "easy"
+  },
+  {
+    "id": "k8s-eval-02",
+    "question": "Why would a pod stay stuck in the Pending phase?",
+    "reference_answer": "A pod stays Pending when the scheduler cannot place it: not enough memory or CPU on any node, an unmet nodeSelector, or taints without matching tolerations.",
+    "expected_keywords": ["scheduler", "memory", "taints"],
+    "category": "troubleshooting",
+    "difficulty": "medium"
+  },
+  {
+    "id": "k8s-eval-03",
+    "question": "How do I change a deployment to run four replicas?",
+    "reference_answer": "Use kubectl scale deployment &lt;name&gt; --replicas=4, or edit the replicas field in the manifest and reapply it.",
+    "expected_keywords": ["kubectl", "scale", "replicas"],
+    "category": "operations",
+    "difficulty": "easy"
+  },
+  {
+    "id": "k8s-eval-04",
+    "question": "When should I pick a StatefulSet instead of a Deployment?",
+    "reference_answer": "Pick a StatefulSet when pods need stable identities and persistent storage, such as databases. Use a Deployment for stateless, interchangeable replicas.",
+    "expected_keywords": ["StatefulSet", "persistent", "stateless"],
+    "category": "concepts",
+    "difficulty": "medium"
+  },
+  {
+    "id": "k8s-eval-05",
+    "question": "How do I store a database password as a Kubernetes secret?",
+    "reference_answer": "Create it with kubectl create secret generic db --from-literal=password=... then mount it as an env var or volume so the value never lives in the manifest.",
+    "expected_keywords": ["kubectl", "secret", "from-literal"],
+    "category": "security",
+    "difficulty": "medium"
+  },
+  {
+    "id": "k8s-eval-06",
+    "question": "How can I roll back a deployment after a bad release?",
+    "reference_answer": "Run kubectl rollout undo deployment/&lt;name&gt; to revert to the previous revision, and kubectl rollout history to inspect what is available.",
+    "expected_keywords": ["kubectl", "rollout", "undo"],
+    "category": "operations",
+    "difficulty": "medium"
+  }
+]
+EOF
+
+ls -la /root/evaluation/datasets/</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="script">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Écrire le script de validation</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s2b">Toujours dans le terminal, collez ce second bloc. Il écrit <code>validate_dataset.py</code> et le rend exécutable avec <code>chmod +x</code>. Le script vérifie les champs obligatoires, les identifiants en double, la longueur des questions et la présence de chaque mot-clé dans la réponse de référence.</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcScript">cat > /root/evaluation/datasets/validate_dataset.py &lt;&lt; 'EOF'
+#!/usr/bin/env python3
+"""Structure check for an LLM evaluation set — Koffi Academy."""
+import json
+import sys
+from collections import Counter
+
+REQUIRED = ["id", "question", "reference_answer",
+            "expected_keywords", "category", "difficulty"]
+
+def validate(path):
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+    except FileNotFoundError:
+        print("FAIL: file not found -> %s" % path)
+        return False
+    except json.JSONDecodeError as err:
+        print("FAIL: invalid JSON -> %s" % err)
+        return False
+
+    if not isinstance(data, list) or not data:
+        print("FAIL: the dataset must be a non-empty JSON array")
+        return False
+
+    problems, seen = [], set()
+    for index, row in enumerate(data):
+        tag = row.get("id", "row[%d]" % index)
+
+        for field in REQUIRED:
+            if field not in row or row[field] in ("", [], None):
+                problems.append("%s: missing or empty field '%s'" % (tag, field))
+
+        if tag in seen:
+            problems.append("%s: duplicate id" % tag)
+        seen.add(tag)
+
+        if len(row.get("question", "")) &lt; 12:
+            problems.append("%s: question too short" % tag)
+
+        answer = row.get("reference_answer", "").lower()
+        for kw in row.get("expected_keywords", []):
+            if kw.lower() not in answer:
+                problems.append("%s: keyword '%s' missing from the answer" % (tag, kw))
+
+    if problems:
+        print("FAIL: %d issue(s) found" % len(problems))
+        for item in problems:
+            print("  - " + item)
+        return False
+
+    cats = Counter(r["category"] for r in data)
+    diffs = Counter(r["difficulty"] for r in data)
+    avg_kw = sum(len(r["expected_keywords"]) for r in data) / len(data)
+    print("OK: %d entries, %d unique ids" % (len(data), len(seen)))
+    print("   categories : %s" % dict(cats))
+    print("   difficulty : %s" % dict(diffs))
+    print("   avg keywords: %.1f per question" % avg_kw)
+    return True
+
+if __name__ == "__main__":
+    target = sys.argv[1] if len(sys.argv) &gt; 1 else "/root/evaluation/datasets/kubernetes_eval.json"
+    sys.exit(0 if validate(target) else 1)
+EOF
+
+chmod +x /root/evaluation/datasets/validate_dataset.py</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="validate">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Lancer la validation</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s3b">Activez l'environnement Python (déjà préparé dans <code>/root/evaluation/venv</code>), puis lancez le script sur votre fichier :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">source /root/evaluation/venv/bin/activate
+python /root/evaluation/datasets/validate_dataset.py /root/evaluation/datasets/kubernetes_eval.json</pre></div>
+            <span data-i18n="s3b2">Un message <code>OK</code> suivi du nombre d'entrées, des catégories et de la répartition par difficulté confirme que le jeu est prêt. En cas de <code>FAIL</code>, corrigez les lignes signalées et relancez. Astuce : tapez <code>check</code> à tout moment.</span>
+          </div>
+        </article>
+
+        <article class="step" data-step="done">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <ul class="crit">
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Le fichier <code>kubernetes_eval.json</code> existe et contient un JSON valide.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Le script <code>validate_dataset.py</code> est présent et s'exécute sans erreur.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Le jeu compte au moins 5 entrées d'évaluation.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Chaque entrée porte tous les champs requis et des mots-clés cohérents.</span></li>
+            </ul>
+            <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal à tout moment pour vérifier votre progression.</p>
+          </div>
+        </article>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<button type="button" class="inst-fab" id="instFab" aria-label="Instructions"><i class="fa-solid fa-book-open"></i> <span data-i18n="instrHead">Instructions</span></button>
+
+<section class="help-panel" id="helpPanel" aria-label="Lab assistant">
+  <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
+  <div class="help-body">
+    <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend pour une aide contextuelle.</p>
+    <div class="hint" id="hintText" data-i18n="hint0">Commencez par coller le jeu de données dans l'onglet Datasets, puis enregistrez-le.</div>
+    <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+window.I18N = {
+  "fr":{
+    "navOverview":"Aperçu","navChapter2":"Chapitre 2","navBack":"Retour aux labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal",
+    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Collez ici le contenu fourni dans les instructions, puis cliquez sur Enregistrer.",
+    "mEntries":"Entrées","mIds":"IDs uniques","mCats":"Catégories","mKw":"Mots-clés/Q",
+    "instrHead":"Instructions","instrTitle":"Construire le jeu d'évaluation",
+    "instrSub":"Dans cet atelier, vous assemblez un petit jeu de données de référence (« golden set ») pour mesurer la qualité des réponses d'un LLM sur Kubernetes, puis vous écrivez et exécutez un script qui en vérifie la structure — le tout dans le terminal à gauche.",
+    "progLabel":"Progression","copy":"Copier","copied":"Copié ✓",
+    "s1h":"Étape 1 · Créer le dossier et le jeu de données",
+    "s1b":"Tout se passe dans le <strong>Terminal</strong> à gauche. Cliquez sur « Copier », collez le bloc dans le terminal et appuyez sur Entrée. Il crée le dossier de travail, écrit le fichier <code>kubernetes_eval.json</code> via un « here-document » (<code>cat &lt;&lt; EOF</code>), puis liste le dossier pour vérifier.",
+    "s2h":"Étape 2 · Écrire le script de validation",
+    "s2b":"Toujours dans le terminal, collez ce second bloc. Il écrit <code>validate_dataset.py</code> et le rend exécutable avec <code>chmod +x</code>. Le script vérifie les champs obligatoires, les identifiants en double, la longueur des questions et la présence de chaque mot-clé dans la réponse de référence.",
+    "s3h":"Étape 3 · Activer l'environnement et valider",
+    "s3b":"Activez l'environnement Python (déjà préparé dans <code>/root/evaluation/venv</code>), puis lancez le script sur votre fichier :",
+    "s3b2":"Un message <code>OK</code> suivi du nombre d'entrées, des catégories et de la répartition par difficulté confirme que le jeu est prêt. En cas de <code>FAIL</code>, corrigez les lignes signalées et relancez. Astuce : tapez <code>check</code> à tout moment.",
+    "s4h":"Critères de réussite",
+    "c1":"Le fichier <code>kubernetes_eval.json</code> existe et contient un JSON valide.",
+    "c2":"Le script <code>validate_dataset.py</code> est présent et s'exécute sans erreur.",
+    "c3":"Le jeu compte au moins 5 entrées d'évaluation.",
+    "c4":"Chaque entrée porte tous les champs requis et des mots-clés cohérents.",
+    "tipCheck":"Astuce : tapez <code>check</code> dans le terminal à tout moment pour vérifier votre progression.",
+    "helpTitle":"Copilote de l'atelier",
+    "helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend pour une aide contextuelle.",
+    "nextHint":"Indice suivant",
+    "hint0":"Commencez par coller le jeu de données dans l'onglet Datasets, puis enregistrez-le.",
+    "hint1":"Chaque mot-clé attendu doit apparaître mot pour mot dans la réponse de référence.",
+    "hint2":"Collez le script validate_dataset.py et enregistrez-le avant de l'exécuter.",
+    "hint3":"Dans le terminal : activez le venv puis lancez python validate_dataset.py datasets/kubernetes_eval.json.",
+    "hint4":"Tapez check pour voir les critères qui restent à valider.",
+    "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — poste de travail Koffi Academy (llm-eval)",
+    "bEnv":"Environnement Python prêt dans /root/evaluation","bTip":"Astuce : tapez `help` pour la liste des commandes, `check` pour votre progression.",
+    "hHeader":"Commandes disponibles :","hMkdir":"créer le dossier de travail","hWrite":"écrire un fichier (here-document)","hChmod":"rendre le script exécutable","hLs":"lister les fichiers","hCat":"afficher un fichier","hSource":"activer l'environnement Python","hPython":"valider le jeu de données","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "venvOn":"Environnement virtuel activé.","sourceUsage":"source : usage — source venv/bin/activate",
+    "pyNoScript":"python : fichier 'validate_dataset.py' introuvable","pyHint":"Astuce : collez d'abord le script dans l'onglet Datasets (Étape 2).",
+    "pyNotActive":"(note) environnement non activé — pensez à `source venv/bin/activate`","pyBadFile":"python : fichier '{f}' introuvable",
+    "valFail":"FAIL : {n} problème(s) détecté(s)","valOk":"OK : {n} entrées, {m} identifiants uniques",
+    "valCats":"   catégories : ","valDiff":"   difficulté : ","valKw":"   moy. mots-clés : {x} par question","valMin5":"   note : ajoutez au moins 5 entrées pour valider le critère.",
+    "checkHeader":"Progression de l'atelier :","chkDataset":"Jeu de données valide (>= 5 entrées)","chkScript":"Script de validation présent","chkValidate":"Validation exécutée avec succès","chkAll":"Tous les critères sont remplis. Bravo !",
+    "cmdNF":"{c} : commande introuvable. Tapez `help`.","catNF":"cat : {f} : aucun fichier de ce type","lsNF":"ls : impossible d'accéder à '{f}' : aucun fichier de ce type",
+    "pMissing":"{tag} : champ '{f}' manquant ou vide","pDup":"{tag} : identifiant en double","pShort":"{tag} : question trop courte","pKw":"{tag} : mot-clé '{k}' absent de la réponse","pJson":"JSON invalide : {e}","pArray":"le dataset doit être un tableau JSON non vide",
+    "tSaved":"Jeu de données enregistré ✅","tJsonBad":"JSON invalide — vérifiez la syntaxe","tSavedFix":"Enregistré — {n} point(s) à corriger","tScriptSaved":"Script enregistré ✅","tDone":"Atelier terminé — tous les critères sont validés ✅"
+  },
+  "de":{
+    "navOverview":"Übersicht","navChapter2":"Kapitel 2","navBack":"Zurück zu den Laboren","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl",
+    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Fügen Sie hier den aus den Anweisungen kopierten Inhalt ein und klicken Sie auf Speichern.",
+    "mEntries":"Einträge","mIds":"Eindeutige IDs","mCats":"Kategorien","mKw":"Keywords/F",
+    "instrHead":"Anleitung","instrTitle":"Das Evaluierungs-Set aufbauen",
+    "instrSub":"In diesem Atelier erstellen Sie ein kleines Referenz-Datenset („Golden Set\"), um die Qualität von LLM-Antworten zu Kubernetes zu messen, und schreiben dann ein Skript, das dessen Struktur prüft und ausführt — alles im Terminal links.",
+    "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert ✓",
+    "s1h":"Schritt 1 · Ordner und Datenset anlegen",
+    "s1b":"Alles passiert im <strong>Terminal</strong> links. Klicken Sie auf „Kopieren\", fügen Sie den Block ins Terminal ein und drücken Sie Enter. Er legt den Arbeitsordner an, schreibt die Datei <code>kubernetes_eval.json</code> über ein „Here-Document\" (<code>cat &lt;&lt; EOF</code>) und listet danach den Ordner zur Kontrolle.",
+    "s2h":"Schritt 2 · Das Validierungsskript schreiben",
+    "s2b":"Fügen Sie weiterhin im Terminal diesen zweiten Block ein. Er schreibt <code>validate_dataset.py</code> und macht es mit <code>chmod +x</code> ausführbar. Das Skript prüft Pflichtfelder, doppelte IDs, die Länge der Fragen und das Vorkommen jedes Keywords in der Referenzantwort.",
+    "s3h":"Schritt 3 · Umgebung aktivieren und validieren",
+    "s3b":"Aktivieren Sie die Python-Umgebung (bereits vorbereitet in <code>/root/evaluation/venv</code>) und führen Sie dann das Skript auf Ihrer Datei aus:",
+    "s3b2":"Eine <code>OK</code>-Meldung mit Anzahl der Einträge, Kategorien und Schwierigkeitsverteilung bestätigt, dass das Set bereit ist. Bei <code>FAIL</code> korrigieren Sie die gemeldeten Zeilen und starten erneut. Tipp: Tippen Sie jederzeit <code>check</code>.",
+    "s4h":"Erfolgskriterien",
+    "c1":"Die Datei <code>kubernetes_eval.json</code> existiert und enthält gültiges JSON.",
+    "c2":"Das Skript <code>validate_dataset.py</code> ist vorhanden und läuft fehlerfrei.",
+    "c3":"Das Set enthält mindestens 5 Evaluierungseinträge.",
+    "c4":"Jeder Eintrag hat alle Pflichtfelder und konsistente Keywords.",
+    "tipCheck":"Tipp: Tippen Sie jederzeit <code>check</code> im Terminal, um Ihren Fortschritt zu prüfen.",
+    "helpTitle":"Lab-Copilot",
+    "helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend für kontextbezogene Hilfe.",
+    "nextHint":"Nächster Hinweis",
+    "hint0":"Fügen Sie zuerst das Datenset im Reiter Datasets ein und speichern Sie es.",
+    "hint1":"Jedes erwartete Keyword muss wörtlich in der Referenzantwort vorkommen.",
+    "hint2":"Fügen Sie das Skript validate_dataset.py ein und speichern Sie es vor der Ausführung.",
+    "hint3":"Im Terminal: venv aktivieren, dann python validate_dataset.py datasets/kubernetes_eval.json ausführen.",
+    "hint4":"Tippen Sie check, um die noch offenen Kriterien zu sehen.",
+    "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — Koffi-Academy-Arbeitsplatz (llm-eval)",
+    "bEnv":"Python-Umgebung bereit in /root/evaluation","bTip":"Tipp: `help` für die Befehlsliste, `check` für Ihren Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hMkdir":"Arbeitsordner anlegen","hWrite":"Datei schreiben (Here-Document)","hChmod":"Skript ausführbar machen","hLs":"Dateien auflisten","hCat":"Datei anzeigen","hSource":"Python-Umgebung aktivieren","hPython":"Datenset validieren","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "venvOn":"Virtuelle Umgebung aktiviert.","sourceUsage":"source: Verwendung — source venv/bin/activate",
+    "pyNoScript":"python: Datei 'validate_dataset.py' nicht gefunden","pyHint":"Tipp: Fügen Sie das Skript zuerst im Reiter Datasets ein (Schritt 2).",
+    "pyNotActive":"(Hinweis) Umgebung nicht aktiviert — denken Sie an `source venv/bin/activate`","pyBadFile":"python: Datei '{f}' nicht gefunden",
+    "valFail":"FAIL: {n} Problem(e) gefunden","valOk":"OK: {n} Einträge, {m} eindeutige IDs",
+    "valCats":"   Kategorien: ","valDiff":"   Schwierigkeit: ","valKw":"   Ø Keywords: {x} pro Frage","valMin5":"   Hinweis: fügen Sie mindestens 5 Einträge hinzu, um das Kriterium zu erfüllen.",
+    "checkHeader":"Fortschritt des Ateliers:","chkDataset":"Datenset gültig (>= 5 Einträge)","chkScript":"Validierungsskript vorhanden","chkValidate":"Validierung erfolgreich ausgeführt","chkAll":"Alle Kriterien erfüllt. Bravo!",
+    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","catNF":"cat: {f}: keine solche Datei","lsNF":"ls: Zugriff auf '{f}' nicht möglich: keine solche Datei",
+    "pMissing":"{tag}: Feld '{f}' fehlt oder ist leer","pDup":"{tag}: doppelte ID","pShort":"{tag}: Frage zu kurz","pKw":"{tag}: Keyword '{k}' fehlt in der Antwort","pJson":"Ungültiges JSON: {e}","pArray":"das Datenset muss ein nicht-leeres JSON-Array sein",
+    "tSaved":"Datenset gespeichert ✅","tJsonBad":"Ungültiges JSON — prüfen Sie die Syntax","tSavedFix":"Gespeichert — {n} Punkt(e) zu korrigieren","tScriptSaved":"Skript gespeichert ✅","tDone":"Atelier abgeschlossen — alle Kriterien erfüllt ✅"
+  },
+  "en":{
+    "navOverview":"Overview","navChapter2":"Chapter 2","navBack":"Back to Labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command",
+    "btnClear":"Clear","btnSave":"Save","phPaste":"Paste the content from the instructions here, then click Save.",
+    "mEntries":"Entries","mIds":"Unique IDs","mCats":"Categories","mKw":"Keywords/Q",
+    "instrHead":"Instructions","instrTitle":"Build the evaluation set",
+    "instrSub":"In this lab you assemble a small reference dataset (a \"golden set\") to measure the quality of an LLM's answers about Kubernetes, then you write and run a script that checks its structure — all inside the terminal on the left.",
+    "progLabel":"Progress","copy":"Copy","copied":"Copied ✓",
+    "s1h":"Step 1 · Create the folder and dataset",
+    "s1b":"Everything happens in the <strong>Terminal</strong> on the left. Click \"Copy\", paste the block into the terminal and press Enter. It creates the working folder, writes <code>kubernetes_eval.json</code> through a here-document (<code>cat &lt;&lt; EOF</code>), then lists the folder to check.",
+    "s2h":"Step 2 · Write the validation script",
+    "s2b":"Still in the terminal, paste this second block. It writes <code>validate_dataset.py</code> and makes it executable with <code>chmod +x</code>. The script checks the required fields, duplicate ids, question length, and that every keyword appears in the reference answer.",
+    "s3h":"Step 3 · Activate the environment and validate",
+    "s3b":"Activate the Python environment (already prepared in <code>/root/evaluation/venv</code>), then run the script against your file:",
+    "s3b2":"An <code>OK</code> message with the entry count, categories and difficulty split confirms the set is ready. On <code>FAIL</code>, fix the reported lines and run again. Tip: type <code>check</code> anytime.",
+    "s4h":"Success criteria",
+    "c1":"The <code>kubernetes_eval.json</code> file exists and contains valid JSON.",
+    "c2":"The <code>validate_dataset.py</code> script is present and runs without errors.",
+    "c3":"The set holds at least 5 evaluation entries.",
+    "c4":"Every entry has all the required fields and consistent keywords.",
+    "tipCheck":"Tip: type <code>check</code> in the terminal anytime to review your progress.",
+    "helpTitle":"Lab Copilot",
+    "helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend for contextual help.",
+    "nextHint":"Next hint",
+    "hint0":"Start by pasting the dataset into the Datasets tab, then save it.",
+    "hint1":"Every expected keyword must appear verbatim in the reference answer.",
+    "hint2":"Paste the validate_dataset.py script and save it before running it.",
+    "hint3":"In the terminal: activate the venv, then run python validate_dataset.py datasets/kubernetes_eval.json.",
+    "hint4":"Type check to see which criteria are still pending.",
+    "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — Koffi Academy workstation (llm-eval)",
+    "bEnv":"Python environment ready in /root/evaluation","bTip":"Tip: type `help` for the command list, `check` for your progress.",
+    "hHeader":"Available commands:","hMkdir":"create the working folder","hWrite":"write a file (here-document)","hChmod":"make the script executable","hLs":"list files","hCat":"show a file","hSource":"activate the Python environment","hPython":"validate the dataset","hCheck":"check your progress","hClear":"clear the terminal",
+    "venvOn":"Virtual environment activated.","sourceUsage":"source: usage — source venv/bin/activate",
+    "pyNoScript":"python: file 'validate_dataset.py' not found","pyHint":"Tip: paste the script in the Datasets tab first (Step 2).",
+    "pyNotActive":"(note) environment not activated — consider `source venv/bin/activate`","pyBadFile":"python: file '{f}' not found",
+    "valFail":"FAIL: {n} issue(s) found","valOk":"OK: {n} entries, {m} unique ids",
+    "valCats":"   categories : ","valDiff":"   difficulty : ","valKw":"   avg keywords: {x} per question","valMin5":"   note: add at least 5 entries to satisfy the criterion.",
+    "checkHeader":"Lab progress:","chkDataset":"Dataset valid (>= 5 entries)","chkScript":"Validation script present","chkValidate":"Validation ran successfully","chkAll":"All criteria met. Well done!",
+    "cmdNF":"{c}: command not found. Type `help`.","catNF":"cat: {f}: no such file","lsNF":"ls: cannot access '{f}': no such file",
+    "pMissing":"{tag}: field '{f}' missing or empty","pDup":"{tag}: duplicate id","pShort":"{tag}: question too short","pKw":"{tag}: keyword '{k}' missing from the answer","pJson":"Invalid JSON: {e}","pArray":"the dataset must be a non-empty JSON array",
+    "tSaved":"Dataset saved ✅","tJsonBad":"Invalid JSON — check the syntax","tSavedFix":"Saved — {n} point(s) to fix","tScriptSaved":"Script saved ✅","tDone":"Lab complete — all criteria met ✅"
+  }
+};
+
+(function(){
+  "use strict";
+
+  var DATASET = "datasets/kubernetes_eval.json";
+  var SCRIPT  = "validate_dataset.py";
+
+  var I = window.I18N;
+  var lang = localStorage.getItem("preferred-lang");
+  if(!I[lang]) lang = "de";
+
+  function t(key, vars){
+    var s = (I[lang] && I[lang][key]!==undefined) ? I[lang][key] : (I.en[key]!==undefined ? I.en[key] : key);
+    if(vars) Object.keys(vars).forEach(function(k){ s = s.replace(new RegExp("\\{"+k+"\\}","g"), vars[k]); });
+    return s;
+  }
+
+  var FS = {};
+  FS[DATASET] = "[]\n";
+  FS[SCRIPT]  = "";
+
+  var venvActive = false;
+  var venvReady = true;
+  var currentFile = DATASET;
+  var steps = { dataset:false, script:false, validate:false };
+  var hi = 0;
+
+  var out = document.getElementById("terminalOutput");
+  var input = document.getElementById("terminalInput");
+  var termPrompt = document.getElementById("termPrompt");
+  var editor = document.getElementById("fileEditor");
+
+  function esc(v){ return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];}); }
+  function prompt(){ return (venvActive?"(venv) ":"")+"koffi@llm-eval:~$"; }
+  function print(text, cls){
+    var line = document.createElement("div");
+    if(cls) line.className = cls;
+    line.innerHTML = esc(text);
+    out.appendChild(line);
+    out.scrollTop = out.scrollHeight;
+  }
+  function toast(msg){
+    var el = document.getElementById("toast");
+    el.textContent = msg; el.classList.add("is-on");
+    clearTimeout(el._tm); el._tm = setTimeout(function(){ el.classList.remove("is-on"); }, 2200);
+  }
+
+  function banner(){
+    out.innerHTML = "";
+    print(t("bSsh"), "line-muted");
+    print(t("bUbuntu"), "line-muted");
+    print(t("bEnv"), "line-muted");
+    print(t("bTip"), "line-muted");
+    print("");
+  }
+
+  /* ---------- dataset analysis ---------- */
+  function analyze(){
+    var res = { ok:false, items:0, ids:0, cats:0, kw:0, problems:[], data:null };
+    var data;
+    try { data = JSON.parse(FS[DATASET]); }
+    catch(e){ res.problems.push(t("pJson",{e:e.message})); return res; }
+    if(!Array.isArray(data) || data.length===0){ res.problems.push(t("pArray")); return res; }
+    res.data = data;
+    var required = ["id","question","reference_answer","expected_keywords","category","difficulty"];
+    var seen = {}, ids = 0, cats = {}, kwTotal = 0;
+    data.forEach(function(row, i){
+      var tag = (row && row.id) ? row.id : "row["+i+"]";
+      required.forEach(function(f){
+        var v = row ? row[f] : undefined;
+        if(v===undefined || v===null || v==="" || (Array.isArray(v)&&v.length===0))
+          res.problems.push(t("pMissing",{tag:tag,f:f}));
+      });
+      if(seen[tag]) res.problems.push(t("pDup",{tag:tag})); else { seen[tag]=1; ids++; }
+      if(row && typeof row.question==="string" && row.question.length<12) res.problems.push(t("pShort",{tag:tag}));
+      if(row && row.category) cats[row.category]=1;
+      if(row && Array.isArray(row.expected_keywords)){
+        kwTotal += row.expected_keywords.length;
+        var ans = (row.reference_answer||"").toLowerCase();
+        row.expected_keywords.forEach(function(k){
+          if(ans.indexOf(String(k).toLowerCase())===-1) res.problems.push(t("pKw",{tag:tag,k:k}));
+        });
+      }
+    });
+    res.items = data.length; res.ids = ids;
+    res.cats = Object.keys(cats).length;
+    res.kw = data.length ? (kwTotal/data.length) : 0;
+    res.ok = res.problems.length===0 && data.length>=5;
+    return res;
+  }
+
+  function refreshMetrics(){
+    var r = analyze();
+    document.getElementById("mItems").textContent = r.items;
+    document.getElementById("mIds").textContent = r.ids;
+    document.getElementById("mCats").textContent = r.cats;
+    document.getElementById("mKw").textContent = r.kw ? r.kw.toFixed(1) : "0";
+  }
+
+  /* ---------- progress ---------- */
+  function setStep(name, done){
+    if(steps[name]===done) return;
+    steps[name] = done;
+    var el = document.querySelector('.step[data-step="'+name+'"]');
+    if(el) el.classList.toggle("is-done", done);
+    var total = 0; ["dataset","script","validate"].forEach(function(k){ if(steps[k]) total++; });
+    var all = total===3;
+    var doneEl = document.querySelector('.step[data-step="done"]');
+    if(doneEl) doneEl.classList.toggle("is-done", all);
+    var count = total + (all?1:0);
+    document.getElementById("progressText").textContent = count + " / 4";
+    document.getElementById("progressFill").style.width = (count/4*100) + "%";
+    if(all) toast(t("tDone"));
+  }
+
+  function evalSteps(opts){
+    opts = opts || {};
+    var r = analyze();
+    if(r.ok) setStep("dataset", true);
+    var sc = FS[SCRIPT] || "";
+    if(sc.trim().length>40 && /def\s+validate/.test(sc)) setStep("script", true);
+    if(opts.ranValidation && r.ok) setStep("validate", true);
+    return r;
+  }
+
+  /* ---------- terminal ---------- */
+  function norm(path){ return path ? path.trim().replace(/^\.\//,"").replace(/^\/root\/evaluation\//,"").replace(/\/+$/,"") : ""; }
+  function resolve(path){
+    if(!path) return null;
+    var p = norm(path);
+    if(p===DATASET || p==="kubernetes_eval.json" || p==="datasets/kubernetes_eval.json") return DATASET;
+    if(p===SCRIPT || p==="validate_dataset.py" || p==="datasets/validate_dataset.py") return SCRIPT;
+    if(FS[p]!==undefined) return p;
+    return null;
+  }
+  function writeFile(path, body){
+    var key = resolve(path) || norm(path);
+    FS[key] = (body.charAt(body.length-1)==="\n") ? body : body+"\n";
+    if(key===DATASET){ refreshMetrics(); evalSteps(); if(currentFile===DATASET) editor.value = FS[DATASET]; }
+    else if(key===SCRIPT){ evalSteps(); if(currentFile===SCRIPT) editor.value = FS[SCRIPT]; }
+  }
+  function dsExists(){ var v=(FS[DATASET]||"").trim(); return v!=="" && v!=="[]"; }
+  function scExists(){ return (FS[SCRIPT]||"").trim()!==""; }
+
+  function runValidation(arg){
+    var r = analyze();
+    if(r.data===null){
+      print("Traceback (most recent call last):", "line-error");
+      print(r.problems[0], "line-error");
+      evalSteps();
+      return;
+    }
+    if(r.problems.length){
+      print(t("valFail",{n:r.problems.length}), "line-error");
+      r.problems.forEach(function(p){ print("  - " + p, "line-error"); });
+      evalSteps();
+      return;
+    }
+    var cats = {}, diffs = {}, kwTotal = 0;
+    r.data.forEach(function(row){
+      cats[row.category] = (cats[row.category]||0)+1;
+      diffs[row.difficulty] = (diffs[row.difficulty]||0)+1;
+      kwTotal += (row.expected_keywords||[]).length;
+    });
+    print(t("valOk",{n:r.data.length,m:r.ids}), "line-ok");
+    print(t("valCats") + JSON.stringify(cats));
+    print(t("valDiff") + JSON.stringify(diffs));
+    print(t("valKw",{x:(kwTotal/r.data.length).toFixed(1)}));
+    if(r.data.length < 5) print(t("valMin5"), "line-warn");
+    evalSteps({ ranValidation:true });
+  }
+
+  function handle(raw){
+    var cmd = raw.trim();
+    if(!cmd) return;
+    var parts = cmd.split(/\s+/);
+    var head = parts[0];
+
+    if(head==="help"){
+      print(t("hHeader"), "line-muted");
+      print("  mkdir -p <dir>                        " + t("hMkdir"));
+      print("  cat > <file> << 'EOF' ... EOF         " + t("hWrite"));
+      print("  chmod +x <file>                       " + t("hChmod"));
+      print("  ls [-la] [dir]                        " + t("hLs"));
+      print("  source venv/bin/activate              " + t("hSource"));
+      print("  python validate_dataset.py [file]     " + t("hPython"));
+      print("  check                                 " + t("hCheck"));
+      print("  clear                                 " + t("hClear"));
+      return;
+    }
+    if(head==="clear"){ out.innerHTML=""; return; }
+    if(head==="pwd"){ print("/root/evaluation"); return; }
+    if(head==="whoami"){ print("root"); return; }
+    if(head==="mkdir"){ return; }
+    if(head==="chmod"){ return; }
+    if(head==="echo"){ print(cmd.slice(4).trim().replace(/^["']|["']$/g,"")); return; }
+    if(head==="ls"){
+      var args = parts.slice(1).filter(function(a){ return a.charAt(0)!=="-"; });
+      var flags = parts.slice(1).filter(function(a){ return a.charAt(0)==="-"; }).join("");
+      var d = norm(args[0]);
+      var long = /l/.test(flags);
+      if(!args[0] || d==="" || d==="."){ print("datasets   validate_dataset.py   venv   README.md"); return; }
+      if(d==="datasets"){
+        if(long){
+          print("total 8");
+          if(dsExists()) print("-rw-r--r-- 1 root root  1832 Jun 20 07:30 kubernetes_eval.json");
+          if(scExists()) print("-rwxr-xr-x 1 root root  1564 Jun 20 07:31 validate_dataset.py");
+          if(!dsExists() && !scExists()) print("(dossier vide)", "line-muted");
+        } else {
+          var names=[]; if(dsExists()) names.push("kubernetes_eval.json"); if(scExists()) names.push("validate_dataset.py");
+          print(names.length?names.join("   "):"");
+        }
+        return;
+      }
+      if(d==="venv"){ print("bin   lib   pyvenv.cfg"); return; }
+      print(t("lsNF",{f:args[0]}), "line-error");
+      return;
+    }
+    if(head==="cat"){
+      var f = resolve(parts[1]);
+      if(f && FS[f]!==undefined){ FS[f].split("\n").forEach(function(l){ print(l); }); }
+      else print(t("catNF",{f:parts[1]||""}), "line-error");
+      return;
+    }
+    if(head==="source"){
+      if(/activate/.test(cmd)){ venvActive = true; termPrompt.textContent = prompt(); print(t("venvOn"), "line-muted"); }
+      else print(t("sourceUsage"), "line-error");
+      return;
+    }
+    if(head==="python" || head==="python3"){
+      var arg1 = parts[1] || "";
+      if(arg1==="-m" && parts[2]==="venv"){ venvReady = true; return; }
+      if(arg1==="-c"){ runValidation(); return; }
+      if(/validate_dataset\.py$/.test(arg1) || resolve(arg1)===SCRIPT){
+        if(!FS[SCRIPT] || !FS[SCRIPT].trim()){
+          print(t("pyNoScript"), "line-error");
+          print(t("pyHint"), "line-warn");
+          return;
+        }
+        if(!venvActive) print(t("pyNotActive"), "line-warn");
+        runValidation(parts[2]);
+        return;
+      }
+      print(t("pyBadFile",{f:arg1}), "line-error");
+      return;
+    }
+    if(head==="check"){
+      var r = evalSteps();
+      print(t("checkHeader"), "line-muted");
+      print((steps.dataset?"  [x] ":"  [ ] ") + t("chkDataset"), steps.dataset?"line-ok":"line-warn");
+      print((steps.script ?"  [x] ":"  [ ] ") + t("chkScript"), steps.script?"line-ok":"line-warn");
+      print((steps.validate?"  [x] ":"  [ ] ") + t("chkValidate"), steps.validate?"line-ok":"line-warn");
+      if(steps.dataset&&steps.script&&steps.validate) print(t("chkAll"), "line-ok");
+      else if(!r.ok && r.problems.length) print("  - " + r.problems[0], "line-warn");
+      return;
+    }
+    print(t("cmdNF",{c:head}), "line-error");
+  }
+
+  // Run a pasted block line by line, with here-document (cat > file << 'EOF') support.
+  function runScript(text){
+    var lines = text.replace(/\r/g,"").split("\n");
+    var i = 0;
+    while(i < lines.length){
+      var line = lines[i];
+      var hd = line.match(/^\s*cat\s*>\s*(\S+)\s*<<\s*['"]?([A-Za-z0-9_]+)['"]?\s*$/);
+      if(hd){
+        print(prompt() + " " + line, "line-cmd");
+        var path = hd[1], delim = hd[2], body = [];
+        i++;
+        while(i < lines.length && lines[i].trim() !== delim){ body.push(lines[i]); i++; }
+        i++; // skip the closing delimiter
+        writeFile(path, body.join("\n"));
+        continue;
+      }
+      if(line.trim() === ""){ i++; continue; }
+      print(prompt() + " " + line, "line-cmd");
+      handle(line);
+      i++;
+    }
+  }
+
+  document.getElementById("terminalForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var v = input.value;
+    print(prompt() + " " + v, "line-cmd");
+    input.value = "";
+    handle(v);
+  });
+
+  input.addEventListener("paste", function(e){
+    var txt = (e.clipboardData || window.clipboardData).getData("text");
+    if(txt && txt.indexOf("\n") !== -1){
+      e.preventDefault();
+      runScript(txt);
+      input.value = "";
+    }
+  });
+
+  /* ---------- tabs ---------- */
+  document.querySelectorAll(".tab").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".tab").forEach(function(b){ b.classList.remove("is-active"); });
+      btn.classList.add("is-active");
+      var tb = btn.getAttribute("data-tab");
+      document.getElementById("terminalView").classList.toggle("is-active", tb==="terminal");
+      document.getElementById("datasetsView").classList.toggle("is-active", tb==="datasets");
+      if(tb==="terminal"){ input.focus(); }
+    });
+  });
+
+  /* ---------- file editor ---------- */
+  function selectFile(path){
+    currentFile = path;
+    editor.value = FS[path];
+    document.getElementById("fileLabel").textContent = path;
+    document.querySelectorAll(".filetab").forEach(function(b){ b.classList.toggle("is-active", b.getAttribute("data-file")===path); });
+  }
+  document.querySelectorAll(".filetab").forEach(function(b){
+    b.addEventListener("click", function(){ FS[currentFile]=editor.value; selectFile(b.getAttribute("data-file")); });
+  });
+  document.getElementById("saveFile").addEventListener("click", function(){
+    FS[currentFile] = editor.value;
+    refreshMetrics();
+    var r = evalSteps();
+    if(currentFile===DATASET){
+      if(r.data===null) toast(t("tJsonBad"));
+      else if(r.ok) toast(t("tSaved"));
+      else toast(t("tSavedFix",{n:r.problems.length}));
+    } else {
+      toast(t("tScriptSaved"));
+    }
+  });
+  document.getElementById("resetFile").addEventListener("click", function(){
+    editor.value = currentFile===DATASET ? "[]\n" : "";
+    FS[currentFile] = editor.value; refreshMetrics();
+  });
+  document.getElementById("reloadBtn").addEventListener("click", function(){ banner(); input.focus(); });
+
+  /* ---------- accordion ---------- */
+  document.querySelectorAll(".step__top").forEach(function(top){
+    top.addEventListener("click", function(){ top.parentElement.classList.toggle("is-open"); });
+  });
+
+  /* ---------- instructions / help ---------- */
+  var instr = document.getElementById("instructions");
+  var fab = document.getElementById("instFab");
+  function hideInstr(h){ instr.classList.toggle("is-hidden", h); fab.classList.toggle("is-gone", !h); }
+  document.getElementById("toggleInstructions").addEventListener("click", function(){ hideInstr(!instr.classList.contains("is-hidden")); });
+  document.getElementById("closeInstructions").addEventListener("click", function(){ hideInstr(true); });
+  fab.addEventListener("click", function(){ hideInstr(false); });
+
+  var help = document.getElementById("helpPanel");
+  document.getElementById("openHelp").addEventListener("click", function(){ help.classList.add("is-open"); });
+  document.getElementById("closeHelp").addEventListener("click", function(){ help.classList.remove("is-open"); });
+  document.getElementById("nextHint").addEventListener("click", function(){
+    hi = (hi+1) % 5;
+    document.getElementById("hintText").textContent = t("hint"+hi);
+  });
+
+  /* ---------- copy buttons ---------- */
+  document.querySelectorAll(".copybtn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var pre = btn.parentElement.querySelector(".codebox");
+      var text = pre ? pre.textContent : "";
+      function done(){ btn.textContent=t("copied"); btn.classList.add("is-copied"); setTimeout(function(){ btn.textContent=t("copy"); btn.classList.remove("is-copied"); },1400); }
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, done); }
+      else { var ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(e){} ta.remove(); done(); }
+    });
+  });
+
+  /* ---------- timer ---------- */
+  var remaining = 55*60;
+  var tEl = document.getElementById("labTimer");
+  setInterval(function(){
+    if(remaining>0) remaining--;
+    var m = Math.floor(remaining/60), s = remaining%60;
+    tEl.textContent = (m<10?"0":"")+m + ":" + (s<10?"0":"")+s;
+  }, 1000);
+
+  /* ---------- i18n apply ---------- */
+  function applyLang(l){
+    if(!I[l]) return;
+    lang = l;
+    localStorage.setItem("preferred-lang", l);
+    document.documentElement.lang = l;
+    var d = I[l];
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      var k = el.getAttribute("data-i18n");
+      if(d[k]!==undefined) el.innerHTML = d[k];
+    });
+    document.querySelectorAll("[data-i18n-ph]").forEach(function(el){
+      var k = el.getAttribute("data-i18n-ph"); if(d[k]!==undefined) el.setAttribute("placeholder", d[k]);
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach(function(el){
+      var k = el.getAttribute("data-i18n-title"); if(d[k]!==undefined) el.setAttribute("title", d[k]);
+    });
+    document.querySelectorAll("[data-i18n-aria]").forEach(function(el){
+      var k = el.getAttribute("data-i18n-aria"); if(d[k]!==undefined) el.setAttribute("aria-label", d[k]);
+    });
+    document.getElementById("hintText").textContent = t("hint"+hi);
+  }
+  window.setLabWorkspaceLang = applyLang;
+
+  /* ---------- init ---------- */
+  applyLang(lang);
+  banner();
+  selectFile(DATASET);
+  refreshMetrics();
+  input.focus();
+})();
+
+/* language dropdown */
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(l){if(window.setLabWorkspaceLang)window.setLabWorkspaceLang(l);klSync(l);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>

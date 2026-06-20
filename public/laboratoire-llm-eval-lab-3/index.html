@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Build LLM Evaluation Pipeline · Chapitre 3 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Chapitre 3 : assemblez le pipeline d'évaluation complet (chargement du dataset, scoring par métriques, rapport agrégé). DE / FR / EN.">
+  <meta name="theme-color" content="#071a2f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+  <style>
+:root{
+  --bg:#07111f;--panel:#10182b;--panel-2:#151e34;--panel-3:#1c2740;
+  --line:rgba(255,255,255,.11);--muted:#94a3b8;--soft:#c8d4e4;--text:#f7fbff;
+  --navy:#07294d;--teal:#20d3b6;--green:#54e39a;--amber:#f8b85f;--orange:#f89035;
+  --blue:#71a7ff;--danger:#ff6b6b;--shadow:0 24px 80px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);overflow-x:hidden}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,textarea,input{font:inherit}
+button{cursor:pointer}
+.lab-shell{width:100%;max-width:100%;min-height:100vh;display:flex;flex-direction:column;overflow:hidden;background:
+  radial-gradient(circle at 20% -10%,rgba(32,211,182,.18),transparent 28%),
+  radial-gradient(circle at 88% 4%,rgba(248,144,53,.18),transparent 30%),
+  linear-gradient(135deg,#08111f 0%,#0b1730 52%,#09101e 100%)}
+.topline{height:4px;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));opacity:.95}
+.labbar{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(10,17,31,.88);backdrop-filter:blur(18px);position:sticky;top:0;z-index:30}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand__mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#f9d77e,#d6a02d 55%,#b97911);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(214,160,45,.30);flex-shrink:0}
+.brand__mark svg{width:62%;height:62%;display:block}
+.brand__text{min-width:0;display:flex;align-items:center;gap:10px}
+.brand__k{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#fff;white-space:nowrap}
+.brand__sep{color:rgba(255,255,255,.3);font-size:16px}
+.brand__title{font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip-ch{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;color:#071a2f;background:linear-gradient(135deg,#f9d77e,#d6a02d);padding:4px 9px;border-radius:999px;white-space:nowrap}
+.labbar__spacer{flex:1}
+.lab-timer{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#fff;background:rgba(32,211,182,.12);border:1px solid rgba(32,211,182,.32);border-radius:999px;padding:7px 13px}
+.lab-timer i{color:var(--teal);font-size:12px}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
+.topbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:rgba(255,255,255,.9);border-radius:8px;padding:8px 13px;font-weight:700;font-size:13px;line-height:1.15;transition:.16s}
+.topbtn:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.28)}
+.topbtn--ai{background:linear-gradient(135deg,#6d73ff,#8468ff);border-color:rgba(255,255,255,.12);box-shadow:0 10px 28px rgba(109,115,255,.24)}
+.topbtn--ai:hover{filter:brightness(1.06)}
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 12px 7px 9px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+.lab-main{width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1.42fr) minmax(360px,.82fr);gap:0;flex:1;min-height:0}
+.workspace{min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--line);background:rgba(7,12,22,.54)}
+.work-tabs{display:flex;align-items:center;gap:2px;padding:0 14px;background:rgba(255,255,255,.05);border-bottom:1px solid var(--line);min-height:44px}
+.work-tabs__reload{margin-right:6px;border:0;background:transparent;color:var(--soft);font-size:14px;padding:6px}
+.work-tabs__reload:hover{color:#fff}
+.tab{position:relative;border:0;background:transparent;color:rgba(255,255,255,.72);display:inline-flex;align-items:center;gap:8px;padding:13px 14px;font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;transition:.16s}
+.tab.is-active{color:#fff}
+.tab.is-active:after{content:"";position:absolute;left:10px;right:10px;bottom:0;height:2px;background:var(--teal);border-radius:999px}
+.work-surface{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr)}
+.view{display:none;min-height:0}
+.view.is-active{display:flex}
+.terminal-view{flex-direction:column;background:#0d0f12}
+.terminal-output{flex:1;min-height:360px;max-height:calc(100vh - 160px);overflow:auto;padding:20px 22px;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.62;color:#e8edf2;white-space:pre-wrap;word-break:break-word}
+.terminal-output .line-muted{color:#8ea3b8}
+.terminal-output .line-ok{color:#52ef9f}
+.terminal-output .line-warn{color:#ffce73}
+.terminal-output .line-error{color:#ff7d7d}
+.terminal-output .line-cmd{color:#fff}
+.terminal-inputbar{display:flex;align-items:center;gap:10px;border-top:1px solid #23262b;background:#0a0c0f;padding:12px 16px}
+.terminal-prompt{font-family:'JetBrains Mono',monospace;font-size:13px;color:#8cf0ce;white-space:nowrap}
+.terminal-input{flex:1;border:0;outline:0;background:transparent;color:#fff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;min-width:0}
+.runbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:rgba(10,17,31,.88);border-bottom:1px solid var(--line)}
+.runbar__title{display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--soft);min-width:0}
+.runbar__title i{color:var(--teal)}
+.runbar__title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.runbar__actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.toolbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.07);color:#fff;border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:800;transition:.16s}
+.toolbtn:hover{background:rgba(255,255,255,.13)}
+.toolbtn--primary{border-color:transparent;background:linear-gradient(135deg,var(--orange),#ffb057);box-shadow:0 10px 24px rgba(248,144,53,.26)}
+.toolbtn--primary:hover{filter:brightness(1.04)}
+.datasets-view{flex-direction:column;background:#0b1222}
+.filebar{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--line)}
+.filetab{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--soft);border-radius:8px 8px 0 0;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+.filetab.is-active{color:#fff;background:#0b1222;border-bottom-color:#0b1222}
+.dataset-grid{display:grid;grid-template-columns:minmax(0,1fr) 270px;flex:1;min-height:0}
+.dataset-editor{flex:1;min-height:420px;width:100%;border:0;outline:0;resize:none;padding:18px 20px;background:#0b1222;color:#d9f4ff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.65;tab-size:4;border-right:1px solid var(--line)}
+.dataset-editor::selection{background:rgba(32,211,182,.28)}
+.dataset-side{padding:18px;background:rgba(255,255,255,.035);overflow:auto}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.metric{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:10px;padding:12px}
+.metric__k{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.metric__v{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-top:3px}
+.file-list{display:grid;gap:8px}
+.file-pill{display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.06);border-radius:10px;padding:10px 11px;color:var(--soft);font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.file-pill i{color:var(--amber)}
+.instructions{min-width:0;background:linear-gradient(180deg,rgba(20,28,49,.97),rgba(15,21,38,.98));display:flex;flex-direction:column;min-height:0}
+.instructions.is-hidden{display:none}
+.instructions__head{display:flex;align-items:center;gap:12px;padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.instructions__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;margin:0;letter-spacing:-.01em}
+.instructions__head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:20px;line-height:1;padding:4px;border-radius:7px}
+.instructions__head button:hover{background:rgba(255,255,255,.10)}
+.instructions__body{min-width:0;overflow:auto;padding:20px 18px 28px}
+.lab-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;line-height:1.14;font-weight:800;letter-spacing:-.02em;margin:0 0 12px;color:#fff}
+.lab-sub{font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.78);margin:0 0 20px}
+.progress-card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:12px;padding:14px 15px;margin-bottom:18px}
+.progress-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.progress-row span:first-child{font-size:12px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.08em}
+.progress-row span:last-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:#fff}
+.progress-track{height:8px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));border-radius:999px;transition:width .25s}
+.step{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.step__top{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none}
+.step__check{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:transparent;flex-shrink:0;font-size:12px}
+.step.is-done .step__check{background:rgba(84,227,154,.16);border-color:rgba(84,227,154,.42);color:var(--green)}
+.step h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;line-height:1.22;font-weight:800;letter-spacing:-.01em;margin:0;color:#fff;flex:1}
+.step__chev{color:var(--soft);font-size:13px;transition:transform .2s}
+.step.is-open .step__chev{transform:rotate(90deg)}
+.step__body{display:none;border-top:1px solid rgba(255,255,255,.10);padding:16px 18px 18px;color:rgba(255,255,255,.82);font-size:13.8px;line-height:1.62}
+.step.is-open .step__body{display:block}
+.step__body code{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:#06090f;border:1px solid rgba(255,255,255,.10);border-radius:6px;padding:2px 6px;color:#a8fff0}
+.codewrap{position:relative;margin:12px 0 0}
+.copybtn{position:absolute;top:8px;right:8px;z-index:2;border:1px solid rgba(255,255,255,.18);background:rgba(20,28,49,.92);color:#cfe;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:800;letter-spacing:.02em;transition:.16s}
+.copybtn:hover{background:rgba(32,211,182,.18);border-color:rgba(32,211,182,.5)}
+.copybtn.is-copied{color:var(--green);border-color:rgba(84,227,154,.5)}
+.codebox{max-width:100%;margin:0;border:1px solid rgba(255,255,255,.12);background:#050505;border-radius:10px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12.2px;line-height:1.62;color:#eaf2ff;overflow:auto;white-space:pre}
+.crit{list-style:none;margin:6px 0 0;padding:0}
+.crit li{display:flex;align-items:flex-start;gap:10px;padding:7px 0;font-size:13.5px;color:rgba(255,255,255,.84)}
+.crit li i{color:var(--green);font-size:12px;margin-top:3px;flex-shrink:0}
+.help-panel{position:fixed;right:18px;bottom:18px;width:min(420px,calc(100vw - 36px));background:#10182b;border:1px solid rgba(255,255,255,.15);box-shadow:var(--shadow);border-radius:14px;overflow:hidden;z-index:60;display:none}
+.help-panel.is-open{display:block}
+.help-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:linear-gradient(135deg,#202b50,#2c3562);border-bottom:1px solid var(--line)}
+.help-head h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;margin:0}
+.help-head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:18px;border-radius:7px;padding:4px}
+.help-body{padding:16px;color:var(--soft);font-size:13.5px;line-height:1.58}
+.hint{border-left:3px solid var(--teal);background:rgba(32,211,182,.08);padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0;color:#dff}
+.inst-fab{display:none;position:fixed;bottom:20px;right:20px;z-index:45;align-items:center;gap:8px;background:var(--teal);color:#071a2f;border:0;border-radius:999px;padding:12px 20px;font-size:13px;font-weight:700;font-family:inherit;box-shadow:0 8px 28px rgba(32,211,182,.42);transition:.16s}
+.inst-fab:active{transform:scale(.96)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#0f1830;border:1px solid rgba(32,211,182,.4);color:#eafffb;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:80}
+.toast.is-on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:1080px){.lab-main{grid-template-columns:1fr}.workspace{border-right:0}.terminal-output{max-height:none}}
+@media(max-width:768px){
+  .labbar{padding:8px 12px;gap:8px;flex-wrap:wrap}.brand__title,.chip-ch{display:none}.labbar__spacer{display:none}
+  .actions{order:3;width:100%;display:flex;flex-wrap:wrap;gap:6px}.topbtn{font-size:11.5px;padding:7px 10px;gap:5px;min-height:32px}
+  #toggleInstructions{display:none}.topbtn--ai{flex:1}
+  .lab-main{display:flex;flex-direction:column}.workspace{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .work-surface{flex:1;min-height:0;overflow:hidden}
+  .terminal-output{height:calc(100svh - 220px);min-height:260px;max-height:none;overflow:auto}
+  .instructions{position:fixed;inset:0;z-index:50;display:flex!important;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+  .instructions:not(.is-hidden){transform:translateY(0)}
+  .inst-fab{display:inline-flex}.inst-fab.is-gone{display:none}
+  .dataset-grid{grid-template-columns:1fr}.dataset-editor{border-right:0;border-bottom:1px solid var(--line);min-height:260px}
+  .lab-title{font-size:23px}.work-tabs{overflow-x:auto}.tab{white-space:nowrap}
+  .runbar{align-items:flex-start;flex-direction:column;gap:8px}.runbar__actions{width:100%;justify-content:flex-start}
+}
+  </style>
+</head>
+<body>
+<div class="lab-shell">
+  <div class="topline"></div>
+  <header class="labbar">
+    <a class="brand" href="../laboratoire">
+      <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+      <span class="brand__text">
+        <span class="brand__k">Koffi Academy</span>
+        <span class="brand__sep">|</span>
+        <span class="brand__title">Build LLM Evaluation Pipeline</span>
+        <span class="chip-ch">CH.3</span>
+      </span>
+    </a>
+    <div class="labbar__spacer"></div>
+    <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">55:00</span></span>
+    <nav class="actions" aria-label="Lab actions">
+      <a class="topbtn" href="../laboratoire-llm-eval-lab-2"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter2">Chapitre 2</span></a>
+      <a class="topbtn" href="../laboratoire-llm-eval"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
+      <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
+      <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
+      <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
+      <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+    </nav>
+  </header>
+
+  <main class="lab-main">
+    <section class="workspace" aria-label="Workspace">
+      <div class="work-tabs" role="tablist">
+        <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
+        <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-file-code"></i><span data-i18n="tabFiles">Fichiers</span></button>
+      </div>
+      <div class="work-surface">
+        <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
+          <div class="terminal-output" id="terminalOutput" aria-live="polite"></div>
+          <form class="terminal-inputbar" id="terminalForm">
+            <span class="terminal-prompt" id="termPrompt">koffi@llm-eval:~$</span>
+            <input class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" data-i18n-aria="termAria" aria-label="Terminal command" autofocus>
+          </form>
+        </section>
+
+        <section class="view datasets-view" id="datasetsView" role="tabpanel">
+          <div class="filebar">
+            <button type="button" class="filetab is-active" data-file="metrics/pipeline.py">pipeline.py</button>
+            <button type="button" class="filetab" data-file="generate_report.py">generate_report.py</button>
+          </div>
+          <div class="runbar">
+            <div class="runbar__title"><i class="fa-brands fa-python"></i><span id="fileLabel">metrics/pipeline.py</span></div>
+            <div class="runbar__actions">
+              <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
+              <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
+            </div>
+          </div>
+          <div class="dataset-grid">
+            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Créez les fichiers depuis le terminal, ou collez-les ici puis Enregistrer."></textarea>
+            <aside class="dataset-side">
+              <div class="metric-grid">
+                <div class="metric"><span class="metric__k" data-i18n="mFiles">Fichiers</span><div class="metric__v" id="mFiles">0/2</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mReport">Rapport</span><div class="metric__v" id="mReport">—</div></div>
+              </div>
+              <div class="file-list">
+                <div class="file-pill"><i class="fa-brands fa-python"></i>metrics/pipeline.py</div>
+                <div class="file-pill"><i class="fa-brands fa-python"></i>generate_report.py</div>
+                <div class="file-pill"><i class="fa-solid fa-folder"></i>results/ · rapports</div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="instructions" id="instructions">
+      <div class="instructions__head">
+        <h2 data-i18n="instrHead">Instructions</h2>
+        <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
+      </div>
+      <div class="instructions__body">
+        <h1 class="lab-title" data-i18n="instrTitle">Assembler le pipeline complet</h1>
+        <p class="lab-sub" data-i18n="instrSub">Dernière étape : relier les deux chapitres. Le pipeline charge le jeu de données du chapitre 1, applique les métriques du chapitre 2 à un lot de réponses, agrège les scores par catégorie et difficulté, puis exporte un rapport JSON et texte.</p>
+
+        <div class="progress-card">
+          <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <article class="step is-open" data-step="pipeline">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Créer le pipeline et l'exécuter</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s1b">Collez ce bloc dans le <strong>Terminal</strong>. Il écrit <code>pipeline.py</code> dans <code>metrics/</code> : la classe orchestre le chargement du dataset, l'évaluation de chaque réponse, l'agrégation et l'export. Le bloc lance ensuite un premier passage.</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcPipeline">cat > /root/evaluation/metrics/pipeline.py &lt;&lt; 'EOF'
+#!/usr/bin/env python3
+"""Complete evaluation pipeline."""
+import json
+import sys
+from typing import Dict, List, Any, Optional
+from pathlib import Path
+from datetime import datetime
+
+from evaluator import EvaluationMetrics, overall_score
+
+
+class EvaluationPipeline:
+    """Loads a dataset, scores answers and aggregates the results."""
+
+    def __init__(self, dataset_path: Optional[str] = None):
+        self.dataset_path = dataset_path or "/root/evaluation/datasets/kubernetes_eval.json"
+        self.metrics = EvaluationMetrics()
+        self.dataset = []
+        self.results = []
+        self.summary = {}
+
+    def load_dataset(self) -&gt; bool:
+        try:
+            with open(self.dataset_path, encoding="utf-8") as fh:
+                self.dataset = json.load(fh)
+            print("Dataset loaded: %d entries" % len(self.dataset))
+            return True
+        except Exception as err:
+            print("Error loading dataset: %s" % err)
+            return False
+
+    def run(self, answers: Dict[str, str]) -&gt; Dict[str, Any]:
+        self.results = []
+        summary = {"total": len(self.dataset), "evaluated": 0, "scores": [],
+                   "by_category": {}, "by_difficulty": {},
+                   "timestamp": datetime.now().isoformat()}
+        for item in self.dataset:
+            if item["id"] not in answers:
+                continue
+            res = self.metrics.evaluate(answers[item["id"]],
+                                        item["reference_answer"],
+                                        item["expected_keywords"])
+            score = overall_score(res)
+            self.results.append({
+                "id": item["id"], "question": item["question"],
+                "category": item.get("category", "unknown"),
+                "difficulty": item.get("difficulty", "unknown"),
+                "generated": answers[item["id"]],
+                "keyword_match": res["keyword_match"],
+                "semantic_similarity": res["semantic_similarity"],
+                "length_ratio": res["length_ratio"],
+                "overall_score": score,
+            })
+            summary["evaluated"] += 1
+            summary["scores"].append(score)
+            cat = item.get("category", "unknown")
+            dif = item.get("difficulty", "unknown")
+            summary["by_category"].setdefault(cat, {"scores": [], "count": 0})
+            summary["by_category"][cat]["scores"].append(score)
+            summary["by_category"][cat]["count"] += 1
+            summary["by_difficulty"].setdefault(dif, {"scores": [], "count": 0})
+            summary["by_difficulty"][dif]["scores"].append(score)
+            summary["by_difficulty"][dif]["count"] += 1
+        if summary["scores"]:
+            summary["average_score"] = sum(summary["scores"]) / len(summary["scores"])
+            for group in ("by_category", "by_difficulty"):
+                for key in summary[group]:
+                    s = summary[group][key]["scores"]
+                    summary[group][key]["average"] = sum(s) / len(s)
+        self.summary = summary
+        return summary
+
+    def print_summary(self):
+        if not self.summary:
+            print("No summary available")
+            return
+        print("\n" + "=" * 60)
+        print("EVALUATION SUMMARY")
+        print("=" * 60)
+        print("Evaluated   : %d / %d" % (self.summary["evaluated"], self.summary["total"]))
+        print("Average     : %.3f" % self.summary.get("average_score", 0))
+        print("\nBy category")
+        for cat, data in self.summary.get("by_category", {}).items():
+            print("  %-14s %d entries  avg %.3f" % (cat, data["count"], data["average"]))
+        print("\nBy difficulty")
+        for dif, data in self.summary.get("by_difficulty", {}).items():
+            print("  %-14s %d entries  avg %.3f" % (dif, data["count"], data["average"]))
+
+    def save_results(self, path: str):
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump({"summary": self.summary, "results": self.results}, fh, indent=2)
+        print("Results saved to %s" % path)
+
+    def export_report(self, path: str):
+        lines = ["=" * 60, "EVALUATION REPORT", "=" * 60,
+                 "Generated   : %s" % datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                 "Dataset     : %s" % self.dataset_path,
+                 "Average     : %.3f" % self.summary.get("average_score", 0), ""]
+        for res in self.results:
+            lines.append("%s  score %.3f  (%s)" % (res["id"], res["overall_score"], res["category"]))
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write("\n".join(lines))
+        print("Report saved to %s" % path)
+
+
+def sample_answers() -&gt; Dict[str, str]:
+    return {
+        "k8s-eval-01": "Use kubectl logs my-pod -f to stream a pod's logs in real time.",
+        "k8s-eval-02": "A pod stays Pending when the scheduler cannot place it, often due to insufficient memory or taints on the nodes.",
+        "k8s-eval-03": "Scale it with kubectl scale deployment myapp --replicas=4.",
+        "k8s-eval-04": "Use a StatefulSet for stateful apps needing persistent storage and stable identities; a Deployment suits stateless replicas.",
+        "k8s-eval-05": "Create it with kubectl create secret generic db --from-literal=password=secret.",
+        "k8s-eval-06": "Roll back with kubectl rollout undo deployment/myapp to restore the previous revision.",
+    }
+
+
+if __name__ == "__main__":
+    pipeline = EvaluationPipeline()
+    if not pipeline.load_dataset():
+        sys.exit(1)
+    pipeline.run(sample_answers())
+    pipeline.print_summary()
+    pipeline.save_results("/root/evaluation/results/pipeline_results.json")
+    pipeline.export_report("/root/evaluation/results/pipeline_report.txt")
+    print("\nPipeline run complete.")
+EOF
+
+chmod +x /root/evaluation/metrics/pipeline.py
+python /root/evaluation/metrics/pipeline.py</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="report">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Générer le rapport final</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s2b">Le générateur réutilise le pipeline et écrit un rapport JSON exploitable (scores par catégorie et difficulté). Collez ce bloc, puis exécutez-le.</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcReport">cat > /root/evaluation/generate_report.py &lt;&lt; 'EOF'
+#!/usr/bin/env python3
+"""Produce the final evaluation report (text + JSON)."""
+import json
+import sys
+from pathlib import Path
+from datetime import datetime
+
+sys.path.append("/root/evaluation/metrics")
+from pipeline import EvaluationPipeline, sample_answers
+
+
+def generate_report():
+    print("GENERATING EVALUATION REPORT")
+    print("=" * 60)
+    Path("/root/evaluation/results").mkdir(parents=True, exist_ok=True)
+
+    pipeline = EvaluationPipeline()
+    if not pipeline.load_dataset():
+        print("ERROR: failed to load dataset")
+        return False
+
+    pipeline.run(sample_answers())
+    pipeline.print_summary()
+    pipeline.save_results("/root/evaluation/results/evaluation_results.json")
+    pipeline.export_report("/root/evaluation/results/evaluation_report.txt")
+
+    report = {
+        "timestamp": datetime.now().isoformat(),
+        "dataset_path": pipeline.dataset_path,
+        "statistics": {
+            "total_questions": len(pipeline.results),
+            "average_score": pipeline.summary.get("average_score", 0),
+            "by_category": pipeline.summary.get("by_category", {}),
+            "by_difficulty": pipeline.summary.get("by_difficulty", {}),
+        },
+        "results": pipeline.results,
+    }
+    out = "/root/evaluation/results/evaluation_report.json"
+    with open(out, "w", encoding="utf-8") as fh:
+        json.dump(report, fh, indent=2)
+
+    print("\nJSON report saved to %s" % out)
+    print("  total_questions : %d" % report["statistics"]["total_questions"])
+    print("  average_score   : %.3f" % report["statistics"]["average_score"])
+    print("  categories      : %s" % ", ".join(report["statistics"]["by_category"].keys()))
+    return True
+
+
+if __name__ == "__main__":
+    sys.exit(0 if generate_report() else 1)
+EOF
+
+chmod +x /root/evaluation/generate_report.py
+python /root/evaluation/generate_report.py</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="verify">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Vérifier les fichiers produits</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s3b">Inspectez le dossier <code>results/</code> et ouvrez le rapport. Le rapport texte donne un aperçu lisible, le JSON contient les statistiques exploitables par une autre étape (tableau de bord, CI).</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">ls -la /root/evaluation/results/
+cat /root/evaluation/results/evaluation_report.txt</pre></div>
+            <span data-i18n="s3b2">Astuce : tapez <code>check</code> à tout moment pour vérifier la progression du chapitre.</span>
+          </div>
+        </article>
+
+        <article class="step" data-step="done">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <ul class="crit">
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Le module <code>pipeline.py</code> existe et orchestre chargement, scoring et export.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Le script <code>generate_report.py</code> s'exécute sans erreur.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Le fichier <code>results/evaluation_report.json</code> est créé avec les statistiques.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Le rapport agrège les scores par catégorie et par difficulté.</span></li>
+            </ul>
+            <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
+          </div>
+        </article>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<button type="button" class="inst-fab" id="instFab" aria-label="Instructions"><i class="fa-solid fa-book-open"></i> <span data-i18n="instrHead">Instructions</span></button>
+
+<section class="help-panel" id="helpPanel" aria-label="Lab assistant">
+  <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
+  <div class="help-body">
+    <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend pour une aide contextuelle.</p>
+    <div class="hint" id="hintText" data-i18n="hint0">Commencez par créer pipeline.py via le terminal (Étape 1).</div>
+    <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+window.I18N = {
+  "fr":{
+    "navChapter2":"Chapitre 2","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Fichiers",
+    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Créez les fichiers depuis le terminal, ou collez-les ici puis Enregistrer.",
+    "mFiles":"Fichiers","mReport":"Rapport",
+    "instrHead":"Instructions","instrTitle":"Assembler le pipeline complet",
+    "instrSub":"Dernière étape : relier les deux chapitres. Le pipeline charge le jeu de données du chapitre 1, applique les métriques du chapitre 2 à un lot de réponses, agrège les scores par catégorie et difficulté, puis exporte un rapport JSON et texte.",
+    "progLabel":"Progression","copy":"Copier","copied":"Copié",
+    "s1h":"Étape 1 · Créer le pipeline et l'exécuter",
+    "s1b":"Collez ce bloc dans le <strong>Terminal</strong>. Il écrit <code>pipeline.py</code> dans <code>metrics/</code> : la classe orchestre le chargement du dataset, l'évaluation de chaque réponse, l'agrégation et l'export. Le bloc lance ensuite un premier passage.",
+    "s2h":"Étape 2 · Générer le rapport final",
+    "s2b":"Le générateur réutilise le pipeline et écrit un rapport JSON exploitable (scores par catégorie et difficulté). Collez ce bloc, puis exécutez-le.",
+    "s3h":"Étape 3 · Vérifier les fichiers produits",
+    "s3b":"Inspectez le dossier <code>results/</code> et ouvrez le rapport. Le rapport texte donne un aperçu lisible, le JSON contient les statistiques exploitables par une autre étape (tableau de bord, CI).",
+    "s3b2":"Astuce : tapez <code>check</code> à tout moment pour vérifier la progression du chapitre.",
+    "s4h":"Critères de réussite",
+    "c1":"Le module <code>pipeline.py</code> existe et orchestre chargement, scoring et export.",
+    "c2":"Le script <code>generate_report.py</code> s'exécute sans erreur.",
+    "c3":"Le fichier <code>results/evaluation_report.json</code> est créé avec les statistiques.",
+    "c4":"Le rapport agrège les scores par catégorie et par difficulté.",
+    "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
+    "helpTitle":"Copilote de l'atelier",
+    "helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend pour une aide contextuelle.",
+    "nextHint":"Indice suivant",
+    "hint0":"Commencez par créer pipeline.py via le terminal (Étape 1).",
+    "hint1":"Le pipeline relie deux choses : le dataset (chapitre 1) et les métriques (chapitre 2).",
+    "hint2":"sample_answers fournit une réponse par identifiant du dataset (k8s-eval-01 à 06).",
+    "hint3":"generate_report.py importe pipeline.py : créez d'abord le pipeline (Étape 1).",
+    "hint4":"Après generate_report.py, faites ls results/ puis cat du rapport, et tapez check.",
+    "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — poste de travail Koffi Academy (llm-eval)",
+    "bEnv":"Chapitre 3 — pipeline complet. Dossier de travail : /root/evaluation","bTip":"Astuce : tapez `help` pour la liste des commandes, `check` pour votre progression.",
+    "hHeader":"Commandes disponibles :","hMkdir":"créer un dossier","hWrite":"écrire un fichier (here-document)","hChmod":"rendre le script exécutable","hSource":"activer l'environnement Python","hPyRun":"exécuter un script Python","hCheck":"vérifier la progression","hClear":"nettoyer le terminal","hLs":"lister les fichiers","hCat":"afficher un fichier",
+    "venvOn":"Environnement virtuel activé.","sourceUsage":"source : usage — source venv/bin/activate",
+    "pyNoFile":"python : fichier '{f}' introuvable","pyPipeHint":"Astuce : créez d'abord pipeline.py (Étape 1).","pyGenHint":"Astuce : créez d'abord generate_report.py (Étape 2).",
+    "pyModPipeline":"ModuleNotFoundError: No module named 'pipeline'","loadDs":"Dataset loaded: 6 entries",
+    "checkHeader":"Progression du chapitre 3 :","chkPipeline":"pipeline.py présent (chargement, scoring, export)","chkReport":"generate_report.py exécuté","chkRun":"results/evaluation_report.json généré","chkAll":"Tous les critères sont remplis. Atelier complet — bravo !",
+    "cmdNF":"{c} : commande introuvable. Tapez `help`.","catNF":"cat : {f} : aucun fichier de ce type","lsNF":"ls : impossible d'accéder à '{f}' : aucun fichier de ce type",
+    "tSavedFile":"Fichier enregistré","tDone":"Chapitre 3 terminé — le pipeline complet fonctionne"
+  },
+  "de":{
+    "navChapter2":"Kapitel 2","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Dateien",
+    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Erstellen Sie die Dateien im Terminal oder fügen Sie sie hier ein und speichern.",
+    "mFiles":"Dateien","mReport":"Bericht",
+    "instrHead":"Anleitung","instrTitle":"Die komplette Pipeline zusammenbauen",
+    "instrSub":"Letzter Schritt: die beiden Kapitel verbinden. Die Pipeline lädt das Datenset aus Kapitel 1, wendet die Metriken aus Kapitel 2 auf einen Satz Antworten an, aggregiert die Scores nach Kategorie und Schwierigkeit und exportiert einen JSON- und Text-Bericht.",
+    "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
+    "s1h":"Schritt 1 · Pipeline anlegen und ausführen",
+    "s1b":"Fügen Sie diesen Block im <strong>Terminal</strong> ein. Er schreibt <code>pipeline.py</code> nach <code>metrics/</code>: Die Klasse steuert das Laden des Datensets, die Bewertung jeder Antwort, die Aggregation und den Export. Anschließend startet der Block einen ersten Durchlauf.",
+    "s2h":"Schritt 2 · Den Abschlussbericht erzeugen",
+    "s2b":"Der Generator nutzt die Pipeline und schreibt einen auswertbaren JSON-Bericht (Scores nach Kategorie und Schwierigkeit). Fügen Sie den Block ein und führen Sie ihn aus.",
+    "s3h":"Schritt 3 · Die erzeugten Dateien prüfen",
+    "s3b":"Sehen Sie sich den Ordner <code>results/</code> an und öffnen Sie den Bericht. Der Text-Bericht gibt einen lesbaren Überblick, das JSON enthält die von einer weiteren Stufe (Dashboard, CI) auswertbaren Statistiken.",
+    "s3b2":"Tipp: Tippen Sie jederzeit <code>check</code>, um den Fortschritt des Kapitels zu prüfen.",
+    "s4h":"Erfolgskriterien",
+    "c1":"Das Modul <code>pipeline.py</code> existiert und steuert Laden, Scoring und Export.",
+    "c2":"Das Skript <code>generate_report.py</code> läuft fehlerfrei.",
+    "c3":"Die Datei <code>results/evaluation_report.json</code> wird mit den Statistiken erstellt.",
+    "c4":"Der Bericht aggregiert die Scores nach Kategorie und Schwierigkeit.",
+    "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um Ihren Fortschritt zu prüfen.",
+    "helpTitle":"Lab-Copilot",
+    "helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend für kontextbezogene Hilfe.",
+    "nextHint":"Nächster Hinweis",
+    "hint0":"Erstellen Sie zuerst pipeline.py über das Terminal (Schritt 1).",
+    "hint1":"Die Pipeline verbindet zwei Dinge: das Datenset (Kapitel 1) und die Metriken (Kapitel 2).",
+    "hint2":"sample_answers liefert eine Antwort pro Datensatz-ID (k8s-eval-01 bis 06).",
+    "hint3":"generate_report.py importiert pipeline.py: legen Sie zuerst die Pipeline an (Schritt 1).",
+    "hint4":"Nach generate_report.py: ls results/ und cat des Berichts, dann check tippen.",
+    "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — Koffi-Academy-Arbeitsplatz (llm-eval)",
+    "bEnv":"Kapitel 3 — komplette Pipeline. Arbeitsordner: /root/evaluation","bTip":"Tipp: `help` für die Befehlsliste, `check` für Ihren Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hMkdir":"Ordner anlegen","hWrite":"Datei schreiben (Here-Document)","hChmod":"Skript ausführbar machen","hSource":"Python-Umgebung aktivieren","hPyRun":"Python-Skript ausführen","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren","hLs":"Dateien auflisten","hCat":"Datei anzeigen",
+    "venvOn":"Virtuelle Umgebung aktiviert.","sourceUsage":"source: Verwendung — source venv/bin/activate",
+    "pyNoFile":"python: Datei '{f}' nicht gefunden","pyPipeHint":"Tipp: Erstellen Sie zuerst pipeline.py (Schritt 1).","pyGenHint":"Tipp: Erstellen Sie zuerst generate_report.py (Schritt 2).",
+    "pyModPipeline":"ModuleNotFoundError: No module named 'pipeline'","loadDs":"Dataset loaded: 6 entries",
+    "checkHeader":"Fortschritt Kapitel 3:","chkPipeline":"pipeline.py vorhanden (Laden, Scoring, Export)","chkReport":"generate_report.py ausgeführt","chkRun":"results/evaluation_report.json erzeugt","chkAll":"Alle Kriterien erfüllt. Atelier komplett — bravo!",
+    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","catNF":"cat: {f}: keine solche Datei","lsNF":"ls: Zugriff auf '{f}' nicht möglich: keine solche Datei",
+    "tSavedFile":"Datei gespeichert","tDone":"Kapitel 3 abgeschlossen — die komplette Pipeline läuft"
+  },
+  "en":{
+    "navChapter2":"Chapter 2","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Files",
+    "btnClear":"Clear","btnSave":"Save","phPaste":"Create the files from the terminal, or paste them here then Save.",
+    "mFiles":"Files","mReport":"Report",
+    "instrHead":"Instructions","instrTitle":"Assemble the full pipeline",
+    "instrSub":"Final step: connect both chapters. The pipeline loads the chapter 1 dataset, applies the chapter 2 metrics to a batch of answers, aggregates the scores by category and difficulty, then exports a JSON and text report.",
+    "progLabel":"Progress","copy":"Copy","copied":"Copied",
+    "s1h":"Step 1 · Create the pipeline and run it",
+    "s1b":"Paste this block in the <strong>Terminal</strong>. It writes <code>pipeline.py</code> into <code>metrics/</code>: the class orchestrates dataset loading, scoring each answer, aggregation and export. The block then runs a first pass.",
+    "s2h":"Step 2 · Generate the final report",
+    "s2b":"The generator reuses the pipeline and writes an actionable JSON report (scores by category and difficulty). Paste this block, then run it.",
+    "s3h":"Step 3 · Check the produced files",
+    "s3b":"Inspect the <code>results/</code> folder and open the report. The text report gives a readable overview, the JSON holds the statistics another stage (dashboard, CI) can consume.",
+    "s3b2":"Tip: type <code>check</code> anytime to review the chapter progress.",
+    "s4h":"Success criteria",
+    "c1":"The <code>pipeline.py</code> module exists and orchestrates loading, scoring and export.",
+    "c2":"The <code>generate_report.py</code> script runs without errors.",
+    "c3":"The <code>results/evaluation_report.json</code> file is created with the statistics.",
+    "c4":"The report aggregates scores by category and by difficulty.",
+    "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
+    "helpTitle":"Lab Copilot",
+    "helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend for contextual help.",
+    "nextHint":"Next hint",
+    "hint0":"Start by creating pipeline.py from the terminal (Step 1).",
+    "hint1":"The pipeline connects two things: the dataset (chapter 1) and the metrics (chapter 2).",
+    "hint2":"sample_answers gives one answer per dataset id (k8s-eval-01 to 06).",
+    "hint3":"generate_report.py imports pipeline.py: create the pipeline first (Step 1).",
+    "hint4":"After generate_report.py, run ls results/ then cat the report, and type check.",
+    "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — Koffi Academy workstation (llm-eval)",
+    "bEnv":"Chapter 3 — full pipeline. Working folder: /root/evaluation","bTip":"Tip: type `help` for the command list, `check` for your progress.",
+    "hHeader":"Available commands:","hMkdir":"create a folder","hWrite":"write a file (here-document)","hChmod":"make the script executable","hSource":"activate the Python environment","hPyRun":"run a Python script","hCheck":"check your progress","hClear":"clear the terminal","hLs":"list files","hCat":"show a file",
+    "venvOn":"Virtual environment activated.","sourceUsage":"source: usage — source venv/bin/activate",
+    "pyNoFile":"python: file '{f}' not found","pyPipeHint":"Tip: create pipeline.py first (Step 1).","pyGenHint":"Tip: create generate_report.py first (Step 2).",
+    "pyModPipeline":"ModuleNotFoundError: No module named 'pipeline'","loadDs":"Dataset loaded: 6 entries",
+    "checkHeader":"Chapter 3 progress:","chkPipeline":"pipeline.py present (load, score, export)","chkReport":"generate_report.py ran","chkRun":"results/evaluation_report.json generated","chkAll":"All criteria met. Lab complete — well done!",
+    "cmdNF":"{c}: command not found. Type `help`.","catNF":"cat: {f}: no such file","lsNF":"ls: cannot access '{f}': no such file",
+    "tSavedFile":"File saved","tDone":"Chapter 3 complete — the full pipeline works"
+  }
+};
+
+(function(){
+  "use strict";
+
+  var PIPE = "metrics/pipeline.py";
+  var GEN  = "generate_report.py";
+  var RJSON = "results/evaluation_report.json";
+  var RTXT  = "results/evaluation_report.txt";
+
+  var I = window.I18N;
+  var lang = localStorage.getItem("preferred-lang");
+  if(!I[lang]) lang = "de";
+  function t(key, vars){
+    var s = (I[lang] && I[lang][key]!==undefined) ? I[lang][key] : (I.en[key]!==undefined ? I.en[key] : key);
+    if(vars) Object.keys(vars).forEach(function(k){ s = s.replace(new RegExp("\\{"+k+"\\}","g"), vars[k]); });
+    return s;
+  }
+
+  var FS = {}; FS[PIPE] = ""; FS[GEN] = "";
+  var venvActive = false, reportDone = false;
+  var currentFile = PIPE;
+  var steps = { pipeline:false, report:false, run:false };
+  var hi = 0;
+
+  var out = document.getElementById("terminalOutput");
+  var input = document.getElementById("terminalInput");
+  var termPrompt = document.getElementById("termPrompt");
+  var editor = document.getElementById("fileEditor");
+
+  function esc(v){ return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];}); }
+  function prompt(){ return (venvActive?"(venv) ":"")+"koffi@llm-eval:~$"; }
+  function print(text, cls){ var l=document.createElement("div"); if(cls)l.className=cls; l.innerHTML=esc(text); out.appendChild(l); out.scrollTop=out.scrollHeight; }
+  function toast(msg){ var el=document.getElementById("toast"); el.textContent=msg; el.classList.add("is-on"); clearTimeout(el._tm); el._tm=setTimeout(function(){el.classList.remove("is-on");},2200); }
+
+  function banner(){
+    out.innerHTML="";
+    print(t("bSsh"),"line-muted"); print(t("bUbuntu"),"line-muted"); print(t("bEnv"),"line-muted"); print(t("bTip"),"line-muted"); print("");
+  }
+
+  /* ---------- metric helpers (mirror chapter 2) ---------- */
+  function _toks(s){ return s.toLowerCase().replace(/[^a-z0-9\s-]/g," ").split(/\s+/).filter(Boolean); }
+  function kwMatch(gen, kws){ var g=gen.toLowerCase(); var m=kws.filter(function(k){return g.indexOf(k.toLowerCase())!==-1;}); return kws.length?m.length/kws.length:0; }
+  function semSim(gen, ref){ var a={},b={}; _toks(gen).forEach(function(x){a[x]=1;}); _toks(ref).forEach(function(x){b[x]=1;}); var inter=0; Object.keys(b).forEach(function(x){ if(a[x]) inter++; }); var uni={}; Object.keys(a).forEach(function(x){uni[x]=1;}); Object.keys(b).forEach(function(x){uni[x]=1;}); var j=Object.keys(uni).length?inter/Object.keys(uni).length:0; return Math.max(0,Math.min(1,0.30+j*1.25)); }
+  function lenRatio(gen, ref){ var gl=gen.split(/\s+/).filter(Boolean).length, rl=ref.split(/\s+/).filter(Boolean).length; return rl?gl/rl:0; }
+  function overall(km, ss, ratio){ var ls=Math.max(0,1-Math.abs(1-ratio)*0.5); return km*0.3+ss*0.5+ls*0.2; }
+  function f3(x){ return (Math.round(x*1000)/1000).toFixed(3); }
+
+  var DATASET = [
+    {id:"k8s-eval-01",category:"observability",difficulty:"easy",question:"How can I stream the logs of a running pod in real time?",reference_answer:"Run kubectl logs <pod> -f. The -f flag follows the log output live, much like tail -f.",expected_keywords:["kubectl","logs","-f"]},
+    {id:"k8s-eval-02",category:"troubleshooting",difficulty:"medium",question:"Why would a pod stay stuck in the Pending phase?",reference_answer:"A pod stays Pending when the scheduler cannot place it: not enough memory or CPU on any node, an unmet nodeSelector, or taints without matching tolerations.",expected_keywords:["scheduler","memory","taints"]},
+    {id:"k8s-eval-03",category:"operations",difficulty:"easy",question:"How do I change a deployment to run four replicas?",reference_answer:"Use kubectl scale deployment <name> --replicas=4, or edit the replicas field in the manifest and reapply it.",expected_keywords:["kubectl","scale","replicas"]},
+    {id:"k8s-eval-04",category:"concepts",difficulty:"medium",question:"When should I pick a StatefulSet instead of a Deployment?",reference_answer:"Pick a StatefulSet when pods need stable identities and persistent storage, such as databases. Use a Deployment for stateless, interchangeable replicas.",expected_keywords:["StatefulSet","persistent","stateless"]},
+    {id:"k8s-eval-05",category:"security",difficulty:"medium",question:"How do I store a database password as a Kubernetes secret?",reference_answer:"Create it with kubectl create secret generic db --from-literal=password=... then mount it as an env var or volume so the value never lives in the manifest.",expected_keywords:["kubectl","secret","from-literal"]},
+    {id:"k8s-eval-06",category:"operations",difficulty:"medium",question:"How can I roll back a deployment after a bad release?",reference_answer:"Run kubectl rollout undo deployment/<name> to revert to the previous revision, and kubectl rollout history to inspect what is available.",expected_keywords:["kubectl","rollout","undo"]}
+  ];
+  var ANSWERS = {
+    "k8s-eval-01":"Use kubectl logs my-pod -f to stream a pod's logs in real time.",
+    "k8s-eval-02":"A pod stays Pending when the scheduler cannot place it, often due to insufficient memory or taints on the nodes.",
+    "k8s-eval-03":"Scale it with kubectl scale deployment myapp --replicas=4.",
+    "k8s-eval-04":"Use a StatefulSet for stateful apps needing persistent storage and stable identities; a Deployment suits stateless replicas.",
+    "k8s-eval-05":"Create it with kubectl create secret generic db --from-literal=password=secret.",
+    "k8s-eval-06":"Roll back with kubectl rollout undo deployment/myapp to restore the previous revision."
+  };
+
+  function compute(){
+    var results=[], byCat={}, byDif={}, scores=[];
+    DATASET.forEach(function(it){
+      var gen=ANSWERS[it.id]; if(!gen) return;
+      var km=kwMatch(gen,it.expected_keywords), ss=semSim(gen,it.reference_answer), r=lenRatio(gen,it.reference_answer), ov=overall(km,ss,r);
+      results.push({id:it.id,question:it.question,category:it.category,difficulty:it.difficulty,km:km,ss:ss,ov:ov});
+      scores.push(ov);
+      (byCat[it.category]=byCat[it.category]||{c:0,s:0}); byCat[it.category].c++; byCat[it.category].s+=ov;
+      (byDif[it.difficulty]=byDif[it.difficulty]||{c:0,s:0}); byDif[it.difficulty].c++; byDif[it.difficulty].s+=ov;
+    });
+    var avg=scores.length?scores.reduce(function(a,b){return a+b;},0)/scores.length:0;
+    return {results:results,byCat:byCat,byDif:byDif,avg:avg,total:DATASET.length,evaluated:results.length};
+  }
+
+  function printSummary(s){
+    print(""); print("============================================================");
+    print("EVALUATION SUMMARY","line-ok");
+    print("============================================================");
+    print("Evaluated   : " + s.evaluated + " / " + s.total);
+    print("Average     : " + f3(s.avg));
+    print(""); print("By category");
+    Object.keys(s.byCat).forEach(function(c){ var d=s.byCat[c]; print("  " + pad(c,14) + d.c + " entries  avg " + f3(d.s/d.c)); });
+    print(""); print("By difficulty");
+    Object.keys(s.byDif).forEach(function(c){ var d=s.byDif[c]; print("  " + pad(c,14) + d.c + " entries  avg " + f3(d.s/d.c)); });
+  }
+  function pad(str,n){ str=String(str); while(str.length<n) str+=" "; return str; }
+
+  function buildReports(s){
+    var txt=["============================================================","EVALUATION REPORT","============================================================",
+      "Generated   : 2026-06-20 07:30:00","Dataset     : /root/evaluation/datasets/kubernetes_eval.json","Average     : "+f3(s.avg),""];
+    s.results.forEach(function(r){ txt.push(r.id+"  score "+f3(r.ov)+"  ("+r.category+")"); });
+    FS[RTXT]=txt.join("\n")+"\n";
+    var byCat={}; Object.keys(s.byCat).forEach(function(c){ var d=s.byCat[c]; byCat[c]={count:d.c,average:Math.round(d.s/d.c*1000)/1000}; });
+    var byDif={}; Object.keys(s.byDif).forEach(function(c){ var d=s.byDif[c]; byDif[c]={count:d.c,average:Math.round(d.s/d.c*1000)/1000}; });
+    var json={timestamp:"2026-06-20T07:30:00",dataset_path:"/root/evaluation/datasets/kubernetes_eval.json",
+      statistics:{total_questions:s.evaluated,average_score:Math.round(s.avg*1000)/1000,by_category:byCat,by_difficulty:byDif}};
+    FS[RJSON]=JSON.stringify(json,null,2)+"\n";
+    FS["results/evaluation_results.json"]=JSON.stringify({summary:{average_score:json.statistics.average_score},results:s.results.length},null,2)+"\n";
+    FS["results/pipeline_results.json"]=FS["results/evaluation_results.json"];
+    FS["results/pipeline_report.txt"]=FS[RTXT];
+  }
+
+  /* ---------- progress ---------- */
+  function hasPipeline(){ var s=FS[PIPE]||""; return /class\s+EvaluationPipeline/.test(s) && /def\s+run/.test(s); }
+  function hasGen(){ var s=FS[GEN]||""; return /def\s+generate_report/.test(s); }
+  function refreshMetrics(){
+    var n=0; if((FS[PIPE]||"").trim()) n++; if((FS[GEN]||"").trim()) n++;
+    document.getElementById("mFiles").textContent = n+"/2";
+    document.getElementById("mReport").textContent = reportDone ? "OK" : "—";
+  }
+  function setStep(name, done){
+    if(steps[name]===done) return; steps[name]=done;
+    var el=document.querySelector('.step[data-step="'+name+'"]'); if(el) el.classList.toggle("is-done",done);
+    var total=0; ["pipeline","report","run"].forEach(function(k){ if(steps[k]) total++; });
+    var all=total===3; var d=document.querySelector('.step[data-step="done"]'); if(d) d.classList.toggle("is-done",all);
+    var count=total+(all?1:0);
+    document.getElementById("progressText").textContent=count+" / 4";
+    document.getElementById("progressFill").style.width=(count/4*100)+"%";
+    if(all) toast(t("tDone"));
+  }
+  function evalSteps(){ if(hasPipeline()) setStep("pipeline",true); if(reportDone) setStep("run",true); }
+
+  /* ---------- files ---------- */
+  function norm(path){ return path ? path.trim().replace(/^\.\//,"").replace(/^\/root\/evaluation\//,"").replace(/\/+$/,"") : ""; }
+  function resolve(path){
+    if(!path) return null; var p=norm(path);
+    if(p===PIPE || p==="pipeline.py" || p==="metrics/pipeline.py") return PIPE;
+    if(p===GEN || p==="generate_report.py") return GEN;
+    if(FS[p]!==undefined) return p;
+    return null;
+  }
+  function writeFile(path, body){
+    var key=resolve(path)||norm(path);
+    FS[key]=(body.charAt(body.length-1)==="\n")?body:body+"\n";
+    if(key===PIPE){ refreshMetrics(); evalSteps(); if(currentFile===PIPE) editor.value=FS[PIPE]; }
+    else if(key===GEN){ refreshMetrics(); if(currentFile===GEN) editor.value=FS[GEN]; }
+  }
+  function pipeExists(){ return (FS[PIPE]||"").trim()!==""; }
+  function genExists(){ return (FS[GEN]||"").trim()!==""; }
+
+  /* ---------- python ---------- */
+  function runPipeline(){
+    if(!pipeExists()){ print(t("pyNoFile",{f:"pipeline.py"}),"line-error"); print(t("pyPipeHint"),"line-warn"); return; }
+    var s=compute();
+    print(t("loadDs"),"line-ok");
+    printSummary(s);
+    buildReports(s);
+    print("Results saved to /root/evaluation/results/pipeline_results.json","line-muted");
+    print("Report saved to /root/evaluation/results/pipeline_report.txt","line-muted");
+    print(""); print("Pipeline run complete.","line-ok");
+    setStep("pipeline",true);
+  }
+  function runGenerate(){
+    if(!genExists()){ print(t("pyNoFile",{f:"generate_report.py"}),"line-error"); print(t("pyGenHint"),"line-warn"); return; }
+    if(!pipeExists()){ print("Traceback (most recent call last):","line-error"); print(t("pyModPipeline"),"line-error"); print(t("pyPipeHint"),"line-warn"); return; }
+    var s=compute();
+    print("GENERATING EVALUATION REPORT","line-ok");
+    print("============================================================");
+    print(t("loadDs"),"line-muted");
+    printSummary(s);
+    buildReports(s);
+    setStep("report",true);
+    print(""); print("JSON report saved to /root/evaluation/results/evaluation_report.json","line-ok");
+    print("  total_questions : " + s.evaluated);
+    print("  average_score   : " + f3(s.avg));
+    print("  categories      : " + Object.keys(s.byCat).join(", "));
+    reportDone=true; refreshMetrics(); evalSteps();
+  }
+
+  /* ---------- command handler ---------- */
+  function handle(raw){
+    var cmd=raw.trim(); if(!cmd) return;
+    var parts=cmd.split(/\s+/); var head=parts[0];
+    if(head==="help"){
+      print(t("hHeader"),"line-muted");
+      print("  mkdir -p <dir>                        " + t("hMkdir"));
+      print("  cat > <file> << 'EOF' ... EOF         " + t("hWrite"));
+      print("  chmod +x <file>                       " + t("hChmod"));
+      print("  source venv/bin/activate              " + t("hSource"));
+      print("  python <file>                         " + t("hPyRun"));
+      print("  ls [dir]   ·   cat <file>             " + t("hLs"));
+      print("  check   ·   clear                     " + t("hCheck"));
+      return;
+    }
+    if(head==="clear"){ out.innerHTML=""; return; }
+    if(head==="pwd"){ print("/root/evaluation"); return; }
+    if(head==="whoami"){ print("root"); return; }
+    if(head==="mkdir"){ return; }
+    if(head==="chmod"){ return; }
+    if(head==="echo"){ print(cmd.slice(4).trim().replace(/^["']|["']$/g,"")); return; }
+    if(head==="ls"){
+      var args=parts.slice(1).filter(function(a){ return a.charAt(0)!=="-"; });
+      var d=norm(args[0]);
+      if(!args[0] || d==="" || d==="."){ print("datasets   metrics   results   generate_report.py   venv"); return; }
+      if(d==="metrics"){ var m=["evaluator.py","test_metrics.py"]; if(pipeExists()) m.push("pipeline.py"); print(m.join("   ")); return; }
+      if(d==="datasets"){ print("kubernetes_eval.json   validate_dataset.py"); return; }
+      if(d==="results"){
+        if(!reportDone){ print("(vide)","line-muted"); return; }
+        print("evaluation_report.json   evaluation_report.txt   evaluation_results.json   pipeline_results.json   pipeline_report.txt"); return;
+      }
+      if(d==="venv"){ print("bin   lib   pyvenv.cfg"); return; }
+      print(t("lsNF",{f:args[0]}),"line-error"); return;
+    }
+    if(head==="cat"){
+      var f=resolve(parts[1]);
+      if(f && FS[f]!==undefined && FS[f]!==""){ FS[f].split("\n").forEach(function(l){ print(l); }); }
+      else print(t("catNF",{f:parts[1]||""}),"line-error");
+      return;
+    }
+    if(head==="source"){
+      if(/activate/.test(cmd)){ venvActive=true; termPrompt.textContent=prompt(); print(t("venvOn"),"line-muted"); }
+      else print(t("sourceUsage"),"line-error");
+      return;
+    }
+    if(head==="python" || head==="python3"){
+      var a1=parts[1]||"";
+      if(/generate_report\.py$/.test(a1) || resolve(a1)===GEN){ runGenerate(); return; }
+      if(/pipeline\.py$/.test(a1) || resolve(a1)===PIPE){ runPipeline(); return; }
+      print(t("pyNoFile",{f:a1}),"line-error"); return;
+    }
+    if(head==="check"){
+      evalSteps();
+      print(t("checkHeader"),"line-muted");
+      print((steps.pipeline?"  [x] ":"  [ ] ")+t("chkPipeline"), steps.pipeline?"line-ok":"line-warn");
+      print((steps.report  ?"  [x] ":"  [ ] ")+t("chkReport"),   steps.report?"line-ok":"line-warn");
+      print((steps.run     ?"  [x] ":"  [ ] ")+t("chkRun"),      steps.run?"line-ok":"line-warn");
+      if(steps.pipeline&&steps.report&&steps.run) print(t("chkAll"),"line-ok");
+      return;
+    }
+    print(t("cmdNF",{c:head}),"line-error");
+  }
+
+  /* ---------- pasted blocks + here-document ---------- */
+  function runScript(text){
+    var lines=text.replace(/\r/g,"").split("\n"); var i=0;
+    while(i<lines.length){
+      var line=lines[i];
+      var hd=line.match(/^\s*cat\s*>\s*(\S+)\s*<<\s*['"]?([A-Za-z0-9_]+)['"]?\s*$/);
+      if(hd){
+        print(prompt()+" "+line,"line-cmd");
+        var path=hd[1], delim=hd[2], body=[]; i++;
+        while(i<lines.length && lines[i].trim()!==delim){ body.push(lines[i]); i++; }
+        i++; writeFile(path, body.join("\n")); continue;
+      }
+      if(line.trim()===""){ i++; continue; }
+      print(prompt()+" "+line,"line-cmd"); handle(line); i++;
+    }
+  }
+  document.getElementById("terminalForm").addEventListener("submit", function(e){ e.preventDefault(); var v=input.value; print(prompt()+" "+v,"line-cmd"); input.value=""; handle(v); });
+  input.addEventListener("paste", function(e){ var txt=(e.clipboardData||window.clipboardData).getData("text"); if(txt && txt.indexOf("\n")!==-1){ e.preventDefault(); runScript(txt); input.value=""; } });
+
+  /* ---------- tabs / editor / accordion / help ---------- */
+  document.querySelectorAll(".tab").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".tab").forEach(function(b){ b.classList.remove("is-active"); });
+      btn.classList.add("is-active");
+      var tb=btn.getAttribute("data-tab");
+      document.getElementById("terminalView").classList.toggle("is-active", tb==="terminal");
+      document.getElementById("datasetsView").classList.toggle("is-active", tb==="datasets");
+      if(tb==="terminal") input.focus();
+    });
+  });
+  function selectFile(path){ currentFile=path; editor.value=FS[path]; document.getElementById("fileLabel").textContent=path; document.querySelectorAll(".filetab").forEach(function(b){ b.classList.toggle("is-active", b.getAttribute("data-file")===path); }); }
+  document.querySelectorAll(".filetab").forEach(function(b){ b.addEventListener("click", function(){ FS[currentFile]=editor.value; selectFile(b.getAttribute("data-file")); }); });
+  document.getElementById("saveFile").addEventListener("click", function(){ FS[currentFile]=editor.value; refreshMetrics(); evalSteps(); toast(t("tSavedFile")); });
+  document.getElementById("resetFile").addEventListener("click", function(){ editor.value=""; FS[currentFile]=""; refreshMetrics(); });
+  document.getElementById("reloadBtn").addEventListener("click", function(){ banner(); input.focus(); });
+  document.querySelectorAll(".step__top").forEach(function(top){ top.addEventListener("click", function(){ top.parentElement.classList.toggle("is-open"); }); });
+
+  var instr=document.getElementById("instructions"), fab=document.getElementById("instFab");
+  function hideInstr(h){ instr.classList.toggle("is-hidden",h); fab.classList.toggle("is-gone",!h); }
+  document.getElementById("toggleInstructions").addEventListener("click", function(){ hideInstr(!instr.classList.contains("is-hidden")); });
+  document.getElementById("closeInstructions").addEventListener("click", function(){ hideInstr(true); });
+  fab.addEventListener("click", function(){ hideInstr(false); });
+  var help=document.getElementById("helpPanel");
+  document.getElementById("openHelp").addEventListener("click", function(){ help.classList.add("is-open"); });
+  document.getElementById("closeHelp").addEventListener("click", function(){ help.classList.remove("is-open"); });
+  document.getElementById("nextHint").addEventListener("click", function(){ hi=(hi+1)%5; document.getElementById("hintText").textContent=t("hint"+hi); });
+
+  document.querySelectorAll(".copybtn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var pre=btn.parentElement.querySelector(".codebox"); var text=pre?pre.textContent:"";
+      function done(){ btn.textContent=t("copied"); btn.classList.add("is-copied"); setTimeout(function(){ btn.textContent=t("copy"); btn.classList.remove("is-copied"); },1400); }
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done,done); }
+      else { var ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(e){} ta.remove(); done(); }
+    });
+  });
+
+  var remaining=55*60, tEl=document.getElementById("labTimer");
+  setInterval(function(){ if(remaining>0) remaining--; var m=Math.floor(remaining/60), s=remaining%60; tEl.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s; },1000);
+
+  function applyLang(l){
+    if(!I[l]) return; lang=l; localStorage.setItem("preferred-lang",l); document.documentElement.lang=l; var d=I[l];
+    document.querySelectorAll("[data-i18n]").forEach(function(el){ var k=el.getAttribute("data-i18n"); if(d[k]!==undefined) el.innerHTML=d[k]; });
+    document.querySelectorAll("[data-i18n-ph]").forEach(function(el){ var k=el.getAttribute("data-i18n-ph"); if(d[k]!==undefined) el.setAttribute("placeholder",d[k]); });
+    document.querySelectorAll("[data-i18n-title]").forEach(function(el){ var k=el.getAttribute("data-i18n-title"); if(d[k]!==undefined) el.setAttribute("title",d[k]); });
+    document.querySelectorAll("[data-i18n-aria]").forEach(function(el){ var k=el.getAttribute("data-i18n-aria"); if(d[k]!==undefined) el.setAttribute("aria-label",d[k]); });
+    document.getElementById("hintText").textContent=t("hint"+hi);
+  }
+  window.setLabWorkspaceLang = applyLang;
+
+  applyLang(lang); banner(); selectFile(PIPE); refreshMetrics(); input.focus();
+})();
+
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(l){if(window.setLabWorkspaceLang)window.setLabWorkspaceLang(l);klSync(l);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>
