@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Implementing Cilium Network Policies · Chapitre 2 | Atelier — Koffi Academy</title>
-  <meta name="description" content="Atelier Koffi Academy — Cilium, Chapitre 2 : implémentez une politique deny-all par défaut comme baseline de sécurité, et vérifiez que le trafic est bloqué.">
+  <title>Implementing Cilium Network Policies · Chapitre 3 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Cilium, Chapitre 3 : créez des politiques d'autorisation (CiliumNetworkPolicy) pour ouvrir frontend → backend tout en gardant l'isolation.">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -103,7 +103,7 @@ button{cursor:pointer}
 .metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .metric{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:10px;padding:12px}
 .metric__k{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.metric__v{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:#fff;margin-top:3px}
+.metric__v{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#fff;margin-top:3px}
 .file-list{display:grid;gap:8px}
 .file-pill{display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.06);border-radius:10px;padding:10px 11px;color:var(--soft);font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace}
 .file-pill i{color:var(--amber)}
@@ -184,16 +184,15 @@ button{cursor:pointer}
         <span class="brand__k">Koffi Academy</span>
         <span class="brand__sep">|</span>
         <span class="brand__title">Implementing Cilium Network Policies</span>
-        <span class="chip-ch">CH.2</span>
+        <span class="chip-ch">CH.3</span>
       </span>
     </a>
     <div class="labbar__spacer"></div>
     <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">45:00</span></span>
     <nav class="actions" aria-label="Lab actions">
-      <a class="topbtn" href="../laboratoire-cilium-netpol-lab"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter1">Chapitre 1</span></a>
+      <a class="topbtn" href="../laboratoire-cilium-netpol-lab-2"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter2">Chapitre 2</span></a>
       <a class="topbtn" href="../laboratoire-cilium-netpol"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
       <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
-      <a class="topbtn" href="../laboratoire-cilium-netpol-lab-3"><span data-i18n="navChapter3">Chapitre 3</span> <i class="fa-solid fa-arrow-right-long"></i></a>
       <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
       <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
       <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
@@ -218,10 +217,10 @@ button{cursor:pointer}
 
         <section class="view datasets-view" id="datasetsView" role="tabpanel">
           <div class="filebar">
-            <button type="button" class="filetab is-active" data-file="policies/default-deny.yaml">default-deny.yaml</button>
+            <button type="button" class="filetab is-active" data-file="policies/allow-frontend-to-backend.yaml">allow-frontend-to-backend.yaml</button>
           </div>
           <div class="runbar">
-            <div class="runbar__title"><i class="fa-solid fa-file-shield"></i><span id="fileLabel">/root/cilium/policies/default-deny.yaml</span></div>
+            <div class="runbar__title"><i class="fa-solid fa-file-shield"></i><span id="fileLabel">/root/cilium/policies/allow-frontend-to-backend.yaml</span></div>
             <div class="runbar__actions">
               <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
               <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
@@ -231,12 +230,12 @@ button{cursor:pointer}
             <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Collez le manifeste fourni dans les instructions, puis cliquez sur Enregistrer."></textarea>
             <aside class="dataset-side">
               <div class="metric-grid">
-                <div class="metric"><span class="metric__k" data-i18n="mNs">Namespace</span><div class="metric__v">policy-demo</div></div>
-                <div class="metric"><span class="metric__k" data-i18n="mPolicy">Policy</span><div class="metric__v" id="mPolicy">—</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mAllow">Allow policy</span><div class="metric__v" id="mAllow">—</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mTraffic">FE → BE</span><div class="metric__v" id="mTraffic" data-i18n="tBlocked">bloqué</div></div>
               </div>
               <div class="file-list">
-                <div class="file-pill"><i class="fa-solid fa-cube"></i>frontend, backend (Running)</div>
-                <div class="file-pill"><i class="fa-solid fa-file-code"></i>policies/default-deny.yaml</div>
+                <div class="file-pill"><i class="fa-solid fa-shield-halved"></i>default-deny-ingress (actif)</div>
+                <div class="file-pill"><i class="fa-solid fa-file-code"></i>allow-frontend-to-backend.yaml</div>
                 <div class="file-pill"><i class="fa-solid fa-dharmachakra"></i>kubectl · cilium · hubble</div>
               </div>
             </aside>
@@ -251,64 +250,73 @@ button{cursor:pointer}
         <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
       </div>
       <div class="instructions__body">
-        <h1 class="lab-title" data-i18n="instrTitle">Mettre en place une politique deny-all</h1>
-        <p class="lab-sub" data-i18n="instrSub">Dans cette tâche, vous posez une politique « default-deny » comme baseline de sécurité : on vérifie d'abord que le trafic passe, puis on bloque tout l'ingress par défaut, et on confirme que la communication est coupée.</p>
+        <h1 class="lab-title" data-i18n="instrTitle">Créer une politique d'autorisation</h1>
+        <p class="lab-sub" data-i18n="instrSub">La baseline default-deny du chapitre 2 bloque tout. Vous allez maintenant rouvrir sélectivement frontend → backend (port 80) avec une CiliumNetworkPolicy, vérifier que ce flux passe, et confirmer que les autres pods restent bloqués.</p>
 
         <div class="progress-card">
           <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="step is-open" data-step="before">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Tester la connectivité avant la politique</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step is-open" data-step="allow">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Créer et appliquer la politique d'autorisation</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s1b">Vérifiez d'abord que les pods communiquent. Récupérez l'IP du pod backend dans le <strong>Terminal</strong> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">BACKEND_IP=$(kubectl get pod -n policy-demo -l app=backend -o jsonpath='{.items[0].status.podIP}')
-echo "Backend IP: $BACKEND_IP"</pre></div>
-            <span data-i18n="s1b2">Testez la connexion du frontend vers le backend :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http://$BACKEND_IP</pre></div>
-            <span data-i18n="s1b3">Vous devez voir la page d'accueil nginx : la connectivité fonctionne.</span>
-          </div>
-        </article>
-
-        <article class="step" data-step="deny">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Créer la politique default-deny</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
-          <div class="step__body">
-            <span data-i18n="s2b">Créez une politique qui refuse tout l'ingress par défaut (NetworkPolicy Kubernetes standard, appliquée par Cilium). Le plus simple : créez le fichier directement dans le <strong>Terminal</strong> via un here-document (ou collez le manifeste dans l'onglet <strong>Policies</strong> sous <code>default-deny.yaml</code>) :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcDeny">cat > /root/cilium/policies/default-deny.yaml &lt;&lt; 'EOF'
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
+            <span data-i18n="s1b">Créez une <code>CiliumNetworkPolicy</code> qui autorise frontend → backend sur le port 80/TCP. Dans le <strong>Terminal</strong> (here-document) ou l'onglet <strong>Policies</strong> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcAllow">cat > /root/cilium/policies/allow-frontend-to-backend.yaml &lt;&lt; 'EOF'
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
 metadata:
-  name: default-deny-ingress
+  name: allow-frontend-to-backend
   namespace: policy-demo
 spec:
-  podSelector: {}
-  policyTypes:
-  - Ingress
+  endpointSelector:
+    matchLabels:
+      app: backend
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: frontend
+    toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
 EOF</pre></div>
-            <div class="note" data-i18n="s2note">Note : un <code>podSelector</code> vide sélectionne tous les pods du namespace, et déclarer <code>Ingress</code> sans règle crée une baseline « tout refuser ». Cilium l'applique, et des règles d'autorisation (CiliumNetworkPolicy) pourront ensuite ouvrir le trafic voulu.</div>
-            <span data-i18n="s2apply">Appliquez la politique dans le <strong>Terminal</strong> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/cilium/policies/default-deny.yaml</pre></div>
+            <div class="note" data-i18n="s1note">CiliumNetworkPolicy (API <code>cilium.io/v2</code>) est plus puissante qu'une NetworkPolicy standard : identités par labels, filtrage L7 et application eBPF. Ici, <code>endpointSelector</code> cible le backend, <code>fromEndpoints</code> autorise le frontend, <code>toPorts</code> limite au port 80/TCP.</div>
+            <span data-i18n="s1apply">Appliquez la politique dans le <strong>Terminal</strong> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/cilium/policies/allow-frontend-to-backend.yaml</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="verify">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Vérifier que la politique est appliquée</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="allowed">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Tester le trafic autorisé</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s3b">Vérifiez que la politique existe dans le <strong>Terminal</strong> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl get networkpolicies -n policy-demo</pre></div>
+            <span data-i18n="s2b">Récupérez l'IP du backend et testez la connexion depuis le frontend (maintenant autorisée) :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">BACKEND_IP=$(kubectl get pod -n policy-demo -l app=backend -o jsonpath='{.items[0].status.podIP}')
+kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http://$BACKEND_IP</pre></div>
+            <span data-i18n="s2b2">Vous devez voir la page nginx : le flux frontend → backend est rétabli.</span>
+            <span data-i18n="s2b3">La politique est précise (port 80 uniquement) : un autre port reste bloqué :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http://$BACKEND_IP:8080 || echo "Port 8080 blocked as expected"</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="after">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Tester la connectivité après la politique</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="blocked">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Vérifier que les autres trafics sont bloqués</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s4b">Testez que le trafic est maintenant bloqué :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http://$BACKEND_IP || echo "Connection blocked as expected"</pre></div>
-            <span data-i18n="s4b2">La connexion doit expirer ou échouer : la baseline default-deny fonctionne.</span>
-            <span data-i18n="s4b3">Vérifications additionnelles : l'ingress est bloqué dans les deux sens, mais le trafic sortant (egress) reste autorisé :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl exec -n policy-demo deploy/backend -- curl -s --connect-timeout 5 http://10.0.0.28 || echo "Backend cannot reach frontend"
-kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http://google.com || echo "Outbound blocked?"</pre></div>
+            <span data-i18n="s3b">Créez un pod de test (sans le label <code>app: frontend</code>) et attendez qu'il soit prêt :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl run test-pod -n policy-demo --image=curlimages/curl:8.11.1 --restart=Never --command -- sleep 3600
+kubectl wait --for=condition=Ready pod/test-pod -n policy-demo --timeout=60s</pre></div>
+            <span data-i18n="s3b2">Testez depuis ce pod : il n'a pas de règle d'autorisation, donc le trafic est bloqué :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl exec -n policy-demo test-pod -- curl -s --connect-timeout 5 http://$BACKEND_IP || echo "Connection blocked as expected"</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="list">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Lister et inspecter les politiques</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s4b">Listez les politiques (standard + Cilium), puis inspectez la politique d'autorisation :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl get networkpolicies -n policy-demo &amp;&amp; echo "---" &amp;&amp; kubectl get ciliumnetworkpolicies -n policy-demo</pre></div>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl describe ciliumnetworkpolicy allow-frontend-to-backend -n policy-demo</pre></div>
+            <span data-i18n="s4b2">Dans la sortie de <code>describe</code>, <code>Enforcing: true</code> confirme que la politique est activement appliquée.</span>
           </div>
         </article>
 
@@ -316,19 +324,11 @@ kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http:
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <ul class="crit">
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Connectivité initiale vérifiée (frontend → backend).</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Politique default-deny appliquée.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Le trafic entre pods est bloqué.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Politique d'autorisation créée (allow-frontend-to-backend).</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Le frontend atteint le backend (port 80).</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Les autres pods (test-pod) restent bloqués.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">La politique est listée et activement appliquée.</span></li>
             </ul>
-          </div>
-        </article>
-
-        <article class="step" data-step="trouble">
-          <div class="step__top"><span class="step__check" style="background:transparent;border-color:rgba(255,206,115,.4);color:var(--amber)"><i class="fa-solid fa-wrench"></i></span><h3 data-i18n="trH">Dépannage</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
-          <div class="step__body">
-            <span data-i18n="trB">Si le trafic n'est pas bloqué, confirmez que la politique existe et inspectez-la :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl describe networkpolicy default-deny-ingress -n policy-demo</pre></div>
-            <span data-i18n="trB2">Vérifiez aussi que <code>$BACKEND_IP</code> est bien défini (Étape 1) avant de retester.</span>
           </div>
         </article>
       </div>
@@ -347,7 +347,7 @@ kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http:
   <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
   <div class="help-body">
     <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend pour une aide contextuelle.</p>
-    <div class="hint" id="hintText" data-i18n="hint0">Commencez par récupérer l'IP du backend, puis testez la connexion (Étape 1).</div>
+    <div class="hint" id="hintText" data-i18n="hint0">Commencez par créer puis appliquer la CiliumNetworkPolicy (Étape 1).</div>
     <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
   </div>
 </section>
@@ -357,137 +357,134 @@ kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http:
 <script>
 window.I18N = {
   "fr":{
-    "navChapter1":"Chapitre 1","navChapter3":"Chapitre 3","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "navChapter2":"Chapitre 2","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
     "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Policies",
     "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Collez le manifeste fourni dans les instructions, puis cliquez sur Enregistrer.",
-    "mNs":"Namespace","mPolicy":"Policy",
-    "instrHead":"Instructions","instrTitle":"Mettre en place une politique deny-all",
-    "instrSub":"Dans cette tâche, vous posez une politique « default-deny » comme baseline de sécurité : on vérifie d'abord que le trafic passe, puis on bloque tout l'ingress par défaut, et on confirme que la communication est coupée.",
+    "mAllow":"Allow policy","mTraffic":"FE → BE","tBlocked":"bloqué","tAllowed":"autorisé",
+    "instrHead":"Instructions","instrTitle":"Créer une politique d'autorisation",
+    "instrSub":"La baseline default-deny du chapitre 2 bloque tout. Vous allez maintenant rouvrir sélectivement frontend → backend (port 80) avec une CiliumNetworkPolicy, vérifier que ce flux passe, et confirmer que les autres pods restent bloqués.",
     "progLabel":"Progression","copy":"Copier","copied":"Copié",
-    "s1h":"Étape 1 · Tester la connectivité avant la politique",
-    "s1b":"Vérifiez d'abord que les pods communiquent. Récupérez l'IP du pod backend dans le <strong>Terminal</strong> :",
-    "s1b2":"Testez la connexion du frontend vers le backend :",
-    "s1b3":"Vous devez voir la page d'accueil nginx : la connectivité fonctionne.",
-    "s2h":"Étape 2 · Créer la politique default-deny",
-    "s2b":"Créez une politique qui refuse tout l'ingress par défaut (NetworkPolicy Kubernetes standard, appliquée par Cilium). Le plus simple : créez le fichier directement dans le <strong>Terminal</strong> via un here-document (ou collez le manifeste dans l'onglet <strong>Policies</strong> sous <code>default-deny.yaml</code>) :",
-    "s2note":"Note : un <code>podSelector</code> vide sélectionne tous les pods du namespace, et déclarer <code>Ingress</code> sans règle crée une baseline « tout refuser ». Cilium l'applique, et des règles d'autorisation (CiliumNetworkPolicy) pourront ensuite ouvrir le trafic voulu.",
-    "s2apply":"Appliquez la politique dans le <strong>Terminal</strong> :",
-    "s3h":"Étape 3 · Vérifier que la politique est appliquée",
-    "s3b":"Vérifiez que la politique existe dans le <strong>Terminal</strong> :",
-    "s4h":"Étape 4 · Tester la connectivité après la politique",
-    "s4b":"Testez que le trafic est maintenant bloqué :",
-    "s4b2":"La connexion doit expirer ou échouer : la baseline default-deny fonctionne.",
-    "s4b3":"Vérifications additionnelles : l'ingress est bloqué dans les deux sens, mais le trafic sortant (egress) reste autorisé :",
+    "s1h":"Étape 1 · Créer et appliquer la politique d'autorisation",
+    "s1b":"Créez une <code>CiliumNetworkPolicy</code> qui autorise frontend → backend sur le port 80/TCP. Dans le <strong>Terminal</strong> (here-document) ou l'onglet <strong>Policies</strong> :",
+    "s1note":"CiliumNetworkPolicy (API <code>cilium.io/v2</code>) est plus puissante qu'une NetworkPolicy standard : identités par labels, filtrage L7 et application eBPF. Ici, <code>endpointSelector</code> cible le backend, <code>fromEndpoints</code> autorise le frontend, <code>toPorts</code> limite au port 80/TCP.",
+    "s1apply":"Appliquez la politique dans le <strong>Terminal</strong> :",
+    "s2h":"Étape 2 · Tester le trafic autorisé",
+    "s2b":"Récupérez l'IP du backend et testez la connexion depuis le frontend (maintenant autorisée) :",
+    "s2b2":"Vous devez voir la page nginx : le flux frontend → backend est rétabli.",
+    "s2b3":"La politique est précise (port 80 uniquement) : un autre port reste bloqué :",
+    "s3h":"Étape 3 · Vérifier que les autres trafics sont bloqués",
+    "s3b":"Créez un pod de test (sans le label <code>app: frontend</code>) et attendez qu'il soit prêt :",
+    "s3b2":"Testez depuis ce pod : il n'a pas de règle d'autorisation, donc le trafic est bloqué :",
+    "s4h":"Étape 4 · Lister et inspecter les politiques",
+    "s4b":"Listez les politiques (standard + Cilium), puis inspectez la politique d'autorisation :",
+    "s4b2":"Dans la sortie de <code>describe</code>, <code>Enforcing: true</code> confirme que la politique est activement appliquée.",
     "critH":"Critères de réussite",
-    "c1":"Connectivité initiale vérifiée (frontend → backend).","c2":"Politique default-deny appliquée.","c3":"Le trafic entre pods est bloqué.",
-    "trH":"Dépannage","trB":"Si le trafic n'est pas bloqué, confirmez que la politique existe et inspectez-la :","trB2":"Vérifiez aussi que <code>$BACKEND_IP</code> est bien défini (Étape 1) avant de retester.",
+    "c1":"Politique d'autorisation créée (allow-frontend-to-backend).","c2":"Le frontend atteint le backend (port 80).","c3":"Les autres pods (test-pod) restent bloqués.","c4":"La politique est listée et activement appliquée.",
     "skip":"Ignorer","check":"Vérifier",
     "helpTitle":"Copilote de l'atelier",
     "helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend pour une aide contextuelle.",
     "nextHint":"Indice suivant",
-    "hint0":"Commencez par récupérer l'IP du backend, puis testez la connexion (Étape 1).",
-    "hint1":"BACKEND_IP est une variable du shell : définissez-la avant de l'utiliser dans curl.",
-    "hint2":"Le manifeste default-deny.yaml se colle dans l'onglet Policies, puis on l'applique.",
-    "hint3":"Après l'application, retestez curl : la connexion doit être bloquée.",
-    "hint4":"Cliquez sur Vérifier (ou tapez check) pour contrôler les critères.",
+    "hint0":"Commencez par créer puis appliquer la CiliumNetworkPolicy (Étape 1).",
+    "hint1":"endpointSelector cible le backend, fromEndpoints autorise le frontend, toPorts limite au port 80.",
+    "hint2":"Après l'application, retestez frontend → backend : la page nginx doit apparaître.",
+    "hint3":"Le test-pod n'a pas le label app=frontend : il reste bloqué par le default-deny.",
+    "hint4":"kubectl get ciliumnetworkpolicies puis describe pour voir Enforcing: true.",
     "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — poste de travail Koffi Academy (cilium-cluster)",
-    "bEnv":"App policy-demo déjà déployée (frontend, backend en Running). Manifestes : /root/cilium/policies","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
-    "hHeader":"Commandes disponibles :","hVar":"définir une variable (IP du backend)","hExec":"tester la connexion frontend → backend","hApply":"appliquer la politique","hGetNp":"lister les NetworkPolicies","hDescribe":"inspecter une NetworkPolicy","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
-    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Astuce : enregistrez d'abord default-deny.yaml dans l'onglet Policies.","ddCreated":"networkpolicy.networking.k8s.io/default-deny-ingress created","noNp":"No resources found in policy-demo namespace.","noIp":"curl: (6) Could not resolve host","noIpHint":"Astuce : définissez d'abord BACKEND_IP (Étape 1).",
-    "checkHeader":"Progression de la tâche :","chkBefore":"Connectivité initiale vérifiée","chkDeny":"Politique default-deny appliquée","chkVerify":"Politique visible (get networkpolicies)","chkAfter":"Trafic bloqué après la politique","chkAll":"Tous les critères sont remplis. Tâche terminée !","skipped":"Étape ignorée.",
+    "bEnv":"policy-demo : frontend, backend Running. Baseline default-deny active. Manifestes : /root/cilium/policies","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hWrite":"créer un manifeste (here-document)","hApply":"appliquer une politique","hExec":"tester la connexion (curl)","hRun":"créer / attendre un pod de test","hGetCnp":"lister les politiques Cilium","hDescribe":"inspecter une politique","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Astuce : créez d'abord allow-frontend-to-backend.yaml.","afCreated":"ciliumnetworkpolicy.cilium.io/allow-frontend-to-backend created","cnpNone":"No resources found in policy-demo namespace.","podCreated":"pod/test-pod created","podReady":"pod/test-pod condition met","podNotFound":"Error from server (NotFound): pods \"test-pod\" not found","noIp":"curl: (6) Could not resolve host","noIpHint":"Astuce : définissez d'abord BACKEND_IP.",
+    "checkHeader":"Progression de la tâche :","chkAllow":"Politique d'autorisation appliquée","chkAllowed":"Frontend → backend autorisé","chkBlocked":"test-pod bloqué (isolation maintenue)","chkList":"Politiques listées / inspectées","chkAll":"Tous les critères sont remplis. Tâche terminée !","skipped":"Étape ignorée.",
     "cmdNF":"{c} : commande introuvable. Tapez `help`.","kNF":"error: commande non simulée dans cet atelier — utilisez kubectl/cilium.","catNF":"cat : {f} : aucun fichier de ce type",
-    "tSavedFile":"Manifeste enregistré","tDone":"Tâche terminée — la baseline default-deny est en place"
+    "tSavedFile":"Manifeste enregistré","tDone":"Tâche terminée — frontend → backend autorisé, le reste bloqué"
   },
   "de":{
-    "navChapter1":"Kapitel 1","navChapter3":"Kapitel 3","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "navChapter2":"Kapitel 2","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
     "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Policies",
     "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Fügen Sie das Manifest aus den Anweisungen ein und klicken Sie auf Speichern.",
-    "mNs":"Namespace","mPolicy":"Policy",
-    "instrHead":"Anleitung","instrTitle":"Eine Deny-all-Policy einrichten",
-    "instrSub":"In dieser Aufgabe setzen Sie eine „Default-Deny\"-Policy als Sicherheits-Baseline: Sie prüfen zuerst, dass der Traffic fließt, blockieren dann standardmäßig den gesamten Ingress und bestätigen, dass die Kommunikation unterbrochen ist.",
+    "mAllow":"Allow-Policy","mTraffic":"FE → BE","tBlocked":"blockiert","tAllowed":"erlaubt",
+    "instrHead":"Anleitung","instrTitle":"Eine Allow-Policy erstellen",
+    "instrSub":"Die Default-Deny-Baseline aus Kapitel 2 blockiert alles. Jetzt öffnen Sie gezielt frontend → backend (Port 80) mit einer CiliumNetworkPolicy, prüfen, dass dieser Fluss durchgeht, und bestätigen, dass andere Pods blockiert bleiben.",
     "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
-    "s1h":"Schritt 1 · Konnektivität vor der Policy testen",
-    "s1b":"Prüfen Sie zuerst, dass die Pods kommunizieren. Holen Sie die IP des Backend-Pods im <strong>Terminal</strong>:",
-    "s1b2":"Testen Sie die Verbindung von Frontend zu Backend:",
-    "s1b3":"Sie sollten die nginx-Willkommensseite sehen: die Konnektivität funktioniert.",
-    "s2h":"Schritt 2 · Die Default-Deny-Policy erstellen",
-    "s2b":"Erstellen Sie eine Policy, die standardmäßig allen Ingress ablehnt (Standard-Kubernetes-NetworkPolicy, von Cilium durchgesetzt). Am einfachsten: erstellen Sie die Datei direkt im <strong>Terminal</strong> per Here-Document (oder fügen Sie das Manifest im Reiter <strong>Policies</strong> als <code>default-deny.yaml</code> ein):",
-    "s2note":"Hinweis: Ein leerer <code>podSelector</code> wählt alle Pods des Namespace, und <code>Ingress</code> ohne Regel erzeugt eine „Alles-ablehnen\"-Baseline. Cilium setzt sie durch; Allow-Regeln (CiliumNetworkPolicy) können danach gezielt Traffic öffnen.",
-    "s2apply":"Wenden Sie die Policy im <strong>Terminal</strong> an:",
-    "s3h":"Schritt 3 · Prüfen, dass die Policy angewendet ist",
-    "s3b":"Prüfen Sie im <strong>Terminal</strong>, dass die Policy existiert:",
-    "s4h":"Schritt 4 · Konnektivität nach der Policy testen",
-    "s4b":"Testen Sie, dass der Traffic nun blockiert ist:",
-    "s4b2":"Die Verbindung muss ablaufen oder fehlschlagen: die Default-Deny-Baseline funktioniert.",
-    "s4b3":"Zusätzliche Prüfungen: der Ingress ist in beide Richtungen blockiert, der ausgehende Traffic (Egress) bleibt jedoch erlaubt:",
+    "s1h":"Schritt 1 · Allow-Policy erstellen und anwenden",
+    "s1b":"Erstellen Sie eine <code>CiliumNetworkPolicy</code>, die frontend → backend auf Port 80/TCP erlaubt. Im <strong>Terminal</strong> (Here-Document) oder im Reiter <strong>Policies</strong>:",
+    "s1note":"CiliumNetworkPolicy (API <code>cilium.io/v2</code>) ist mächtiger als eine Standard-NetworkPolicy: Label-Identitäten, L7-Filterung und eBPF-Durchsetzung. Hier zielt <code>endpointSelector</code> auf das Backend, <code>fromEndpoints</code> erlaubt das Frontend, <code>toPorts</code> beschränkt auf Port 80/TCP.",
+    "s1apply":"Wenden Sie die Policy im <strong>Terminal</strong> an:",
+    "s2h":"Schritt 2 · Den erlaubten Traffic testen",
+    "s2b":"Holen Sie die Backend-IP und testen Sie die Verbindung vom Frontend (jetzt erlaubt):",
+    "s2b2":"Sie sollten die nginx-Seite sehen: der Fluss frontend → backend ist wiederhergestellt.",
+    "s2b3":"Die Policy ist präzise (nur Port 80): ein anderer Port bleibt blockiert:",
+    "s3h":"Schritt 3 · Prüfen, dass anderer Traffic blockiert ist",
+    "s3b":"Erstellen Sie einen Test-Pod (ohne das Label <code>app: frontend</code>) und warten Sie, bis er bereit ist:",
+    "s3b2":"Testen Sie von diesem Pod: er hat keine Allow-Regel, also wird der Traffic blockiert:",
+    "s4h":"Schritt 4 · Policies auflisten und inspizieren",
+    "s4b":"Listen Sie die Policies (Standard + Cilium) und inspizieren Sie dann die Allow-Policy:",
+    "s4b2":"In der Ausgabe von <code>describe</code> bestätigt <code>Enforcing: true</code>, dass die Policy aktiv durchgesetzt wird.",
     "critH":"Erfolgskriterien",
-    "c1":"Anfängliche Konnektivität verifiziert (Frontend → Backend).","c2":"Default-Deny-Policy angewendet.","c3":"Der Traffic zwischen Pods ist blockiert.",
-    "trH":"Fehlerbehebung","trB":"Wenn der Traffic nicht blockiert ist, bestätigen Sie, dass die Policy existiert, und inspizieren Sie sie:","trB2":"Prüfen Sie auch, dass <code>$BACKEND_IP</code> gesetzt ist (Schritt 1), bevor Sie erneut testen.",
+    "c1":"Allow-Policy erstellt (allow-frontend-to-backend).","c2":"Das Frontend erreicht das Backend (Port 80).","c3":"Andere Pods (test-pod) bleiben blockiert.","c4":"Die Policy ist gelistet und aktiv durchgesetzt.",
     "skip":"Überspringen","check":"Prüfen",
     "helpTitle":"Lab-Copilot",
     "helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend für kontextbezogene Hilfe.",
     "nextHint":"Nächster Hinweis",
-    "hint0":"Holen Sie zuerst die Backend-IP und testen Sie dann die Verbindung (Schritt 1).",
-    "hint1":"BACKEND_IP ist eine Shell-Variable: Setzen Sie sie, bevor Sie sie in curl verwenden.",
-    "hint2":"Das Manifest default-deny.yaml wird im Reiter Policies eingefügt und dann angewendet.",
-    "hint3":"Testen Sie curl nach dem Anwenden erneut: die Verbindung muss blockiert sein.",
-    "hint4":"Klicken Sie auf Prüfen (oder tippen Sie check), um die Kriterien zu kontrollieren.",
+    "hint0":"Erstellen und wenden Sie zuerst die CiliumNetworkPolicy an (Schritt 1).",
+    "hint1":"endpointSelector zielt aufs Backend, fromEndpoints erlaubt das Frontend, toPorts beschränkt auf Port 80.",
+    "hint2":"Testen Sie nach dem Anwenden frontend → backend erneut: die nginx-Seite muss erscheinen.",
+    "hint3":"Der test-pod hat kein Label app=frontend: er bleibt durch das Default-Deny blockiert.",
+    "hint4":"kubectl get ciliumnetworkpolicies, dann describe, um Enforcing: true zu sehen.",
     "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — Koffi-Academy-Arbeitsplatz (cilium-cluster)",
-    "bEnv":"App policy-demo bereits bereitgestellt (frontend, backend Running). Manifeste: /root/cilium/policies","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
-    "hHeader":"Verfügbare Befehle:","hVar":"eine Variable setzen (Backend-IP)","hExec":"Verbindung Frontend → Backend testen","hApply":"die Policy anwenden","hGetNp":"NetworkPolicies auflisten","hDescribe":"eine NetworkPolicy inspizieren","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
-    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tipp: speichern Sie zuerst default-deny.yaml im Reiter Policies.","ddCreated":"networkpolicy.networking.k8s.io/default-deny-ingress created","noNp":"No resources found in policy-demo namespace.","noIp":"curl: (6) Could not resolve host","noIpHint":"Tipp: setzen Sie zuerst BACKEND_IP (Schritt 1).",
-    "checkHeader":"Fortschritt der Aufgabe:","chkBefore":"Anfängliche Konnektivität verifiziert","chkDeny":"Default-Deny-Policy angewendet","chkVerify":"Policy sichtbar (get networkpolicies)","chkAfter":"Traffic nach der Policy blockiert","chkAll":"Alle Kriterien erfüllt. Aufgabe abgeschlossen!","skipped":"Schritt übersprungen.",
+    "bEnv":"policy-demo: frontend, backend Running. Default-Deny-Baseline aktiv. Manifeste: /root/cilium/policies","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hWrite":"ein Manifest erstellen (Here-Document)","hApply":"eine Policy anwenden","hExec":"die Verbindung testen (curl)","hRun":"einen Test-Pod erstellen / abwarten","hGetCnp":"Cilium-Policies auflisten","hDescribe":"eine Policy inspizieren","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tipp: erstellen Sie zuerst allow-frontend-to-backend.yaml.","afCreated":"ciliumnetworkpolicy.cilium.io/allow-frontend-to-backend created","cnpNone":"No resources found in policy-demo namespace.","podCreated":"pod/test-pod created","podReady":"pod/test-pod condition met","podNotFound":"Error from server (NotFound): pods \"test-pod\" not found","noIp":"curl: (6) Could not resolve host","noIpHint":"Tipp: setzen Sie zuerst BACKEND_IP.",
+    "checkHeader":"Fortschritt der Aufgabe:","chkAllow":"Allow-Policy angewendet","chkAllowed":"Frontend → backend erlaubt","chkBlocked":"test-pod blockiert (Isolation erhalten)","chkList":"Policies gelistet / inspiziert","chkAll":"Alle Kriterien erfüllt. Aufgabe abgeschlossen!","skipped":"Schritt übersprungen.",
     "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","kNF":"error: Befehl in diesem Labor nicht simuliert — nutzen Sie kubectl/cilium.","catNF":"cat: {f}: keine solche Datei",
-    "tSavedFile":"Manifest gespeichert","tDone":"Aufgabe abgeschlossen — die Default-Deny-Baseline steht"
+    "tSavedFile":"Manifest gespeichert","tDone":"Aufgabe abgeschlossen — frontend → backend erlaubt, Rest blockiert"
   },
   "en":{
-    "navChapter1":"Chapter 1","navChapter3":"Chapter 3","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "navChapter2":"Chapter 2","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
     "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Policies",
     "btnClear":"Clear","btnSave":"Save","phPaste":"Paste the manifest from the instructions, then click Save.",
-    "mNs":"Namespace","mPolicy":"Policy",
-    "instrHead":"Instructions","instrTitle":"Implement a default-deny policy",
-    "instrSub":"In this task you set a default-deny policy as a security baseline: first verify that traffic flows, then block all ingress by default, and confirm communication is cut.",
+    "mAllow":"Allow policy","mTraffic":"FE → BE","tBlocked":"blocked","tAllowed":"allowed",
+    "instrHead":"Instructions","instrTitle":"Create an allow policy",
+    "instrSub":"The chapter 2 default-deny baseline blocks everything. You now selectively reopen frontend → backend (port 80) with a CiliumNetworkPolicy, verify the flow works, and confirm other pods stay blocked.",
     "progLabel":"Progress","copy":"Copy","copied":"Copied",
-    "s1h":"Step 1 · Test connectivity before the policy",
-    "s1b":"First verify the pods communicate. Get the backend pod IP in the <strong>Terminal</strong>:",
-    "s1b2":"Test connectivity from frontend to backend:",
-    "s1b3":"You should see the nginx welcome page: connectivity works.",
-    "s2h":"Step 2 · Create the default-deny policy",
-    "s2b":"Create a policy that denies all ingress by default (standard Kubernetes NetworkPolicy, enforced by Cilium). Easiest: create the file directly in the <strong>Terminal</strong> with a here-document (or paste the manifest in the <strong>Policies</strong> tab as <code>default-deny.yaml</code>):",
-    "s2note":"Note: an empty <code>podSelector</code> selects all pods in the namespace, and declaring <code>Ingress</code> with no rule creates a deny-all baseline. Cilium enforces it; allow rules (CiliumNetworkPolicy) can then selectively open traffic.",
-    "s2apply":"Apply the policy in the <strong>Terminal</strong>:",
-    "s3h":"Step 3 · Verify the policy is applied",
-    "s3b":"Check the policy exists in the <strong>Terminal</strong>:",
-    "s4h":"Step 4 · Test connectivity after the policy",
-    "s4b":"Test that traffic is now blocked:",
-    "s4b2":"The connection must time out or fail: the default-deny baseline works.",
-    "s4b3":"Additional checks: ingress is blocked both ways, but outbound (egress) traffic is still allowed:",
+    "s1h":"Step 1 · Create and apply the allow policy",
+    "s1b":"Create a <code>CiliumNetworkPolicy</code> that allows frontend → backend on port 80/TCP. In the <strong>Terminal</strong> (here-document) or the <strong>Policies</strong> tab:",
+    "s1note":"CiliumNetworkPolicy (API <code>cilium.io/v2</code>) is more powerful than a standard NetworkPolicy: label identities, L7 filtering and eBPF enforcement. Here <code>endpointSelector</code> targets the backend, <code>fromEndpoints</code> allows the frontend, <code>toPorts</code> limits to port 80/TCP.",
+    "s1apply":"Apply the policy in the <strong>Terminal</strong>:",
+    "s2h":"Step 2 · Test the allowed traffic",
+    "s2b":"Get the backend IP and test the connection from the frontend (now allowed):",
+    "s2b2":"You should see the nginx page: the frontend → backend flow is restored.",
+    "s2b3":"The policy is precise (port 80 only): another port stays blocked:",
+    "s3h":"Step 3 · Verify other traffic is blocked",
+    "s3b":"Create a test pod (without the <code>app: frontend</code> label) and wait until it is ready:",
+    "s3b2":"Test from this pod: it has no allow rule, so the traffic is blocked:",
+    "s4h":"Step 4 · List and inspect the policies",
+    "s4b":"List the policies (standard + Cilium), then inspect the allow policy:",
+    "s4b2":"In the <code>describe</code> output, <code>Enforcing: true</code> confirms the policy is actively enforced.",
     "critH":"Success criteria",
-    "c1":"Initial connectivity verified (frontend → backend).","c2":"Default-deny policy applied.","c3":"Traffic between pods is blocked.",
-    "trH":"Troubleshooting","trB":"If traffic is not blocked, confirm the policy exists and inspect it:","trB2":"Also check that <code>$BACKEND_IP</code> is set (Step 1) before testing again.",
+    "c1":"Allow policy created (allow-frontend-to-backend).","c2":"The frontend reaches the backend (port 80).","c3":"Other pods (test-pod) stay blocked.","c4":"The policy is listed and actively enforced.",
     "skip":"Skip","check":"Check",
     "helpTitle":"Lab Copilot",
     "helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend for contextual help.",
     "nextHint":"Next hint",
-    "hint0":"Start by getting the backend IP, then test the connection (Step 1).",
-    "hint1":"BACKEND_IP is a shell variable: set it before using it in curl.",
-    "hint2":"The default-deny.yaml manifest is pasted in the Policies tab, then applied.",
-    "hint3":"After applying, test curl again: the connection must be blocked.",
-    "hint4":"Click Check (or type check) to validate the criteria.",
+    "hint0":"Start by creating and applying the CiliumNetworkPolicy (Step 1).",
+    "hint1":"endpointSelector targets the backend, fromEndpoints allows the frontend, toPorts limits to port 80.",
+    "hint2":"After applying, test frontend → backend again: the nginx page must appear.",
+    "hint3":"The test-pod has no app=frontend label: it stays blocked by the default-deny.",
+    "hint4":"kubectl get ciliumnetworkpolicies then describe to see Enforcing: true.",
     "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — Koffi Academy workstation (cilium-cluster)",
-    "bEnv":"App policy-demo already deployed (frontend, backend Running). Manifests: /root/cilium/policies","bTip":"Tip: type `help` for commands, `check` for progress.",
-    "hHeader":"Available commands:","hVar":"set a variable (backend IP)","hExec":"test frontend → backend connectivity","hApply":"apply the policy","hGetNp":"list NetworkPolicies","hDescribe":"inspect a NetworkPolicy","hCheck":"check your progress","hClear":"clear the terminal",
-    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tip: save default-deny.yaml in the Policies tab first.","ddCreated":"networkpolicy.networking.k8s.io/default-deny-ingress created","noNp":"No resources found in policy-demo namespace.","noIp":"curl: (6) Could not resolve host","noIpHint":"Tip: set BACKEND_IP first (Step 1).",
-    "checkHeader":"Task progress:","chkBefore":"Initial connectivity verified","chkDeny":"Default-deny policy applied","chkVerify":"Policy visible (get networkpolicies)","chkAfter":"Traffic blocked after the policy","chkAll":"All criteria met. Task complete!","skipped":"Step skipped.",
+    "bEnv":"policy-demo: frontend, backend Running. Default-deny baseline active. Manifests: /root/cilium/policies","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hWrite":"create a manifest (here-document)","hApply":"apply a policy","hExec":"test the connection (curl)","hRun":"create / wait for a test pod","hGetCnp":"list Cilium policies","hDescribe":"inspect a policy","hCheck":"check your progress","hClear":"clear the terminal",
+    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tip: create allow-frontend-to-backend.yaml first.","afCreated":"ciliumnetworkpolicy.cilium.io/allow-frontend-to-backend created","cnpNone":"No resources found in policy-demo namespace.","podCreated":"pod/test-pod created","podReady":"pod/test-pod condition met","podNotFound":"Error from server (NotFound): pods \"test-pod\" not found","noIp":"curl: (6) Could not resolve host","noIpHint":"Tip: set BACKEND_IP first.",
+    "checkHeader":"Task progress:","chkAllow":"Allow policy applied","chkAllowed":"Frontend → backend allowed","chkBlocked":"test-pod blocked (isolation kept)","chkList":"Policies listed / inspected","chkAll":"All criteria met. Task complete!","skipped":"Step skipped.",
     "cmdNF":"{c}: command not found. Type `help`.","kNF":"error: command not simulated in this lab — use kubectl/cilium.","catNF":"cat: {f}: no such file",
-    "tSavedFile":"Manifest saved","tDone":"Task complete — the default-deny baseline is in place"
+    "tSavedFile":"Manifest saved","tDone":"Task complete — frontend → backend allowed, the rest blocked"
   }
 };
 
 (function(){
   "use strict";
 
-  var DD = "policies/default-deny.yaml";
+  var AF = "policies/allow-frontend-to-backend.yaml";
   var BACKEND_IP = "10.0.0.214";
   var FRONTEND_IP = "10.0.0.28";
 
@@ -500,10 +497,10 @@ window.I18N = {
     return s;
   }
 
-  var FS = {}; FS[DD] = "";
+  var FS = {}; FS[AF] = "";
   var vars = {};
-  var denyApplied=false, connBefore=false, verified=false, connBlocked=false;
-  var steps = { before:false, deny:false, verify:false, after:false };
+  var allowApplied=false, allowedOk=false, blockedOk=false, listed=false, testPodCreated=false;
+  var steps = { allow:false, allowed:false, blocked:false, list:false };
   var hi = 0;
 
   var out = document.getElementById("terminalOutput");
@@ -522,20 +519,23 @@ window.I18N = {
   function setStep(name, done){
     if(steps[name]===done) return; steps[name]=done;
     var el=document.querySelector('.step[data-step="'+name+'"]'); if(el) el.classList.toggle("is-done",done);
-    var total=0; ["before","deny","verify","after"].forEach(function(k){ if(steps[k]) total++; });
+    var total=0; ["allow","allowed","blocked","list"].forEach(function(k){ if(steps[k]) total++; });
     document.getElementById("progressText").textContent=total+" / 4";
     document.getElementById("progressFill").style.width=(total/4*100)+"%";
     if(total===4) toast(t("tDone"));
   }
-  function refreshMetrics(){ document.getElementById("mPolicy").textContent = denyApplied ? "default-deny" : "—"; }
+  function refreshMetrics(){
+    document.getElementById("mAllow").textContent = allowApplied ? "OK" : "—";
+    var tr=document.getElementById("mTraffic"); tr.textContent = allowApplied ? t("tAllowed") : t("tBlocked");
+  }
 
   function resolve(path){
     if(!path) return null; var p=path.trim().replace(/^\.\//,"").replace(/^\/root\/cilium\//,"").replace(/\/+$/,"");
-    if(p===DD || p==="default-deny.yaml" || p==="policies/default-deny.yaml") return DD;
+    if(p===AF || p==="allow-frontend-to-backend.yaml" || p==="policies/allow-frontend-to-backend.yaml") return AF;
     if(FS[p]!==undefined) return p;
     return null;
   }
-  function ddReady(){ return (FS[DD]||"").indexOf("default-deny-ingress")!==-1 || (FS[DD]||"").indexOf("kind: NetworkPolicy")!==-1; }
+  function afReady(){ return (FS[AF]||"").indexOf("allow-frontend-to-backend")!==-1 || (FS[AF]||"").indexOf("CiliumNetworkPolicy")!==-1; }
 
   function printNginx(){
     ["<!DOCTYPE html>","<html>","<head>","<title>Welcome to nginx!</title>","</head>","<body>",
@@ -545,14 +545,14 @@ window.I18N = {
   }
 
   function expand(s){ return s.replace(/\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?/g, function(_,n){ return (vars[n]!==undefined)?vars[n]:""; }); }
-
   function substitute(inner){
-    // command substitution: backend pod IP via jsonpath
-    if(/kubectl\s+get\s+pod/.test(inner) && /podIP/.test(inner) && /app=backend/.test(inner)) return BACKEND_IP;
+    if(/kubectl\s+get\s+pod/.test(inner) && /podIP/.test(inner)){
+      if(/app=frontend/.test(inner)) return FRONTEND_IP;
+      return BACKEND_IP;
+    }
     return "";
   }
 
-  // returns true on success, false on failure (for || handling)
   function exec(line){
     line=line.trim(); if(!line) return true;
     var parts=line.split(/\s+/); var head=parts[0];
@@ -560,11 +560,12 @@ window.I18N = {
     if(head==="echo"){ print(line.slice(4).trim().replace(/^["']|["']$/g,"")); return true; }
     if(head==="help"){
       print(t("hHeader"),"line-muted");
-      print("  BACKEND_IP=$(kubectl get pod ... podIP)   " + t("hVar"));
-      print("  kubectl exec ... -- curl http://$BACKEND_IP " + t("hExec"));
+      print("  cat > <file> << 'EOF' ... EOF             " + t("hWrite"));
       print("  kubectl apply -f <manifest>               " + t("hApply"));
-      print("  kubectl get networkpolicies -n policy-demo " + t("hGetNp"));
-      print("  kubectl describe networkpolicy <name> ...  " + t("hDescribe"));
+      print("  kubectl exec ... -- curl http://$BACKEND_IP " + t("hExec"));
+      print("  kubectl run test-pod ... / kubectl wait    " + t("hRun"));
+      print("  kubectl get ciliumnetworkpolicies -n ...   " + t("hGetCnp"));
+      print("  kubectl describe ciliumnetworkpolicy ...   " + t("hDescribe"));
       print("  check   ·   clear                          " + t("hCheck"));
       return true;
     }
@@ -574,47 +575,73 @@ window.I18N = {
 
     if(head!=="kubectl" && head!=="cilium" && head!=="k"){ print(t("cmdNF",{c:head}),"line-error"); return false; }
 
+    var verb=parts[1]||"";
+
     // kubectl exec ... curl
-    if(parts[1]==="exec" && /curl/.test(line)){
+    if(verb==="exec" && /curl/.test(line)){
+      var src = /test-pod/.test(line) ? "testpod" : (/frontend/.test(line) ? "frontend" : (/backend/.test(line) ? "backend" : "other"));
+      if(src==="testpod" && !testPodCreated){ print(t("podNotFound"),"line-error"); return false; }
       var m=line.match(/https?:\/\/([^\s\/]+)/); var host=m?m[1]:"";
       if(!host){ print(t("noIp"),"line-error"); print(t("noIpHint"),"line-warn"); return false; }
-      if(host==="localhost"||host==="127.0.0.1"){ printNginx(); return true; }
-      var external = /\./.test(host) && !/^10\.0\.0\./.test(host);
-      if(external){ print("HTTP/1.1 301 Moved Permanently","line-muted"); print("Location: https://"+host+"/","line-muted"); return true; }
-      if(denyApplied){ connBlocked=true; setStep("after",true); return false; }
-      printNginx(); connBefore=true; setStep("before",true); return true;
+      var hp=host.split(":"); var hh=hp[0]; var port=hp[1]||"80";
+      if(hh==="localhost"||hh==="127.0.0.1"){ printNginx(); return true; }
+      if(/\./.test(hh) && !/^10\.0\.0\./.test(hh)){ print("HTTP/1.1 301 Moved Permanently","line-muted"); return true; }
+      // internal pod-to-pod
+      if(src==="frontend" && hh===BACKEND_IP && port==="80" && allowApplied){ printNginx(); allowedOk=true; setStep("allowed",true); return true; }
+      if(src==="testpod" && hh===BACKEND_IP){ blockedOk=true; setStep("blocked",true); return false; }
+      return false;
     }
-    var verb=parts[1]||"";
     if(verb==="apply"){
       var fi=parts.indexOf("-f"); var path=fi>=0?parts[fi+1]:"";
       var f=resolve(path);
-      if(!f || !FS[f] || !ddReady()){ print(t("applyNoFile",{f:path||"?"}),"line-error"); print(t("applyHint"),"line-warn"); return false; }
-      denyApplied=true; print(t("ddCreated"),"line-ok"); refreshMetrics(); setStep("deny",true); return true;
+      if(!f || !FS[f] || !afReady()){ print(t("applyNoFile",{f:path||"?"}),"line-error"); print(t("applyHint"),"line-warn"); return false; }
+      allowApplied=true; print(t("afCreated"),"line-ok"); refreshMetrics(); setStep("allow",true); return true;
+    }
+    if(verb==="run" && /test-pod/.test(line)){ testPodCreated=true; print(t("podCreated"),"line-ok"); return true; }
+    if(verb==="wait" && /test-pod/.test(line)){ if(!testPodCreated){ print(t("podNotFound"),"line-error"); return false; } print(t("podReady"),"line-ok"); return true; }
+    if(verb==="get" && /(ciliumnetworkpolicies|ciliumnetworkpolicy|cnp)/.test(parts[2]||"")){
+      if(!allowApplied){ print(t("cnpNone"),"line-warn"); return true; }
+      print("NAME                        AGE");
+      print("allow-frontend-to-backend   2m");
+      listed=true; setStep("list",true); return true;
     }
     if(verb==="get" && /(networkpolicies|networkpolicy|netpol)/.test(parts[2]||"")){
-      if(!denyApplied){ print(t("noNp"),"line-warn"); return true; }
       print("NAME                   POD-SELECTOR   AGE");
-      print("default-deny-ingress   {}             5s");
-      verified=true; setStep("verify",true); return true;
+      print("default-deny-ingress   {}             12m");
+      return true;
     }
-    if(verb==="describe" && /(networkpolicy|netpol)/.test(parts[2]||"")){
-      if(!denyApplied){ print(t("noNp"),"line-warn"); return true; }
-      print("Name:         default-deny-ingress");
+    if(verb==="describe" && /(ciliumnetworkpolicy|cnp)/.test(parts[2]||"")){
+      if(!allowApplied){ print(t("cnpNone"),"line-warn"); return true; }
+      print("Name:         allow-frontend-to-backend");
       print("Namespace:    policy-demo");
       print("Labels:       <none>");
       print("Annotations:  <none>");
+      print("API Version:  cilium.io/v2");
+      print("Kind:         CiliumNetworkPolicy");
       print("Spec:");
-      print("  PodSelector:     <none> (Allowing the specific traffic to all pods in this namespace)");
-      print("  Allowing ingress traffic:");
-      print("    <none> (Selected pods are isolated for ingress connectivity)");
-      print("  Not affecting egress traffic");
-      print("  Policy Types: Ingress");
-      return true;
+      print("  Endpoint Selector:");
+      print("    Match Labels:");
+      print("      app:  backend");
+      print("  Ingress:");
+      print("    From Endpoints:");
+      print("      Match Labels:");
+      print("        app:  frontend");
+      print("    To Ports:");
+      print("      Ports:");
+      print("        Port:      80");
+      print("        Protocol:  TCP");
+      print("Status:");
+      print("  Nodes:");
+      print("    minikube:");
+      print("      Enforcing:  true","line-ok");
+      print("      OK:  true","line-ok");
+      listed=true; setStep("list",true); return true;
     }
     if(verb==="get" && /(pods?|po)$/.test(parts[2]||"")){
       print("NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE");
-      print("frontend-6f8c9d4b7-x2k9p     1/1     Running   0          6m    10.0.0.28     worker-1");
-      print("backend-7d9f5c8a6-q4m2t      1/1     Running   0          6m    10.0.0.214    worker-2");
+      print("frontend-6f8c9d4b7-x2k9p     1/1     Running   0          12m   10.0.0.28     worker-1");
+      print("backend-7d9f5c8a6-q4m2t      1/1     Running   0          12m   10.0.0.214    worker-2");
+      if(testPodCreated) print("test-pod                     1/1     Running   0          1m    10.0.0.156    worker-1");
       return true;
     }
     print(t("kNF"),"line-error"); return false;
@@ -625,18 +652,23 @@ window.I18N = {
     var asg=cmd.match(/^([A-Za-z_][A-Za-z0-9_]*)=\$\((.+)\)$/);
     if(asg){ vars[asg[1]]=substitute(asg[2]); return; }
     cmd=expand(cmd);
-    var orp=cmd.split(/\s*\|\|\s*/);
-    var ok=exec(orp[0]);
-    if(!ok && orp[1]) exec(orp[1]);
+    // left-to-right && / || evaluation
+    var toks=cmd.split(/\s*(\&\&|\|\|)\s*/);
+    var ok=exec(toks[0]);
+    for(var i=1;i<toks.length;i+=2){
+      var op=toks[i], next=toks[i+1];
+      if(op==="&&"){ if(ok) ok=exec(next); }
+      else { if(!ok) ok=exec(next); }
+    }
   }
 
   function runCheck(){
     print(t("checkHeader"),"line-muted");
-    print((steps.before?"  [x] ":"  [ ] ")+t("chkBefore"), steps.before?"line-ok":"line-warn");
-    print((steps.deny  ?"  [x] ":"  [ ] ")+t("chkDeny"),   steps.deny?"line-ok":"line-warn");
-    print((steps.verify?"  [x] ":"  [ ] ")+t("chkVerify"), steps.verify?"line-ok":"line-warn");
-    print((steps.after ?"  [x] ":"  [ ] ")+t("chkAfter"),  steps.after?"line-ok":"line-warn");
-    if(steps.before&&steps.deny&&steps.verify&&steps.after) print(t("chkAll"),"line-ok");
+    print((steps.allow  ?"  [x] ":"  [ ] ")+t("chkAllow"),   steps.allow?"line-ok":"line-warn");
+    print((steps.allowed?"  [x] ":"  [ ] ")+t("chkAllowed"), steps.allowed?"line-ok":"line-warn");
+    print((steps.blocked?"  [x] ":"  [ ] ")+t("chkBlocked"), steps.blocked?"line-ok":"line-warn");
+    print((steps.list   ?"  [x] ":"  [ ] ")+t("chkList"),    steps.list?"line-ok":"line-warn");
+    if(steps.allow&&steps.allowed&&steps.blocked&&steps.list) print(t("chkAll"),"line-ok");
   }
 
   function runScript(text){
@@ -649,7 +681,7 @@ window.I18N = {
         var path=hd[1], delim=hd[2], body=[]; i++;
         while(i<lines.length && lines[i].trim()!==delim){ body.push(lines[i]); i++; }
         i++;
-        var f=resolve(path)||path; FS[f]=body.join("\n")+"\n"; if(f===DD) editor.value=FS[DD];
+        var f=resolve(path)||path; FS[f]=body.join("\n")+"\n"; if(f===AF) editor.value=FS[AF];
         continue;
       }
       if(line.trim()===""){ i++; continue; }
@@ -676,9 +708,9 @@ window.I18N = {
     });
   });
   function switchTab(which){ document.querySelectorAll(".tab").forEach(function(b){ if(b.getAttribute("data-tab")===which) b.click(); }); }
-  document.querySelectorAll(".filetab").forEach(function(b){ b.addEventListener("click", function(){ FS[DD]=editor.value; }); });
-  document.getElementById("saveFile").addEventListener("click", function(){ FS[DD]=editor.value; toast(t("tSavedFile")); });
-  document.getElementById("resetFile").addEventListener("click", function(){ editor.value=""; FS[DD]=""; });
+  document.querySelectorAll(".filetab").forEach(function(b){ b.addEventListener("click", function(){ FS[AF]=editor.value; }); });
+  document.getElementById("saveFile").addEventListener("click", function(){ FS[AF]=editor.value; toast(t("tSavedFile")); });
+  document.getElementById("resetFile").addEventListener("click", function(){ editor.value=""; FS[AF]=""; });
   document.getElementById("reloadBtn").addEventListener("click", function(){ banner(); switchTab("terminal"); input.focus(); });
   document.querySelectorAll(".step__top").forEach(function(top){ top.addEventListener("click", function(){ top.parentElement.classList.toggle("is-open"); }); });
 
@@ -719,10 +751,11 @@ window.I18N = {
     document.querySelectorAll("[data-i18n-title]").forEach(function(el){ var k=el.getAttribute("data-i18n-title"); if(d[k]!==undefined) el.setAttribute("title",d[k]); });
     document.querySelectorAll("[data-i18n-aria]").forEach(function(el){ var k=el.getAttribute("data-i18n-aria"); if(d[k]!==undefined) el.setAttribute("aria-label",d[k]); });
     document.getElementById("hintText").textContent=t("hint"+hi);
+    refreshMetrics();
   }
   window.setLabWorkspaceLang = applyLang;
 
-  applyLang(lang); banner(); editor.value=FS[DD]; refreshMetrics(); input.focus();
+  applyLang(lang); banner(); editor.value=FS[AF]; refreshMetrics(); input.focus();
 })();
 
 var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
