@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Advanced GitOps Patterns · Chapitre 1 | Atelier — Koffi Academy</title>
-  <meta name="description" content="Atelier Koffi Academy — GitOps, Chapitre 1 : progressive delivery avec Argo Rollouts (Canary, Blue-Green, A/B, promotion automatique par métriques).">
+  <title>Advanced GitOps Patterns · Chapitre 2 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — GitOps, Chapitre 2 : rollback automatique, playbooks de reprise après sinistre, recovery point-in-time depuis Git et chaos engineering.">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,7 +90,7 @@ button{cursor:pointer}
 .metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .metric{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:10px;padding:12px}
 .metric__k{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.metric__v{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:#fff;margin-top:3px}
+.metric__v{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#fff;margin-top:3px}
 .file-list{display:grid;gap:8px}
 .file-pill{display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.06);border-radius:10px;padding:9px 11px;color:var(--soft);font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace}
 .file-pill i{color:var(--amber)}
@@ -100,7 +100,7 @@ button{cursor:pointer}
 .instructions__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;margin:0}
 .instructions__head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:20px;line-height:1;padding:4px;border-radius:7px}
 .instructions__body{min-width:0;overflow:auto;padding:20px 18px 24px;flex:1}
-.lab-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;line-height:1.16;font-weight:800;letter-spacing:-.02em;margin:0 0 12px;color:#fff}
+.lab-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:25px;line-height:1.16;font-weight:800;letter-spacing:-.02em;margin:0 0 12px;color:#fff}
 .lab-sub{font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.78);margin:0 0 20px}
 .progress-card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:12px;padding:14px 15px;margin-bottom:18px}
 .progress-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
@@ -163,15 +163,15 @@ button{cursor:pointer}
         <span class="brand__k">Koffi Academy</span>
         <span class="brand__sep">|</span>
         <span class="brand__title">Advanced GitOps Patterns</span>
-        <span class="chip-ch">CH.1</span>
+        <span class="chip-ch">CH.2</span>
       </span>
     </a>
     <div class="labbar__spacer"></div>
     <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">90:00</span></span>
     <nav class="actions" aria-label="Lab actions">
+      <a class="topbtn" href="../laboratoire-gitops-patterns-lab"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter1">Chapitre 1</span></a>
       <a class="topbtn" href="../laboratoire-gitops-patterns"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
       <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
-      <a class="topbtn" href="../laboratoire-gitops-patterns-lab-2"><span data-i18n="navChapter2">Chapitre 2</span> <i class="fa-solid fa-arrow-right-long"></i></a>
       <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
       <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
       <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
@@ -195,29 +195,30 @@ button{cursor:pointer}
         </section>
         <section class="view datasets-view" id="datasetsView" role="tabpanel">
           <div class="filebar">
-            <button type="button" class="filetab is-active" data-file="apps/canary/canary-rollout.yaml">canary-rollout.yaml</button>
-            <button type="button" class="filetab" data-file="apps/blue-green/blue-green-rollout.yaml">blue-green-rollout.yaml</button>
-            <button type="button" class="filetab" data-file="apps/ab-testing/ab-rollout.yaml">ab-rollout.yaml</button>
-            <button type="button" class="filetab" data-file="rollouts/analysis-templates/success-rate.yaml">success-rate.yaml</button>
+            <button type="button" class="filetab is-active" data-file="apps/auto-rollback/rollback-demo.yaml">rollback-demo.yaml</button>
+            <button type="button" class="filetab" data-file="rollouts/analysis-templates/health-check.yaml">health-check.yaml</button>
+            <button type="button" class="filetab" data-file="disaster-recovery-playbook.sh">disaster-recovery-playbook.sh</button>
+            <button type="button" class="filetab" data-file="git-recovery.sh">git-recovery.sh</button>
+            <button type="button" class="filetab" data-file="chaos-engineering.sh">chaos-engineering.sh</button>
           </div>
           <div class="runbar">
-            <div class="runbar__title"><i class="fa-solid fa-file-code"></i><span id="fileLabel">/root/gitops-platform/apps/canary/canary-rollout.yaml</span></div>
+            <div class="runbar__title"><i class="fa-solid fa-file-code"></i><span id="fileLabel">/root/gitops-platform/apps/auto-rollback/rollback-demo.yaml</span></div>
             <div class="runbar__actions">
               <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
               <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
             </div>
           </div>
           <div class="dataset-grid">
-            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Collez le manifeste fourni dans les instructions, puis Enregistrer."></textarea>
+            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Collez le fichier fourni dans les instructions, puis Enregistrer."></textarea>
             <aside class="dataset-side">
               <div class="metric-grid">
-                <div class="metric"><span class="metric__k" data-i18n="mRollouts">Rollouts</span><div class="metric__v" id="mRollouts">0/3</div></div>
-                <div class="metric"><span class="metric__k" data-i18n="mAnalysis">Analysis</span><div class="metric__v" id="mAnalysis">—</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mRollback">Rollback</span><div class="metric__v" id="mRollback">—</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mBackup">Backup</span><div class="metric__v" id="mBackup">—</div></div>
               </div>
               <div class="file-list">
-                <div class="file-pill"><i class="fa-solid fa-code-branch"></i>Argo Rollouts</div>
-                <div class="file-pill"><i class="fa-solid fa-layer-group"></i>ns: canary · production · staging</div>
-                <div class="file-pill"><i class="fa-solid fa-dharmachakra"></i>kubectl argo rollouts</div>
+                <div class="file-pill"><i class="fa-solid fa-rotate-left"></i>Argo Rollouts undo</div>
+                <div class="file-pill"><i class="fa-brands fa-git-alt"></i>git snapshot / recovery</div>
+                <div class="file-pill"><i class="fa-solid fa-bolt"></i>chaos engineering</div>
               </div>
             </aside>
           </div>
@@ -231,240 +232,205 @@ button{cursor:pointer}
         <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
       </div>
       <div class="instructions__body">
-        <h1 class="lab-title" data-i18n="instrTitle">Progressive delivery avec Argo Rollouts</h1>
-        <p class="lab-sub" data-i18n="instrSub">Vous implémentez des stratégies de déploiement progressives — Canary, Blue-Green et A/B — puis la promotion automatique basée sur des métriques. Ces patterns réduisent le rayon d'impact des pannes et augmentent la confiance dans les déploiements.</p>
+        <h1 class="lab-title" data-i18n="instrTitle">Rollback automatique & reprise après sinistre</h1>
+        <p class="lab-sub" data-i18n="instrSub">Vous mettez en place un rollback automatique sur échec de health-check, des playbooks de reprise après sinistre, une restauration point-in-time depuis Git, et des tests de chaos pour valider la résilience. Le rollback réduit le MTTR ; Git est votre sauvegarde de reprise.</p>
 
         <div class="progress-card">
           <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 5</span></div>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="step is-open" data-step="canary">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Déploiement Canary</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step is-open" data-step="rollback">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Rollout avec rollback automatique</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s1b">Le canary décale le trafic progressivement vers la nouvelle version. Dans l'onglet <strong>Manifests</strong>, enregistrez <code>apps/canary/canary-rollout.yaml</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcCanary">apiVersion: argoproj.io/v1alpha1
+            <span data-i18n="s1b">Créez un Rollout avec liveness/readiness probes. Dans l'onglet <strong>Manifests</strong>, enregistrez <code>apps/auto-rollback/rollback-demo.yaml</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcRb">apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: canary-demo
-  namespace: canary
-spec:
-  replicas: 5
-  strategy:
-    canary:
-      steps:
-      - setWeight: 20
-      - pause: {duration: 30s}
-      - setWeight: 40
-      - pause: {duration: 30s}
-      - setWeight: 60
-      - pause: {duration: 30s}
-      - setWeight: 80
-      - pause: {duration: 30s}
-  selector:
-    matchLabels:
-      app: canary-demo
-  template:
-    metadata:
-      labels:
-        app: canary-demo
-    spec:
-      containers:
-      - name: canary-demo
-        image: nginx:1.25
-        ports:
-        - name: http
-          containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: canary-demo
-  namespace: canary
-spec:
-  ports:
-  - port: 80
-    targetPort: http
-  selector:
-    app: canary-demo</pre></div>
-            <span data-i18n="s1apply">Appliquez et observez l'état dans le <strong>Terminal</strong> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/apps/canary/canary-rollout.yaml
-kubectl argo rollouts get rollout canary-demo -n canary</pre></div>
-          </div>
-        </article>
-
-        <article class="step" data-step="bluegreen">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Déploiement Blue-Green</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
-          <div class="step__body">
-            <span data-i18n="s2b">Le blue-green bascule instantanément du service actif (blue) vers le service preview (green). Enregistrez <code>apps/blue-green/blue-green-rollout.yaml</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcBg">apiVersion: argoproj.io/v1alpha1
-kind: Rollout
-metadata:
-  name: bluegreen-demo
+  name: rollback-demo
   namespace: production
 spec:
   replicas: 3
-  selector:
-    matchLabels:
-      app: bluegreen-demo
-  template:
-    metadata:
-      labels:
-        app: bluegreen-demo
-    spec:
-      containers:
-      - name: bluegreen-demo
-        image: nginx:1.25
-        ports:
-        - name: http
-          containerPort: 80
-  strategy:
-    blueGreen:
-      activeService: bluegreen-demo-active
-      previewService: bluegreen-demo-preview
-      autoPromotionEnabled: false
-      scaleDownDelaySeconds: 30
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: bluegreen-demo-active
-  namespace: production
-spec:
-  ports:
-  - port: 80
-    targetPort: http
-  selector:
-    app: bluegreen-demo
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: bluegreen-demo-preview
-  namespace: production
-spec:
-  ports:
-  - port: 80
-    targetPort: http
-  selector:
-    app: bluegreen-demo</pre></div>
-            <span data-i18n="s2apply">Appliquez et observez :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/apps/blue-green/blue-green-rollout.yaml
-kubectl argo rollouts get rollout bluegreen-demo -n production</pre></div>
-          </div>
-        </article>
-
-        <article class="step" data-step="ab">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · A/B testing</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
-          <div class="step__body">
-            <span data-i18n="s3b">L'A/B route des segments d'utilisateurs vers des versions différentes (via en-têtes). Enregistrez <code>apps/ab-testing/ab-rollout.yaml</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcAb">apiVersion: argoproj.io/v1alpha1
-kind: Rollout
-metadata:
-  name: ab-demo
-  namespace: staging
-spec:
-  replicas: 4
   strategy:
     canary:
-      canaryService: ab-demo-canary
-      stableService: ab-demo-stable
-      trafficRouting:
-        managedRoutes:
-        - name: header-route
       steps:
-      - setCanaryScale:
-          weight: 50
-      - pause: {duration: 2m}
+      - setWeight: 25
+      - pause: {duration: 20s}
+      - setWeight: 50
+      - pause: {duration: 20s}
+      - setWeight: 75
+      - pause: {duration: 20s}
+      maxSurge: 1
+      maxUnavailable: 0
+  revisionHistoryLimit: 5
   selector:
     matchLabels:
-      app: ab-demo
+      app: rollback-demo
   template:
     metadata:
       labels:
-        app: ab-demo
+        app: rollback-demo
     spec:
       containers:
-      - name: ab-demo
+      - name: rollback-demo
         image: nginx:1.25
         ports:
         - name: http
           containerPort: 80
+        livenessProbe:
+          httpGet: {path: /, port: 80}
+          initialDelaySeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet: {path: /, port: 80}
+          initialDelaySeconds: 5
+          failureThreshold: 2
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ab-demo-stable
-  namespace: staging
+  name: rollback-demo
+  namespace: production
 spec:
   ports:
   - port: 80
     targetPort: http
   selector:
-    app: ab-demo
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: ab-demo-canary
-  namespace: staging
-spec:
-  ports:
-  - port: 80
-    targetPort: http
-  selector:
-    app: ab-demo</pre></div>
-            <span data-i18n="s3apply">Appliquez et vérifiez :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/apps/ab-testing/ab-rollout.yaml
-kubectl argo rollouts get rollout ab-demo -n staging</pre></div>
+    app: rollback-demo</pre></div>
+            <span data-i18n="s1apply">Appliquez puis attendez que le rollout soit sain :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/apps/auto-rollback/rollback-demo.yaml
+kubectl argo rollouts status rollback-demo -n production</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="trigger">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Déclencher et suivre les rollouts</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="health">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Rollback piloté par health-check</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s4b">Déclenchez un nouveau déploiement en changeant l'image, puis observez la montée progressive. Promouvez ensuite le blue-green manuellement :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl argo rollouts set image canary-demo -n canary canary-demo=nginx:1.26
-kubectl argo rollouts get rollout canary-demo -n canary
-kubectl argo rollouts set image bluegreen-demo -n production bluegreen-demo=nginx:1.26
-kubectl argo rollouts promote bluegreen-demo -n production
-kubectl argo rollouts status bluegreen-demo -n production</pre></div>
-          </div>
-        </article>
-
-        <article class="step" data-step="analysis">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s5h">Étape 5 · Promotion automatique par métriques</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
-          <div class="step__body">
-            <span data-i18n="s5b">Un <code>AnalysisTemplate</code> décide automatiquement de promouvoir ou de rollback selon le taux de succès. Enregistrez <code>rollouts/analysis-templates/success-rate.yaml</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcAnalysis">apiVersion: argoproj.io/v1alpha1
+            <span data-i18n="s2b">Un <code>AnalysisTemplate</code> surveille la santé et déclenche le rollback si elle échoue. Enregistrez <code>rollouts/analysis-templates/health-check.yaml</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcHc">apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: success-rate
-  namespace: canary
+  name: health-check
+  namespace: production
 spec:
   args:
   - name: service-name
   - name: namespace
   metrics:
-  - name: success-rate
-    interval: 30s
-    count: 5
-    successCondition: result &gt;= 0.95
-    failureLimit: 3
+  - name: health-check
+    interval: 10s
+    count: 10
+    successCondition: result == "healthy"
+    failureLimit: 2
     provider:
       job:
         spec:
           template:
             spec:
               containers:
-              - name: curl
+              - name: health-checker
                 image: curlimages/curl:8.5.0
-                command: ["sh","-c","echo 1.0"]
+                command: ["sh","-c","echo healthy"]
               restartPolicy: Never
           backoffLimit: 0</pre></div>
-            <span data-i18n="s5apply">Appliquez le template, puis listez tous les rollouts :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/rollouts/analysis-templates/success-rate.yaml
-kubectl argo rollouts list rollouts -A</pre></div>
+            <span data-i18n="s2apply">Appliquez le template (référencez-le ensuite dans la stratégie canary du Rollout) :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/gitops-platform/rollouts/analysis-templates/health-check.yaml</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="playbook">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Playbook de reprise après sinistre</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s3b">Un script orchestre la sauvegarde et la vérification de l'état du cluster. Enregistrez <code>disaster-recovery-playbook.sh</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcPb">#!/bin/bash
+# Koffi Academy — Playbook de reprise apres sinistre GitOps
+set -e
+BACKUP_DIR="/root/gitops-platform/backups/$(date +%Y%m%d-%H%M%S)"
+
+backup() {
+  echo "Sauvegarde de l'etat du cluster..."
+  mkdir -p "$BACKUP_DIR"
+  kubectl get rollouts -A -o yaml > "$BACKUP_DIR/rollouts.yaml"
+  kubectl get applications -n argocd -o yaml > "$BACKUP_DIR/applications.yaml"
+  echo "Backup enregistre dans: $BACKUP_DIR"
+}
+
+verify() {
+  echo "Verification de la sante du cluster..."
+  kubectl get nodes
+  kubectl argo rollouts list rollouts -A
+}
+
+case "${1:-}" in
+  backup) backup ;;
+  verify) verify ;;
+  *) echo "Usage: $0 {backup|verify}" ; exit 1 ;;
+esac</pre></div>
+            <span data-i18n="s3apply">Rendez-le exécutable, lancez une sauvegarde et vérifiez :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">chmod +x /root/gitops-platform/disaster-recovery-playbook.sh
+/root/gitops-platform/disaster-recovery-playbook.sh backup
+ls -lh /root/gitops-platform/backups/</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="gitrec">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Recovery point-in-time depuis Git</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s4b">Votre dépôt Git est votre sauvegarde : vous pouvez créer des points de restauration et y revenir. Enregistrez <code>git-recovery.sh</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcGr">#!/bin/bash
+# Koffi Academy — Recovery point-in-time depuis Git
+set -e
+REPO="/root/gitops-platform"
+cd "$REPO"
+
+snapshot() {
+  local NAME="${1:-snapshot-$(date +%Y%m%d-%H%M%S)}"
+  [ -d .git ] || { git init -q; git add .; git commit -qm "Etat initial"; }
+  git add .
+  git commit -qm "Snapshot de reprise: $NAME" || true
+  git tag -a "$NAME" -m "Point de reprise: $NAME"
+  echo "Snapshot cree: $NAME"
+}
+
+list_points() {
+  git log --oneline --decorate --max-count=20
+}
+
+case "${1:-}" in
+  snapshot) snapshot "$2" ;;
+  list) list_points ;;
+  *) echo "Usage: $0 {snapshot <nom>|list}" ; exit 1 ;;
+esac</pre></div>
+            <span data-i18n="s4apply">Créez un point de reprise, puis listez les points disponibles :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">chmod +x /root/gitops-platform/git-recovery.sh
+/root/gitops-platform/git-recovery.sh snapshot pre-chaos-baseline
+/root/gitops-platform/git-recovery.sh list</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="chaos">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s5h">Étape 5 · Chaos engineering</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s5b">Validez le rollback en conditions réelles : on déploie une image cassée, le rollout se dégrade, puis on revient en arrière. Enregistrez <code>chaos-engineering.sh</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcCh">#!/bin/bash
+# Koffi Academy — Chaos engineering : test du rollback
+broken_deployment() {
+  echo "Deploiement d'une image cassee pour tester le rollback..."
+  kubectl argo rollouts set image rollback-demo -n production rollback-demo=nginx:broken-tag-does-not-exist
+  echo "Surveillance du rollout (devrait se degrader)..."
+  kubectl argo rollouts get rollout rollback-demo -n production
+  kubectl argo rollouts undo rollback-demo -n production
+  echo "Rollback manuel declenche."
+}
+
+case "${1:-}" in
+  broken-deployment) broken_deployment ;;
+  *) echo "Usage: $0 {broken-deployment}" ; exit 1 ;;
+esac</pre></div>
+            <span data-i18n="s5apply">Rendez-le exécutable et lancez le scénario, puis vérifiez le rollout :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">chmod +x /root/gitops-platform/chaos-engineering.sh
+/root/gitops-platform/chaos-engineering.sh broken-deployment
+kubectl argo rollouts get rollout rollback-demo -n production</pre></div>
           </div>
         </article>
 
@@ -472,11 +438,11 @@ kubectl argo rollouts list rollouts -A</pre></div>
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <ul class="crit">
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Rollout Canary appliqué et sain.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Rollout Blue-Green appliqué.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Rollout A/B appliqué.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Un déploiement déclenché et promu.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c5">AnalysisTemplate de métriques en place.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Rollout avec probes appliqué.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">AnalysisTemplate de health-check en place.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Sauvegarde de l'état réalisée.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Point de reprise Git créé.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c5">Scénario de chaos exécuté et rollback validé.</span></li>
             </ul>
             <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
           </div>
@@ -497,7 +463,7 @@ kubectl argo rollouts list rollouts -A</pre></div>
   <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
   <div class="help-body">
     <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.</p>
-    <div class="hint" id="hintText" data-i18n="hint0">Collez le Rollout Canary dans l'onglet Manifests, enregistrez, puis appliquez-le.</div>
+    <div class="hint" id="hintText" data-i18n="hint0">Collez le Rollout dans l'onglet Manifests, enregistrez, puis appliquez-le.</div>
     <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
   </div>
 </section>
@@ -507,146 +473,149 @@ kubectl argo rollouts list rollouts -A</pre></div>
 <script>
 window.I18N = {
   "fr":{
-    "navOverview":"Aperçu","navChapter2":"Chapitre 2","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "navChapter1":"Chapitre 1","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
     "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Manifests",
-    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Collez le manifeste fourni dans les instructions, puis Enregistrer.",
-    "mRollouts":"Rollouts","mAnalysis":"Analysis",
-    "instrHead":"Instructions","instrTitle":"Progressive delivery avec Argo Rollouts",
-    "instrSub":"Vous implémentez des stratégies de déploiement progressives — Canary, Blue-Green et A/B — puis la promotion automatique basée sur des métriques. Ces patterns réduisent le rayon d'impact des pannes et augmentent la confiance dans les déploiements.",
+    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Collez le fichier fourni dans les instructions, puis Enregistrer.",
+    "mRollback":"Rollback","mBackup":"Backup",
+    "instrHead":"Instructions","instrTitle":"Rollback automatique & reprise après sinistre",
+    "instrSub":"Vous mettez en place un rollback automatique sur échec de health-check, des playbooks de reprise après sinistre, une restauration point-in-time depuis Git, et des tests de chaos pour valider la résilience. Le rollback réduit le MTTR ; Git est votre sauvegarde de reprise.",
     "progLabel":"Progression","copy":"Copier","copied":"Copié",
-    "s1h":"Étape 1 · Déploiement Canary",
-    "s1b":"Le canary décale le trafic progressivement vers la nouvelle version. Dans l'onglet <strong>Manifests</strong>, enregistrez <code>apps/canary/canary-rollout.yaml</code> :",
-    "s1apply":"Appliquez et observez l'état dans le <strong>Terminal</strong> :",
-    "s2h":"Étape 2 · Déploiement Blue-Green",
-    "s2b":"Le blue-green bascule instantanément du service actif (blue) vers le service preview (green). Enregistrez <code>apps/blue-green/blue-green-rollout.yaml</code> :",
-    "s2apply":"Appliquez et observez :",
-    "s3h":"Étape 3 · A/B testing",
-    "s3b":"L'A/B route des segments d'utilisateurs vers des versions différentes (via en-têtes). Enregistrez <code>apps/ab-testing/ab-rollout.yaml</code> :",
-    "s3apply":"Appliquez et vérifiez :",
-    "s4h":"Étape 4 · Déclencher et suivre les rollouts",
-    "s4b":"Déclenchez un nouveau déploiement en changeant l'image, puis observez la montée progressive. Promouvez ensuite le blue-green manuellement :",
-    "s5h":"Étape 5 · Promotion automatique par métriques",
-    "s5b":"Un <code>AnalysisTemplate</code> décide automatiquement de promouvoir ou de rollback selon le taux de succès. Enregistrez <code>rollouts/analysis-templates/success-rate.yaml</code> :",
-    "s5apply":"Appliquez le template, puis listez tous les rollouts :",
+    "s1h":"Étape 1 · Rollout avec rollback automatique",
+    "s1b":"Créez un Rollout avec liveness/readiness probes. Dans l'onglet <strong>Manifests</strong>, enregistrez <code>apps/auto-rollback/rollback-demo.yaml</code> :",
+    "s1apply":"Appliquez puis attendez que le rollout soit sain :",
+    "s2h":"Étape 2 · Rollback piloté par health-check",
+    "s2b":"Un <code>AnalysisTemplate</code> surveille la santé et déclenche le rollback si elle échoue. Enregistrez <code>rollouts/analysis-templates/health-check.yaml</code> :",
+    "s2apply":"Appliquez le template (référencez-le ensuite dans la stratégie canary du Rollout) :",
+    "s3h":"Étape 3 · Playbook de reprise après sinistre",
+    "s3b":"Un script orchestre la sauvegarde et la vérification de l'état du cluster. Enregistrez <code>disaster-recovery-playbook.sh</code> :",
+    "s3apply":"Rendez-le exécutable, lancez une sauvegarde et vérifiez :",
+    "s4h":"Étape 4 · Recovery point-in-time depuis Git",
+    "s4b":"Votre dépôt Git est votre sauvegarde : vous pouvez créer des points de restauration et y revenir. Enregistrez <code>git-recovery.sh</code> :",
+    "s4apply":"Créez un point de reprise, puis listez les points disponibles :",
+    "s5h":"Étape 5 · Chaos engineering",
+    "s5b":"Validez le rollback en conditions réelles : on déploie une image cassée, le rollout se dégrade, puis on revient en arrière. Enregistrez <code>chaos-engineering.sh</code> :",
+    "s5apply":"Rendez-le exécutable et lancez le scénario, puis vérifiez le rollout :",
     "critH":"Critères de réussite",
-    "c1":"Rollout Canary appliqué et sain.","c2":"Rollout Blue-Green appliqué.","c3":"Rollout A/B appliqué.","c4":"Un déploiement déclenché et promu.","c5":"AnalysisTemplate de métriques en place.",
+    "c1":"Rollout avec probes appliqué.","c2":"AnalysisTemplate de health-check en place.","c3":"Sauvegarde de l'état réalisée.","c4":"Point de reprise Git créé.","c5":"Scénario de chaos exécuté et rollback validé.",
     "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
     "skip":"Ignorer","check":"Vérifier",
     "helpTitle":"Copilote de l'atelier",
     "helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.",
     "nextHint":"Indice suivant",
-    "hint0":"Collez le Rollout Canary dans l'onglet Manifests, enregistrez, puis appliquez-le.",
-    "hint1":"kubectl argo rollouts get rollout <nom> -n <ns> affiche l'état (Healthy/Progressing).",
-    "hint2":"Blue-Green : autoPromotionEnabled est false, donc on promeut manuellement avec promote.",
-    "hint3":"set image déclenche un nouveau déploiement progressif.",
-    "hint4":"L'AnalysisTemplate compare le taux de succès au seuil (>= 0.95).",
+    "hint0":"Collez le Rollout dans l'onglet Manifests, enregistrez, puis appliquez-le.",
+    "hint1":"Les probes liveness/readiness permettent à Argo de détecter un déploiement défaillant.",
+    "hint2":"Les scripts .sh se collent dans l'onglet Manifests, puis chmod +x et exécution.",
+    "hint3":"git snapshot crée un tag ; revenir à un commit restaure l'état de apps/.",
+    "hint4":"Le chaos déploie une image cassée : le rollout se dégrade et on fait undo.",
     "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — poste de travail Koffi Academy (gitops-cluster)",
-    "bEnv":"Cluster Kubernetes + Argo CD + Argo Rollouts prêts. Dépôt : /root/gitops-platform","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
-    "hHeader":"Commandes disponibles :","hApply":"appliquer un manifeste","hGet":"état d'un rollout","hStatus":"statut d'un rollout","hSet":"changer l'image (déclencher)","hPromote":"promouvoir un rollout","hList":"lister tous les rollouts","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
-    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Astuce : enregistrez d'abord ce manifeste dans l'onglet Manifests.",
-    "noRollout":"Error from server (NotFound): rollouts.argoproj.io \"{r}\" not found","rolloutSet":"rollout \"{r}\" image updated","rolloutPromoted":"rollout '{r}' promoted",
-    "checkHeader":"Progression de la tâche :","chkCanary":"Rollout Canary appliqué","chkBg":"Rollout Blue-Green appliqué","chkAb":"Rollout A/B appliqué","chkTrigger":"Déploiement déclenché et promu","chkAnalysis":"AnalysisTemplate appliqué","chkAll":"Tous les critères sont remplis. Chapitre 1 terminé !","skipped":"Étape ignorée.",
-    "cmdNF":"{c} : commande introuvable. Tapez `help`.","kNF":"error: commande non simulée dans cet atelier — utilisez kubectl / kubectl argo rollouts.","catNF":"cat : {f} : aucun fichier de ce type",
-    "tSavedFile":"Manifeste enregistré","tDone":"Chapitre 1 terminé — progressive delivery en place"
+    "bEnv":"Cluster + Argo Rollouts prêts. Dépôt : /root/gitops-platform","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hApply":"appliquer un manifeste","hStatus":"statut d'un rollout","hGet":"état d'un rollout","hChmod":"rendre un script exécutable","hRun":"exécuter un script (.sh)","hLs":"lister un dossier","hUndo":"rollback d'un rollout","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Astuce : enregistrez d'abord ce fichier dans l'onglet Manifests.",
+    "shNoFile":"bash: {f}: No such file or directory","shHint":"Astuce : enregistrez d'abord ce script dans l'onglet Manifests.","shUsage":"Usage: {f} {a}",
+    "checkHeader":"Progression de la tâche :","chkRb":"Rollout avec probes appliqué","chkHc":"AnalysisTemplate health-check appliqué","chkBackup":"Sauvegarde exécutée","chkGit":"Point de reprise Git créé","chkChaos":"Scénario de chaos exécuté","chkAll":"Tous les critères sont remplis. Chapitre 2 terminé !","skipped":"Étape ignorée.",
+    "cmdNF":"{c} : commande introuvable. Tapez `help`.","kNF":"error: commande non simulée dans cet atelier.","catNF":"cat : {f} : aucun fichier de ce type",
+    "tSavedFile":"Fichier enregistré","tDone":"Chapitre 2 terminé — rollback & reprise en place"
   },
   "de":{
-    "navOverview":"Übersicht","navChapter2":"Kapitel 2","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "navChapter1":"Kapitel 1","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
     "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Manifests",
-    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Fügen Sie das Manifest aus den Anweisungen ein und speichern Sie.",
-    "mRollouts":"Rollouts","mAnalysis":"Analysis",
-    "instrHead":"Anleitung","instrTitle":"Progressive Delivery mit Argo Rollouts",
-    "instrSub":"Sie setzen progressive Deployment-Strategien um — Canary, Blue-Green und A/B — und dann die automatische, metrikbasierte Promotion. Diese Patterns verringern den Radius von Ausfällen und erhöhen das Vertrauen in Deployments.",
+    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Fügen Sie die Datei aus den Anweisungen ein und speichern Sie.",
+    "mRollback":"Rollback","mBackup":"Backup",
+    "instrHead":"Anleitung","instrTitle":"Automatisches Rollback & Disaster Recovery",
+    "instrSub":"Sie richten ein automatisches Rollback bei fehlgeschlagenem Health-Check ein, Disaster-Recovery-Playbooks, eine Point-in-Time-Wiederherstellung aus Git und Chaos-Tests zur Validierung der Resilienz. Rollback senkt die MTTR; Git ist Ihr Recovery-Backup.",
     "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
-    "s1h":"Schritt 1 · Canary-Deployment",
-    "s1b":"Canary verschiebt den Traffic schrittweise zur neuen Version. Speichern Sie im Reiter <strong>Manifests</strong> <code>apps/canary/canary-rollout.yaml</code>:",
-    "s1apply":"Anwenden und Zustand im <strong>Terminal</strong> beobachten:",
-    "s2h":"Schritt 2 · Blue-Green-Deployment",
-    "s2b":"Blue-Green schaltet sofort vom aktiven (blue) zum Preview-Service (green) um. Speichern Sie <code>apps/blue-green/blue-green-rollout.yaml</code>:",
-    "s2apply":"Anwenden und beobachten:",
-    "s3h":"Schritt 3 · A/B-Testing",
-    "s3b":"A/B leitet Nutzersegmente (über Header) auf verschiedene Versionen. Speichern Sie <code>apps/ab-testing/ab-rollout.yaml</code>:",
-    "s3apply":"Anwenden und prüfen:",
-    "s4h":"Schritt 4 · Rollouts auslösen und verfolgen",
-    "s4b":"Lösen Sie ein neues Deployment durch Image-Wechsel aus und beobachten Sie den Fortschritt. Promoten Sie dann das Blue-Green manuell:",
-    "s5h":"Schritt 5 · Automatische Promotion über Metriken",
-    "s5b":"Ein <code>AnalysisTemplate</code> entscheidet automatisch über Promotion oder Rollback anhand der Erfolgsrate. Speichern Sie <code>rollouts/analysis-templates/success-rate.yaml</code>:",
-    "s5apply":"Template anwenden und alle Rollouts auflisten:",
+    "s1h":"Schritt 1 · Rollout mit automatischem Rollback",
+    "s1b":"Erstellen Sie einen Rollout mit Liveness/Readiness-Probes. Speichern Sie im Reiter <strong>Manifests</strong> <code>apps/auto-rollback/rollback-demo.yaml</code>:",
+    "s1apply":"Anwenden und warten, bis der Rollout gesund ist:",
+    "s2h":"Schritt 2 · Rollback per Health-Check",
+    "s2b":"Ein <code>AnalysisTemplate</code> überwacht die Gesundheit und löst bei Fehlern das Rollback aus. Speichern Sie <code>rollouts/analysis-templates/health-check.yaml</code>:",
+    "s2apply":"Template anwenden (danach in der Canary-Strategie des Rollouts referenzieren):",
+    "s3h":"Schritt 3 · Disaster-Recovery-Playbook",
+    "s3b":"Ein Skript orchestriert Backup und Prüfung des Cluster-Zustands. Speichern Sie <code>disaster-recovery-playbook.sh</code>:",
+    "s3apply":"Ausführbar machen, ein Backup starten und prüfen:",
+    "s4h":"Schritt 4 · Point-in-Time-Recovery aus Git",
+    "s4b":"Ihr Git-Repository ist Ihr Backup: Sie können Wiederherstellungspunkte erstellen und dorthin zurück. Speichern Sie <code>git-recovery.sh</code>:",
+    "s4apply":"Erstellen Sie einen Wiederherstellungspunkt und listen Sie die verfügbaren auf:",
+    "s5h":"Schritt 5 · Chaos Engineering",
+    "s5b":"Validieren Sie das Rollback real: ein kaputtes Image wird deployt, der Rollout degradiert, dann rollen wir zurück. Speichern Sie <code>chaos-engineering.sh</code>:",
+    "s5apply":"Ausführbar machen, das Szenario starten und den Rollout prüfen:",
     "critH":"Erfolgskriterien",
-    "c1":"Canary-Rollout angewendet und gesund.","c2":"Blue-Green-Rollout angewendet.","c3":"A/B-Rollout angewendet.","c4":"Ein Deployment ausgelöst und promotet.","c5":"Metrik-AnalysisTemplate vorhanden.",
+    "c1":"Rollout mit Probes angewendet.","c2":"Health-Check-AnalysisTemplate vorhanden.","c3":"Backup des Zustands erstellt.","c4":"Git-Wiederherstellungspunkt erstellt.","c5":"Chaos-Szenario ausgeführt und Rollback validiert.",
     "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
     "skip":"Überspringen","check":"Prüfen",
     "helpTitle":"Lab-Copilot",
     "helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.",
     "nextHint":"Nächster Hinweis",
-    "hint0":"Fügen Sie den Canary-Rollout im Reiter Manifests ein, speichern Sie und wenden Sie ihn an.",
-    "hint1":"kubectl argo rollouts get rollout <name> -n <ns> zeigt den Zustand (Healthy/Progressing).",
-    "hint2":"Blue-Green: autoPromotionEnabled ist false, also manuell mit promote promoten.",
-    "hint3":"set image löst ein neues progressives Deployment aus.",
-    "hint4":"Das AnalysisTemplate vergleicht die Erfolgsrate mit dem Schwellenwert (>= 0.95).",
+    "hint0":"Fügen Sie den Rollout im Reiter Manifests ein, speichern Sie und wenden Sie ihn an.",
+    "hint1":"Liveness/Readiness-Probes erlauben Argo, ein fehlerhaftes Deployment zu erkennen.",
+    "hint2":"Die .sh-Skripte werden im Reiter Manifests eingefügt, dann chmod +x und ausgeführt.",
+    "hint3":"git snapshot erstellt einen Tag; Rückkehr zu einem Commit stellt apps/ wieder her.",
+    "hint4":"Chaos deployt ein kaputtes Image: der Rollout degradiert und wir machen undo.",
     "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — Koffi-Academy-Arbeitsplatz (gitops-cluster)",
-    "bEnv":"Kubernetes-Cluster + Argo CD + Argo Rollouts bereit. Repository: /root/gitops-platform","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
-    "hHeader":"Verfügbare Befehle:","hApply":"ein Manifest anwenden","hGet":"Zustand eines Rollouts","hStatus":"Status eines Rollouts","hSet":"Image ändern (auslösen)","hPromote":"einen Rollout promoten","hList":"alle Rollouts auflisten","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
-    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tipp: speichern Sie dieses Manifest zuerst im Reiter Manifests.",
-    "noRollout":"Error from server (NotFound): rollouts.argoproj.io \"{r}\" not found","rolloutSet":"rollout \"{r}\" image updated","rolloutPromoted":"rollout '{r}' promoted",
-    "checkHeader":"Fortschritt der Aufgabe:","chkCanary":"Canary-Rollout angewendet","chkBg":"Blue-Green-Rollout angewendet","chkAb":"A/B-Rollout angewendet","chkTrigger":"Deployment ausgelöst und promotet","chkAnalysis":"AnalysisTemplate angewendet","chkAll":"Alle Kriterien erfüllt. Kapitel 1 abgeschlossen!","skipped":"Schritt übersprungen.",
-    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","kNF":"error: Befehl in diesem Labor nicht simuliert — nutzen Sie kubectl / kubectl argo rollouts.","catNF":"cat: {f}: keine solche Datei",
-    "tSavedFile":"Manifest gespeichert","tDone":"Kapitel 1 abgeschlossen — Progressive Delivery steht"
+    "bEnv":"Cluster + Argo Rollouts bereit. Repository: /root/gitops-platform","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hApply":"ein Manifest anwenden","hStatus":"Status eines Rollouts","hGet":"Zustand eines Rollouts","hChmod":"ein Skript ausführbar machen","hRun":"ein Skript ausführen (.sh)","hLs":"ein Verzeichnis auflisten","hUndo":"Rollback eines Rollouts","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tipp: speichern Sie diese Datei zuerst im Reiter Manifests.",
+    "shNoFile":"bash: {f}: No such file or directory","shHint":"Tipp: speichern Sie dieses Skript zuerst im Reiter Manifests.","shUsage":"Usage: {f} {a}",
+    "checkHeader":"Fortschritt der Aufgabe:","chkRb":"Rollout mit Probes angewendet","chkHc":"Health-Check-AnalysisTemplate angewendet","chkBackup":"Backup ausgeführt","chkGit":"Git-Wiederherstellungspunkt erstellt","chkChaos":"Chaos-Szenario ausgeführt","chkAll":"Alle Kriterien erfüllt. Kapitel 2 abgeschlossen!","skipped":"Schritt übersprungen.",
+    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","kNF":"error: Befehl in diesem Labor nicht simuliert.","catNF":"cat: {f}: keine solche Datei",
+    "tSavedFile":"Datei gespeichert","tDone":"Kapitel 2 abgeschlossen — Rollback & Recovery stehen"
   },
   "en":{
-    "navOverview":"Overview","navChapter2":"Chapter 2","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "navChapter1":"Chapter 1","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
     "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Manifests",
-    "btnClear":"Clear","btnSave":"Save","phPaste":"Paste the manifest from the instructions, then Save.",
-    "mRollouts":"Rollouts","mAnalysis":"Analysis",
-    "instrHead":"Instructions","instrTitle":"Progressive delivery with Argo Rollouts",
-    "instrSub":"You implement progressive deployment strategies — Canary, Blue-Green and A/B — then automatic metric-based promotion. These patterns reduce the blast radius of failures and increase deployment confidence.",
+    "btnClear":"Clear","btnSave":"Save","phPaste":"Paste the file from the instructions, then Save.",
+    "mRollback":"Rollback","mBackup":"Backup",
+    "instrHead":"Instructions","instrTitle":"Automated rollback & disaster recovery",
+    "instrSub":"You set up automatic rollback on failed health-checks, disaster recovery playbooks, point-in-time restore from Git, and chaos tests to validate resilience. Rollback reduces MTTR; Git is your recovery backup.",
     "progLabel":"Progress","copy":"Copy","copied":"Copied",
-    "s1h":"Step 1 · Canary deployment",
-    "s1b":"Canary gradually shifts traffic to the new version. In the <strong>Manifests</strong> tab, save <code>apps/canary/canary-rollout.yaml</code>:",
-    "s1apply":"Apply and observe the state in the <strong>Terminal</strong>:",
-    "s2h":"Step 2 · Blue-Green deployment",
-    "s2b":"Blue-green instantly switches from the active (blue) to the preview service (green). Save <code>apps/blue-green/blue-green-rollout.yaml</code>:",
-    "s2apply":"Apply and observe:",
-    "s3h":"Step 3 · A/B testing",
-    "s3b":"A/B routes user segments (via headers) to different versions. Save <code>apps/ab-testing/ab-rollout.yaml</code>:",
-    "s3apply":"Apply and verify:",
-    "s4h":"Step 4 · Trigger and follow the rollouts",
-    "s4b":"Trigger a new deployment by changing the image, then watch the gradual progression. Then promote the blue-green manually:",
-    "s5h":"Step 5 · Automatic metric-based promotion",
-    "s5b":"An <code>AnalysisTemplate</code> automatically decides to promote or roll back based on the success rate. Save <code>rollouts/analysis-templates/success-rate.yaml</code>:",
-    "s5apply":"Apply the template, then list all rollouts:",
+    "s1h":"Step 1 · Rollout with automatic rollback",
+    "s1b":"Create a Rollout with liveness/readiness probes. In the <strong>Manifests</strong> tab, save <code>apps/auto-rollback/rollback-demo.yaml</code>:",
+    "s1apply":"Apply, then wait for the rollout to be healthy:",
+    "s2h":"Step 2 · Rollback driven by health-check",
+    "s2b":"An <code>AnalysisTemplate</code> monitors health and triggers rollback if it fails. Save <code>rollouts/analysis-templates/health-check.yaml</code>:",
+    "s2apply":"Apply the template (then reference it in the rollout's canary strategy):",
+    "s3h":"Step 3 · Disaster recovery playbook",
+    "s3b":"A script orchestrates backing up and verifying the cluster state. Save <code>disaster-recovery-playbook.sh</code>:",
+    "s3apply":"Make it executable, run a backup and verify:",
+    "s4h":"Step 4 · Point-in-time recovery from Git",
+    "s4b":"Your Git repository is your backup: you can create recovery points and roll back to them. Save <code>git-recovery.sh</code>:",
+    "s4apply":"Create a recovery point, then list the available ones:",
+    "s5h":"Step 5 · Chaos engineering",
+    "s5b":"Validate rollback for real: a broken image is deployed, the rollout degrades, then we roll back. Save <code>chaos-engineering.sh</code>:",
+    "s5apply":"Make it executable, run the scenario, then verify the rollout:",
     "critH":"Success criteria",
-    "c1":"Canary rollout applied and healthy.","c2":"Blue-Green rollout applied.","c3":"A/B rollout applied.","c4":"A deployment triggered and promoted.","c5":"Metric AnalysisTemplate in place.",
+    "c1":"Rollout with probes applied.","c2":"Health-check AnalysisTemplate in place.","c3":"State backup performed.","c4":"Git recovery point created.","c5":"Chaos scenario run and rollback validated.",
     "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
     "skip":"Skip","check":"Check",
     "helpTitle":"Lab Copilot",
     "helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.",
     "nextHint":"Next hint",
-    "hint0":"Paste the Canary rollout in the Manifests tab, save, then apply it.",
-    "hint1":"kubectl argo rollouts get rollout <name> -n <ns> shows the state (Healthy/Progressing).",
-    "hint2":"Blue-Green: autoPromotionEnabled is false, so promote manually with promote.",
-    "hint3":"set image triggers a new progressive deployment.",
-    "hint4":"The AnalysisTemplate compares the success rate to the threshold (>= 0.95).",
+    "hint0":"Paste the Rollout in the Manifests tab, save, then apply it.",
+    "hint1":"Liveness/readiness probes let Argo detect a failing deployment.",
+    "hint2":"The .sh scripts are pasted in the Manifests tab, then chmod +x and run.",
+    "hint3":"git snapshot creates a tag; going back to a commit restores apps/.",
+    "hint4":"Chaos deploys a broken image: the rollout degrades and we undo.",
     "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — Koffi Academy workstation (gitops-cluster)",
-    "bEnv":"Kubernetes cluster + Argo CD + Argo Rollouts ready. Repository: /root/gitops-platform","bTip":"Tip: type `help` for commands, `check` for progress.",
-    "hHeader":"Available commands:","hApply":"apply a manifest","hGet":"a rollout's state","hStatus":"a rollout's status","hSet":"change the image (trigger)","hPromote":"promote a rollout","hList":"list all rollouts","hCheck":"check your progress","hClear":"clear the terminal",
-    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tip: save this manifest in the Manifests tab first.",
-    "noRollout":"Error from server (NotFound): rollouts.argoproj.io \"{r}\" not found","rolloutSet":"rollout \"{r}\" image updated","rolloutPromoted":"rollout '{r}' promoted",
-    "checkHeader":"Task progress:","chkCanary":"Canary rollout applied","chkBg":"Blue-Green rollout applied","chkAb":"A/B rollout applied","chkTrigger":"Deployment triggered and promoted","chkAnalysis":"AnalysisTemplate applied","chkAll":"All criteria met. Chapter 1 complete!","skipped":"Step skipped.",
-    "cmdNF":"{c}: command not found. Type `help`.","kNF":"error: command not simulated in this lab — use kubectl / kubectl argo rollouts.","catNF":"cat: {f}: no such file",
-    "tSavedFile":"Manifest saved","tDone":"Chapter 1 complete — progressive delivery in place"
+    "bEnv":"Cluster + Argo Rollouts ready. Repository: /root/gitops-platform","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hApply":"apply a manifest","hStatus":"a rollout's status","hGet":"a rollout's state","hChmod":"make a script executable","hRun":"run a script (.sh)","hLs":"list a directory","hUndo":"roll back a rollout","hCheck":"check your progress","hClear":"clear the terminal",
+    "applyNoFile":"error: the path \"{f}\" does not exist","applyHint":"Tip: save this file in the Manifests tab first.",
+    "shNoFile":"bash: {f}: No such file or directory","shHint":"Tip: save this script in the Manifests tab first.","shUsage":"Usage: {f} {a}",
+    "checkHeader":"Task progress:","chkRb":"Rollout with probes applied","chkHc":"Health-check AnalysisTemplate applied","chkBackup":"Backup performed","chkGit":"Git recovery point created","chkChaos":"Chaos scenario run","chkAll":"All criteria met. Chapter 2 complete!","skipped":"Step skipped.",
+    "cmdNF":"{c}: command not found. Type `help`.","kNF":"error: command not simulated in this lab.","catNF":"cat: {f}: no such file",
+    "tSavedFile":"File saved","tDone":"Chapter 2 complete — rollback & recovery in place"
   }
 };
 
 (function(){
   "use strict";
-  var FILES=["apps/canary/canary-rollout.yaml","apps/blue-green/blue-green-rollout.yaml","apps/ab-testing/ab-rollout.yaml","rollouts/analysis-templates/success-rate.yaml"];
+  var FILES=["apps/auto-rollback/rollback-demo.yaml","rollouts/analysis-templates/health-check.yaml","disaster-recovery-playbook.sh","git-recovery.sh","chaos-engineering.sh"];
   var I=window.I18N; var lang=localStorage.getItem("preferred-lang"); if(!I[lang])lang="de";
   function t(key,vars){var s=(I[lang]&&I[lang][key]!==undefined)?I[lang][key]:(I.en[key]!==undefined?I.en[key]:key);if(vars)Object.keys(vars).forEach(function(k){s=s.replace(new RegExp("\\{"+k+"\\}","g"),vars[k]);});return s;}
 
   var FS={}; FILES.forEach(function(f){FS[f]="";});
   var currentFile=FILES[0];
-  var st={canary:false,bluegreen:false,ab:false,trigger:false,analysis:false};
-  var applied={"canary-demo":false,"bluegreen-demo":false,"ab-demo":false}; var analysisApplied=false; var triggered=false; var hi=0;
+  var st={rollback:false,health:false,playbook:false,gitrec:false,chaos:false};
+  var rbApplied=false,hcApplied=false,backupDone=false,snapshotDone=false,chaosDone=false; var hi=0;
 
   var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput"), editor=document.getElementById("fileEditor");
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
@@ -654,83 +623,88 @@ window.I18N = {
   function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
   function banner(){out.innerHTML="";print(t("bSsh"),"line-muted");print(t("bUbuntu"),"line-muted");print(t("bEnv"),"line-muted");print(t("bTip"),"line-muted");print("");}
 
-  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["canary","bluegreen","ab","trigger","analysis"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 5";document.getElementById("progressFill").style.width=(tot/5*100)+"%";if(tot===5)toast(t("tDone"));}
-  function refresh(){var n=(applied["canary-demo"]?1:0)+(applied["bluegreen-demo"]?1:0)+(applied["ab-demo"]?1:0);document.getElementById("mRollouts").textContent=n+"/3";document.getElementById("mAnalysis").textContent=analysisApplied?"OK":"—";}
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["rollback","health","playbook","gitrec","chaos"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 5";document.getElementById("progressFill").style.width=(tot/5*100)+"%";if(tot===5)toast(t("tDone"));}
+  function refresh(){document.getElementById("mRollback").textContent=rbApplied?"OK":"—";document.getElementById("mBackup").textContent=backupDone?"OK":"—";}
 
   function norm(p){return p?p.trim().replace(/^\.\//,"").replace(/^\/root\/gitops-platform\//,"").replace(/\/+$/,""):"";}
   function resolve(p){p=norm(p);return FS[p]!==undefined?p:null;}
-  function whichRollout(body){if(/name:\s*canary-demo/.test(body))return"canary-demo";if(/name:\s*bluegreen-demo/.test(body))return"bluegreen-demo";if(/name:\s*ab-demo/.test(body))return"ab-demo";if(/kind:\s*AnalysisTemplate/.test(body))return"analysis";return null;}
-
-  function rolloutStatus(name,ns){
-    print("Name:            "+name);
-    print("Namespace:       "+ns);
-    print("Status:          Healthy","line-ok");
-    print("Strategy:        "+(name==="bluegreen-demo"?"BlueGreen":"Canary"));
-    print("Images:          "+(triggered&&name!=="ab-demo"?"nginx:1.26 (stable)":"nginx:1.25 (stable)"));
-    print("Replicas:");
-    print("  Desired:       "+(name==="canary-demo"?5:name==="bluegreen-demo"?3:4));
-    print("  Updated:       "+(name==="canary-demo"?5:name==="bluegreen-demo"?3:4));
-    print("  Ready:         "+(name==="canary-demo"?5:name==="bluegreen-demo"?3:4));
-    print("  Available:     "+(name==="canary-demo"?5:name==="bluegreen-demo"?3:4));
-  }
 
   function applyFile(path){
-    var f=resolve(path);
-    if(!f||!FS[f].trim()){print(t("applyNoFile",{f:path||"?"}),"line-error");print(t("applyHint"),"line-warn");return false;}
-    var which=whichRollout(FS[f]);
-    if(which==="canary-demo"){applied["canary-demo"]=true;print("rollout.argoproj.io/canary-demo created","line-ok");print("service/canary-demo created","line-ok");refresh();setStep("canary",true);return true;}
-    if(which==="bluegreen-demo"){applied["bluegreen-demo"]=true;print("rollout.argoproj.io/bluegreen-demo created","line-ok");print("service/bluegreen-demo-active created","line-ok");print("service/bluegreen-demo-preview created","line-ok");refresh();setStep("bluegreen",true);return true;}
-    if(which==="ab-demo"){applied["ab-demo"]=true;print("rollout.argoproj.io/ab-demo created","line-ok");print("service/ab-demo-stable created","line-ok");print("service/ab-demo-canary created","line-ok");refresh();setStep("ab",true);return true;}
-    if(which==="analysis"){analysisApplied=true;print("analysistemplate.argoproj.io/success-rate created","line-ok");refresh();setStep("analysis",true);return true;}
-    print("error: invalid manifest","line-error");return false;
+    var f=resolve(path); if(!f||!FS[f].trim()){print(t("applyNoFile",{f:path||"?"}),"line-error");print(t("applyHint"),"line-warn");return;}
+    var b=FS[f];
+    if(/name:\s*rollback-demo/.test(b)){rbApplied=true;print("rollout.argoproj.io/rollback-demo created","line-ok");print("service/rollback-demo created","line-ok");refresh();setStep("rollback",true);return;}
+    if(/kind:\s*AnalysisTemplate/.test(b)){hcApplied=true;print("analysistemplate.argoproj.io/health-check created","line-ok");setStep("health",true);return;}
+    print("error: invalid manifest","line-error");
+  }
+
+  function runSh(path,arg){
+    var f=resolve(path); if(!f||!FS[f].trim()){print(t("shNoFile",{f:path}),"line-error");print(t("shHint"),"line-warn");return;}
+    var base=f;
+    if(base==="disaster-recovery-playbook.sh"){
+      if(arg==="backup"){print("Sauvegarde de l'etat du cluster...","line-muted");print("Backup enregistre dans: /root/gitops-platform/backups/20260620-173000","line-ok");backupDone=true;refresh();setStep("playbook",true);return;}
+      if(arg==="verify"){print("Verification de la sante du cluster...","line-muted");print("NAME           STATUS   ROLES    AGE");print("gitops-node1   Ready    master   6d");return;}
+      print(t("shUsage",{f:f,a:"{backup|verify}"}),"line-warn");return;
+    }
+    if(base==="git-recovery.sh"){
+      if(arg==="snapshot"){print("Snapshot cree: pre-chaos-baseline","line-ok");snapshotDone=true;setStep("gitrec",true);return;}
+      if(arg==="list"){print("a1b2c3d (HEAD -> main, tag: pre-chaos-baseline) Snapshot de reprise: pre-chaos-baseline");print("f4e5d6c Etat initial");return;}
+      print(t("shUsage",{f:f,a:"{snapshot <nom>|list}"}),"line-warn");return;
+    }
+    if(base==="chaos-engineering.sh"){
+      if(arg==="broken-deployment"){
+        print("Deploiement d'une image cassee pour tester le rollback...","line-muted");
+        print("rollout \"rollback-demo\" image updated","line-ok");
+        print("Surveillance du rollout (devrait se degrader)...","line-muted");
+        print("Name: rollback-demo   Namespace: production   Status: Degraded","line-error");
+        print("Message: ImagePullBackOff (nginx:broken-tag-does-not-exist)","line-error");
+        print("rollout 'rollback-demo' undo to revision 1","line-ok");
+        print("Rollback manuel declenche.","line-ok");
+        chaosDone=true;setStep("chaos",true);return;
+      }
+      print(t("shUsage",{f:f,a:"{broken-deployment}"}),"line-warn");return;
+    }
+    print(t("shUsage",{f:f,a:""}),"line-warn");
   }
 
   function handle(raw){
     var cmd=raw.trim(); if(!cmd) return; var parts=cmd.split(/\s+/); var head=parts[0];
     if(head==="help"){print(t("hHeader"),"line-muted");
-      print("  kubectl apply -f <manifest>                      "+t("hApply"));
-      print("  kubectl argo rollouts get rollout <n> -n <ns>    "+t("hGet"));
-      print("  kubectl argo rollouts status <n> -n <ns>         "+t("hStatus"));
-      print("  kubectl argo rollouts set image <n> -n <ns> ...  "+t("hSet"));
-      print("  kubectl argo rollouts promote <n> -n <ns>        "+t("hPromote"));
-      print("  kubectl argo rollouts list rollouts -A           "+t("hList"));
-      print("  check   ·   clear                              "+t("hCheck"));return;}
+      print("  kubectl apply -f <manifest>                  "+t("hApply"));
+      print("  kubectl argo rollouts status <n> -n <ns>     "+t("hStatus"));
+      print("  kubectl argo rollouts get rollout <n> -n <ns> "+t("hGet"));
+      print("  chmod +x <script.sh>                         "+t("hChmod"));
+      print("  /root/gitops-platform/<script.sh> <arg>      "+t("hRun"));
+      print("  ls -lh <dir>                                 "+t("hLs"));
+      print("  check   ·   clear                          "+t("hCheck"));return;}
     if(head==="clear"){out.innerHTML="";return;}
     if(head==="check"){runCheck();return;}
+    if(head==="chmod"){return;}
     if(head==="cat"){var f=resolve(parts[1]);if(f&&FS[f])FS[f].split("\n").forEach(function(l){print(l);});else print(t("catNF",{f:parts[1]||""}),"line-error");return;}
-    if(head!=="kubectl"&&head!=="k"){print(t("cmdNF",{c:head}),"line-error");return;}
+    if(head==="ls"){if(/backups/.test(cmd)){if(backupDone){print("total 8.0K");print("drwxr-xr-x 2 root root 4.0K Jun 20 17:30 20260620-173000");}else{print("ls: cannot access '/root/gitops-platform/backups/': No such file or directory","line-warn");}}else{print("apps  rollouts  backups  disaster-recovery-playbook.sh  git-recovery.sh  chaos-engineering.sh");}return;}
+    if(/\.sh(\s|$)/.test(cmd) && head.indexOf("/root/gitops-platform/")===0){runSh(head,parts[1]||"");return;}
 
+    if(head!=="kubectl"&&head!=="k"){print(t("cmdNF",{c:head}),"line-error");return;}
     if(parts[1]==="apply"){var fi=parts.indexOf("-f");applyFile(fi>=0?parts[fi+1]:"");return;}
-    // kubectl argo rollouts ...
     if(parts[1]==="argo"&&parts[2]==="rollouts"){
-      var verb=parts[3]||""; var ni=parts.indexOf("-n"); var ns=ni>=0?parts[ni+1]:"";
-      if(verb==="get"||verb==="status"){
-        var name=(verb==="get")?parts[5]:parts[4];
-        if(name && applied[name]===false && name!=="analysis"){print(t("noRollout",{r:name}),"line-error");return;}
-        if(verb==="status"){print("Healthy","line-ok");return;}
-        rolloutStatus(name,ns||"-");return;
-      }
-      if(verb==="set"&&parts[4]==="image"){var nm=parts[5];triggered=true;setStep("trigger",true);print(t("rolloutSet",{r:nm}),"line-ok");return;}
-      if(verb==="promote"){var pn=parts[4];triggered=true;setStep("trigger",true);print(t("rolloutPromoted",{r:pn}),"line-ok");return;}
-      if(verb==="list"){
-        print("NAMESPACE    NAME             STRATEGY   STATUS     STEP   SET-WEIGHT");
-        if(applied["canary-demo"])print("canary       canary-demo      Canary     Healthy    8/8    100");
-        if(applied["bluegreen-demo"])print("production   bluegreen-demo   BlueGreen  Healthy    -      -");
-        if(applied["ab-demo"])print("staging      ab-demo          Canary     Paused     1/2    50");
-        return;
-      }
+      var verb=parts[3]||"";
+      if(verb==="status"){print("Healthy","line-ok");return;}
+      if(verb==="get"){print("Name:            rollback-demo");print("Namespace:       production");print((chaosDone?"Status:          Healthy (rolled back to rev 1)":"Status:          Healthy"),"line-ok");print("Strategy:        Canary");print("Images:          nginx:1.25 (stable)");print("Replicas:        3/3 ready");return;}
+      if(verb==="undo"){print("rollout 'rollback-demo' undo","line-ok");return;}
+      if(verb==="set"&&parts[4]==="image"){print("rollout \"rollback-demo\" image updated","line-ok");return;}
+      if(verb==="list"){print("NAMESPACE    NAME            STRATEGY   STATUS");print("production   rollback-demo   Canary     Healthy");return;}
     }
+    if(parts[1]==="get"&&/rollout/.test(parts[2]||"")){print("NAME            STATUS    AGE");print("rollback-demo   Healthy   3m");return;}
     print(t("kNF"),"line-error");
   }
 
   function runCheck(){
     print(t("checkHeader"),"line-muted");
-    print((st.canary?"  [x] ":"  [ ] ")+t("chkCanary"),st.canary?"line-ok":"line-warn");
-    print((st.bluegreen?"  [x] ":"  [ ] ")+t("chkBg"),st.bluegreen?"line-ok":"line-warn");
-    print((st.ab?"  [x] ":"  [ ] ")+t("chkAb"),st.ab?"line-ok":"line-warn");
-    print((st.trigger?"  [x] ":"  [ ] ")+t("chkTrigger"),st.trigger?"line-ok":"line-warn");
-    print((st.analysis?"  [x] ":"  [ ] ")+t("chkAnalysis"),st.analysis?"line-ok":"line-warn");
-    if(st.canary&&st.bluegreen&&st.ab&&st.trigger&&st.analysis)print(t("chkAll"),"line-ok");
+    print((st.rollback?"  [x] ":"  [ ] ")+t("chkRb"),st.rollback?"line-ok":"line-warn");
+    print((st.health?"  [x] ":"  [ ] ")+t("chkHc"),st.health?"line-ok":"line-warn");
+    print((st.playbook?"  [x] ":"  [ ] ")+t("chkBackup"),st.playbook?"line-ok":"line-warn");
+    print((st.gitrec?"  [x] ":"  [ ] ")+t("chkGit"),st.gitrec?"line-ok":"line-warn");
+    print((st.chaos?"  [x] ":"  [ ] ")+t("chkChaos"),st.chaos?"line-ok":"line-warn");
+    if(st.rollback&&st.health&&st.playbook&&st.gitrec&&st.chaos)print(t("chkAll"),"line-ok");
   }
 
   function runScript(text){
