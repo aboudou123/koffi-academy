@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="de">
+<head>
+   <meta charset="utf-8">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Self-Service: Deploy a New API to APIM via Multi-Agent Platform | Laboratoire — Koffi Academy</title>
+   <meta name="description" content="Laboratoire pratique Koffi Academy : plateforme multi-agents sur Azure — supervisor plan/approve/apply, serveurs MCP (APIM, GitHub, Azure), dry-run et validation humaine, GitOps comme source de vérité, et Azure Front Door devant APIM.">
+   <meta name="theme-color" content="#07294d">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+   <style>
+:root{--navy:#07294d;--navy-d:#05203f;--ink:#0f1c2e;--accent:#f89035;--go:#4aa3e6;--slate-600:#475569;--slate-500:#64748b;--slate-400:#94a3b8;--slate-300:#cbd5e1;--slate-200:#e2e8f0;--slate-100:#f1f5f9;--slate-50:#f8fafc}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--slate-50);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.kh{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(18,48,79,.98),rgba(9,33,61,.98));backdrop-filter:blur(14px);border-bottom:1px solid rgba(214,160,45,.42);box-shadow:0 14px 36px rgba(2,12,26,.24)}
+.kh__in{max-width:1140px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.kh__brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+.kh__mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f9d77e 0%,#d6a02d 55%,#b97911 100%);display:flex;align-items:center;justify-content:center;color:#07294d;font-size:15px;box-shadow:0 8px 22px rgba(214,160,45,.34)}
+.kh__name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.01em;color:#fff}
+.kh__nav{display:flex;align-items:center;gap:4px}
+.kh__nav a{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);text-decoration:none;padding:8px 14px;border-radius:8px;transition:all .18s}
+.kh__nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#041a32 0%,#07294d 50%,#0e3d72 85%,#1a5fa0 100%);color:#fff;padding:30px 0 40px}
+.hero__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:48px 48px;opacity:.5;-webkit-mask-image:radial-gradient(ellipse 70% 90% at 30% 0%,#000 40%,transparent 80%);mask-image:radial-gradient(ellipse 70% 90% at 30% 0%,#000 40%,transparent 80%)}
+.hero__glow{position:absolute;top:-30%;right:4%;width:340px;height:340px;background:radial-gradient(circle,rgba(74,163,230,.34),transparent 62%)}
+.hero .wrap{position:relative}
+.crumb{display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.6);margin-bottom:22px}
+.crumb a{text-decoration:none;color:rgba(255,255,255,.72)}
+.crumb a:hover{color:#fff}
+.crumb i{font-size:9px;color:rgba(255,255,255,.4)}
+.hero__head{display:flex;gap:20px;align-items:flex-start}
+.hero__head>div{min-width:0;flex:1}
+.hero__badge{width:66px;height:66px;border-radius:16px;background:#fff;display:flex;align-items:center;justify-content:center;padding:13px;box-shadow:0 8px 26px rgba(0,0,0,.3);flex-shrink:0}
+.hero__badge img{width:100%;height:100%;object-fit:contain}
+.hero__cat{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--go);margin:0 0 9px}
+.hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:clamp(23px,3vw,32px);line-height:1.14;margin:0 0 15px}
+.hero__meta{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.mchip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:rgba(255,255,255,.92);background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);padding:7px 13px;border-radius:999px}
+.mchip i{font-size:12px;color:var(--accent)}
+.mchip.lvl{color:#f0a98c}.mchip.lvl i{color:#f0a98c}
+.detail{padding:36px 0 80px}
+.detail .wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:30px;align-items:start}
+.card{background:#fff;border:1px solid var(--slate-200);border-radius:14px;box-shadow:0 6px 22px rgba(7,41,77,.05)}
+.card + .card{margin-top:24px}
+.card__head{display:flex;align-items:center;gap:11px;padding:18px 22px;border-bottom:1px solid var(--slate-100)}
+.card__head i{width:30px;height:30px;border-radius:8px;background:color-mix(in srgb,var(--accent) 14%,#fff);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px}
+.card__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16.5px;font-weight:700;letter-spacing:-.01em;color:var(--navy);margin:0}
+.card__head .tagx{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,#fff);padding:4px 10px;border-radius:999px}
+.card__body{padding:22px}
+.player{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#0b1f3a,#0f2c52 60%,#123a6c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:not-allowed}
+.player__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:34px 34px}
+.player__play{position:relative;width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.34);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;backdrop-filter:blur(3px)}
+.player__note{position:relative;font-size:13px;color:rgba(255,255,255,.78);font-weight:500}
+.player__soon{position:absolute;top:14px;right:14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(248,144,53,.9);padding:5px 11px;border-radius:999px}
+.chapters{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column}
+.chapters li{display:flex;align-items:center;gap:13px;padding:11px 4px;border-top:1px solid var(--slate-100);font-size:14px;color:var(--slate-600)}
+.chapters li:first-child{border-top:0}
+.chapters .num{width:26px;height:26px;border-radius:7px;background:var(--slate-100);color:var(--navy);font-family:'JetBrains Mono',monospace;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chapters .ttl{flex:1;color:var(--ink);font-weight:500}
+.chapters .dur{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--slate-400)}
+.obj{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:11px 22px}
+.obj li{display:flex;align-items:flex-start;gap:10px;font-size:13.7px;line-height:1.45;color:var(--slate-600)}
+.obj li i{color:#0f8a4f;font-size:12px;margin-top:3px;flex-shrink:0}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{position:relative;padding:0 0 22px 44px;counter-increment:s}
+.steps li:before{content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:9px;background:var(--navy);color:#fff;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center}
+.steps li:after{content:"";position:absolute;left:14px;top:34px;bottom:2px;width:2px;background:var(--slate-200)}
+.steps li:last-child{padding-bottom:0}
+.steps li:last-child:after{display:none}
+.steps h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:var(--navy);margin:4px 0 5px}
+.steps p{margin:0;font-size:13.6px;line-height:1.5;color:var(--slate-600)}
+.term{background:#0c1a2e;border:1px solid #1b3a5c;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(7,41,77,.18)}
+.term__bar{display:flex;align-items:center;gap:7px;padding:11px 14px;background:#0a1626;border-bottom:1px solid #18324f}
+.term__bar span{width:11px;height:11px;border-radius:50%}
+.term__bar .r{background:#ff5f57}.term__bar .y{background:#febc2e}.term__bar .g{background:#28c840}
+.term__bar em{margin-left:8px;font-family:'JetBrains Mono',monospace;font-style:normal;font-size:12px;color:#6b8cae}
+.term__body{padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.8px;line-height:1.75;color:#cde0f5;overflow-x:auto}
+.term__body .c{color:#5f7fa5}
+.term__body .p{color:#3ee08f}
+.term__body .o{color:#8fb4dd}
+.term__body .k{color:#f8b85f}
+.term__body pre{margin:0;white-space:pre-wrap;word-break:break-word}
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.spec__item{display:flex;gap:11px;align-items:flex-start;padding:13px 15px;background:var(--slate-50);border:1px solid var(--slate-100);border-radius:10px}
+.spec__item i{color:var(--accent);font-size:14px;margin-top:2px}
+.spec__item .k{display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--slate-400);margin-bottom:3px}
+.spec__item .v{font-size:13.4px;font-weight:500;color:var(--ink)}
+.aside{position:sticky;top:88px;display:flex;flex-direction:column;gap:20px}
+.fiche{background:#fff;border:1px solid var(--slate-200);border-radius:14px;overflow:hidden;box-shadow:0 6px 22px rgba(7,41,77,.06)}
+.fiche__top{background:linear-gradient(135deg,#07294d,#0e3d72);color:#fff;padding:20px 22px}
+.fiche__top h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin:0 0 3px}
+.fiche__top p{margin:0;font-size:12.5px;color:rgba(255,255,255,.66)}
+.fiche__rows{padding:8px 22px 6px}
+.frow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--slate-100);font-size:13.6px}
+.frow:last-child{border-bottom:0}
+.frow i{width:18px;text-align:center;color:var(--accent);font-size:13px}
+.frow .fk{color:var(--slate-500);min-width:88px}
+.frow .fv{margin-left:auto;font-weight:600;color:var(--ink);text-align:right}
+.fiche__pre{padding:0 22px 18px}
+.fiche__pre h4,.fiche__tags h4{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--slate-400);margin:14px 0 9px}
+.fiche__pre ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.fiche__pre li{display:flex;align-items:flex-start;gap:9px;font-size:13.2px;color:var(--slate-600)}
+.fiche__pre li i{color:#0f8a4f;font-size:10px;margin-top:4px}
+.fiche__tags{padding:0 22px 20px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#5a6a82;background:var(--slate-100);border-radius:6px;padding:4px 9px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;border-radius:11px;padding:13px 18px;cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);border:0;text-decoration:none}
+.btn--primary{background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(248,144,53,.32)}
+.btn--primary:hover{background:#ed7f1f}
+.btn--ghost{background:#fff;color:var(--navy);border:1.5px solid var(--slate-200)}
+.btn--ghost:hover{border-color:var(--navy)}
+.fiche__cta{padding:0 22px 22px;display:flex;flex-direction:column;gap:10px}
+.soon-hint{font-size:12px;color:var(--slate-400);text-align:center;margin:2px 0 0}
+.kf{background:var(--navy-d);color:rgba(255,255,255,.5);padding:26px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.07)}
+.kf p{margin:0;font-size:13px;letter-spacing:.2px}
+.kf strong{color:rgba(7,41,77,.76);font-weight:600}
+@media (max-width:980px){.detail .wrap{grid-template-columns:1fr}.aside{position:static;order:-1}.obj{grid-template-columns:1fr}.spec{grid-template-columns:1fr}}
+@media (max-width:600px){.hero__head{flex-direction:column;gap:14px}.kh__name{font-size:15.5px}.kh__nav a{padding:7px 9px;font-size:13px}}
+.kh__drop{position:relative;display:inline-flex;align-items:center}.kh__drop>a{padding-right:4px}.kh__droplabel{font-size:14.5px;font-weight:600;color:rgba(255,255,255,.78);padding:8px 4px 8px 14px;cursor:default}.kh__drop:hover .kh__droplabel{color:#fff}.kh__droplabel.active{color:#f9d77e}.kh__drop>i{color:rgba(255,255,255,.58);font-size:11px;cursor:pointer;padding:8px 10px 8px 2px}.kh__drop:hover>i{color:#f9d77e}.kh__menu{position:absolute;top:calc(100% + 2px);left:0;min-width:168px;background:#fff;border:1px solid rgba(214,160,45,.28);border-top:3px solid #d6a02d;border-radius:0 0 10px 10px;box-shadow:0 18px 38px rgba(7,41,77,.14);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .2s cubic-bezier(.4,0,.2,1);z-index:70}.kh__drop:hover .kh__menu{opacity:1;visibility:visible;transform:none}.kh__menu a{display:block;padding:9px 12px;border-radius:7px;font-size:14px;font-weight:600;color:rgba(7,41,77,.76)}.kh__menu a:hover{background:rgba(214,160,45,.12);color:#9a6510}
+/*txt-safe*/h1,h2,h3,h4,h5,h6,p,li,figcaption,dt,dd,blockquote{overflow-wrap:break-word;word-wrap:break-word}
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+</head>
+<body>
+   <header class="kh">
+      <div class="kh__in">
+         <a class="kh__brand" href="../index.html">
+            <span class="kh__mark"><svg viewBox="0 0 40 40" fill="none" style="width:62%;height:62%;display:block" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+            <span class="kh__name">Koffi Academy</span>
+         </a>
+         <nav class="kh__nav">
+            <a href="../index.html" data-i18n="navHome">Accueil</a>
+            <span class="kh__drop"><span class="kh__droplabel" data-i18n="navCourses">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire" class="active" data-i18n="navLab">Laboratoires</a><a href="/courses/courses" data-i18n="navCatalog">Catalogue de cours</a><a href="/idp-demo" data-i18n="navDevPortal">Dev Portal</a></span></span>
+            <a href="/blog">Blog</a>
+            <a href="/culture">Culture</a>
+<a href="/koffi-profile" data-i18n="navProfile">Profil</a>
+         </nav>
+<div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+      </div>
+   </header>
+
+   <section class="hero">
+      <span class="hero__grid" aria-hidden="true"></span>
+      <span class="hero__glow" aria-hidden="true"></span>
+      <div class="wrap">
+         <nav class="crumb" aria-label="Breadcrumb">
+            <span class="kh__drop"><span class="kh__droplabel" data-i18n="navCourses">Cours</span><i class="fa-solid fa-angle-down"></i><span class="kh__menu"><a href="/laboratoire" data-i18n="navLab">Laboratoires</a><a href="/courses/courses" data-i18n="navCatalog">Catalogue de cours</a><a href="/idp-demo" data-i18n="navDevPortal">Dev Portal</a></span></span>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="/laboratoire" data-i18n="crumbCat">AI Platform Engineering</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Self-Service: Deploy a New API to APIM</span>
+         </nav>
+         <div class="hero__head">
+            <span class="hero__badge">
+               <img src="https://www.vectorlogo.zone/logos/microsoft_azure/microsoft_azure-icon.svg" alt="Azure"
+                    onerror="this.outerHTML='<span style=&quot;font-family:JetBrains Mono;font-weight:700;font-size:17px;color:#0078D4&quot;>Az</span>'">
+            </span>
+            <div>
+               <p class="hero__cat" data-i18n="heroCat">AI Platform Engineering · Azure</p>
+               <h1>Self-Service: Deploy a New API to APIM via Multi-Agent Platform</h1>
+               <div class="hero__meta">
+                  <span class="mchip"><i class="fa-brands fa-microsoft"></i>Azure · APIM · AKS</span>
+                  <span class="mchip lvl"><i class="fa-solid fa-signal"></i><span data-i18n="lvl">Avancé</span></span>
+                  <span class="mchip"><i class="fa-regular fa-clock"></i>120 min</span>
+                  <span class="mchip"><i class="fa-solid fa-certificate"></i>AI Platform Engineering on Azure</span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <main class="detail">
+      <div class="wrap">
+         <div class="main">
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-play"></i>
+                  <h2 data-i18n="vTitle">Vidéo du laboratoire</h2>
+                  <span class="tagx" data-i18n="vTag">5 chapitres · 120 min</span>
+               </div>
+               <div class="card__body">
+                  <div class="player" id="player">
+                     <span class="player__grid" aria-hidden="true"></span>
+                     <span class="player__soon" data-i18n="soon">Bientôt disponible</span>
+                     <span class="player__play"><i class="fa-solid fa-play"></i></span>
+                     <span class="player__note" data-i18n="vNote">La vidéo méthodique sera publiée prochainement.</span>
+                  </div>
+                  <ol class="chapters">
+                     <li><span class="num">01</span><span class="ttl" data-i18n="ch1">Re-provisionnement & déploiement Lab 1 + Lab 2 sur AKS</span><span class="dur">28 min</span></li>
+                     <li><span class="num">02</span><span class="ttl" data-i18n="ch2">Serveur MCP GitHub officiel + fixture locale</span><span class="dur">22 min</span></li>
+                     <li><span class="num">03</span><span class="ttl" data-i18n="ch3">Supervisor multi-agents : plan → approve → apply</span><span class="dur">26 min</span></li>
+                     <li><span class="num">04</span><span class="ttl" data-i18n="ch4">Mode dry-run & validation humaine</span><span class="dur">22 min</span></li>
+                     <li><span class="num">05</span><span class="ttl" data-i18n="ch5">Flux self-service de bout en bout + Azure Front Door</span><span class="dur">22 min</span></li>
+                  </ol>
+               </div>
+            </section>
+
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-bullseye"></i>
+                  <h2 data-i18n="objTitle">Objectifs d'apprentissage</h2>
+               </div>
+               <div class="card__body">
+                  <ul class="obj">
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o1">Re-provisionner la fondation (Azure OpenAI + APIM + AKS) de façon reproductible.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o2">Déployer côte à côte sur AKS les agents Lab 1 (Azure MCP) et Lab 2 (APIM MCP).</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o3">Intégrer le serveur MCP GitHub officiel câblé à une fixture locale.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o4">Piloter le protocole MCP stdio à la main (initialize, tools/list, tools/call).</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o5">Construire un supervisor à machine à états plan → approve → apply.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o6">Restreindre la surface d'outils par agent (APIM, GitHub, Azure).</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o7">Implémenter le mode dry-run et une porte de validation humaine.</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="o8">Comprendre Azure Front Door devant APIM (concepts et commandes az afd).</span></li>
+                  </ul>
+               </div>
+            </section>
+
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-terminal"></i>
+                  <h2 data-i18n="envTitle">Environnement virtuel</h2>
+                  <span class="tagx">Sandbox</span>
+               </div>
+               <div class="card__body">
+                  <div class="term">
+                     <div class="term__bar"><span class="r"></span><span class="y"></span><span class="g"></span><em>capstone@koffi-lab: ~</em></div>
+                     <div class="term__body"><pre><span class="c" data-i18n="t1"># 1 · Le supervisor planifie la mutation APIM (dry-run)</span>
+<span class="p">$</span> dotnet run <span class="k">--</span> --dry-run "Publish a new orders API at /orders/v1 rate 100/min"
+<span class="o">[plan] proposed API: orders v1   policy: rate-limit 100/min</span>
+
+<span class="c" data-i18n="t2"># 2 · Validation humaine via la fixture Slack</span>
+<span class="p">$</span> bash scripts/approve-latest-plan.sh
+<span class="o">approval_verdict: approve</span>
+
+<span class="c" data-i18n="t3"># 3 · Apply : commit GitHub (MCP) + création de l'API (APIM MCP)</span>
+<span class="o">[apply] github: committed apim/orders-v1.yaml</span>
+<span class="o">[apply] apim:   created API revision orders v1</span>
+
+<span class="c" data-i18n="t4"># 4 · Surfaces MCP orchestrées par le supervisor</span>
+<span class="p">$</span> kubectl <span class="k">-n</span> capstone get pods
+<span class="o">apim-mcp   Running    azure-agent   Running</span></pre></div>
+                  </div>
+                  <div class="spec">
+                     <div class="spec__item"><i class="fa-brands fa-ubuntu"></i><div><span class="k">OS</span><span class="v">Ubuntu 24.04 LTS</span></div></div>
+                     <div class="spec__item"><i class="fa-brands fa-microsoft"></i><div><span class="k">Azure</span><span class="v" data-i18n="spAzV">OpenAI · APIM Consumption · AKS</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-robot"></i><div><span class="k" data-i18n="spFw">Framework</span><span class="v">Microsoft Agent Framework 1.6.1 · .NET 8</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-toolbox"></i><div><span class="k" data-i18n="spOutils">Outils</span><span class="v">az, kubectl, dotnet, docker, mcp</span></div></div>
+                     <div class="spec__item"><i class="fa-solid fa-folder"></i><div><span class="k" data-i18n="spRepo">Dépôt</span><span class="v">/root/capstone</span></div></div>
+                     <div class="spec__item"><i class="fa-regular fa-hourglass-half"></i><div><span class="k" data-i18n="spSession">Session</span><span class="v" data-i18n="spSessionV">120 min, réinitialisable</span></div></div>
+                  </div>
+               </div>
+            </section>
+
+            <section class="card">
+               <div class="card__head">
+                  <i class="fa-solid fa-list-check"></i>
+                  <h2 data-i18n="stepsTitle">Déroulé du laboratoire</h2>
+               </div>
+               <div class="card__body">
+                  <ol class="steps">
+                     <li><h3 data-i18n="s1t">Re-provisionnement de la fondation</h3><p data-i18n-html="s1d">Re-provisionnez <code>Azure OpenAI + APIM + AKS</code>, puis déployez les conteneurs des agents Lab 1 et Lab 2 sur le cluster.</p></li>
+                     <li><h3 data-i18n="s2t">Serveur MCP GitHub</h3><p data-i18n-html="s2d">Branchez le <code>github-mcp-server</code> officiel sur une fixture locale et pilotez le handshake stdio à la main.</p></li>
+                     <li><h3 data-i18n="s3t">Supervisor plan → approve → apply</h3><p data-i18n-html="s3d">Construisez un graphe à trois états avec <code>Microsoft Agent Framework</code> ; chaque état appelle un seul serveur MCP.</p></li>
+                     <li><h3 data-i18n="s4t">Dry-run & validation humaine</h3><p data-i18n-html="s4d">Ajoutez le mode <code>--dry-run</code> et une porte d'approbation adossée à une fixture Slack avant toute mutation.</p></li>
+                     <li><h3 data-i18n="s5t">Bout en bout + Azure Front Door</h3><p data-i18n-html="s5d">Exécutez le flux complet, puis parcourez les concepts d'<code>Azure Front Door</code> devant APIM (sans provisioning).</p></li>
+                  </ol>
+               </div>
+            </section>
+         </div>
+
+         <aside class="aside">
+            <div class="fiche">
+               <div class="fiche__top">
+                  <h3 data-i18n="fTitle">Fiche technique</h3>
+                  <p data-i18n="fSub">Koffi Academy · Laboratoire pratique</p>
+               </div>
+               <div class="fiche__rows">
+                  <div class="frow"><i class="fa-solid fa-signal"></i><span class="fk" data-i18n="fNiveau">Niveau</span><span class="fv" data-i18n="lvl">Avancé</span></div>
+                  <div class="frow"><i class="fa-regular fa-clock"></i><span class="fk" data-i18n="fDuree">Durée</span><span class="fv">120 min</span></div>
+                  <div class="frow"><i class="fa-solid fa-layer-group"></i><span class="fk" data-i18n="fCat">Catégorie</span><span class="fv" data-i18n="fCatV">AI Platform Engineering · Azure</span></div>
+                  <div class="frow"><i class="fa-solid fa-certificate"></i><span class="fk" data-i18n="fParcours">Parcours</span><span class="fv">AI Platform Engineering on Azure</span></div>
+                  <div class="frow"><i class="fa-solid fa-cube"></i><span class="fk" data-i18n="fFormat">Format</span><span class="fv" data-i18n="fFormatV">Vidéo + Sandbox</span></div>
+               </div>
+               <div class="fiche__pre">
+                  <h4 data-i18n="fPre">Prérequis</h4>
+                  <ul>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="p1">Lab agent Azure OpenAI (Lab 1)</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="p2">Serveur MCP APIM en C# (Lab 2)</span></li>
+                     <li><i class="fa-solid fa-check"></i><span data-i18n="p3">Bases C#/.NET et Kubernetes</span></li>
+                  </ul>
+               </div>
+               <div class="fiche__tags">
+                  <h4 data-i18n="fTags">Tags</h4>
+                  <div class="tags"><span class="tag">azure</span><span class="tag">apim</span><span class="tag">multi-agent</span><span class="tag">mcp</span><span class="tag">aks</span></div>
+               </div>
+               <div class="fiche__cta">
+                  <a class="btn btn--primary" href="/laboratoire-apim-multi-agent-lab"><i class="fa-solid fa-flask"></i> <span data-i18n="ctaLaunch">Démarrer le laboratoire</span></a>
+                  <a class="btn btn--ghost" href="/laboratoire"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="ctaAll">Tous les laboratoires</span></a>
+                  <p class="soon-hint" data-i18n="hint">Vidéo et sandbox interactifs bientôt disponibles.</p>
+               </div>
+            </div>
+         </aside>
+      </div>
+   </main>
+
+   <footer class="kf">
+      <p>&copy; 2026 <strong>Koffi Academy</strong>. <span data-i18n="fRights">Tous droits réservés.</span></p>
+<div class="footer-legal" style="border-top:1px solid rgba(255,255,255,.10);background:rgba(2,12,26,.30);padding:14px 0 16px"><div class="footer-legal__inner" style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 18px;text-align:center"><span class="footer-legal__brand" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.68);font-weight:500">&copy; 2026 Koffi Academy</span><nav class="footer-legal__links" aria-label="Rechtliches" style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px"><a href="/impressum" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.84);font-weight:700;letter-spacing:.01em;text-decoration:none;transition:color .16s ease">Impressum</a><span class="footer-legal__sep" aria-hidden="true" style="color:rgba(255,255,255,.30);font-size:11px">·</span><a href="/datenschutz" style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.84);font-weight:700;letter-spacing:.01em;text-decoration:none;transition:color .16s ease">Datenschutz</a></nav></div></div>
+</footer>
+
+   <script>
+   (function(){var p=document.getElementById('player');if(p)p.addEventListener('click',function(){var n=p.querySelector('.player__note');if(n)n.textContent='Disponible très prochainement — revenez bientôt.';});})();
+   </script>
+<script>
+window.I18N_LAB={"fr":{"navHome":"Accueil","navCourses":"Cours","navCatalog":"Catalogue de cours","navLab":"Laboratoires","navProfile":"Profil","navDevPortal":"Dev Portal","crumbCat":"AI Platform Engineering","heroCat":"AI Platform Engineering · Azure","lvl":"Avancé","vTitle":"Vidéo du laboratoire","vTag":"5 chapitres · 120 min","soon":"Bientôt disponible","vNote":"La vidéo méthodique sera publiée prochainement.","ch1":"Re-provisionnement & déploiement Lab 1 + Lab 2 sur AKS","ch2":"Serveur MCP GitHub officiel + fixture locale","ch3":"Supervisor multi-agents : plan → approve → apply","ch4":"Mode dry-run & validation humaine","ch5":"Flux self-service de bout en bout + Azure Front Door","objTitle":"Objectifs d'apprentissage","o1":"Re-provisionner la fondation (Azure OpenAI + APIM + AKS) de façon reproductible.","o2":"Déployer côte à côte sur AKS les agents Lab 1 (Azure MCP) et Lab 2 (APIM MCP).","o3":"Intégrer le serveur MCP GitHub officiel câblé à une fixture locale.","o4":"Piloter le protocole MCP stdio à la main (initialize, tools/list, tools/call).","o5":"Construire un supervisor à machine à états plan → approve → apply.","o6":"Restreindre la surface d'outils par agent (APIM, GitHub, Azure).","o7":"Implémenter le mode dry-run et une porte de validation humaine.","o8":"Comprendre Azure Front Door devant APIM (concepts et commandes az afd).","envTitle":"Environnement virtuel","t1":"# 1 · Le supervisor planifie la mutation APIM (dry-run)","t2":"# 2 · Validation humaine via la fixture Slack","t3":"# 3 · Apply : commit GitHub (MCP) + création de l'API (APIM MCP)","t4":"# 4 · Surfaces MCP orchestrées par le supervisor","spAzV":"OpenAI · APIM Consumption · AKS","spFw":"Framework","spOutils":"Outils","spRepo":"Dépôt","spSession":"Session","spSessionV":"120 min, réinitialisable","stepsTitle":"Déroulé du laboratoire","s1t":"Re-provisionnement de la fondation","s1d":"Re-provisionnez <code>Azure OpenAI + APIM + AKS</code>, puis déployez les conteneurs des agents Lab 1 et Lab 2 sur le cluster.","s2t":"Serveur MCP GitHub","s2d":"Branchez le <code>github-mcp-server</code> officiel sur une fixture locale et pilotez le handshake stdio à la main.","s3t":"Supervisor plan → approve → apply","s3d":"Construisez un graphe à trois états avec <code>Microsoft Agent Framework</code> ; chaque état appelle un seul serveur MCP.","s4t":"Dry-run & validation humaine","s4d":"Ajoutez le mode <code>--dry-run</code> et une porte d'approbation adossée à une fixture Slack avant toute mutation.","s5t":"Bout en bout + Azure Front Door","s5d":"Exécutez le flux complet, puis parcourez les concepts d'<code>Azure Front Door</code> devant APIM (sans provisioning).","fTitle":"Fiche technique","fSub":"Koffi Academy · Laboratoire pratique","fNiveau":"Niveau","fDuree":"Durée","fCat":"Catégorie","fCatV":"AI Platform Engineering · Azure","fParcours":"Parcours","fFormat":"Format","fFormatV":"Vidéo + Sandbox","fPre":"Prérequis","p1":"Lab agent Azure OpenAI (Lab 1)","p2":"Serveur MCP APIM en C# (Lab 2)","p3":"Bases C#/.NET et Kubernetes","fTags":"Tags","ctaLaunch":"Démarrer le laboratoire","ctaAll":"Tous les laboratoires","hint":"Vidéo et sandbox interactifs bientôt disponibles.","fRights":"Tous droits réservés."},"de":{"navHome":"Startseite","navCourses":"Kurse","navCatalog":"Kurskatalog","navLab":"Labore","navProfile":"Profil","navDevPortal":"Dev Portal","crumbCat":"AI Platform Engineering","heroCat":"AI Platform Engineering · Azure","lvl":"Experte","vTitle":"Lab-Video","vTag":"5 Kapitel · 120 Min","soon":"Bald verfügbar","vNote":"Das methodische Video wird in Kürze veröffentlicht.","ch1":"Re-Provisionierung & Deployment von Lab 1 + Lab 2 auf AKS","ch2":"Offizieller GitHub-MCP-Server + lokale Fixture","ch3":"Multi-Agent-Supervisor: plan → approve → apply","ch4":"Dry-Run-Modus & menschliche Freigabe","ch5":"End-to-End-Self-Service-Flow + Azure Front Door","objTitle":"Lernziele","o1":"Die Grundlage (Azure OpenAI + APIM + AKS) reproduzierbar neu provisionieren.","o2":"Die Agents aus Lab 1 (Azure MCP) und Lab 2 (APIM MCP) nebeneinander auf AKS deployen.","o3":"Den offiziellen GitHub-MCP-Server an eine lokale Fixture anbinden.","o4":"Das MCP-stdio-Protokoll manuell steuern (initialize, tools/list, tools/call).","o5":"Einen Supervisor als Zustandsautomat plan → approve → apply bauen.","o6":"Die Tool-Oberfläche pro Agent einschränken (APIM, GitHub, Azure).","o7":"Dry-Run-Modus und ein menschliches Freigabe-Gate implementieren.","o8":"Azure Front Door vor APIM verstehen (Konzepte und az-afd-Befehle).","envTitle":"Virtuelle Umgebung","t1":"# 1 · Der Supervisor plant die APIM-Mutation (Dry-Run)","t2":"# 2 · Menschliche Freigabe über die Slack-Fixture","t3":"# 3 · Apply: GitHub-Commit (MCP) + API-Erstellung (APIM MCP)","t4":"# 4 · Vom Supervisor orchestrierte MCP-Oberflächen","spAzV":"OpenAI · APIM Consumption · AKS","spFw":"Framework","spOutils":"Tools","spRepo":"Repository","spSession":"Sitzung","spSessionV":"120 Min, zurücksetzbar","stepsTitle":"Ablauf des Labors","s1t":"Re-Provisionierung der Grundlage","s1d":"Provisionieren Sie <code>Azure OpenAI + APIM + AKS</code> neu und deployen Sie die Container der Agents aus Lab 1 und Lab 2 auf dem Cluster.","s2t":"GitHub-MCP-Server","s2d":"Verbinden Sie den offiziellen <code>github-mcp-server</code> mit einer lokalen Fixture und steuern Sie den stdio-Handshake manuell.","s3t":"Supervisor plan → approve → apply","s3d":"Bauen Sie mit dem <code>Microsoft Agent Framework</code> einen Graphen mit drei Zuständen; jeder Zustand ruft genau einen MCP-Server.","s4t":"Dry-Run & menschliche Freigabe","s4d":"Fügen Sie den <code>--dry-run</code>-Modus und ein an eine Slack-Fixture gekoppeltes Freigabe-Gate vor jeder Mutation hinzu.","s5t":"End-to-End + Azure Front Door","s5d":"Führen Sie den vollständigen Flow aus und gehen Sie dann die Konzepte von <code>Azure Front Door</code> vor APIM durch (ohne Provisioning).","fTitle":"Technisches Datenblatt","fSub":"Koffi Academy · Praxislabor","fNiveau":"Niveau","fDuree":"Dauer","fCat":"Kategorie","fCatV":"AI Platform Engineering · Azure","fParcours":"Lernpfad","fFormat":"Format","fFormatV":"Video + Sandbox","fPre":"Voraussetzungen","p1":"Azure-OpenAI-Agent-Lab (Lab 1)","p2":"APIM-MCP-Server in C# (Lab 2)","p3":"C#/.NET- und Kubernetes-Grundlagen","fTags":"Tags","ctaLaunch":"Labor starten","ctaAll":"Alle Labore","hint":"Interaktives Video und Sandbox bald verfügbar.","fRights":"Alle Rechte vorbehalten."},"en":{"navHome":"Home","navCourses":"Courses","navCatalog":"Course catalog","navLab":"Labs","navProfile":"Profile","navDevPortal":"Dev Portal","crumbCat":"AI Platform Engineering","heroCat":"AI Platform Engineering · Azure","lvl":"Advanced","vTitle":"Lab video","vTag":"5 chapters · 120 min","soon":"Coming soon","vNote":"The methodical video will be published soon.","ch1":"Re-provision & deploy Lab 1 + Lab 2 to AKS","ch2":"Official GitHub MCP server + local fixture","ch3":"Multi-agent supervisor: plan → approve → apply","ch4":"Dry-run mode & human approval gate","ch5":"End-to-end self-service flow + Azure Front Door","objTitle":"Learning objectives","o1":"Re-provision the foundation (Azure OpenAI + APIM + AKS) reproducibly.","o2":"Deploy the Lab 1 (Azure MCP) and Lab 2 (APIM MCP) agents side by side on AKS.","o3":"Integrate the official GitHub MCP server wired to a local fixture.","o4":"Drive the MCP stdio protocol by hand (initialize, tools/list, tools/call).","o5":"Build a plan → approve → apply state-machine supervisor.","o6":"Scope each agent's tool surface (APIM, GitHub, Azure).","o7":"Implement dry-run mode and a human approval gate.","o8":"Understand Azure Front Door in front of APIM (concepts and az afd commands).","envTitle":"Virtual environment","t1":"# 1 · The supervisor plans the APIM mutation (dry-run)","t2":"# 2 · Human approval via the Slack fixture","t3":"# 3 · Apply: GitHub commit (MCP) + API creation (APIM MCP)","t4":"# 4 · MCP surfaces orchestrated by the supervisor","spAzV":"OpenAI · APIM Consumption · AKS","spFw":"Framework","spOutils":"Tools","spRepo":"Repository","spSession":"Session","spSessionV":"120 min, resettable","stepsTitle":"Lab walkthrough","s1t":"Re-provision the foundation","s1d":"Re-provision <code>Azure OpenAI + APIM + AKS</code>, then deploy the Lab 1 and Lab 2 agent containers onto the cluster.","s2t":"GitHub MCP server","s2d":"Wire the official <code>github-mcp-server</code> to a local fixture and drive the stdio handshake by hand.","s3t":"Supervisor plan → approve → apply","s3d":"Build a three-state graph with the <code>Microsoft Agent Framework</code>; each state calls exactly one MCP server.","s4t":"Dry-run & human approval","s4d":"Add <code>--dry-run</code> mode and an approval gate backed by a Slack fixture before any mutation.","s5t":"End-to-end + Azure Front Door","s5d":"Run the full flow, then walk through <code>Azure Front Door</code> concepts in front of APIM (no provisioning).","fTitle":"Technical sheet","fSub":"Koffi Academy · Hands-on lab","fNiveau":"Level","fDuree":"Duration","fCat":"Category","fCatV":"AI Platform Engineering · Azure","fParcours":"Track","fFormat":"Format","fFormatV":"Video + Sandbox","fPre":"Prerequisites","p1":"Azure OpenAI agent lab (Lab 1)","p2":"APIM MCP server in C# (Lab 2)","p3":"C#/.NET and Kubernetes basics","fTags":"Tags","ctaLaunch":"Start the lab","ctaAll":"All labs","hint":"Interactive video and sandbox coming soon.","fRights":"All rights reserved."}};
+(function(){var I=window.I18N_LAB;var lang=localStorage.getItem("preferred-lang");if(!I[lang])lang="de";function apply(l){if(!I[l])return;lang=l;localStorage.setItem("preferred-lang",l);document.documentElement.lang=l;var d=I[l];document.querySelectorAll("[data-i18n]").forEach(function(el){var k=el.getAttribute("data-i18n");if(d[k]!==undefined)el.textContent=d[k];});document.querySelectorAll("[data-i18n-html]").forEach(function(el){var k=el.getAttribute("data-i18n-html");if(d[k]!==undefined)el.innerHTML=d[k];});}window.setLabDetailLang=apply;document.addEventListener("DOMContentLoaded",function(){apply(lang);});})();
+</script>
+<script src="../assets/js/kontakt-popup.js"></script>
+<script src="../assets/js/mobile-nav.js"></script>
+<script>
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);klSync(lang);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>
