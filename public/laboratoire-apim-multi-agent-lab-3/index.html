@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Multi-Agent APIM Platform · Chapitre 2 | Atelier — Koffi Academy</title>
-  <meta name="description" content="Atelier Koffi Academy — Chapitre 2 : serveur MCP GitHub officiel câblé à une fixture locale, handshake stdio JSON-RPC et appel mutant.">
+  <title>Multi-Agent APIM Platform · Chapitre 3 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Chapitre 3 : supervisor multi-agents à machine à états plan → approve → apply avec Microsoft Agent Framework.">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -163,16 +163,16 @@ button{cursor:pointer}
         <span class="brand__k">Koffi Academy</span>
         <span class="brand__sep">|</span>
         <span class="brand__title">Multi-Agent APIM Platform</span>
-        <span class="chip-ch">CH.2</span>
+        <span class="chip-ch">CH.3</span>
       </span>
     </a>
     <div class="labbar__spacer"></div>
     <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">120:00</span></span>
     <nav class="actions" aria-label="Lab actions">
-      <a class="topbtn" href="../laboratoire-apim-multi-agent-lab"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter1">Chapitre 1</span></a>
+      <a class="topbtn" href="../laboratoire-apim-multi-agent-lab-2"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter2">Chapitre 2</span></a>
       <a class="topbtn" href="../laboratoire-apim-multi-agent"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
       <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
-      <a class="topbtn" href="../laboratoire-apim-multi-agent-lab-3"><span data-i18n="navChapter3">Chapitre 3</span> <i class="fa-solid fa-arrow-right-long"></i></a>
+      <a class="topbtn" href="../laboratoire-apim-multi-agent-lab-4"><span data-i18n="navChapter4">Chapitre 4</span> <i class="fa-solid fa-arrow-right-long"></i></a>
       <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
       <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
       <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
@@ -184,7 +184,7 @@ button{cursor:pointer}
       <div class="work-tabs" role="tablist">
         <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
         <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
-        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-brands fa-github"></i><span data-i18n="tabFiles">Fixtures</span></button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-diagram-project"></i><span data-i18n="tabFiles">Supervisor</span></button>
       </div>
       <div class="work-surface">
         <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
@@ -196,28 +196,27 @@ button{cursor:pointer}
         </section>
         <section class="view datasets-view" id="datasetsView" role="tabpanel">
           <div class="filebar">
-            <button type="button" class="filetab is-active" data-file="fixtures/github-fixture/github_fixture.py">github_fixture.py</button>
-            <button type="button" class="filetab" data-file="fixtures/github-fixture/run-fixture.sh">run-fixture.sh</button>
-            <button type="button" class="filetab" data-file="scripts/github-mcp-handshake.sh">github-mcp-handshake.sh</button>
+            <button type="button" class="filetab is-active" data-file="Supervisor/Program.cs">Program.cs</button>
+            <button type="button" class="filetab" data-file="Supervisor/Workflow.cs">Workflow.cs</button>
           </div>
           <div class="runbar">
-            <div class="runbar__title"><i class="fa-brands fa-github"></i><span id="fileLabel">/root/capstone/fixtures/github-fixture/github_fixture.py</span></div>
+            <div class="runbar__title"><i class="fa-solid fa-diagram-project"></i><span id="fileLabel">/root/capstone/Supervisor/Program.cs</span></div>
             <div class="runbar__actions">
               <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
               <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
             </div>
           </div>
           <div class="dataset-grid">
-            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Inspectez ou modifiez le fichier de la fixture."></textarea>
+            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Lisez ou modifiez le code du supervisor."></textarea>
             <aside class="dataset-side">
               <div class="metric-grid">
-                <div class="metric"><span class="metric__k" data-i18n="mFixture">Fixture</span><div class="metric__v" id="mFixture">—</div></div>
-                <div class="metric"><span class="metric__k" data-i18n="mTools">Outils MCP</span><div class="metric__v" id="mTools">0/3</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mBuild">Build</span><div class="metric__v" id="mBuild">—</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mRun">Run</span><div class="metric__v" id="mRun">—</div></div>
               </div>
               <div class="file-list">
-                <div class="file-pill"><i class="fa-solid fa-flask-vial"></i>fixture GitHub :9006</div>
-                <div class="file-pill"><i class="fa-solid fa-plug"></i>github-mcp-server v1.0.3</div>
-                <div class="file-pill"><i class="fa-solid fa-code"></i>JSON-RPC stdio</div>
+                <div class="file-pill"><i class="fa-solid fa-diagram-project"></i>plan → approve → apply</div>
+                <div class="file-pill"><i class="fa-solid fa-robot"></i>Agent Framework 1.6.1</div>
+                <div class="file-pill"><i class="fa-solid fa-plug"></i>APIM · GitHub · Azure MCP</div>
               </div>
             </aside>
           </div>
@@ -231,48 +230,47 @@ button{cursor:pointer}
         <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
       </div>
       <div class="instructions__body">
-        <h1 class="lab-title" data-i18n="instrTitle">Serveur MCP GitHub & fixture locale</h1>
-        <p class="lab-sub" data-i18n="instrSub">Vous branchez le serveur <code>github-mcp-server</code> officiel sur une fixture locale (aucun GitHub réel requis), pilotez le handshake MCP stdio à la main, et effectuez un appel mutant. À la fin, le supervisor disposera des trois surfaces MCP : APIM, GitHub et Azure.</p>
+        <h1 class="lab-title" data-i18n="instrTitle">Supervisor plan → approve → apply</h1>
+        <p class="lab-sub" data-i18n="instrSub">Vous construisez un supervisor (console .NET 8, Microsoft Agent Framework) avec un graphe explicite à trois états : plan → approve → apply. Chaque état possède un seul spécialiste qui appelle un seul serveur MCP. Ce chapitre utilise un court-circuit <code>--auto-approve</code> ; le chapitre 4 le remplace par une vraie validation humaine.</p>
 
         <div class="progress-card">
           <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="step is-open" data-step="fixture">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Démarrer la fixture GitHub (port 9006)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step is-open" data-step="scaffold">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Échafauder le projet Supervisor</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s1b">Inspectez <code>github_fixture.py</code> dans l'onglet <strong>Fixtures</strong> (sous-ensemble de l'API REST GitHub : create_branch, create_or_update_file, create_pull_request), puis démarrez-la :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/fixtures/github-fixture/run-fixture.sh
-curl -sf http://localhost:9006/healthz | jq
-tail -F /tmp/github-fixture.log &amp;</pre></div>
+            <span data-i18n="s1b">Le script d'échafaudage écrit un projet .NET 8 sous <code>/root/capstone/Supervisor/</code> avec le jeu de paquets Microsoft Agent Framework 1.6.1 épinglé (il ne lance pas encore le supervisor) :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/scaffold-supervisor.sh</pre></div>
+            <span data-i18n="s1b2">Ouvrez <code>Program.cs</code> et <code>Workflow.cs</code> dans l'onglet <strong>Supervisor</strong> : <code>CapstonePlan</code> circule dans les trois états, et chaque état est un petit exécuteur.</span>
           </div>
         </article>
 
-        <article class="step" data-step="image">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Confirmer l'image pré-téléchargée</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="build">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Construire le supervisor</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s2b">Le script de setup a déjà tiré <code>ghcr.io/github/github-mcp-server:v1.0.3</code> pour éviter la latence au premier appel. Confirmez-le :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">docker image inspect ghcr.io/github/github-mcp-server:v1.0.3 --format '{{.Id}} {{.Created}}'</pre></div>
+            <span data-i18n="s2b">Restaurez les paquets et compilez. Le premier restore tire Microsoft.Agents.AI 1.6.1 et le paquet .Workflows :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">cd /root/capstone/Supervisor &amp;&amp; dotnet build -c Release</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="handshake">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Piloter le handshake stdio</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="wire">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Câbler aux pods AKS + AI Gateway</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s3b">Le protocole MCP stdio est une suite de trames JSON-RPC séparées par des retours à la ligne. Envoyez les trois trames (initialize, notifications/initialized, tools/list) dans un conteneur one-shot :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/github-mcp-handshake.sh | tee /tmp/github-mcp-tools.txt
-grep -oE '"name":"(create_branch|create_or_update_file|create_pull_request)"' /tmp/github-mcp-tools.txt | sort -u</pre></div>
-            <p style="margin:10px 0 0;color:var(--soft)" data-i18n="s3n">Vous devez voir les trois outils. Si vous en voyez moins, vérifiez le log : github-mcp-server interroge la racine <code>/api/v3/</code> de la fixture au démarrage.</p>
+            <span data-i18n="s3b">Le supervisor a besoin de trois bundles : l'endpoint Azure OpenAI (ou l'AI Gateway), l'endpoint HTTP de l'APIM MCP (port-forwardé depuis AKS) et le serveur MCP GitHub (lancé via <code>docker run</code>). Le script les câble tous :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/wire-supervisor.sh</pre></div>
+            <p style="margin:10px 0 0;color:var(--soft)" data-i18n="s3n">Cela écrit <code>.env</code> avec <code>LLM_API_BASE</code>, <code>LLM_API_KEY</code>, <code>APIM_MCP_URL</code> et <code>GITHUB_MCP_IMAGE</code>, et démarre un port-forward vers l'APIM MCP sur <code>http://localhost:18080/mcp</code>.</p>
           </div>
         </article>
 
-        <article class="step" data-step="mutate">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Un appel mutant via le serveur MCP</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="run">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Exécuter en mode auto-approve</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s4b">Appelez <code>create_branch</code> à travers le serveur MCP pour prouver l'aller-retour de bout en bout, puis vérifiez l'entrée dans le log de la fixture :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/github-mcp-create-branch.sh
-grep create_branch /tmp/github-fixture.log | tail -3</pre></div>
+            <span data-i18n="s4b">Lancez le supervisor avec le prompt de test et le flag <code>--auto-approve</code> (il contourne la porte d'approbation pour clore ce chapitre sur un aller-retour plan → apply propre) :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">cd /root/capstone/Supervisor &amp;&amp; dotnet run -c Release -- --auto-approve "Publish a new orders API at /orders/v1 with rate limit 100/min"
+tail -80 /tmp/supervisor.log</pre></div>
+            <p style="margin:10px 0 0;color:var(--soft)" data-i18n="s4n">Vous devez voir trois blocs : <code>[plan]</code> avec la proposition, <code>[approve]</code> avec <code>auto-approved</code>, et <code>[apply]</code> avec le commit GitHub simulé et la création APIM.</p>
           </div>
         </article>
 
@@ -280,10 +278,10 @@ grep create_branch /tmp/github-fixture.log | tail -3</pre></div>
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <ul class="crit">
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Fixture GitHub démarrée et /healthz OK.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Image github-mcp-server v1.0.3 confirmée.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Handshake réussi : les 3 outils listés.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Appel create_branch passé via MCP.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Projet Supervisor échafaudé.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Build en Release réussi.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Câblage .env + port-forward APIM MCP.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Run auto-approve : plan → approve → apply.</span></li>
             </ul>
             <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
           </div>
@@ -304,7 +302,7 @@ grep create_branch /tmp/github-fixture.log | tail -3</pre></div>
   <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
   <div class="help-body">
     <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.</p>
-    <div class="hint" id="hintText" data-i18n="hint0">Démarrez d'abord la fixture GitHub sur le port 9006 (Étape 1).</div>
+    <div class="hint" id="hintText" data-i18n="hint0">Commencez par échafauder le projet Supervisor (Étape 1).</div>
     <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
   </div>
 </section>
@@ -314,118 +312,114 @@ grep create_branch /tmp/github-fixture.log | tail -3</pre></div>
 <script>
 window.I18N = {
   "fr":{
-    "navChapter1":"Chapitre 1","navChapter3":"Chapitre 3","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
-    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Fixtures",
-    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Inspectez ou modifiez le fichier de la fixture.",
-    "mFixture":"Fixture","mTools":"Outils MCP",
-    "instrHead":"Instructions","instrTitle":"Serveur MCP GitHub & fixture locale",
-    "instrSub":"Vous branchez le serveur <code>github-mcp-server</code> officiel sur une fixture locale (aucun GitHub réel requis), pilotez le handshake MCP stdio à la main, et effectuez un appel mutant. À la fin, le supervisor disposera des trois surfaces MCP : APIM, GitHub et Azure.",
+    "navChapter2":"Chapitre 2","navChapter4":"Chapitre 4","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Supervisor",
+    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Lisez ou modifiez le code du supervisor.",
+    "mBuild":"Build","mRun":"Run",
+    "instrHead":"Instructions","instrTitle":"Supervisor plan → approve → apply",
+    "instrSub":"Vous construisez un supervisor (console .NET 8, Microsoft Agent Framework) avec un graphe explicite à trois états : plan → approve → apply. Chaque état possède un seul spécialiste qui appelle un seul serveur MCP. Ce chapitre utilise un court-circuit <code>--auto-approve</code> ; le chapitre 4 le remplace par une vraie validation humaine.",
     "progLabel":"Progression","copy":"Copier","copied":"Copié",
-    "s1h":"Étape 1 · Démarrer la fixture GitHub (port 9006)","s1b":"Inspectez <code>github_fixture.py</code> dans l'onglet <strong>Fixtures</strong> (sous-ensemble de l'API REST GitHub : create_branch, create_or_update_file, create_pull_request), puis démarrez-la :",
-    "s2h":"Étape 2 · Confirmer l'image pré-téléchargée","s2b":"Le script de setup a déjà tiré <code>ghcr.io/github/github-mcp-server:v1.0.3</code> pour éviter la latence au premier appel. Confirmez-le :",
-    "s3h":"Étape 3 · Piloter le handshake stdio","s3b":"Le protocole MCP stdio est une suite de trames JSON-RPC séparées par des retours à la ligne. Envoyez les trois trames (initialize, notifications/initialized, tools/list) dans un conteneur one-shot :","s3n":"Vous devez voir les trois outils. Si vous en voyez moins, vérifiez le log : github-mcp-server interroge la racine <code>/api/v3/</code> de la fixture au démarrage.",
-    "s4h":"Étape 4 · Un appel mutant via le serveur MCP","s4b":"Appelez <code>create_branch</code> à travers le serveur MCP pour prouver l'aller-retour de bout en bout, puis vérifiez l'entrée dans le log de la fixture :",
+    "s1h":"Étape 1 · Échafauder le projet Supervisor","s1b":"Le script d'échafaudage écrit un projet .NET 8 sous <code>/root/capstone/Supervisor/</code> avec le jeu de paquets Microsoft Agent Framework 1.6.1 épinglé (il ne lance pas encore le supervisor) :","s1b2":"Ouvrez <code>Program.cs</code> et <code>Workflow.cs</code> dans l'onglet <strong>Supervisor</strong> : <code>CapstonePlan</code> circule dans les trois états, et chaque état est un petit exécuteur.",
+    "s2h":"Étape 2 · Construire le supervisor","s2b":"Restaurez les paquets et compilez. Le premier restore tire Microsoft.Agents.AI 1.6.1 et le paquet .Workflows :",
+    "s3h":"Étape 3 · Câbler aux pods AKS + AI Gateway","s3b":"Le supervisor a besoin de trois bundles : l'endpoint Azure OpenAI (ou l'AI Gateway), l'endpoint HTTP de l'APIM MCP (port-forwardé depuis AKS) et le serveur MCP GitHub (lancé via <code>docker run</code>). Le script les câble tous :","s3n":"Cela écrit <code>.env</code> avec <code>LLM_API_BASE</code>, <code>LLM_API_KEY</code>, <code>APIM_MCP_URL</code> et <code>GITHUB_MCP_IMAGE</code>, et démarre un port-forward vers l'APIM MCP sur <code>http://localhost:18080/mcp</code>.",
+    "s4h":"Étape 4 · Exécuter en mode auto-approve","s4b":"Lancez le supervisor avec le prompt de test et le flag <code>--auto-approve</code> (il contourne la porte d'approbation pour clore ce chapitre sur un aller-retour plan → apply propre) :","s4n":"Vous devez voir trois blocs : <code>[plan]</code> avec la proposition, <code>[approve]</code> avec <code>auto-approved</code>, et <code>[apply]</code> avec le commit GitHub simulé et la création APIM.",
     "critH":"Critères de réussite",
-    "c1":"Fixture GitHub démarrée et /healthz OK.","c2":"Image github-mcp-server v1.0.3 confirmée.","c3":"Handshake réussi : les 3 outils listés.","c4":"Appel create_branch passé via MCP.",
+    "c1":"Projet Supervisor échafaudé.","c2":"Build en Release réussi.","c3":"Câblage .env + port-forward APIM MCP.","c4":"Run auto-approve : plan → approve → apply.",
     "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
     "skip":"Ignorer","check":"Vérifier",
     "helpTitle":"Copilote de l'atelier","helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.","nextHint":"Indice suivant",
-    "hint0":"Démarrez d'abord la fixture GitHub sur le port 9006 (Étape 1).",
-    "hint1":"La fixture implémente juste ce qu'il faut : create_branch, create_or_update_file, create_pull_request.",
-    "hint2":"github-mcp-server interroge /api/v3/ au démarrage pour détecter l'URL de base.",
-    "hint3":"Le handshake stdio = 3 trames JSON-RPC : initialize, notifications/initialized, tools/list.",
-    "hint4":"L'appel create_branch traverse le serveur MCP puis atterrit dans le log de la fixture.",
+    "hint0":"Commencez par échafauder le projet Supervisor (Étape 1).",
+    "hint1":"CapstonePlan est le record partagé qui circule entre les trois états.",
+    "hint2":"PlanState, ApproveState, ApplyState sont de petits exécuteurs (sous 40 lignes).",
+    "hint3":"wire-supervisor.sh écrit le .env et démarre le port-forward APIM MCP.",
+    "hint4":"--auto-approve court-circuite la porte d'approbation pour ce chapitre.",
     "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — VM apim-capstone (Koffi Academy)",
-    "bEnv":"docker + jq + curl prêts. Fixture : /root/capstone/fixtures/github-fixture","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
-    "hHeader":"Commandes disponibles :","hRun":"démarrer la fixture GitHub","hCurl":"tester /healthz de la fixture","hTail":"suivre le log de la fixture","hInspect":"inspecter l'image github-mcp-server","hHand":"piloter le handshake stdio","hBranch":"appel mutant create_branch","hGrep":"filtrer dans un fichier/log","hCheck":"vérifier la progression",
-    "fxUp":"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)","fxHealth":"{ \"status\": \"ok\", \"service\": \"github-fixture\" }","fxTail":"[tail] suivi de /tmp/github-fixture.log","fxDown":"curl: (7) Failed to connect to localhost port 9006",
-    "imgLine":"sha256:ab12cd34ef56  2025-05-12T09:33:00Z","imgMiss":"Error: No such image — relancez le script de setup",
-    "needFixture":"Astuce : démarrez d'abord la fixture (Étape 1).","needHand":"Astuce : lancez d'abord le handshake (Étape 3).",
-    "checkHeader":"Progression de la tâche :","chkFx":"Fixture GitHub démarrée","chkImg":"Image github-mcp-server confirmée","chkHand":"Handshake réussi (3 outils)","chkMut":"Appel create_branch via MCP","chkAll":"Tous les critères sont remplis. Chapitre 2 terminé !","skipped":"Étape ignorée.",
+    "bEnv":".NET 8 + docker prêts. Projet : /root/capstone/Supervisor","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hScaffold":"échafauder le projet supervisor","hBuild":"compiler (dotnet build -c Release)","hWire":"câbler .env + port-forward","hRun":"exécuter (dotnet run -- --auto-approve)","hTail":"afficher le journal du supervisor","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "needScaffold":"Astuce : échafaudez d'abord le projet (Étape 1).","needBuild":"Astuce : compilez d'abord le projet (Étape 2).","needWire":"Astuce : câblez d'abord l'environnement (Étape 3).",
+    "logEmpty":"(supervisor.log vide — lancez d'abord le supervisor)",
+    "checkHeader":"Progression de la tâche :","chkSc":"Projet échafaudé","chkBd":"Build Release réussi","chkWr":"Environnement câblé","chkRn":"Run plan → approve → apply","chkAll":"Tous les critères sont remplis. Chapitre 3 terminé !","skipped":"Étape ignorée.",
     "cmdNF":"{c} : commande introuvable. Tapez `help`.","catNF":"cat : {f} : aucun fichier de ce type",
-    "tSavedFile":"Fichier enregistré","tDone":"Chapitre 2 terminé — surface MCP GitHub prête"
+    "tSavedFile":"Fichier enregistré","tDone":"Chapitre 3 terminé — machine à états en place"
   },
   "de":{
-    "navChapter1":"Kapitel 1","navChapter3":"Kapitel 3","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
-    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Fixtures",
-    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Inspizieren oder bearbeiten Sie die Fixture-Datei.",
-    "mFixture":"Fixture","mTools":"MCP-Tools",
-    "instrHead":"Anleitung","instrTitle":"GitHub-MCP-Server & lokale Fixture",
-    "instrSub":"Sie verbinden den offiziellen <code>github-mcp-server</code> mit einer lokalen Fixture (kein echtes GitHub nötig), steuern den MCP-stdio-Handshake manuell und führen einen mutierenden Aufruf aus. Am Ende verfügt der Supervisor über die drei MCP-Oberflächen: APIM, GitHub und Azure.",
+    "navChapter2":"Kapitel 2","navChapter4":"Kapitel 4","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Supervisor",
+    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Lesen oder bearbeiten Sie den Supervisor-Code.",
+    "mBuild":"Build","mRun":"Run",
+    "instrHead":"Anleitung","instrTitle":"Supervisor plan → approve → apply",
+    "instrSub":"Sie bauen einen Supervisor (.NET-8-Konsole, Microsoft Agent Framework) mit einem expliziten Graphen aus drei Zuständen: plan → approve → apply. Jeder Zustand hat genau einen Spezialisten, der genau einen MCP-Server aufruft. Dieses Kapitel nutzt einen <code>--auto-approve</code>-Kurzschluss; Kapitel 4 ersetzt ihn durch eine echte menschliche Freigabe.",
     "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
-    "s1h":"Schritt 1 · GitHub-Fixture starten (Port 9006)","s1b":"Inspizieren Sie <code>github_fixture.py</code> im Reiter <strong>Fixtures</strong> (Teilmenge der GitHub-REST-API: create_branch, create_or_update_file, create_pull_request) und starten Sie sie:",
-    "s2h":"Schritt 2 · Vorab geladenes Image bestätigen","s2b":"Das Setup-Skript hat <code>ghcr.io/github/github-mcp-server:v1.0.3</code> bereits gezogen, um Latenz beim ersten Aufruf zu vermeiden. Bestätigen Sie es:",
-    "s3h":"Schritt 3 · Den stdio-Handshake steuern","s3b":"Das MCP-stdio-Protokoll ist eine Folge zeilengetrennter JSON-RPC-Frames. Senden Sie die drei Frames (initialize, notifications/initialized, tools/list) in einen One-Shot-Container:","s3n":"Sie sollten alle drei Tools sehen. Sehen Sie weniger, prüfen Sie das Log: github-mcp-server fragt beim Start die <code>/api/v3/</code>-Wurzel der Fixture ab.",
-    "s4h":"Schritt 4 · Ein mutierender Aufruf über den MCP-Server","s4b":"Rufen Sie <code>create_branch</code> über den MCP-Server auf, um den End-to-End-Roundtrip zu beweisen, und prüfen Sie dann den Eintrag im Fixture-Log:",
+    "s1h":"Schritt 1 · Supervisor-Projekt scaffolden","s1b":"Das Scaffold-Skript schreibt ein .NET-8-Projekt unter <code>/root/capstone/Supervisor/</code> mit gepinntem Microsoft-Agent-Framework-1.6.1-Paketsatz (es startet den Supervisor noch nicht):","s1b2":"Öffnen Sie <code>Program.cs</code> und <code>Workflow.cs</code> im Reiter <strong>Supervisor</strong>: <code>CapstonePlan</code> fließt durch alle drei Zustände, und jeder Zustand ist ein kleiner Executor.",
+    "s2h":"Schritt 2 · Supervisor bauen","s2b":"Stellen Sie die Pakete wieder her und kompilieren Sie. Der erste Restore zieht Microsoft.Agents.AI 1.6.1 und das .Workflows-Paket:",
+    "s3h":"Schritt 3 · An AKS-Pods + AI Gateway anbinden","s3b":"Der Supervisor braucht drei Bundles: den Azure-OpenAI-Endpoint (oder das AI Gateway), den HTTP-Endpoint des APIM MCP (per Port-Forward aus AKS) und den GitHub-MCP-Server (per <code>docker run</code> gestartet). Das Skript bindet alle drei an:","s3n":"Das schreibt <code>.env</code> mit <code>LLM_API_BASE</code>, <code>LLM_API_KEY</code>, <code>APIM_MCP_URL</code> und <code>GITHUB_MCP_IMAGE</code> und startet ein Port-Forward zum APIM MCP unter <code>http://localhost:18080/mcp</code>.",
+    "s4h":"Schritt 4 · Im Auto-Approve-Modus ausführen","s4b":"Starten Sie den Supervisor mit dem Test-Prompt und dem <code>--auto-approve</code>-Flag (es umgeht das Freigabe-Gate, damit dieses Kapitel mit einem sauberen plan → apply-Roundtrip endet):","s4n":"Sie sollten drei Blöcke sehen: <code>[plan]</code> mit dem Vorschlag, <code>[approve]</code> mit <code>auto-approved</code> und <code>[apply]</code> mit dem simulierten GitHub-Commit und der APIM-Erstellung.",
     "critH":"Erfolgskriterien",
-    "c1":"GitHub-Fixture gestartet und /healthz OK.","c2":"Image github-mcp-server v1.0.3 bestätigt.","c3":"Handshake erfolgreich: 3 Tools gelistet.","c4":"create_branch-Aufruf über MCP ausgeführt.",
+    "c1":"Supervisor-Projekt gescaffoldet.","c2":"Release-Build erfolgreich.","c3":".env-Anbindung + APIM-MCP-Port-Forward.","c4":"Auto-Approve-Run: plan → approve → apply.",
     "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
     "skip":"Überspringen","check":"Prüfen",
     "helpTitle":"Lab-Copilot","helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.","nextHint":"Nächster Hinweis",
-    "hint0":"Starten Sie zuerst die GitHub-Fixture auf Port 9006 (Schritt 1).",
-    "hint1":"Die Fixture implementiert genau das Nötige: create_branch, create_or_update_file, create_pull_request.",
-    "hint2":"github-mcp-server fragt beim Start /api/v3/ ab, um die Basis-URL zu ermitteln.",
-    "hint3":"Der stdio-Handshake = 3 JSON-RPC-Frames: initialize, notifications/initialized, tools/list.",
-    "hint4":"Der create_branch-Aufruf läuft durch den MCP-Server und landet im Fixture-Log.",
+    "hint0":"Scaffolden Sie zuerst das Supervisor-Projekt (Schritt 1).",
+    "hint1":"CapstonePlan ist das geteilte Record, das zwischen den drei Zuständen fließt.",
+    "hint2":"PlanState, ApproveState, ApplyState sind kleine Executoren (unter 40 Zeilen).",
+    "hint3":"wire-supervisor.sh schreibt die .env und startet das APIM-MCP-Port-Forward.",
+    "hint4":"--auto-approve umgeht das Freigabe-Gate für dieses Kapitel.",
     "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — VM apim-capstone (Koffi Academy)",
-    "bEnv":"docker + jq + curl bereit. Fixture: /root/capstone/fixtures/github-fixture","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
-    "hHeader":"Verfügbare Befehle:","hRun":"die GitHub-Fixture starten","hCurl":"/healthz der Fixture testen","hTail":"das Fixture-Log verfolgen","hInspect":"das github-mcp-server-Image inspizieren","hHand":"den stdio-Handshake steuern","hBranch":"mutierender create_branch-Aufruf","hGrep":"in einer Datei/im Log filtern","hCheck":"Fortschritt prüfen",
-    "fxUp":"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)","fxHealth":"{ \"status\": \"ok\", \"service\": \"github-fixture\" }","fxTail":"[tail] verfolge /tmp/github-fixture.log","fxDown":"curl: (7) Failed to connect to localhost port 9006",
-    "imgLine":"sha256:ab12cd34ef56  2025-05-12T09:33:00Z","imgMiss":"Error: No such image — Setup-Skript erneut ausführen",
-    "needFixture":"Tipp: starten Sie zuerst die Fixture (Schritt 1).","needHand":"Tipp: führen Sie zuerst den Handshake aus (Schritt 3).",
-    "checkHeader":"Fortschritt der Aufgabe:","chkFx":"GitHub-Fixture gestartet","chkImg":"github-mcp-server-Image bestätigt","chkHand":"Handshake erfolgreich (3 Tools)","chkMut":"create_branch-Aufruf über MCP","chkAll":"Alle Kriterien erfüllt. Kapitel 2 abgeschlossen!","skipped":"Schritt übersprungen.",
+    "bEnv":".NET 8 + docker bereit. Projekt: /root/capstone/Supervisor","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hScaffold":"das Supervisor-Projekt scaffolden","hBuild":"kompilieren (dotnet build -c Release)","hWire":".env + Port-Forward anbinden","hRun":"ausführen (dotnet run -- --auto-approve)","hTail":"das Supervisor-Log anzeigen","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "needScaffold":"Tipp: scaffolden Sie zuerst das Projekt (Schritt 1).","needBuild":"Tipp: kompilieren Sie zuerst das Projekt (Schritt 2).","needWire":"Tipp: binden Sie zuerst die Umgebung an (Schritt 3).",
+    "logEmpty":"(supervisor.log leer — starten Sie zuerst den Supervisor)",
+    "checkHeader":"Fortschritt der Aufgabe:","chkSc":"Projekt gescaffoldet","chkBd":"Release-Build erfolgreich","chkWr":"Umgebung angebunden","chkRn":"Run plan → approve → apply","chkAll":"Alle Kriterien erfüllt. Kapitel 3 abgeschlossen!","skipped":"Schritt übersprungen.",
     "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","catNF":"cat: {f}: keine solche Datei",
-    "tSavedFile":"Datei gespeichert","tDone":"Kapitel 2 abgeschlossen — GitHub-MCP-Oberfläche bereit"
+    "tSavedFile":"Datei gespeichert","tDone":"Kapitel 3 abgeschlossen — Zustandsautomat steht"
   },
   "en":{
-    "navChapter1":"Chapter 1","navChapter3":"Chapter 3","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
-    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Fixtures",
-    "btnClear":"Clear","btnSave":"Save","phPaste":"Inspect or edit the fixture file.",
-    "mFixture":"Fixture","mTools":"MCP tools",
-    "instrHead":"Instructions","instrTitle":"GitHub MCP server & local fixture",
-    "instrSub":"You wire the official <code>github-mcp-server</code> to a local fixture (no real GitHub needed), drive the MCP stdio handshake by hand, and make one mutating call. By the end, the supervisor will have all three MCP surfaces: APIM, GitHub and Azure.",
+    "navChapter2":"Chapter 2","navChapter4":"Chapter 4","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Supervisor",
+    "btnClear":"Clear","btnSave":"Save","phPaste":"Read or edit the supervisor code.",
+    "mBuild":"Build","mRun":"Run",
+    "instrHead":"Instructions","instrTitle":"Supervisor plan → approve → apply",
+    "instrSub":"You build a supervisor (.NET 8 console, Microsoft Agent Framework) with an explicit three-state graph: plan → approve → apply. Each state has a single specialist that calls one MCP server. This chapter uses an <code>--auto-approve</code> short-circuit; chapter 4 replaces it with a real human approval.",
     "progLabel":"Progress","copy":"Copy","copied":"Copied",
-    "s1h":"Step 1 · Start the GitHub fixture (port 9006)","s1b":"Inspect <code>github_fixture.py</code> in the <strong>Fixtures</strong> tab (a subset of GitHub's REST API: create_branch, create_or_update_file, create_pull_request), then start it:",
-    "s2h":"Step 2 · Confirm the pre-pulled image","s2b":"The setup script already pulled <code>ghcr.io/github/github-mcp-server:v1.0.3</code> so first-call latency is no surprise. Confirm it:",
-    "s3h":"Step 3 · Drive the stdio handshake","s3b":"The MCP stdio protocol is newline-delimited JSON-RPC frames. Send the three frames (initialize, notifications/initialized, tools/list) into a one-shot container:","s3n":"You should see all three tools. If you see fewer, check the log: github-mcp-server hits the fixture's <code>/api/v3/</code> root at startup.",
-    "s4h":"Step 4 · One mutating call through the MCP server","s4b":"Call <code>create_branch</code> through the MCP server to prove the round trip end to end, then check the entry in the fixture log:",
+    "s1h":"Step 1 · Scaffold the Supervisor project","s1b":"The scaffold script writes a .NET 8 project under <code>/root/capstone/Supervisor/</code> with the Microsoft Agent Framework 1.6.1 package set pinned (it does not yet run the supervisor):","s1b2":"Open <code>Program.cs</code> and <code>Workflow.cs</code> in the <strong>Supervisor</strong> tab: <code>CapstonePlan</code> flows through all three states, and each state is a small executor.",
+    "s2h":"Step 2 · Build the supervisor","s2b":"Restore packages and build. The first restore pulls Microsoft.Agents.AI 1.6.1 and the .Workflows package:",
+    "s3h":"Step 3 · Wire to AKS pods + AI Gateway","s3b":"The supervisor needs three bundles: the Azure OpenAI endpoint (or the AI Gateway), the APIM MCP HTTP endpoint (port-forwarded from AKS) and the GitHub MCP server (spawned via <code>docker run</code>). The script wires all three:","s3n":"This writes <code>.env</code> with <code>LLM_API_BASE</code>, <code>LLM_API_KEY</code>, <code>APIM_MCP_URL</code> and <code>GITHUB_MCP_IMAGE</code>, and starts a port-forward to the APIM MCP on <code>http://localhost:18080/mcp</code>.",
+    "s4h":"Step 4 · Run in auto-approve mode","s4b":"Run the supervisor with the test prompt and the <code>--auto-approve</code> flag (it bypasses the approval gate so this chapter ends on a clean plan → apply round trip):","s4n":"You should see three blocks: <code>[plan]</code> with the proposal, <code>[approve]</code> with <code>auto-approved</code>, and <code>[apply]</code> with the simulated GitHub commit and APIM create.",
     "critH":"Success criteria",
-    "c1":"GitHub fixture started and /healthz OK.","c2":"Image github-mcp-server v1.0.3 confirmed.","c3":"Handshake succeeded: 3 tools listed.","c4":"create_branch call made through MCP.",
+    "c1":"Supervisor project scaffolded.","c2":"Release build succeeded.","c3":".env wiring + APIM MCP port-forward.","c4":"Auto-approve run: plan → approve → apply.",
     "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
     "skip":"Skip","check":"Check",
     "helpTitle":"Lab Copilot","helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.","nextHint":"Next hint",
-    "hint0":"First start the GitHub fixture on port 9006 (Step 1).",
-    "hint1":"The fixture implements just enough: create_branch, create_or_update_file, create_pull_request.",
-    "hint2":"github-mcp-server hits /api/v3/ at startup to detect the base URL.",
-    "hint3":"The stdio handshake = 3 JSON-RPC frames: initialize, notifications/initialized, tools/list.",
-    "hint4":"The create_branch call goes through the MCP server then lands in the fixture log.",
+    "hint0":"First scaffold the Supervisor project (Step 1).",
+    "hint1":"CapstonePlan is the shared record that flows between the three states.",
+    "hint2":"PlanState, ApproveState, ApplyState are small executors (under 40 lines).",
+    "hint3":"wire-supervisor.sh writes the .env and starts the APIM MCP port-forward.",
+    "hint4":"--auto-approve short-circuits the approval gate for this chapter.",
     "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — apim-capstone VM (Koffi Academy)",
-    "bEnv":"docker + jq + curl ready. Fixture: /root/capstone/fixtures/github-fixture","bTip":"Tip: type `help` for commands, `check` for progress.",
-    "hHeader":"Available commands:","hRun":"start the GitHub fixture","hCurl":"test the fixture /healthz","hTail":"follow the fixture log","hInspect":"inspect the github-mcp-server image","hHand":"drive the stdio handshake","hBranch":"mutating create_branch call","hGrep":"filter in a file/log","hCheck":"check your progress",
-    "fxUp":"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)","fxHealth":"{ \"status\": \"ok\", \"service\": \"github-fixture\" }","fxTail":"[tail] following /tmp/github-fixture.log","fxDown":"curl: (7) Failed to connect to localhost port 9006",
-    "imgLine":"sha256:ab12cd34ef56  2025-05-12T09:33:00Z","imgMiss":"Error: No such image — re-run the setup script",
-    "needFixture":"Tip: start the fixture first (Step 1).","needHand":"Tip: run the handshake first (Step 3).",
-    "checkHeader":"Task progress:","chkFx":"GitHub fixture started","chkImg":"github-mcp-server image confirmed","chkHand":"Handshake succeeded (3 tools)","chkMut":"create_branch call via MCP","chkAll":"All criteria met. Chapter 2 complete!","skipped":"Step skipped.",
+    "bEnv":".NET 8 + docker ready. Project: /root/capstone/Supervisor","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hScaffold":"scaffold the supervisor project","hBuild":"build (dotnet build -c Release)","hWire":"wire .env + port-forward","hRun":"run (dotnet run -- --auto-approve)","hTail":"show the supervisor log","hCheck":"check your progress","hClear":"clear the terminal",
+    "needScaffold":"Tip: scaffold the project first (Step 1).","needBuild":"Tip: build the project first (Step 2).","needWire":"Tip: wire the environment first (Step 3).",
+    "logEmpty":"(supervisor.log empty — run the supervisor first)",
+    "checkHeader":"Task progress:","chkSc":"Project scaffolded","chkBd":"Release build succeeded","chkWr":"Environment wired","chkRn":"Run plan → approve → apply","chkAll":"All criteria met. Chapter 3 complete!","skipped":"Step skipped.",
     "cmdNF":"{c}: command not found. Type `help`.","catNF":"cat: {f}: no such file",
-    "tSavedFile":"File saved","tDone":"Chapter 2 complete — GitHub MCP surface ready"
+    "tSavedFile":"File saved","tDone":"Chapter 3 complete — state machine in place"
   }
 };
 
 (function(){
   "use strict";
-  var FILES=["fixtures/github-fixture/github_fixture.py","fixtures/github-fixture/run-fixture.sh","scripts/github-mcp-handshake.sh"];
+  var FILES=["Supervisor/Program.cs","Supervisor/Workflow.cs"];
   var SEED={
-    "fixtures/github-fixture/github_fixture.py":"# Koffi Academy - fixture GitHub locale (sous-ensemble de l'API REST)\nfrom flask import Flask, request, jsonify\napp = Flask(__name__)\n\n@app.get(\"/healthz\")\ndef healthz():\n    return jsonify(status=\"ok\", service=\"github-fixture\")\n\n# racine interrogee par github-mcp-server au demarrage\n@app.get(\"/api/v3/\")\ndef api_root():\n    return jsonify(installed_version=\"3.11\")\n\n# create_branch -> POST refs / create_or_update_file -> PUT contents\n# create_pull_request -> POST pulls\n# (routes Flask completes dans le fichier fourni par le lab)\nif __name__ == \"__main__\":\n    app.run(host=\"0.0.0.0\", port=9006)\n",
-    "fixtures/github-fixture/run-fixture.sh":"#!/bin/bash\n# Koffi Academy - demarre la fixture GitHub sur le port 9006\ncd \"$(dirname \"$0\")\"\nnohup python3 github_fixture.py > /tmp/github-fixture.log 2>&1 &\nsleep 1\necho \"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)\"\n",
-    "scripts/github-mcp-handshake.sh":"#!/bin/bash\n# Koffi Academy - handshake stdio MCP (initialize + initialized + tools/list)\nprintf '%s\\n' \\\n  '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"koffi\",\"version\":\"1.0\"}}}' \\\n  '{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}' \\\n  '{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}' \\\n| docker run -i --rm \\\n    -e GITHUB_HOST=http://host.docker.internal:9006 \\\n    -e GITHUB_PERSONAL_ACCESS_TOKEN=koffi-fixture-token \\\n    ghcr.io/github/github-mcp-server:v1.0.3 stdio\n"
+    "Supervisor/Program.cs":"// Koffi Academy - Supervisor (Microsoft Agent Framework)\nusing Capstone;\n\nvar autoApprove = args.Contains(\"--auto-approve\");\nvar prompt = args.LastOrDefault(a => !a.StartsWith(\"--\")) ?? \"\";\n\nvar plan = await PlanState.PlanAsync(prompt);\nConsole.WriteLine($\"[plan] {plan.Summary}\");\n\nvar approved = await ApproveState.ApproveAsync(plan, autoApprove);\nConsole.WriteLine($\"[approve] {(approved ? \\\"auto-approved\\\" : \\\"rejected\\\")}\");\n\nif (approved)\n    await ApplyState.ApplyAsync(plan);\n",
+    "Supervisor/Workflow.cs":"// Koffi Academy - etats plan / approve / apply\nnamespace Capstone;\n\npublic record CapstonePlan(string ApiName, string Path, int RateLimit, string Summary);\n\npublic static class PlanState\n{\n    // demande a l'APIM MCP ce qui existe, propose l'API manquante\n    public static Task PlanAsync(string prompt) => Task.FromResult(\n        new CapstonePlan(\"orders\", \"/orders/v1\", 100,\n            \"proposed API orders v1, rate-limit 100/min\"));\n}\n\npublic static class ApproveState\n{\n    // court-circuit --auto-approve pour ce chapitre\n    public static Task ApproveAsync(CapstonePlan plan, bool autoApprove)\n        => Task.FromResult(autoApprove);\n}\n\npublic static class ApplyState\n{\n    public static Task ApplyAsync(CapstonePlan plan)\n    {\n        Console.WriteLine(\"[apply] github: commit apim/orders-v1.yaml\");\n        Console.WriteLine(\"[apply] apim:   create API revision orders v1\");\n        return Task.CompletedTask;\n    }\n}\n"
   };
   var I=window.I18N; var lang=localStorage.getItem("preferred-lang"); if(!I[lang])lang="de";
   function t(key,vars){var s=(I[lang]&&I[lang][key]!==undefined)?I[lang][key]:(I.en[key]!==undefined?I.en[key]:key);if(vars)Object.keys(vars).forEach(function(k){s=s.replace(new RegExp("\\{"+k+"\\}","g"),vars[k]);});return s;}
 
   var FS={}; FILES.forEach(function(f){FS[f]=SEED[f]||"";});
   var currentFile=FILES[0];
-  var st={fixture:false,image:false,handshake:false,mutate:false};
-  var fixtureUp=false, imageOk=false, handshakeOk=false, mutateOk=false; var hi=0;
+  var st={scaffold:false,build:false,wire:false,run:false};
+  var scaffolded=false, built=false, wired=false, ran=false; var hi=0;
 
   var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput"), editor=document.getElementById("fileEditor");
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
@@ -433,73 +427,58 @@ window.I18N = {
   function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
   function banner(){out.innerHTML="";print(t("bSsh"),"line-muted");print(t("bUbuntu"),"line-muted");print(t("bEnv"),"line-muted");print(t("bTip"),"line-muted");print("");}
 
-  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["fixture","image","handshake","mutate"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
-  function refresh(){document.getElementById("mFixture").textContent=fixtureUp?"OK":"—";document.getElementById("mTools").textContent=(handshakeOk?3:0)+"/3";}
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["scaffold","build","wire","run"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
+  function refresh(){document.getElementById("mBuild").textContent=built?"OK":"—";document.getElementById("mRun").textContent=ran?"OK":"—";}
 
   function norm(p){return p?p.trim().replace(/^\.\//,"").replace(/^\/root\/capstone\//,"").replace(/\/+$/,""):"";}
   function resolve(p){p=norm(p);return FS[p]!==undefined?p:null;}
 
+  function doRun(){
+    if(!built){print(t("needBuild"),"line-warn");return;}
+    if(!wired){print(t("needWire"),"line-warn");return;}
+    print("[plan] proposed API orders v1, rate-limit 100/min","line-ok");
+    print("[approve] auto-approved","line-ok");
+    print("[apply] github: commit apim/orders-v1.yaml","line-ok");
+    print("[apply] apim:   create API revision orders v1","line-ok");
+    ran=true;refresh();setStep("run",true);
+  }
+
   function handle(raw){
     var cmd=raw.trim(); if(!cmd) return; var parts=cmd.split(/\s+/); var head=parts[0];
     if(head==="help"){print(t("hHeader"),"line-muted");
-      print("  bash fixtures/github-fixture/run-fixture.sh  "+t("hRun"));
-      print("  curl -sf http://localhost:9006/healthz | jq  "+t("hCurl"));
-      print("  tail -F /tmp/github-fixture.log &            "+t("hTail"));
-      print("  docker image inspect github-mcp-server ...   "+t("hInspect"));
-      print("  bash scripts/github-mcp-handshake.sh         "+t("hHand"));
-      print("  bash scripts/github-mcp-create-branch.sh     "+t("hBranch"));
-      print("  grep ... <file|log>                          "+t("hGrep"));
+      print("  bash scripts/scaffold-supervisor.sh         "+t("hScaffold"));
+      print("  dotnet build -c Release                      "+t("hBuild"));
+      print("  bash scripts/wire-supervisor.sh              "+t("hWire"));
+      print("  dotnet run -c Release -- --auto-approve ...   "+t("hRun"));
+      print("  tail -80 /tmp/supervisor.log                 "+t("hTail"));
       print("  check   ·   clear                          "+t("hCheck"));return;}
     if(head==="clear"){out.innerHTML="";return;}
     if(head==="check"){runCheck();return;}
     if(head==="cat"){var f=resolve(parts[1]);if(f&&FS[f])FS[f].split("\n").forEach(function(l){print(l);});else print(t("catNF",{f:parts[1]||""}),"line-error");return;}
-    if(head==="tail"){if(/github-fixture\.log/.test(cmd))print(t("fxTail"),"line-muted");return;}
-    if(head==="curl"){
-      if(/9006\/healthz/.test(cmd)){ if(fixtureUp){print(t("fxHealth"),"line-ok");} else {print(t("fxDown"),"line-error");print(t("needFixture"),"line-warn");} return; }
-      print("curl: endpoint non simulé dans cet atelier","line-warn");return;
+    if(head==="tail"&&/supervisor\.log/.test(cmd)){
+      if(ran){print("plan_id=koffi-7f3a   prompt=orders /orders/v1 100/min");print("state=plan -> proposed orders v1");print("state=approve -> auto-approved");print("state=apply -> github commit ok, apim create ok");}
+      else{print(t("logEmpty"),"line-warn");}
+      return;
     }
-    if(head==="grep"){
-      if(/create_branch|create_or_update_file|create_pull_request/.test(cmd)){
-        if(handshakeOk){print('"name":"create_branch"');print('"name":"create_or_update_file"');print('"name":"create_pull_request"');}
-        else{print(t("needHand"),"line-warn");}
-        return;
-      }
-      if(/create_branch/.test(cmd)&&/github-fixture\.log/.test(cmd)){
-        if(mutateOk){print("[fixture] POST /api/v3/repos/koffi/apim-config/git/refs  create_branch ref=refs/heads/feature/orders-v1 sha=c0ffee");}
-        else{print("(aucune entrée create_branch — lancez d'abord l'appel mutant)","line-warn");}
-        return;
-      }
-      print("(grep: aucune correspondance)","line-muted");return;
-    }
-    if(head==="docker"){
-      if(parts[1]==="image"&&parts[2]==="inspect"){ if(/github-mcp-server:v1\.0\.3/.test(cmd)){imageOk=true;print(t("imgLine"),"line-ok");setStep("image",true);} else {print(t("imgMiss"),"line-error");} return; }
-      print("docker: sous-commande non simulée dans cet atelier","line-warn");return;
-    }
+    // dotnet (handle even when prefixed with "cd ... &&")
+    if(/dotnet\s+build/.test(cmd)){ if(!scaffolded){print(t("needScaffold"),"line-warn");return;} print("Determining projects to restore...","line-muted");print("Restored /root/capstone/Supervisor/Supervisor.csproj (Microsoft.Agents.AI 1.6.1)","line-muted");print("Build succeeded.  0 Warning(s)  0 Error(s)","line-ok");built=true;refresh();setStep("build",true);return; }
+    if(/dotnet\s+run/.test(cmd)){ doRun(); return; }
     if(head==="bash"){
-      if(/run-fixture\.sh/.test(cmd)){fixtureUp=true;print(t("fxUp"),"line-ok");refresh();setStep("fixture",true);return;}
-      if(/github-mcp-handshake\.sh/.test(cmd)){
-        if(!fixtureUp){print(t("needFixture"),"line-warn");}
-        print('{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","serverInfo":{"name":"github-mcp-server","version":"1.0.3"}}}');
-        print('{"jsonrpc":"2.0","id":2,"result":{"tools":[{"name":"create_branch"},{"name":"create_or_update_file"},{"name":"create_pull_request"}]}}');
-        handshakeOk=true;refresh();setStep("handshake",true);return;
-      }
-      if(/github-mcp-create-branch\.sh/.test(cmd)){
-        if(!fixtureUp){print(t("needFixture"),"line-warn");}
-        print('{"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":"branch feature/orders-v1 created (sha c0ffee)"}]}}',"line-ok");
-        mutateOk=true;setStep("mutate",true);return;
-      }
+      if(/scaffold-supervisor\.sh/.test(cmd)){scaffolded=true;print("Scaffolded /root/capstone/Supervisor (Microsoft Agent Framework 1.6.1 pinned)","line-ok");print("  wrote Program.cs, Workflow.cs, Supervisor.csproj","line-muted");setStep("scaffold",true);return;}
+      if(/wire-supervisor\.sh/.test(cmd)){ if(!built){print(t("needBuild"),"line-warn");} wired=true;print("wrote /root/capstone/Supervisor/.env (LLM_API_BASE, LLM_API_KEY, APIM_MCP_URL, GITHUB_MCP_IMAGE)","line-ok");print("port-forward to apim-mcp started on http://localhost:18080/mcp","line-ok");setStep("wire",true);return;}
       print("bash: "+(parts[1]||"")+": script non simulé dans cet atelier","line-warn");return;
     }
+    if(head==="cd"){return;}
     print(t("cmdNF",{c:head}),"line-error");
   }
 
   function runCheck(){
     print(t("checkHeader"),"line-muted");
-    print((st.fixture?"  [x] ":"  [ ] ")+t("chkFx"),st.fixture?"line-ok":"line-warn");
-    print((st.image?"  [x] ":"  [ ] ")+t("chkImg"),st.image?"line-ok":"line-warn");
-    print((st.handshake?"  [x] ":"  [ ] ")+t("chkHand"),st.handshake?"line-ok":"line-warn");
-    print((st.mutate?"  [x] ":"  [ ] ")+t("chkMut"),st.mutate?"line-ok":"line-warn");
-    if(st.fixture&&st.image&&st.handshake&&st.mutate)print(t("chkAll"),"line-ok");
+    print((st.scaffold?"  [x] ":"  [ ] ")+t("chkSc"),st.scaffold?"line-ok":"line-warn");
+    print((st.build?"  [x] ":"  [ ] ")+t("chkBd"),st.build?"line-ok":"line-warn");
+    print((st.wire?"  [x] ":"  [ ] ")+t("chkWr"),st.wire?"line-ok":"line-warn");
+    print((st.run?"  [x] ":"  [ ] ")+t("chkRn"),st.run?"line-ok":"line-warn");
+    if(st.scaffold&&st.build&&st.wire&&st.run)print(t("chkAll"),"line-ok");
   }
 
   function runScript(text){

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Multi-Agent APIM Platform · Chapitre 2 | Atelier — Koffi Academy</title>
-  <meta name="description" content="Atelier Koffi Academy — Chapitre 2 : serveur MCP GitHub officiel câblé à une fixture locale, handshake stdio JSON-RPC et appel mutant.">
+  <title>Multi-Agent APIM Platform · Chapitre 5 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Chapitre 5 : flux self-service de bout en bout, GitOps comme source de vérité, et parcours conceptuel Azure Front Door devant APIM.">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -163,16 +163,15 @@ button{cursor:pointer}
         <span class="brand__k">Koffi Academy</span>
         <span class="brand__sep">|</span>
         <span class="brand__title">Multi-Agent APIM Platform</span>
-        <span class="chip-ch">CH.2</span>
+        <span class="chip-ch">CH.5</span>
       </span>
     </a>
     <div class="labbar__spacer"></div>
     <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">120:00</span></span>
     <nav class="actions" aria-label="Lab actions">
-      <a class="topbtn" href="../laboratoire-apim-multi-agent-lab"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter1">Chapitre 1</span></a>
+      <a class="topbtn" href="../laboratoire-apim-multi-agent-lab-4"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter4">Chapitre 4</span></a>
       <a class="topbtn" href="../laboratoire-apim-multi-agent"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
       <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
-      <a class="topbtn" href="../laboratoire-apim-multi-agent-lab-3"><span data-i18n="navChapter3">Chapitre 3</span> <i class="fa-solid fa-arrow-right-long"></i></a>
       <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
       <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
       <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
@@ -184,7 +183,7 @@ button{cursor:pointer}
       <div class="work-tabs" role="tablist">
         <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
         <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
-        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-brands fa-github"></i><span data-i18n="tabFiles">Fixtures</span></button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-sitemap"></i><span data-i18n="tabFiles">GitOps + AFD</span></button>
       </div>
       <div class="work-surface">
         <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
@@ -196,28 +195,27 @@ button{cursor:pointer}
         </section>
         <section class="view datasets-view" id="datasetsView" role="tabpanel">
           <div class="filebar">
-            <button type="button" class="filetab is-active" data-file="fixtures/github-fixture/github_fixture.py">github_fixture.py</button>
-            <button type="button" class="filetab" data-file="fixtures/github-fixture/run-fixture.sh">run-fixture.sh</button>
-            <button type="button" class="filetab" data-file="scripts/github-mcp-handshake.sh">github-mcp-handshake.sh</button>
+            <button type="button" class="filetab is-active" data-file="apim/orders-v1.yaml">orders-v1.yaml</button>
+            <button type="button" class="filetab" data-file="frontdoor-notes.md">frontdoor-notes.md</button>
           </div>
           <div class="runbar">
-            <div class="runbar__title"><i class="fa-brands fa-github"></i><span id="fileLabel">/root/capstone/fixtures/github-fixture/github_fixture.py</span></div>
+            <div class="runbar__title"><i class="fa-solid fa-sitemap"></i><span id="fileLabel">/root/capstone/apim/orders-v1.yaml</span></div>
             <div class="runbar__actions">
               <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
               <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
             </div>
           </div>
           <div class="dataset-grid">
-            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Inspectez ou modifiez le fichier de la fixture."></textarea>
+            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Consultez le manifeste APIM et les notes Front Door."></textarea>
             <aside class="dataset-side">
               <div class="metric-grid">
-                <div class="metric"><span class="metric__k" data-i18n="mFixture">Fixture</span><div class="metric__v" id="mFixture">—</div></div>
-                <div class="metric"><span class="metric__k" data-i18n="mTools">Outils MCP</span><div class="metric__v" id="mTools">0/3</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mApi">API</span><div class="metric__v" id="mApi">—</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mGit">GitOps</span><div class="metric__v" id="mGit">—</div></div>
               </div>
               <div class="file-list">
-                <div class="file-pill"><i class="fa-solid fa-flask-vial"></i>fixture GitHub :9006</div>
-                <div class="file-pill"><i class="fa-solid fa-plug"></i>github-mcp-server v1.0.3</div>
-                <div class="file-pill"><i class="fa-solid fa-code"></i>JSON-RPC stdio</div>
+                <div class="file-pill"><i class="fa-solid fa-wand-magic-sparkles"></i>flux self-service</div>
+                <div class="file-pill"><i class="fa-brands fa-git-alt"></i>Git = source de vérité</div>
+                <div class="file-pill"><i class="fa-solid fa-shield-halved"></i>Azure Front Door</div>
               </div>
             </aside>
           </div>
@@ -231,48 +229,47 @@ button{cursor:pointer}
         <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
       </div>
       <div class="instructions__body">
-        <h1 class="lab-title" data-i18n="instrTitle">Serveur MCP GitHub & fixture locale</h1>
-        <p class="lab-sub" data-i18n="instrSub">Vous branchez le serveur <code>github-mcp-server</code> officiel sur une fixture locale (aucun GitHub réel requis), pilotez le handshake MCP stdio à la main, et effectuez un appel mutant. À la fin, le supervisor disposera des trois surfaces MCP : APIM, GitHub et Azure.</p>
+        <h1 class="lab-title" data-i18n="instrTitle">Bout en bout + Azure Front Door</h1>
+        <p class="lab-sub" data-i18n="instrSub">Vous exécutez le flux self-service complet : un prompt en langage naturel déclenche plan → approve → apply, avec un commit GitHub (manifeste APIM) et une révision d'API créée. Vous confirmez que Git est la source de vérité, parcourez les concepts d'Azure Front Door devant APIM, puis nettoyez l'environnement.</p>
 
         <div class="progress-card">
           <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="step is-open" data-step="fixture">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Démarrer la fixture GitHub (port 9006)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step is-open" data-step="e2e">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Flux self-service de bout en bout</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s1b">Inspectez <code>github_fixture.py</code> dans l'onglet <strong>Fixtures</strong> (sous-ensemble de l'API REST GitHub : create_branch, create_or_update_file, create_pull_request), puis démarrez-la :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/fixtures/github-fixture/run-fixture.sh
-curl -sf http://localhost:9006/healthz | jq
-tail -F /tmp/github-fixture.log &amp;</pre></div>
+            <span data-i18n="s1b">Tapez la demande en langage naturel : le supervisor planifie, publie pour approbation, puis applique (commit GitHub + révision APIM). Approuvez depuis le même shell :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">cd /root/capstone/Supervisor &amp;&amp; dotnet run -c Release -- "publish a new orders API with rate limit 100/min" &amp;
+bash /root/capstone/scripts/approve-latest-plan.sh</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="image">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Confirmer l'image pré-téléchargée</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="gitops">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Git comme source de vérité</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s2b">Le script de setup a déjà tiré <code>ghcr.io/github/github-mcp-server:v1.0.3</code> pour éviter la latence au premier appel. Confirmez-le :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">docker image inspect ghcr.io/github/github-mcp-server:v1.0.3 --format '{{.Id}} {{.Created}}'</pre></div>
+            <span data-i18n="s2b">Le manifeste APIM déclaratif est désormais commité dans Git. Vérifiez le commit et le manifeste (onglet <strong>GitOps + AFD</strong>), puis listez l'API côté APIM MCP :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">git -C /root/capstone log --oneline -3
+cat /root/capstone/apim/orders-v1.yaml
+bash /root/capstone/scripts/apim-list-apis.sh</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="handshake">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Piloter le handshake stdio</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="afd">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Parcours Azure Front Door</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s3b">Le protocole MCP stdio est une suite de trames JSON-RPC séparées par des retours à la ligne. Envoyez les trois trames (initialize, notifications/initialized, tools/list) dans un conteneur one-shot :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/github-mcp-handshake.sh | tee /tmp/github-mcp-tools.txt
-grep -oE '"name":"(create_branch|create_or_update_file|create_pull_request)"' /tmp/github-mcp-tools.txt | sort -u</pre></div>
-            <p style="margin:10px 0 0;color:var(--soft)" data-i18n="s3n">Vous devez voir les trois outils. Si vous en voyez moins, vérifiez le log : github-mcp-server interroge la racine <code>/api/v3/</code> de la fixture au démarrage.</p>
+            <span data-i18n="s3b">Parcourez les concepts d'Azure Front Door devant APIM (point d'entrée global, TLS au bord, WAF, failover multi-région). Aucune ressource à provisionner — ce sont des exemples à exécuter après le lab si vous êtes curieux :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">cat /root/capstone/frontdoor-notes.md
+az afd profile create --resource-group rg-multi-agent-apim-capstone --profile-name afd-koffi --sku Premium_AzureFrontDoor</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="mutate">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Un appel mutant via le serveur MCP</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="cleanup">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Nettoyer l'environnement</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s4b">Appelez <code>create_branch</code> à travers le serveur MCP pour prouver l'aller-retour de bout en bout, puis vérifiez l'entrée dans le log de la fixture :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/github-mcp-create-branch.sh
-grep create_branch /tmp/github-fixture.log | tail -3</pre></div>
+            <span data-i18n="s4b">Quand vous avez terminé, le script de nettoyage supprime tout le groupe de ressources (toutes les ressources Azure du lab y vivent) :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/cleanup-apim-capstone.sh</pre></div>
           </div>
         </article>
 
@@ -280,12 +277,13 @@ grep create_branch /tmp/github-fixture.log | tail -3</pre></div>
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <ul class="crit">
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Fixture GitHub démarrée et /healthz OK.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Image github-mcp-server v1.0.3 confirmée.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Handshake réussi : les 3 outils listés.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Appel create_branch passé via MCP.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Flux complet exécuté : plan → approve → apply.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Commit GitHub + révision APIM confirmés.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Concepts Azure Front Door parcourus.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Environnement nettoyé (groupe supprimé).</span></li>
             </ul>
             <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
+            <p style="margin:12px 0 0;color:var(--green);font-weight:700" data-i18n="finale">Bravo — vous avez livré une architecture de référence pour l'infrastructure self-service pilotée par des agents !</p>
           </div>
         </article>
       </div>
@@ -304,7 +302,7 @@ grep create_branch /tmp/github-fixture.log | tail -3</pre></div>
   <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
   <div class="help-body">
     <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.</p>
-    <div class="hint" id="hintText" data-i18n="hint0">Démarrez d'abord la fixture GitHub sur le port 9006 (Étape 1).</div>
+    <div class="hint" id="hintText" data-i18n="hint0">Lancez le flux complet puis approuvez le plan (Étape 1).</div>
     <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
   </div>
 </section>
@@ -314,118 +312,120 @@ grep create_branch /tmp/github-fixture.log | tail -3</pre></div>
 <script>
 window.I18N = {
   "fr":{
-    "navChapter1":"Chapitre 1","navChapter3":"Chapitre 3","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
-    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Fixtures",
-    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Inspectez ou modifiez le fichier de la fixture.",
-    "mFixture":"Fixture","mTools":"Outils MCP",
-    "instrHead":"Instructions","instrTitle":"Serveur MCP GitHub & fixture locale",
-    "instrSub":"Vous branchez le serveur <code>github-mcp-server</code> officiel sur une fixture locale (aucun GitHub réel requis), pilotez le handshake MCP stdio à la main, et effectuez un appel mutant. À la fin, le supervisor disposera des trois surfaces MCP : APIM, GitHub et Azure.",
+    "navChapter4":"Chapitre 4","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"GitOps + AFD",
+    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Consultez le manifeste APIM et les notes Front Door.",
+    "mApi":"API","mGit":"GitOps",
+    "instrHead":"Instructions","instrTitle":"Bout en bout + Azure Front Door",
+    "instrSub":"Vous exécutez le flux self-service complet : un prompt en langage naturel déclenche plan → approve → apply, avec un commit GitHub (manifeste APIM) et une révision d'API créée. Vous confirmez que Git est la source de vérité, parcourez les concepts d'Azure Front Door devant APIM, puis nettoyez l'environnement.",
     "progLabel":"Progression","copy":"Copier","copied":"Copié",
-    "s1h":"Étape 1 · Démarrer la fixture GitHub (port 9006)","s1b":"Inspectez <code>github_fixture.py</code> dans l'onglet <strong>Fixtures</strong> (sous-ensemble de l'API REST GitHub : create_branch, create_or_update_file, create_pull_request), puis démarrez-la :",
-    "s2h":"Étape 2 · Confirmer l'image pré-téléchargée","s2b":"Le script de setup a déjà tiré <code>ghcr.io/github/github-mcp-server:v1.0.3</code> pour éviter la latence au premier appel. Confirmez-le :",
-    "s3h":"Étape 3 · Piloter le handshake stdio","s3b":"Le protocole MCP stdio est une suite de trames JSON-RPC séparées par des retours à la ligne. Envoyez les trois trames (initialize, notifications/initialized, tools/list) dans un conteneur one-shot :","s3n":"Vous devez voir les trois outils. Si vous en voyez moins, vérifiez le log : github-mcp-server interroge la racine <code>/api/v3/</code> de la fixture au démarrage.",
-    "s4h":"Étape 4 · Un appel mutant via le serveur MCP","s4b":"Appelez <code>create_branch</code> à travers le serveur MCP pour prouver l'aller-retour de bout en bout, puis vérifiez l'entrée dans le log de la fixture :",
+    "s1h":"Étape 1 · Flux self-service de bout en bout","s1b":"Tapez la demande en langage naturel : le supervisor planifie, publie pour approbation, puis applique (commit GitHub + révision APIM). Approuvez depuis le même shell :",
+    "s2h":"Étape 2 · Git comme source de vérité","s2b":"Le manifeste APIM déclaratif est désormais commité dans Git. Vérifiez le commit et le manifeste (onglet <strong>GitOps + AFD</strong>), puis listez l'API côté APIM MCP :",
+    "s3h":"Étape 3 · Parcours Azure Front Door","s3b":"Parcourez les concepts d'Azure Front Door devant APIM (point d'entrée global, TLS au bord, WAF, failover multi-région). Aucune ressource à provisionner — ce sont des exemples à exécuter après le lab si vous êtes curieux :",
+    "s4h":"Étape 4 · Nettoyer l'environnement","s4b":"Quand vous avez terminé, le script de nettoyage supprime tout le groupe de ressources (toutes les ressources Azure du lab y vivent) :",
     "critH":"Critères de réussite",
-    "c1":"Fixture GitHub démarrée et /healthz OK.","c2":"Image github-mcp-server v1.0.3 confirmée.","c3":"Handshake réussi : les 3 outils listés.","c4":"Appel create_branch passé via MCP.",
+    "c1":"Flux complet exécuté : plan → approve → apply.","c2":"Commit GitHub + révision APIM confirmés.","c3":"Concepts Azure Front Door parcourus.","c4":"Environnement nettoyé (groupe supprimé).",
     "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
+    "finale":"Bravo — vous avez livré une architecture de référence pour l'infrastructure self-service pilotée par des agents !",
     "skip":"Ignorer","check":"Vérifier",
     "helpTitle":"Copilote de l'atelier","helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.","nextHint":"Indice suivant",
-    "hint0":"Démarrez d'abord la fixture GitHub sur le port 9006 (Étape 1).",
-    "hint1":"La fixture implémente juste ce qu'il faut : create_branch, create_or_update_file, create_pull_request.",
-    "hint2":"github-mcp-server interroge /api/v3/ au démarrage pour détecter l'URL de base.",
-    "hint3":"Le handshake stdio = 3 trames JSON-RPC : initialize, notifications/initialized, tools/list.",
-    "hint4":"L'appel create_branch traverse le serveur MCP puis atterrit dans le log de la fixture.",
+    "hint0":"Lancez le flux complet puis approuvez le plan (Étape 1).",
+    "hint1":"Le même topologie qu'aux chapitres 1-4 : APIM MCP + GitHub MCP + Azure MCP.",
+    "hint2":"git log montre le commit du manifeste APIM : Git est la source de vérité.",
+    "hint3":"Front Door est un walkthrough conceptuel — aucune ressource n'est provisionnée ici.",
+    "hint4":"Le script de cleanup supprime tout le groupe rg-multi-agent-apim-capstone.",
     "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — VM apim-capstone (Koffi Academy)",
-    "bEnv":"docker + jq + curl prêts. Fixture : /root/capstone/fixtures/github-fixture","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
-    "hHeader":"Commandes disponibles :","hRun":"démarrer la fixture GitHub","hCurl":"tester /healthz de la fixture","hTail":"suivre le log de la fixture","hInspect":"inspecter l'image github-mcp-server","hHand":"piloter le handshake stdio","hBranch":"appel mutant create_branch","hGrep":"filtrer dans un fichier/log","hCheck":"vérifier la progression",
-    "fxUp":"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)","fxHealth":"{ \"status\": \"ok\", \"service\": \"github-fixture\" }","fxTail":"[tail] suivi de /tmp/github-fixture.log","fxDown":"curl: (7) Failed to connect to localhost port 9006",
-    "imgLine":"sha256:ab12cd34ef56  2025-05-12T09:33:00Z","imgMiss":"Error: No such image — relancez le script de setup",
-    "needFixture":"Astuce : démarrez d'abord la fixture (Étape 1).","needHand":"Astuce : lancez d'abord le handshake (Étape 3).",
-    "checkHeader":"Progression de la tâche :","chkFx":"Fixture GitHub démarrée","chkImg":"Image github-mcp-server confirmée","chkHand":"Handshake réussi (3 outils)","chkMut":"Appel create_branch via MCP","chkAll":"Tous les critères sont remplis. Chapitre 2 terminé !","skipped":"Étape ignorée.",
+    "bEnv":"Topologie complète prête (APIM/GitHub/Azure MCP). Dépôt : /root/capstone","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hRun":"exécuter le flux self-service","hApprove":"approuver le dernier plan","hGit":"voir l'historique Git","hCat":"afficher un fichier","hApim":"lister les API côté APIM","hAfd":"exemple Azure Front Door (walkthrough)","hClean":"nettoyer le groupe de ressources","hCheck":"vérifier la progression",
+    "posted":"[plan] proposed orders v1 — publié sur Slack, attente d'approbation (plan_id=koffi-9a2)...","approvedMsg":"approved plan koffi-9a2 (verdict=approve)","gitLog":"a1b2c3d publish orders API v1 via agent (koffi-9a2)","gitLog2":"f4e5d6c capstone: initial APIM manifests","apimList":"NAME     REVISION   PATH         POLICY              STATE","apimRow":"orders   v1         /orders/v1   rate-limit 100/min   Online",
+    "afdNote":"(walkthrough uniquement — à exécuter après le lab si vous êtes curieux)","cleanMsg":"Suppression du groupe de ressources rg-multi-agent-apim-capstone (toutes les ressources du lab)...","cleanDone":"done — groupe de ressources supprimé",
+    "needE2E":"Astuce : exécutez d'abord le flux complet (Étape 1).","needGate":"Astuce : lancez d'abord le supervisor (Étape 1).",
+    "checkHeader":"Progression de la tâche :","chkE2":"Flux plan → approve → apply","chkGo":"Commit + révision APIM confirmés","chkAf":"Concepts Front Door parcourus","chkCl":"Environnement nettoyé","chkAll":"Tous les critères sont remplis. Chapitre 5 terminé — parcours complet !","skipped":"Étape ignorée.",
     "cmdNF":"{c} : commande introuvable. Tapez `help`.","catNF":"cat : {f} : aucun fichier de ce type",
-    "tSavedFile":"Fichier enregistré","tDone":"Chapitre 2 terminé — surface MCP GitHub prête"
+    "tSavedFile":"Fichier enregistré","tDone":"Parcours terminé — plateforme multi-agents livrée"
   },
   "de":{
-    "navChapter1":"Kapitel 1","navChapter3":"Kapitel 3","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
-    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Fixtures",
-    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Inspizieren oder bearbeiten Sie die Fixture-Datei.",
-    "mFixture":"Fixture","mTools":"MCP-Tools",
-    "instrHead":"Anleitung","instrTitle":"GitHub-MCP-Server & lokale Fixture",
-    "instrSub":"Sie verbinden den offiziellen <code>github-mcp-server</code> mit einer lokalen Fixture (kein echtes GitHub nötig), steuern den MCP-stdio-Handshake manuell und führen einen mutierenden Aufruf aus. Am Ende verfügt der Supervisor über die drei MCP-Oberflächen: APIM, GitHub und Azure.",
+    "navChapter4":"Kapitel 4","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"GitOps + AFD",
+    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Sehen Sie das APIM-Manifest und die Front-Door-Notizen an.",
+    "mApi":"API","mGit":"GitOps",
+    "instrHead":"Anleitung","instrTitle":"End-to-End + Azure Front Door",
+    "instrSub":"Sie führen den vollständigen Self-Service-Flow aus: Ein Prompt in natürlicher Sprache löst plan → approve → apply aus, mit einem GitHub-Commit (APIM-Manifest) und einer erstellten API-Revision. Sie bestätigen, dass Git die Source of Truth ist, gehen die Konzepte von Azure Front Door vor APIM durch und räumen dann die Umgebung auf.",
     "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
-    "s1h":"Schritt 1 · GitHub-Fixture starten (Port 9006)","s1b":"Inspizieren Sie <code>github_fixture.py</code> im Reiter <strong>Fixtures</strong> (Teilmenge der GitHub-REST-API: create_branch, create_or_update_file, create_pull_request) und starten Sie sie:",
-    "s2h":"Schritt 2 · Vorab geladenes Image bestätigen","s2b":"Das Setup-Skript hat <code>ghcr.io/github/github-mcp-server:v1.0.3</code> bereits gezogen, um Latenz beim ersten Aufruf zu vermeiden. Bestätigen Sie es:",
-    "s3h":"Schritt 3 · Den stdio-Handshake steuern","s3b":"Das MCP-stdio-Protokoll ist eine Folge zeilengetrennter JSON-RPC-Frames. Senden Sie die drei Frames (initialize, notifications/initialized, tools/list) in einen One-Shot-Container:","s3n":"Sie sollten alle drei Tools sehen. Sehen Sie weniger, prüfen Sie das Log: github-mcp-server fragt beim Start die <code>/api/v3/</code>-Wurzel der Fixture ab.",
-    "s4h":"Schritt 4 · Ein mutierender Aufruf über den MCP-Server","s4b":"Rufen Sie <code>create_branch</code> über den MCP-Server auf, um den End-to-End-Roundtrip zu beweisen, und prüfen Sie dann den Eintrag im Fixture-Log:",
+    "s1h":"Schritt 1 · End-to-End-Self-Service-Flow","s1b":"Tippen Sie die Anfrage in natürlicher Sprache: Der Supervisor plant, postet zur Freigabe und wendet dann an (GitHub-Commit + APIM-Revision). Geben Sie aus derselben Shell frei:",
+    "s2h":"Schritt 2 · Git als Source of Truth","s2b":"Das deklarative APIM-Manifest ist jetzt in Git committet. Prüfen Sie den Commit und das Manifest (Reiter <strong>GitOps + AFD</strong>) und listen Sie dann die API über den APIM MCP auf:",
+    "s3h":"Schritt 3 · Azure-Front-Door-Walkthrough","s3b":"Gehen Sie die Konzepte von Azure Front Door vor APIM durch (globaler Eingangspunkt, TLS am Rand, WAF, Multi-Region-Failover). Keine Ressourcen zu provisionieren — das sind Beispiele zum Ausführen nach dem Lab, falls Sie neugierig sind:",
+    "s4h":"Schritt 4 · Umgebung aufräumen","s4b":"Wenn Sie fertig sind, löscht das Cleanup-Skript die gesamte Ressourcengruppe (alle Azure-Ressourcen des Labs liegen darin):",
     "critH":"Erfolgskriterien",
-    "c1":"GitHub-Fixture gestartet und /healthz OK.","c2":"Image github-mcp-server v1.0.3 bestätigt.","c3":"Handshake erfolgreich: 3 Tools gelistet.","c4":"create_branch-Aufruf über MCP ausgeführt.",
+    "c1":"Vollständiger Flow ausgeführt: plan → approve → apply.","c2":"GitHub-Commit + APIM-Revision bestätigt.","c3":"Azure-Front-Door-Konzepte durchgegangen.","c4":"Umgebung aufgeräumt (Gruppe gelöscht).",
     "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
+    "finale":"Glückwunsch — Sie haben eine Referenzarchitektur für agentengesteuerte Self-Service-Infrastruktur geliefert!",
     "skip":"Überspringen","check":"Prüfen",
     "helpTitle":"Lab-Copilot","helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.","nextHint":"Nächster Hinweis",
-    "hint0":"Starten Sie zuerst die GitHub-Fixture auf Port 9006 (Schritt 1).",
-    "hint1":"Die Fixture implementiert genau das Nötige: create_branch, create_or_update_file, create_pull_request.",
-    "hint2":"github-mcp-server fragt beim Start /api/v3/ ab, um die Basis-URL zu ermitteln.",
-    "hint3":"Der stdio-Handshake = 3 JSON-RPC-Frames: initialize, notifications/initialized, tools/list.",
-    "hint4":"Der create_branch-Aufruf läuft durch den MCP-Server und landet im Fixture-Log.",
+    "hint0":"Starten Sie den vollständigen Flow und geben Sie dann den Plan frei (Schritt 1).",
+    "hint1":"Dieselbe Topologie wie in Kapitel 1-4: APIM MCP + GitHub MCP + Azure MCP.",
+    "hint2":"git log zeigt den Commit des APIM-Manifests: Git ist die Source of Truth.",
+    "hint3":"Front Door ist ein konzeptioneller Walkthrough — hier wird nichts provisioniert.",
+    "hint4":"Das Cleanup-Skript löscht die gesamte Gruppe rg-multi-agent-apim-capstone.",
     "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — VM apim-capstone (Koffi Academy)",
-    "bEnv":"docker + jq + curl bereit. Fixture: /root/capstone/fixtures/github-fixture","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
-    "hHeader":"Verfügbare Befehle:","hRun":"die GitHub-Fixture starten","hCurl":"/healthz der Fixture testen","hTail":"das Fixture-Log verfolgen","hInspect":"das github-mcp-server-Image inspizieren","hHand":"den stdio-Handshake steuern","hBranch":"mutierender create_branch-Aufruf","hGrep":"in einer Datei/im Log filtern","hCheck":"Fortschritt prüfen",
-    "fxUp":"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)","fxHealth":"{ \"status\": \"ok\", \"service\": \"github-fixture\" }","fxTail":"[tail] verfolge /tmp/github-fixture.log","fxDown":"curl: (7) Failed to connect to localhost port 9006",
-    "imgLine":"sha256:ab12cd34ef56  2025-05-12T09:33:00Z","imgMiss":"Error: No such image — Setup-Skript erneut ausführen",
-    "needFixture":"Tipp: starten Sie zuerst die Fixture (Schritt 1).","needHand":"Tipp: führen Sie zuerst den Handshake aus (Schritt 3).",
-    "checkHeader":"Fortschritt der Aufgabe:","chkFx":"GitHub-Fixture gestartet","chkImg":"github-mcp-server-Image bestätigt","chkHand":"Handshake erfolgreich (3 Tools)","chkMut":"create_branch-Aufruf über MCP","chkAll":"Alle Kriterien erfüllt. Kapitel 2 abgeschlossen!","skipped":"Schritt übersprungen.",
+    "bEnv":"Vollständige Topologie bereit (APIM/GitHub/Azure MCP). Repository: /root/capstone","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hRun":"den Self-Service-Flow ausführen","hApprove":"den letzten Plan freigeben","hGit":"die Git-Historie ansehen","hCat":"eine Datei anzeigen","hApim":"die APIs über APIM auflisten","hAfd":"Azure-Front-Door-Beispiel (Walkthrough)","hClean":"die Ressourcengruppe aufräumen","hCheck":"Fortschritt prüfen",
+    "posted":"[plan] proposed orders v1 — in Slack gepostet, warte auf Freigabe (plan_id=koffi-9a2)...","approvedMsg":"approved plan koffi-9a2 (verdict=approve)","gitLog":"a1b2c3d publish orders API v1 via agent (koffi-9a2)","gitLog2":"f4e5d6c capstone: initial APIM manifests","apimList":"NAME     REVISION   PATH         POLICY              STATE","apimRow":"orders   v1         /orders/v1   rate-limit 100/min   Online",
+    "afdNote":"(nur Walkthrough — nach dem Lab ausführen, falls Sie neugierig sind)","cleanMsg":"Lösche Ressourcengruppe rg-multi-agent-apim-capstone (alle Lab-Ressourcen)...","cleanDone":"done — Ressourcengruppe gelöscht",
+    "needE2E":"Tipp: führen Sie zuerst den vollständigen Flow aus (Schritt 1).","needGate":"Tipp: starten Sie zuerst den Supervisor (Schritt 1).",
+    "checkHeader":"Fortschritt der Aufgabe:","chkE2":"Flow plan → approve → apply","chkGo":"Commit + APIM-Revision bestätigt","chkAf":"Front-Door-Konzepte durchgegangen","chkCl":"Umgebung aufgeräumt","chkAll":"Alle Kriterien erfüllt. Kapitel 5 abgeschlossen — kompletter Pfad!","skipped":"Schritt übersprungen.",
     "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","catNF":"cat: {f}: keine solche Datei",
-    "tSavedFile":"Datei gespeichert","tDone":"Kapitel 2 abgeschlossen — GitHub-MCP-Oberfläche bereit"
+    "tSavedFile":"Datei gespeichert","tDone":"Pfad abgeschlossen — Multi-Agent-Plattform geliefert"
   },
   "en":{
-    "navChapter1":"Chapter 1","navChapter3":"Chapter 3","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
-    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Fixtures",
-    "btnClear":"Clear","btnSave":"Save","phPaste":"Inspect or edit the fixture file.",
-    "mFixture":"Fixture","mTools":"MCP tools",
-    "instrHead":"Instructions","instrTitle":"GitHub MCP server & local fixture",
-    "instrSub":"You wire the official <code>github-mcp-server</code> to a local fixture (no real GitHub needed), drive the MCP stdio handshake by hand, and make one mutating call. By the end, the supervisor will have all three MCP surfaces: APIM, GitHub and Azure.",
+    "navChapter4":"Chapter 4","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"GitOps + AFD",
+    "btnClear":"Clear","btnSave":"Save","phPaste":"Review the APIM manifest and the Front Door notes.",
+    "mApi":"API","mGit":"GitOps",
+    "instrHead":"Instructions","instrTitle":"End-to-end + Azure Front Door",
+    "instrSub":"You run the full self-service flow: a natural-language prompt triggers plan → approve → apply, with a GitHub commit (APIM manifest) and a created API revision. You confirm Git is the source of truth, walk through Azure Front Door concepts in front of APIM, then clean up the environment.",
     "progLabel":"Progress","copy":"Copy","copied":"Copied",
-    "s1h":"Step 1 · Start the GitHub fixture (port 9006)","s1b":"Inspect <code>github_fixture.py</code> in the <strong>Fixtures</strong> tab (a subset of GitHub's REST API: create_branch, create_or_update_file, create_pull_request), then start it:",
-    "s2h":"Step 2 · Confirm the pre-pulled image","s2b":"The setup script already pulled <code>ghcr.io/github/github-mcp-server:v1.0.3</code> so first-call latency is no surprise. Confirm it:",
-    "s3h":"Step 3 · Drive the stdio handshake","s3b":"The MCP stdio protocol is newline-delimited JSON-RPC frames. Send the three frames (initialize, notifications/initialized, tools/list) into a one-shot container:","s3n":"You should see all three tools. If you see fewer, check the log: github-mcp-server hits the fixture's <code>/api/v3/</code> root at startup.",
-    "s4h":"Step 4 · One mutating call through the MCP server","s4b":"Call <code>create_branch</code> through the MCP server to prove the round trip end to end, then check the entry in the fixture log:",
+    "s1h":"Step 1 · End-to-end self-service flow","s1b":"Type the natural-language request: the supervisor plans, posts for approval, then applies (GitHub commit + APIM revision). Approve from the same shell:",
+    "s2h":"Step 2 · Git as the source of truth","s2b":"The declarative APIM manifest is now committed in Git. Check the commit and the manifest (the <strong>GitOps + AFD</strong> tab), then list the API via the APIM MCP:",
+    "s3h":"Step 3 · Azure Front Door walkthrough","s3b":"Walk through Azure Front Door concepts in front of APIM (global entry point, TLS at the edge, WAF, multi-region failover). No resources to provision — these are examples to run after the lab if you are curious:",
+    "s4h":"Step 4 · Clean up the environment","s4b":"When you are done, the cleanup script deletes the whole resource group (all the lab's Azure resources live in it):",
     "critH":"Success criteria",
-    "c1":"GitHub fixture started and /healthz OK.","c2":"Image github-mcp-server v1.0.3 confirmed.","c3":"Handshake succeeded: 3 tools listed.","c4":"create_branch call made through MCP.",
+    "c1":"Full flow run: plan → approve → apply.","c2":"GitHub commit + APIM revision confirmed.","c3":"Azure Front Door concepts walked through.","c4":"Environment cleaned up (group deleted).",
     "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
+    "finale":"Congratulations — you shipped a reference architecture for agent-driven self-service infrastructure!",
     "skip":"Skip","check":"Check",
     "helpTitle":"Lab Copilot","helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.","nextHint":"Next hint",
-    "hint0":"First start the GitHub fixture on port 9006 (Step 1).",
-    "hint1":"The fixture implements just enough: create_branch, create_or_update_file, create_pull_request.",
-    "hint2":"github-mcp-server hits /api/v3/ at startup to detect the base URL.",
-    "hint3":"The stdio handshake = 3 JSON-RPC frames: initialize, notifications/initialized, tools/list.",
-    "hint4":"The create_branch call goes through the MCP server then lands in the fixture log.",
+    "hint0":"Run the full flow then approve the plan (Step 1).",
+    "hint1":"Same topology as chapters 1-4: APIM MCP + GitHub MCP + Azure MCP.",
+    "hint2":"git log shows the APIM manifest commit: Git is the source of truth.",
+    "hint3":"Front Door is a conceptual walkthrough — nothing is provisioned here.",
+    "hint4":"The cleanup script deletes the whole rg-multi-agent-apim-capstone group.",
     "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — apim-capstone VM (Koffi Academy)",
-    "bEnv":"docker + jq + curl ready. Fixture: /root/capstone/fixtures/github-fixture","bTip":"Tip: type `help` for commands, `check` for progress.",
-    "hHeader":"Available commands:","hRun":"start the GitHub fixture","hCurl":"test the fixture /healthz","hTail":"follow the fixture log","hInspect":"inspect the github-mcp-server image","hHand":"drive the stdio handshake","hBranch":"mutating create_branch call","hGrep":"filter in a file/log","hCheck":"check your progress",
-    "fxUp":"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)","fxHealth":"{ \"status\": \"ok\", \"service\": \"github-fixture\" }","fxTail":"[tail] following /tmp/github-fixture.log","fxDown":"curl: (7) Failed to connect to localhost port 9006",
-    "imgLine":"sha256:ab12cd34ef56  2025-05-12T09:33:00Z","imgMiss":"Error: No such image — re-run the setup script",
-    "needFixture":"Tip: start the fixture first (Step 1).","needHand":"Tip: run the handshake first (Step 3).",
-    "checkHeader":"Task progress:","chkFx":"GitHub fixture started","chkImg":"github-mcp-server image confirmed","chkHand":"Handshake succeeded (3 tools)","chkMut":"create_branch call via MCP","chkAll":"All criteria met. Chapter 2 complete!","skipped":"Step skipped.",
+    "bEnv":"Full topology ready (APIM/GitHub/Azure MCP). Repository: /root/capstone","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hRun":"run the self-service flow","hApprove":"approve the latest plan","hGit":"view the Git history","hCat":"display a file","hApim":"list APIs via APIM","hAfd":"Azure Front Door example (walkthrough)","hClean":"clean up the resource group","hCheck":"check your progress",
+    "posted":"[plan] proposed orders v1 — posted to Slack, waiting for approval (plan_id=koffi-9a2)...","approvedMsg":"approved plan koffi-9a2 (verdict=approve)","gitLog":"a1b2c3d publish orders API v1 via agent (koffi-9a2)","gitLog2":"f4e5d6c capstone: initial APIM manifests","apimList":"NAME     REVISION   PATH         POLICY              STATE","apimRow":"orders   v1         /orders/v1   rate-limit 100/min   Online",
+    "afdNote":"(walkthrough only — run after the lab if you are curious)","cleanMsg":"Deleting resource group rg-multi-agent-apim-capstone (all lab resources)...","cleanDone":"done — resource group deleted",
+    "needE2E":"Tip: run the full flow first (Step 1).","needGate":"Tip: run the supervisor first (Step 1).",
+    "checkHeader":"Task progress:","chkE2":"Flow plan → approve → apply","chkGo":"Commit + APIM revision confirmed","chkAf":"Front Door concepts walked through","chkCl":"Environment cleaned up","chkAll":"All criteria met. Chapter 5 complete — full track done!","skipped":"Step skipped.",
     "cmdNF":"{c}: command not found. Type `help`.","catNF":"cat: {f}: no such file",
-    "tSavedFile":"File saved","tDone":"Chapter 2 complete — GitHub MCP surface ready"
+    "tSavedFile":"File saved","tDone":"Track complete — multi-agent platform delivered"
   }
 };
 
 (function(){
   "use strict";
-  var FILES=["fixtures/github-fixture/github_fixture.py","fixtures/github-fixture/run-fixture.sh","scripts/github-mcp-handshake.sh"];
+  var FILES=["apim/orders-v1.yaml","frontdoor-notes.md"];
   var SEED={
-    "fixtures/github-fixture/github_fixture.py":"# Koffi Academy - fixture GitHub locale (sous-ensemble de l'API REST)\nfrom flask import Flask, request, jsonify\napp = Flask(__name__)\n\n@app.get(\"/healthz\")\ndef healthz():\n    return jsonify(status=\"ok\", service=\"github-fixture\")\n\n# racine interrogee par github-mcp-server au demarrage\n@app.get(\"/api/v3/\")\ndef api_root():\n    return jsonify(installed_version=\"3.11\")\n\n# create_branch -> POST refs / create_or_update_file -> PUT contents\n# create_pull_request -> POST pulls\n# (routes Flask completes dans le fichier fourni par le lab)\nif __name__ == \"__main__\":\n    app.run(host=\"0.0.0.0\", port=9006)\n",
-    "fixtures/github-fixture/run-fixture.sh":"#!/bin/bash\n# Koffi Academy - demarre la fixture GitHub sur le port 9006\ncd \"$(dirname \"$0\")\"\nnohup python3 github_fixture.py > /tmp/github-fixture.log 2>&1 &\nsleep 1\necho \"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)\"\n",
-    "scripts/github-mcp-handshake.sh":"#!/bin/bash\n# Koffi Academy - handshake stdio MCP (initialize + initialized + tools/list)\nprintf '%s\\n' \\\n  '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"koffi\",\"version\":\"1.0\"}}}' \\\n  '{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}' \\\n  '{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}' \\\n| docker run -i --rm \\\n    -e GITHUB_HOST=http://host.docker.internal:9006 \\\n    -e GITHUB_PERSONAL_ACCESS_TOKEN=koffi-fixture-token \\\n    ghcr.io/github/github-mcp-server:v1.0.3 stdio\n"
+    "apim/orders-v1.yaml":"# Koffi Academy - manifeste APIM declaratif (source de verite GitOps)\napiVersion: apim.azure.com/v1\nkind: Api\nmetadata:\n  name: orders\nspec:\n  displayName: Orders API\n  path: orders/v1\n  protocols: [https]\n  policies:\n    rateLimit:\n      calls: 100\n      renewalPeriod: 60\n  operations:\n  - name: list-orders\n    method: GET\n    urlTemplate: /orders\n  - name: create-order\n    method: POST\n    urlTemplate: /orders\n",
+    "frontdoor-notes.md":"# Azure Front Door devant APIM - parcours conceptuel (sans provisioning)\n\n## Pourquoi Front Door devant APIM\n- point d'entree global (anycast), TLS termine au bord\n- routage par chemin/hote, cache statique, WAF integre\n- failover multi-region si plusieurs gateways APIM\n\n## Exemples az afd a executer APRES le lab (par curiosite)\naz afd profile create --resource-group rg-multi-agent-apim-capstone --profile-name afd-koffi --sku Premium_AzureFrontDoor\naz afd endpoint create --resource-group rg-multi-agent-apim-capstone --profile-name afd-koffi --endpoint-name api-edge\naz afd origin-group create --resource-group rg-multi-agent-apim-capstone --profile-name afd-koffi --origin-group-name apim-origins\n\n## A retenir\n- aucun provisioning cote etudiant ici : c'est un walkthrough\n- en production : Front Door puis APIM puis AKS, avec WAF et cache au bord\n"
   };
   var I=window.I18N; var lang=localStorage.getItem("preferred-lang"); if(!I[lang])lang="de";
   function t(key,vars){var s=(I[lang]&&I[lang][key]!==undefined)?I[lang][key]:(I.en[key]!==undefined?I.en[key]:key);if(vars)Object.keys(vars).forEach(function(k){s=s.replace(new RegExp("\\{"+k+"\\}","g"),vars[k]);});return s;}
 
   var FS={}; FILES.forEach(function(f){FS[f]=SEED[f]||"";});
   var currentFile=FILES[0];
-  var st={fixture:false,image:false,handshake:false,mutate:false};
-  var fixtureUp=false, imageOk=false, handshakeOk=false, mutateOk=false; var hi=0;
+  var st={e2e:false,gitops:false,afd:false,cleanup:false};
+  var gateRunning=false, e2eDone=false, afdViewed=false; var hi=0;
 
   var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput"), editor=document.getElementById("fileEditor");
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
@@ -433,8 +433,8 @@ window.I18N = {
   function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
   function banner(){out.innerHTML="";print(t("bSsh"),"line-muted");print(t("bUbuntu"),"line-muted");print(t("bEnv"),"line-muted");print(t("bTip"),"line-muted");print("");}
 
-  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["fixture","image","handshake","mutate"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
-  function refresh(){document.getElementById("mFixture").textContent=fixtureUp?"OK":"—";document.getElementById("mTools").textContent=(handshakeOk?3:0)+"/3";}
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["e2e","gitops","afd","cleanup"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
+  function refresh(){document.getElementById("mApi").textContent=e2eDone?"orders v1":"—";document.getElementById("mGit").textContent=st.gitops?"committed":"—";}
 
   function norm(p){return p?p.trim().replace(/^\.\//,"").replace(/^\/root\/capstone\//,"").replace(/\/+$/,""):"";}
   function resolve(p){p=norm(p);return FS[p]!==undefined?p:null;}
@@ -442,52 +442,37 @@ window.I18N = {
   function handle(raw){
     var cmd=raw.trim(); if(!cmd) return; var parts=cmd.split(/\s+/); var head=parts[0];
     if(head==="help"){print(t("hHeader"),"line-muted");
-      print("  bash fixtures/github-fixture/run-fixture.sh  "+t("hRun"));
-      print("  curl -sf http://localhost:9006/healthz | jq  "+t("hCurl"));
-      print("  tail -F /tmp/github-fixture.log &            "+t("hTail"));
-      print("  docker image inspect github-mcp-server ...   "+t("hInspect"));
-      print("  bash scripts/github-mcp-handshake.sh         "+t("hHand"));
-      print("  bash scripts/github-mcp-create-branch.sh     "+t("hBranch"));
-      print("  grep ... <file|log>                          "+t("hGrep"));
+      print("  dotnet run -- \"publish ...\" &               "+t("hRun"));
+      print("  bash scripts/approve-latest-plan.sh          "+t("hApprove"));
+      print("  git -C /root/capstone log --oneline          "+t("hGit"));
+      print("  cat <file>                                   "+t("hCat"));
+      print("  bash scripts/apim-list-apis.sh               "+t("hApim"));
+      print("  az afd profile create ...                    "+t("hAfd"));
+      print("  bash scripts/cleanup-apim-capstone.sh        "+t("hClean"));
       print("  check   ·   clear                          "+t("hCheck"));return;}
     if(head==="clear"){out.innerHTML="";return;}
     if(head==="check"){runCheck();return;}
-    if(head==="cat"){var f=resolve(parts[1]);if(f&&FS[f])FS[f].split("\n").forEach(function(l){print(l);});else print(t("catNF",{f:parts[1]||""}),"line-error");return;}
-    if(head==="tail"){if(/github-fixture\.log/.test(cmd))print(t("fxTail"),"line-muted");return;}
-    if(head==="curl"){
-      if(/9006\/healthz/.test(cmd)){ if(fixtureUp){print(t("fxHealth"),"line-ok");} else {print(t("fxDown"),"line-error");print(t("needFixture"),"line-warn");} return; }
-      print("curl: endpoint non simulé dans cet atelier","line-warn");return;
+    if(head==="cd"){return;}
+    if(head==="cat"){var f=resolve(parts[1]);if(f&&FS[f]){FS[f].split("\n").forEach(function(l){print(l);});if(f==="frontdoor-notes.md"){afdViewed=true;setStep("afd",true);}}else print(t("catNF",{f:parts[1]||""}),"line-error");return;}
+    if(/dotnet\s+run/.test(cmd)){print(t("posted"),"line-warn");gateRunning=true;return;}
+    if(head==="git"){
+      if(/log/.test(cmd)){ if(!e2eDone){print("(aucun commit d'API — exécutez d'abord le flux)","line-warn");return;} print(t("gitLog"),"line-ok");print(t("gitLog2"));setStep("gitops",true);refresh();return; }
+      print("git: sous-commande non simulée dans cet atelier","line-warn");return;
     }
-    if(head==="grep"){
-      if(/create_branch|create_or_update_file|create_pull_request/.test(cmd)){
-        if(handshakeOk){print('"name":"create_branch"');print('"name":"create_or_update_file"');print('"name":"create_pull_request"');}
-        else{print(t("needHand"),"line-warn");}
-        return;
-      }
-      if(/create_branch/.test(cmd)&&/github-fixture\.log/.test(cmd)){
-        if(mutateOk){print("[fixture] POST /api/v3/repos/koffi/apim-config/git/refs  create_branch ref=refs/heads/feature/orders-v1 sha=c0ffee");}
-        else{print("(aucune entrée create_branch — lancez d'abord l'appel mutant)","line-warn");}
-        return;
-      }
-      print("(grep: aucune correspondance)","line-muted");return;
-    }
-    if(head==="docker"){
-      if(parts[1]==="image"&&parts[2]==="inspect"){ if(/github-mcp-server:v1\.0\.3/.test(cmd)){imageOk=true;print(t("imgLine"),"line-ok");setStep("image",true);} else {print(t("imgMiss"),"line-error");} return; }
-      print("docker: sous-commande non simulée dans cet atelier","line-warn");return;
+    if(head==="az"){
+      if(parts[1]==="afd"){print(t("afdNote"),"line-muted");afdViewed=true;setStep("afd",true);return;}
+      print("az: sous-commande non simulée dans cet atelier","line-warn");return;
     }
     if(head==="bash"){
-      if(/run-fixture\.sh/.test(cmd)){fixtureUp=true;print(t("fxUp"),"line-ok");refresh();setStep("fixture",true);return;}
-      if(/github-mcp-handshake\.sh/.test(cmd)){
-        if(!fixtureUp){print(t("needFixture"),"line-warn");}
-        print('{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","serverInfo":{"name":"github-mcp-server","version":"1.0.3"}}}');
-        print('{"jsonrpc":"2.0","id":2,"result":{"tools":[{"name":"create_branch"},{"name":"create_or_update_file"},{"name":"create_pull_request"}]}}');
-        handshakeOk=true;refresh();setStep("handshake",true);return;
+      if(/approve-latest-plan\.sh/.test(cmd)){
+        if(!gateRunning){print(t("needGate"),"line-warn");return;}
+        print(t("approvedMsg"),"line-ok");
+        print("[apply] github: commit apim/orders-v1.yaml","line-ok");
+        print("[apply] apim:   create API revision orders v1","line-ok");
+        e2eDone=true;gateRunning=false;refresh();setStep("e2e",true);return;
       }
-      if(/github-mcp-create-branch\.sh/.test(cmd)){
-        if(!fixtureUp){print(t("needFixture"),"line-warn");}
-        print('{"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":"branch feature/orders-v1 created (sha c0ffee)"}]}}',"line-ok");
-        mutateOk=true;setStep("mutate",true);return;
-      }
+      if(/apim-list-apis\.sh/.test(cmd)){ if(!e2eDone){print(t("needE2E"),"line-warn");return;} print(t("apimList"));print(t("apimRow"),"line-ok");return; }
+      if(/cleanup-apim-capstone\.sh/.test(cmd)){print(t("cleanMsg"),"line-muted");print(t("cleanDone"),"line-ok");setStep("cleanup",true);return;}
       print("bash: "+(parts[1]||"")+": script non simulé dans cet atelier","line-warn");return;
     }
     print(t("cmdNF",{c:head}),"line-error");
@@ -495,11 +480,11 @@ window.I18N = {
 
   function runCheck(){
     print(t("checkHeader"),"line-muted");
-    print((st.fixture?"  [x] ":"  [ ] ")+t("chkFx"),st.fixture?"line-ok":"line-warn");
-    print((st.image?"  [x] ":"  [ ] ")+t("chkImg"),st.image?"line-ok":"line-warn");
-    print((st.handshake?"  [x] ":"  [ ] ")+t("chkHand"),st.handshake?"line-ok":"line-warn");
-    print((st.mutate?"  [x] ":"  [ ] ")+t("chkMut"),st.mutate?"line-ok":"line-warn");
-    if(st.fixture&&st.image&&st.handshake&&st.mutate)print(t("chkAll"),"line-ok");
+    print((st.e2e?"  [x] ":"  [ ] ")+t("chkE2"),st.e2e?"line-ok":"line-warn");
+    print((st.gitops?"  [x] ":"  [ ] ")+t("chkGo"),st.gitops?"line-ok":"line-warn");
+    print((st.afd?"  [x] ":"  [ ] ")+t("chkAf"),st.afd?"line-ok":"line-warn");
+    print((st.cleanup?"  [x] ":"  [ ] ")+t("chkCl"),st.cleanup?"line-ok":"line-warn");
+    if(st.e2e&&st.gitops&&st.afd&&st.cleanup)print(t("chkAll"),"line-ok");
   }
 
   function runScript(text){
