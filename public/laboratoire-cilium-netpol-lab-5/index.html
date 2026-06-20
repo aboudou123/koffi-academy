@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cilium Network Policies · Chapitre 4 | Atelier — Koffi Academy</title>
-  <meta name="description" content="Atelier Koffi Academy — Cilium, Chapitre 4 : testez l'application des politiques réseau (frontend→backend autorisé, backend→frontend bloqué) et lisez les verdicts Cilium.">
+  <title>Cilium Network Policies · Chapitre 5 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Cilium, Chapitre 5 : observez les flux réseau en temps réel avec Hubble — verdicts FORWARDED et DROPPED, filtrage par label.">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,16 +87,10 @@ button{cursor:pointer}
 .runbar__title{display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--soft);min-width:0}
 .runbar__title i{color:var(--teal)}
 .runbar__title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.runbar__actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .toolbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.07);color:#fff;border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:800;transition:.16s}
-.toolbtn:hover{background:rgba(255,255,255,.13)}
-.toolbtn--primary{border-color:transparent;background:linear-gradient(135deg,var(--orange),#ffb057);box-shadow:0 10px 24px rgba(248,144,53,.26)}
 .datasets-view{flex-direction:column;background:#0b1222}
-.filebar{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--line)}
-.filetab{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--soft);border-radius:8px 8px 0 0;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
-.filetab.is-active{color:#fff;background:#0b1222;border-bottom-color:#0b1222}
 .dataset-grid{display:grid;grid-template-columns:minmax(0,1fr) 270px;flex:1;min-height:0}
-.dataset-editor{flex:1;min-height:420px;width:100%;border:0;outline:0;resize:none;padding:18px 20px;background:#0b1222;color:#d9f4ff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.65;tab-size:2;border-right:1px solid var(--line)}
+.dataset-editor{flex:1;min-height:420px;width:100%;border:0;outline:0;resize:none;padding:18px 20px;background:#0b1222;color:#d9f4ff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.65;border-right:1px solid var(--line)}
 .dataset-side{padding:18px;background:rgba(255,255,255,.035);overflow:auto}
 .metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .metric{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:10px;padding:12px}
@@ -110,7 +104,6 @@ button{cursor:pointer}
 .instructions__head{display:flex;align-items:center;gap:12px;padding:18px 18px 14px;border-bottom:1px solid var(--line)}
 .instructions__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;margin:0;letter-spacing:-.01em}
 .instructions__head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:20px;line-height:1;padding:4px;border-radius:7px}
-.instructions__head button:hover{background:rgba(255,255,255,.10)}
 .instructions__body{min-width:0;overflow:auto;padding:20px 18px 24px;flex:1}
 .lab-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;line-height:1.14;font-weight:800;letter-spacing:-.02em;margin:0 0 12px;color:#fff}
 .lab-sub{font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.78);margin:0 0 20px}
@@ -167,7 +160,7 @@ button{cursor:pointer}
   .inst-fab{display:inline-flex}.inst-fab.is-gone{display:none}
   .dataset-grid{grid-template-columns:1fr}.dataset-editor{border-right:0;border-bottom:1px solid var(--line);min-height:220px}
   .lab-title{font-size:23px}.work-tabs{overflow-x:auto}.tab{white-space:nowrap}
-  .runbar{align-items:flex-start;flex-direction:column;gap:8px}.runbar__actions{width:100%;justify-content:flex-start}
+  .runbar{align-items:flex-start;flex-direction:column;gap:8px}
 }
   </style>
 </head>
@@ -181,16 +174,15 @@ button{cursor:pointer}
         <span class="brand__k">Koffi Academy</span>
         <span class="brand__sep">|</span>
         <span class="brand__title">Implementing Cilium Network Policies</span>
-        <span class="chip-ch">CH.4</span>
+        <span class="chip-ch">CH.5</span>
       </span>
     </a>
     <div class="labbar__spacer"></div>
     <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">45:00</span></span>
     <nav class="actions" aria-label="Lab actions">
-      <a class="topbtn" href="../laboratoire-cilium-netpol-lab-3"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter3">Chapitre 3</span></a>
+      <a class="topbtn" href="../laboratoire-cilium-netpol-lab-4"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter4">Chapitre 4</span></a>
       <a class="topbtn" href="../laboratoire-cilium-netpol"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
       <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
-      <a class="topbtn" href="../laboratoire-cilium-netpol-lab-5"><span data-i18n="navChapter5">Chapitre 5</span> <i class="fa-solid fa-arrow-right-long"></i></a>
       <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
       <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
       <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
@@ -202,7 +194,7 @@ button{cursor:pointer}
       <div class="work-tabs" role="tablist">
         <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
         <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
-        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-diagram-project"></i><span data-i18n="tabFiles">Topologie</span></button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-eye"></i><span data-i18n="tabFiles">Hubble</span></button>
       </div>
       <div class="work-surface">
         <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
@@ -215,35 +207,35 @@ button{cursor:pointer}
 
         <section class="view datasets-view" id="datasetsView" role="tabpanel">
           <div class="runbar">
-            <div class="runbar__title"><i class="fa-solid fa-diagram-project"></i><span data-i18n="topoTitle">Topologie des flux — namespace policy-demo</span></div>
+            <div class="runbar__title"><i class="fa-solid fa-eye"></i><span data-i18n="hubTitle">Hubble — verdicts d'observation des flux</span></div>
           </div>
           <div class="dataset-grid">
-            <div class="dataset-editor" style="white-space:pre-wrap;color:#cfe3f7" aria-readonly="true">  policy-demo
+            <div class="dataset-editor" style="white-space:pre-wrap;color:#cfe3f7" aria-readonly="true">  Hubble — lecture des verdicts
   ───────────────────────────────────────────────
 
-   [ frontend ]  app=frontend   10.0.0.28
-        │
-        │  ✅ allow-frontend-to-backend  (port 80/TCP)
-        ▼
-   [ backend  ]  app=backend    10.0.0.214
-        ▲
-        │  ❌ default-deny-ingress  (aucune règle)
-        │
-   [ backend ]  ──X──►  [ frontend ]     bloqué
-   [ test-pod ] ──X──►  [ backend ]      bloqué
+   FORWARDED   le flux est autorisé et transmis
+   DROPPED     le flux est refusé par une politique
+   AUDIT       observé sans blocage (mode audit)
+   ERROR       erreur de traitement
+
+  Flux clés du namespace policy-demo :
+
+   frontend ──► backend     FORWARDED   allow-frontend-to-backend
+   backend  ──► frontend    DROPPED     default-deny-ingress
+   test-pod ──► backend     DROPPED     default-deny-ingress
 
   ───────────────────────────────────────────────
-  Politiques actives :
-   • default-deny-ingress      (NetworkPolicy)
-   • allow-frontend-to-backend (CiliumNetworkPolicy)
+   hubble observe                 flux récents
+   hubble observe --verdict DROPPED   flux refusés
+   hubble observe --to-label app=backend   filtrer
 </div>
             <aside class="dataset-side">
               <div class="metric-grid">
-                <div class="metric"><span class="metric__k" data-i18n="mFe2be">FE → BE</span><div class="metric__v" id="mFe2be" data-i18n="tAllowed">autorisé</div></div>
-                <div class="metric"><span class="metric__k" data-i18n="mBe2fe">BE → FE</span><div class="metric__v" id="mBe2fe" data-i18n="tBlocked">bloqué</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mFwd">Forwarded</span><div class="metric__v" id="mFwd">—</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mDrop">Dropped</span><div class="metric__v" id="mDrop">—</div></div>
               </div>
               <div class="file-list">
-                <div class="file-pill"><i class="fa-solid fa-cube"></i>frontend · backend · test-pod</div>
+                <div class="file-pill"><i class="fa-solid fa-eye"></i>hubble observe</div>
                 <div class="file-pill"><i class="fa-solid fa-shield-halved"></i>2 politiques actives</div>
                 <div class="file-pill"><i class="fa-solid fa-dharmachakra"></i>kubectl · cilium · hubble</div>
               </div>
@@ -259,50 +251,51 @@ button{cursor:pointer}
         <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
       </div>
       <div class="instructions__body">
-        <h1 class="lab-title" data-i18n="instrTitle">Tester l'application des politiques</h1>
-        <p class="lab-sub" data-i18n="instrSub">Dans cette tâche, vous validez méthodiquement l'application des politiques : le flux autorisé passe, les flux non autorisés sont bloqués, et vous lisez les verdicts directement via Cilium.</p>
+        <h1 class="lab-title" data-i18n="instrTitle">Observer les flux avec Hubble</h1>
+        <p class="lab-sub" data-i18n="instrSub">Hubble est l'observabilité de Cilium. Vous allez vérifier qu'il est actif, générer du trafic, puis lire les verdicts des flux en temps réel : ce qui passe (FORWARDED) et ce qui est refusé par les politiques (DROPPED).</p>
 
         <div class="progress-card">
           <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="step is-open" data-step="ips">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Récupérer les IPs des pods</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step is-open" data-step="hubble">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Vérifier que Hubble est actif</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s1b">Récupérez les adresses IP des pods dans le <strong>Terminal</strong> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">FRONTEND_IP=$(kubectl get pod -n policy-demo -l app=frontend -o jsonpath='{.items[0].status.podIP}')
-BACKEND_IP=$(kubectl get pod -n policy-demo -l app=backend -o jsonpath='{.items[0].status.podIP}')
-echo "Frontend IP: $FRONTEND_IP"
-echo "Backend IP: $BACKEND_IP"</pre></div>
+            <span data-i18n="s1b">Contrôlez l'état de Cilium et de Hubble dans le <strong>Terminal</strong> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl -n kube-system exec ds/cilium -- cilium status | grep -i hubble</pre></div>
+            <span data-i18n="s1b2">Vous devez voir <code>Hubble: Ok</code>. Sinon, activez-le avec <code>cilium hubble enable</code>.</span>
           </div>
         </article>
 
         <article class="step" data-step="allowed">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Frontend → Backend (autorisé)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Générer du trafic autorisé et l'observer</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s2b">Vérifiez que le chemin autorisé fonctionne :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl exec -n policy-demo deploy/frontend -- curl -s --connect-timeout 5 http://$BACKEND_IP | head -5</pre></div>
-            <span data-i18n="s2b2">Cela doit réussir, car une politique allow couvre ce chemin.</span>
+            <span data-i18n="s2b">Générez un appel frontend → backend, puis lisez les flux récents :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">BACKEND_IP=$(kubectl get pod -n policy-demo -l app=backend -o jsonpath='{.items[0].status.podIP}')
+kubectl exec -n policy-demo deploy/frontend -- curl -s -o /dev/null http://$BACKEND_IP
+kubectl -n kube-system exec ds/cilium -- hubble observe --namespace policy-demo --last 5</pre></div>
+            <span data-i18n="s2b2">Le flux frontend → backend apparaît avec le verdict <code>FORWARDED</code>.</span>
           </div>
         </article>
 
-        <article class="step" data-step="blocked">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Backend → Frontend (bloqué)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="dropped">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Observer les flux refusés (DROPPED)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s3b">Testez si le backend peut joindre le frontend (devrait être bloqué) :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl exec -n policy-demo deploy/backend -- curl -s --connect-timeout 5 http://$FRONTEND_IP || echo "Connection blocked as expected"</pre></div>
-            <span data-i18n="s3b2">Cela doit échouer : aucune politique n'autorise backend → frontend.</span>
+            <span data-i18n="s3b">Générez un appel non autorisé backend → frontend, puis filtrez les flux refusés :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">FRONTEND_IP=$(kubectl get pod -n policy-demo -l app=frontend -o jsonpath='{.items[0].status.podIP}')
+kubectl exec -n policy-demo deploy/backend -- curl -s --connect-timeout 5 http://$FRONTEND_IP || true
+kubectl -n kube-system exec ds/cilium -- hubble observe --verdict DROPPED --last 5</pre></div>
+            <span data-i18n="s3b2">Le flux backend → frontend apparaît en <code>DROPPED</code> avec la raison <code>Policy denied</code>.</span>
           </div>
         </article>
 
-        <article class="step" data-step="verdicts">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Lire les verdicts via Cilium</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="filter">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Filtrer les flux par label</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s4b">Affichez les politiques appliquées par Cilium dans le cluster :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl exec -n kube-system ds/cilium -- cilium policy get</pre></div>
-            <span data-i18n="s4b2">Nettoyez enfin le pod de test :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl delete pod test-pod -n policy-demo --ignore-not-found</pre></div>
+            <span data-i18n="s4b">Ciblez les flux à destination du backend pour ne voir que ce qui le concerne :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl -n kube-system exec ds/cilium -- hubble observe --namespace policy-demo --to-label app=backend --last 10</pre></div>
+            <span data-i18n="s4b2">Vous combinez ainsi génération de trafic et observabilité pour auditer précisément vos politiques.</span>
           </div>
         </article>
 
@@ -310,10 +303,10 @@ echo "Backend IP: $BACKEND_IP"</pre></div>
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <ul class="crit">
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Trafic frontend → backend autorisé.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Trafic backend → frontend bloqué.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Les pods non autorisés n'atteignent pas les services protégés.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Verdicts de politique visibles via Cilium.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Hubble est actif (Ok).</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Un flux autorisé est observé (FORWARDED).</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Un flux refusé est observé (DROPPED).</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Le filtrage des flux par label fonctionne.</span></li>
             </ul>
           </div>
         </article>
@@ -321,8 +314,9 @@ echo "Backend IP: $BACKEND_IP"</pre></div>
         <article class="step" data-step="trouble">
           <div class="step__top"><span class="step__check" style="background:transparent;border-color:rgba(255,206,115,.4);color:var(--amber)"><i class="fa-solid fa-wrench"></i></span><h3 data-i18n="trH">Dépannage</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="trB">Si les politiques ne s'appliquent pas comme prévu, vérifiez que les endpoints portent les bons labels :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl get ciliumendpoints -n policy-demo</pre></div>
+            <span data-i18n="trB">Si aucun flux n'apparaît, activez Hubble puis attendez quelques secondes avant de réobserver :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">cilium hubble enable
+kubectl -n kube-system exec ds/cilium -- cilium status | grep -i hubble</pre></div>
           </div>
         </article>
       </div>
@@ -341,7 +335,7 @@ echo "Backend IP: $BACKEND_IP"</pre></div>
   <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
   <div class="help-body">
     <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend pour une aide contextuelle.</p>
-    <div class="hint" id="hintText" data-i18n="hint0">Commencez par récupérer les IPs des pods (Étape 1).</div>
+    <div class="hint" id="hintText" data-i18n="hint0">Commencez par vérifier que Hubble est actif (Étape 1).</div>
     <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
   </div>
 </section>
@@ -351,118 +345,121 @@ echo "Backend IP: $BACKEND_IP"</pre></div>
 <script>
 window.I18N = {
   "fr":{
-    "navChapter3":"Chapitre 3","navChapter5":"Chapitre 5","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
-    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Topologie","topoTitle":"Topologie des flux — namespace policy-demo",
-    "mFe2be":"FE → BE","mBe2fe":"BE → FE","tAllowed":"autorisé","tBlocked":"bloqué",
-    "instrHead":"Instructions","instrTitle":"Tester l'application des politiques",
-    "instrSub":"Dans cette tâche, vous validez méthodiquement l'application des politiques : le flux autorisé passe, les flux non autorisés sont bloqués, et vous lisez les verdicts directement via Cilium.",
+    "navChapter4":"Chapitre 4","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Hubble","hubTitle":"Hubble — verdicts d'observation des flux",
+    "mFwd":"Forwarded","mDrop":"Dropped","tSeen":"observé",
+    "instrHead":"Instructions","instrTitle":"Observer les flux avec Hubble",
+    "instrSub":"Hubble est l'observabilité de Cilium. Vous allez vérifier qu'il est actif, générer du trafic, puis lire les verdicts des flux en temps réel : ce qui passe (FORWARDED) et ce qui est refusé par les politiques (DROPPED).",
     "progLabel":"Progression","copy":"Copier","copied":"Copié",
-    "s1h":"Étape 1 · Récupérer les IPs des pods",
-    "s1b":"Récupérez les adresses IP des pods dans le <strong>Terminal</strong> :",
-    "s2h":"Étape 2 · Frontend → Backend (autorisé)",
-    "s2b":"Vérifiez que le chemin autorisé fonctionne :",
-    "s2b2":"Cela doit réussir, car une politique allow couvre ce chemin.",
-    "s3h":"Étape 3 · Backend → Frontend (bloqué)",
-    "s3b":"Testez si le backend peut joindre le frontend (devrait être bloqué) :",
-    "s3b2":"Cela doit échouer : aucune politique n'autorise backend → frontend.",
-    "s4h":"Étape 4 · Lire les verdicts via Cilium",
-    "s4b":"Affichez les politiques appliquées par Cilium dans le cluster :",
-    "s4b2":"Nettoyez enfin le pod de test :",
+    "s1h":"Étape 1 · Vérifier que Hubble est actif",
+    "s1b":"Contrôlez l'état de Cilium et de Hubble dans le <strong>Terminal</strong> :",
+    "s1b2":"Vous devez voir <code>Hubble: Ok</code>. Sinon, activez-le avec <code>cilium hubble enable</code>.",
+    "s2h":"Étape 2 · Générer du trafic autorisé et l'observer",
+    "s2b":"Générez un appel frontend → backend, puis lisez les flux récents :",
+    "s2b2":"Le flux frontend → backend apparaît avec le verdict <code>FORWARDED</code>.",
+    "s3h":"Étape 3 · Observer les flux refusés (DROPPED)",
+    "s3b":"Générez un appel non autorisé backend → frontend, puis filtrez les flux refusés :",
+    "s3b2":"Le flux backend → frontend apparaît en <code>DROPPED</code> avec la raison <code>Policy denied</code>.",
+    "s4h":"Étape 4 · Filtrer les flux par label",
+    "s4b":"Ciblez les flux à destination du backend pour ne voir que ce qui le concerne :",
+    "s4b2":"Vous combinez ainsi génération de trafic et observabilité pour auditer précisément vos politiques.",
     "critH":"Critères de réussite",
-    "c1":"Trafic frontend → backend autorisé.","c2":"Trafic backend → frontend bloqué.","c3":"Les pods non autorisés n'atteignent pas les services protégés.","c4":"Verdicts de politique visibles via Cilium.",
-    "trH":"Dépannage","trB":"Si les politiques ne s'appliquent pas comme prévu, vérifiez que les endpoints portent les bons labels :",
+    "c1":"Hubble est actif (Ok).","c2":"Un flux autorisé est observé (FORWARDED).","c3":"Un flux refusé est observé (DROPPED).","c4":"Le filtrage des flux par label fonctionne.",
+    "trH":"Dépannage","trB":"Si aucun flux n'apparaît, activez Hubble puis attendez quelques secondes avant de réobserver :",
     "skip":"Ignorer","check":"Vérifier",
     "helpTitle":"Copilote de l'atelier",
     "helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend pour une aide contextuelle.",
     "nextHint":"Indice suivant",
-    "hint0":"Commencez par récupérer les IPs des pods (Étape 1).",
-    "hint1":"Définissez FRONTEND_IP et BACKEND_IP, puis utilisez-les dans les tests curl.",
-    "hint2":"Frontend → backend doit réussir (policy allow), backend → frontend doit échouer.",
-    "hint3":"cilium policy get montre les politiques appliquées par l'agent Cilium.",
-    "hint4":"En cas de souci, kubectl get ciliumendpoints vérifie les labels des endpoints.",
+    "hint0":"Commencez par vérifier que Hubble est actif (Étape 1).",
+    "hint1":"Hubble doit montrer Ok dans cilium status ; sinon cilium hubble enable.",
+    "hint2":"Générez d'abord du trafic, sinon hubble observe n'a rien à montrer.",
+    "hint3":"--verdict DROPPED ne montre que les flux refusés par les politiques.",
+    "hint4":"--to-label / --from-label filtrent les flux par étiquette de pod.",
     "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — poste de travail Koffi Academy (cilium-cluster)",
-    "bEnv":"policy-demo : default-deny + allow-frontend-to-backend actives. frontend, backend Running.","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
-    "hHeader":"Commandes disponibles :","hVar":"définir les IPs (frontend/backend)","hExec":"tester la connexion (curl)","hPolicy":"voir les politiques appliquées (cilium policy get)","hDelete":"supprimer le pod de test","hEndpoints":"lister les endpoints Cilium","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
-    "noIp":"curl: (6) Could not resolve host","noIpHint":"Astuce : définissez d'abord FRONTEND_IP et BACKEND_IP (Étape 1).","podDeleted":"pod \"test-pod\" deleted",
-    "checkHeader":"Progression de la tâche :","chkIps":"IPs des pods récupérées","chkAllowed":"Frontend → backend autorisé","chkBlocked":"Backend → frontend bloqué","chkVerdicts":"Verdicts Cilium consultés","chkAll":"Tous les critères sont remplis. Parcours Cilium terminé !","skipped":"Étape ignorée.",
-    "cmdNF":"{c} : commande introuvable. Tapez `help`.","kNF":"error: commande non simulée dans cet atelier — utilisez kubectl/cilium.",
-    "tDone":"Parcours terminé — l'application des politiques est validée"
+    "bEnv":"policy-demo : default-deny + allow-frontend-to-backend actives. Hubble disponible.","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hStatus":"état de Cilium / Hubble","hGen":"générer du trafic (curl)","hObserve":"observer les flux (hubble observe)","hVerdict":"filtrer par verdict (--verdict DROPPED)","hLabel":"filtrer par label (--to-label)","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "hubbleOn":"Hubble enabled.","noFlowFwd":"Aucun flux récent. Générez d'abord du trafic (Étape 2).","noFlowDrop":"Aucun flux refusé dans le tampon. Générez d'abord un trafic bloqué (Étape 3).","noIp":"curl: (6) Could not resolve host",
+    "checkHeader":"Progression de la tâche :","chkHubble":"Hubble actif (Ok)","chkAllowed":"Flux autorisé observé (FORWARDED)","chkDropped":"Flux refusé observé (DROPPED)","chkFilter":"Filtrage des flux par label","chkAll":"Tous les critères sont remplis. Observabilité maîtrisée !","skipped":"Étape ignorée.",
+    "cmdNF":"{c} : commande introuvable. Tapez `help`.","kNF":"error: commande non simulée dans cet atelier — utilisez kubectl/cilium/hubble.",
+    "tDone":"Tâche terminée — les verdicts de flux sont lisibles via Hubble"
   },
   "de":{
-    "navChapter3":"Kapitel 3","navChapter5":"Kapitel 5","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
-    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Topologie","topoTitle":"Fluss-Topologie — Namespace policy-demo",
-    "mFe2be":"FE → BE","mBe2fe":"BE → FE","tAllowed":"erlaubt","tBlocked":"blockiert",
-    "instrHead":"Anleitung","instrTitle":"Die Durchsetzung der Policies testen",
-    "instrSub":"In dieser Aufgabe validieren Sie methodisch die Durchsetzung der Policies: der erlaubte Fluss geht durch, nicht erlaubte Flüsse werden blockiert, und Sie lesen die Verdicts direkt über Cilium.",
+    "navChapter4":"Kapitel 4","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Hubble","hubTitle":"Hubble — Beobachtung der Fluss-Verdicts",
+    "mFwd":"Forwarded","mDrop":"Dropped","tSeen":"beobachtet",
+    "instrHead":"Anleitung","instrTitle":"Flüsse mit Hubble beobachten",
+    "instrSub":"Hubble ist die Observability von Cilium. Sie prüfen, dass es aktiv ist, erzeugen Traffic und lesen dann die Fluss-Verdicts in Echtzeit: was durchgeht (FORWARDED) und was von den Policies abgelehnt wird (DROPPED).",
     "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
-    "s1h":"Schritt 1 · Die Pod-IPs holen",
-    "s1b":"Holen Sie die IP-Adressen der Pods im <strong>Terminal</strong>:",
-    "s2h":"Schritt 2 · Frontend → Backend (erlaubt)",
-    "s2b":"Prüfen Sie, dass der erlaubte Pfad funktioniert:",
-    "s2b2":"Das muss gelingen, da eine Allow-Policy diesen Pfad abdeckt.",
-    "s3h":"Schritt 3 · Backend → Frontend (blockiert)",
-    "s3b":"Testen Sie, ob das Backend das Frontend erreicht (sollte blockiert sein):",
-    "s3b2":"Das muss fehlschlagen: keine Policy erlaubt backend → frontend.",
-    "s4h":"Schritt 4 · Verdicts über Cilium lesen",
-    "s4b":"Zeigen Sie die von Cilium durchgesetzten Policies im Cluster an:",
-    "s4b2":"Räumen Sie zum Schluss den Test-Pod auf:",
+    "s1h":"Schritt 1 · Prüfen, dass Hubble aktiv ist",
+    "s1b":"Prüfen Sie den Status von Cilium und Hubble im <strong>Terminal</strong>:",
+    "s1b2":"Sie sollten <code>Hubble: Ok</code> sehen. Sonst aktivieren Sie es mit <code>cilium hubble enable</code>.",
+    "s2h":"Schritt 2 · Erlaubten Traffic erzeugen und beobachten",
+    "s2b":"Erzeugen Sie einen Aufruf frontend → backend und lesen Sie dann die jüngsten Flüsse:",
+    "s2b2":"Der Fluss frontend → backend erscheint mit dem Verdict <code>FORWARDED</code>.",
+    "s3h":"Schritt 3 · Abgelehnte Flüsse beobachten (DROPPED)",
+    "s3b":"Erzeugen Sie einen nicht erlaubten Aufruf backend → frontend und filtern Sie die abgelehnten Flüsse:",
+    "s3b2":"Der Fluss backend → frontend erscheint als <code>DROPPED</code> mit dem Grund <code>Policy denied</code>.",
+    "s4h":"Schritt 4 · Flüsse nach Label filtern",
+    "s4b":"Zielen Sie auf die Flüsse zum Backend, um nur Relevantes zu sehen:",
+    "s4b2":"So kombinieren Sie Traffic-Erzeugung und Observability, um Ihre Policies präzise zu auditieren.",
     "critH":"Erfolgskriterien",
-    "c1":"Traffic frontend → backend erlaubt.","c2":"Traffic backend → frontend blockiert.","c3":"Nicht autorisierte Pods erreichen die geschützten Dienste nicht.","c4":"Policy-Verdicts über Cilium sichtbar.",
-    "trH":"Fehlerbehebung","trB":"Wenn die Policies nicht wie erwartet greifen, prüfen Sie die Labels der Endpoints:",
+    "c1":"Hubble ist aktiv (Ok).","c2":"Ein erlaubter Fluss wird beobachtet (FORWARDED).","c3":"Ein abgelehnter Fluss wird beobachtet (DROPPED).","c4":"Die Fluss-Filterung nach Label funktioniert.",
+    "trH":"Fehlerbehebung","trB":"Wenn kein Fluss erscheint, aktivieren Sie Hubble und warten Sie einige Sekunden vor der erneuten Beobachtung:",
     "skip":"Überspringen","check":"Prüfen",
     "helpTitle":"Lab-Copilot",
     "helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend für kontextbezogene Hilfe.",
     "nextHint":"Nächster Hinweis",
-    "hint0":"Holen Sie zuerst die Pod-IPs (Schritt 1).",
-    "hint1":"Setzen Sie FRONTEND_IP und BACKEND_IP und nutzen Sie sie in den curl-Tests.",
-    "hint2":"Frontend → backend muss gelingen (Allow-Policy), backend → frontend muss fehlschlagen.",
-    "hint3":"cilium policy get zeigt die vom Cilium-Agent durchgesetzten Policies.",
-    "hint4":"Bei Problemen prüft kubectl get ciliumendpoints die Labels der Endpoints.",
+    "hint0":"Prüfen Sie zuerst, dass Hubble aktiv ist (Schritt 1).",
+    "hint1":"Hubble muss in cilium status Ok zeigen; sonst cilium hubble enable.",
+    "hint2":"Erzeugen Sie zuerst Traffic, sonst hat hubble observe nichts zu zeigen.",
+    "hint3":"--verdict DROPPED zeigt nur die von Policies abgelehnten Flüsse.",
+    "hint4":"--to-label / --from-label filtern die Flüsse nach Pod-Label.",
     "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — Koffi-Academy-Arbeitsplatz (cilium-cluster)",
-    "bEnv":"policy-demo: default-deny + allow-frontend-to-backend aktiv. frontend, backend Running.","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
-    "hHeader":"Verfügbare Befehle:","hVar":"die IPs setzen (frontend/backend)","hExec":"die Verbindung testen (curl)","hPolicy":"durchgesetzte Policies anzeigen (cilium policy get)","hDelete":"den Test-Pod löschen","hEndpoints":"Cilium-Endpoints auflisten","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
-    "noIp":"curl: (6) Could not resolve host","noIpHint":"Tipp: setzen Sie zuerst FRONTEND_IP und BACKEND_IP (Schritt 1).","podDeleted":"pod \"test-pod\" deleted",
-    "checkHeader":"Fortschritt der Aufgabe:","chkIps":"Pod-IPs geholt","chkAllowed":"Frontend → backend erlaubt","chkBlocked":"Backend → frontend blockiert","chkVerdicts":"Cilium-Verdicts eingesehen","chkAll":"Alle Kriterien erfüllt. Cilium-Parcours abgeschlossen!","skipped":"Schritt übersprungen.",
-    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","kNF":"error: Befehl in diesem Labor nicht simuliert — nutzen Sie kubectl/cilium.",
-    "tDone":"Parcours abgeschlossen — die Durchsetzung der Policies ist validiert"
+    "bEnv":"policy-demo: default-deny + allow-frontend-to-backend aktiv. Hubble verfügbar.","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hStatus":"Cilium-/Hubble-Status","hGen":"Traffic erzeugen (curl)","hObserve":"Flüsse beobachten (hubble observe)","hVerdict":"nach Verdict filtern (--verdict DROPPED)","hLabel":"nach Label filtern (--to-label)","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "hubbleOn":"Hubble enabled.","noFlowFwd":"Keine jüngsten Flüsse. Erzeugen Sie zuerst Traffic (Schritt 2).","noFlowDrop":"Keine abgelehnten Flüsse im Puffer. Erzeugen Sie zuerst blockierten Traffic (Schritt 3).","noIp":"curl: (6) Could not resolve host",
+    "checkHeader":"Fortschritt der Aufgabe:","chkHubble":"Hubble aktiv (Ok)","chkAllowed":"Erlaubter Fluss beobachtet (FORWARDED)","chkDropped":"Abgelehnter Fluss beobachtet (DROPPED)","chkFilter":"Fluss-Filterung nach Label","chkAll":"Alle Kriterien erfüllt. Observability beherrscht!","skipped":"Schritt übersprungen.",
+    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","kNF":"error: Befehl in diesem Labor nicht simuliert — nutzen Sie kubectl/cilium/hubble.",
+    "tDone":"Aufgabe abgeschlossen — die Fluss-Verdicts sind über Hubble lesbar"
   },
   "en":{
-    "navChapter3":"Chapter 3","navChapter5":"Chapter 5","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
-    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Topology","topoTitle":"Flow topology — namespace policy-demo",
-    "mFe2be":"FE → BE","mBe2fe":"BE → FE","tAllowed":"allowed","tBlocked":"blocked",
-    "instrHead":"Instructions","instrTitle":"Test policy enforcement",
-    "instrSub":"In this task you methodically validate policy enforcement: the allowed flow passes, the unauthorized flows are blocked, and you read the verdicts directly via Cilium.",
+    "navChapter4":"Chapter 4","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Hubble","hubTitle":"Hubble — flow verdict observation",
+    "mFwd":"Forwarded","mDrop":"Dropped","tSeen":"observed",
+    "instrHead":"Instructions","instrTitle":"Observe flows with Hubble",
+    "instrSub":"Hubble is Cilium's observability. You verify it is active, generate traffic, then read flow verdicts in real time: what passes (FORWARDED) and what the policies deny (DROPPED).",
     "progLabel":"Progress","copy":"Copy","copied":"Copied",
-    "s1h":"Step 1 · Get the pod IPs",
-    "s1b":"Get the pod IP addresses in the <strong>Terminal</strong>:",
-    "s2h":"Step 2 · Frontend → Backend (allowed)",
-    "s2b":"Verify the allowed path works:",
-    "s2b2":"This should succeed because an allow policy covers this path.",
-    "s3h":"Step 3 · Backend → Frontend (blocked)",
-    "s3b":"Test whether the backend can reach the frontend (should be blocked):",
-    "s3b2":"This should fail: no policy allows backend → frontend traffic.",
-    "s4h":"Step 4 · Read the verdicts via Cilium",
-    "s4b":"Show the policies enforced by Cilium across the cluster:",
-    "s4b2":"Finally, clean up the test pod:",
+    "s1h":"Step 1 · Verify Hubble is active",
+    "s1b":"Check the Cilium and Hubble status in the <strong>Terminal</strong>:",
+    "s1b2":"You should see <code>Hubble: Ok</code>. Otherwise enable it with <code>cilium hubble enable</code>.",
+    "s2h":"Step 2 · Generate allowed traffic and observe it",
+    "s2b":"Generate a frontend → backend call, then read the recent flows:",
+    "s2b2":"The frontend → backend flow appears with the <code>FORWARDED</code> verdict.",
+    "s3h":"Step 3 · Observe denied flows (DROPPED)",
+    "s3b":"Generate an unauthorized backend → frontend call, then filter the denied flows:",
+    "s3b2":"The backend → frontend flow appears as <code>DROPPED</code> with the reason <code>Policy denied</code>.",
+    "s4h":"Step 4 · Filter flows by label",
+    "s4b":"Target the flows to the backend to see only what concerns it:",
+    "s4b2":"You thus combine traffic generation and observability to precisely audit your policies.",
     "critH":"Success criteria",
-    "c1":"Frontend → backend traffic allowed.","c2":"Backend → frontend traffic blocked.","c3":"Unauthorized pods cannot access the protected services.","c4":"Policy verdicts visible via Cilium.",
-    "trH":"Troubleshooting","trB":"If policies aren't enforcing as expected, verify the endpoints carry the right labels:",
+    "c1":"Hubble is active (Ok).","c2":"An allowed flow is observed (FORWARDED).","c3":"A denied flow is observed (DROPPED).","c4":"Flow filtering by label works.",
+    "trH":"Troubleshooting","trB":"If no flow appears, enable Hubble and wait a few seconds before observing again:",
     "skip":"Skip","check":"Check",
     "helpTitle":"Lab Copilot",
     "helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend for contextual help.",
     "nextHint":"Next hint",
-    "hint0":"Start by getting the pod IPs (Step 1).",
-    "hint1":"Set FRONTEND_IP and BACKEND_IP, then use them in the curl tests.",
-    "hint2":"Frontend → backend must succeed (allow policy), backend → frontend must fail.",
-    "hint3":"cilium policy get shows the policies enforced by the Cilium agent.",
-    "hint4":"If in doubt, kubectl get ciliumendpoints checks the endpoints' labels.",
+    "hint0":"Start by verifying Hubble is active (Step 1).",
+    "hint1":"Hubble must show Ok in cilium status; otherwise cilium hubble enable.",
+    "hint2":"Generate traffic first, otherwise hubble observe has nothing to show.",
+    "hint3":"--verdict DROPPED shows only the flows denied by policies.",
+    "hint4":"--to-label / --from-label filter flows by pod label.",
     "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — Koffi Academy workstation (cilium-cluster)",
-    "bEnv":"policy-demo: default-deny + allow-frontend-to-backend active. frontend, backend Running.","bTip":"Tip: type `help` for commands, `check` for progress.",
-    "hHeader":"Available commands:","hVar":"set the IPs (frontend/backend)","hExec":"test the connection (curl)","hPolicy":"show enforced policies (cilium policy get)","hDelete":"delete the test pod","hEndpoints":"list Cilium endpoints","hCheck":"check your progress","hClear":"clear the terminal",
-    "noIp":"curl: (6) Could not resolve host","noIpHint":"Tip: set FRONTEND_IP and BACKEND_IP first (Step 1).","podDeleted":"pod \"test-pod\" deleted",
-    "checkHeader":"Task progress:","chkIps":"Pod IPs retrieved","chkAllowed":"Frontend → backend allowed","chkBlocked":"Backend → frontend blocked","chkVerdicts":"Cilium verdicts reviewed","chkAll":"All criteria met. Cilium track complete!","skipped":"Step skipped.",
-    "cmdNF":"{c}: command not found. Type `help`.","kNF":"error: command not simulated in this lab — use kubectl/cilium.",
-    "tDone":"Track complete — policy enforcement is validated"
+    "bEnv":"policy-demo: default-deny + allow-frontend-to-backend active. Hubble available.","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hStatus":"Cilium / Hubble status","hGen":"generate traffic (curl)","hObserve":"observe flows (hubble observe)","hVerdict":"filter by verdict (--verdict DROPPED)","hLabel":"filter by label (--to-label)","hCheck":"check your progress","hClear":"clear the terminal",
+    "hubbleOn":"Hubble enabled.","noFlowFwd":"No recent flows. Generate some traffic first (Step 2).","noFlowDrop":"No denied flows in the buffer. Generate blocked traffic first (Step 3).","noIp":"curl: (6) Could not resolve host",
+    "checkHeader":"Task progress:","chkHubble":"Hubble active (Ok)","chkAllowed":"Allowed flow observed (FORWARDED)","chkDropped":"Denied flow observed (DROPPED)","chkFilter":"Flow filtering by label","chkAll":"All criteria met. Observability mastered!","skipped":"Step skipped.",
+    "cmdNF":"{c}: command not found. Type `help`.","kNF":"error: command not simulated in this lab — use kubectl/cilium/hubble.",
+    "tDone":"Task complete — flow verdicts are readable via Hubble"
   }
 };
 
@@ -482,7 +479,8 @@ window.I18N = {
   }
 
   var vars = {};
-  var steps = { ips:false, allowed:false, blocked:false, verdicts:false };
+  var hubbleOk=true, allowedGen=false, droppedGen=false;
+  var steps = { hubble:false, allowed:false, dropped:false, filter:false };
   var hi = 0;
 
   var out = document.getElementById("terminalOutput");
@@ -500,37 +498,60 @@ window.I18N = {
   function setStep(name, done){
     if(steps[name]===done) return; steps[name]=done;
     var el=document.querySelector('.step[data-step="'+name+'"]'); if(el) el.classList.toggle("is-done",done);
-    var total=0; ["ips","allowed","blocked","verdicts"].forEach(function(k){ if(steps[k]) total++; });
+    var total=0; ["hubble","allowed","dropped","filter"].forEach(function(k){ if(steps[k]) total++; });
     document.getElementById("progressText").textContent=total+" / 4";
     document.getElementById("progressFill").style.width=(total/4*100)+"%";
     if(total===4) toast(t("tDone"));
   }
+  function refreshMetrics(){
+    document.getElementById("mFwd").textContent = allowedGen ? t("tSeen") : "—";
+    document.getElementById("mDrop").textContent = droppedGen ? t("tSeen") : "—";
+  }
 
-  var NGINX=["<!DOCTYPE html>","<html>","<head>","<title>Welcome to nginx!</title>","</head>","<body>",
-     "<h1>Welcome to nginx!</h1>",
-     "<p>If you see this page, the nginx web server is successfully installed and working.</p>",
-     "<p><em>Thank you for using nginx.</em></p>","</body>","</html>"];
-  function printNginx(limit){ var arr = limit?NGINX.slice(0,limit):NGINX; arr.forEach(function(l){ print(l,"line-muted"); }); }
+  function ciliumStatus(grepHubble){
+    if(grepHubble){
+      print("Hubble:                 Ok   Current/Max Flows: 4095/4095 (100.00%)","line-ok");
+      print("Hubble Relay:           Ok","line-ok");
+    } else {
+      print("KVStore:                Ok");
+      print("Kubernetes:             Ok   1.29 (v1.29.2)");
+      print("Cilium:                 Ok   1/1 healthy");
+      print("Cluster health:         2/2 reachable");
+      print("Hubble:                 Ok   Current/Max Flows: 4095/4095 (100.00%)","line-ok");
+      print("Hubble Relay:           Ok","line-ok");
+    }
+    setStep("hubble",true);
+  }
 
-  function printPolicyGet(){
-    ["[","  {",
-     "    \"endpointSelector\": {",
-     "      \"matchLabels\": { \"k8s:app\": \"backend\", \"k8s:io.kubernetes.pod.namespace\": \"policy-demo\" }",
-     "    },",
-     "    \"ingress\": [",
-     "      { \"fromEndpoints\": [ { \"matchLabels\": { \"k8s:app\": \"frontend\" } } ],",
-     "        \"toPorts\": [ { \"ports\": [ { \"port\": \"80\", \"protocol\": \"TCP\" } ] } ] }",
-     "    ]",
-     "  }",
-     "]","Revision: 3"].forEach(function(l){ print(l); });
+  function fwdFlows(){
+    print("Jun 20 17:30:01.184: policy-demo/frontend-6f8c9d4b7-x2k9p:43120 (ID:34522) -> policy-demo/backend-7d9f5c8a6-q4m2t:80 (ID:34521) to-endpoint FORWARDED (TCP Flags: SYN)","line-ok");
+    print("Jun 20 17:30:01.185: policy-demo/backend-7d9f5c8a6-q4m2t:80 (ID:34521) -> policy-demo/frontend-6f8c9d4b7-x2k9p:43120 (ID:34522) to-endpoint FORWARDED (TCP Flags: SYN, ACK)","line-ok");
+  }
+  function dropFlows(){
+    print("Jun 20 17:30:05.402: policy-demo/backend-7d9f5c8a6-q4m2t:51002 (ID:34521) -> policy-demo/frontend-6f8c9d4b7-x2k9p:80 (ID:34522) Policy denied DROPPED (TCP Flags: SYN)","line-error");
+  }
+
+  function hubbleObserve(line){
+    if(/--verdict\s+DROPPED/i.test(line)){
+      if(droppedGen){ dropFlows(); setStep("dropped",true); refreshMetrics(); }
+      else print(t("noFlowDrop"),"line-warn");
+      return;
+    }
+    var filtered = /--(to-label|from-label|label|to-pod|from-pod)/.test(line);
+    if(allowedGen){
+      fwdFlows();
+      if(droppedGen) dropFlows();
+      setStep("allowed",true);
+      if(filtered) setStep("filter",true);
+      refreshMetrics();
+    } else {
+      print(t("noFlowFwd"),"line-warn");
+    }
   }
 
   function expand(s){ return s.replace(/\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?/g, function(_,n){ return (vars[n]!==undefined)?vars[n]:""; }); }
   function substitute(inner){
-    if(/kubectl\s+get\s+pod/.test(inner) && /podIP/.test(inner)){
-      if(/app=frontend/.test(inner)) return FRONTEND_IP;
-      return BACKEND_IP;
-    }
+    if(/kubectl\s+get\s+pod/.test(inner) && /podIP/.test(inner)){ return /app=frontend/.test(inner)?FRONTEND_IP:BACKEND_IP; }
     return "";
   }
 
@@ -539,57 +560,46 @@ window.I18N = {
     var parts=line.split(/\s+/); var head=parts[0];
 
     if(head==="echo"){ print(line.slice(4).trim().replace(/^["']|["']$/g,"")); return true; }
+    if(head==="true"){ return true; }
     if(head==="help"){
       print(t("hHeader"),"line-muted");
-      print("  FRONTEND_IP=$(...) / BACKEND_IP=$(...)     " + t("hVar"));
-      print("  kubectl exec ... -- curl http://$IP        " + t("hExec"));
-      print("  kubectl exec ds/cilium -- cilium policy get " + t("hPolicy"));
-      print("  kubectl delete pod test-pod ...            " + t("hDelete"));
-      print("  kubectl get ciliumendpoints -n policy-demo  " + t("hEndpoints"));
-      print("  check   ·   clear                          " + t("hCheck"));
+      print("  kubectl exec ds/cilium -- cilium status     " + t("hStatus"));
+      print("  kubectl exec deploy/frontend -- curl ...    " + t("hGen"));
+      print("  kubectl exec ds/cilium -- hubble observe    " + t("hObserve"));
+      print("  hubble observe --verdict DROPPED            " + t("hVerdict"));
+      print("  hubble observe --to-label app=backend       " + t("hLabel"));
+      print("  check   ·   clear                           " + t("hCheck"));
       return true;
     }
     if(head==="clear"){ out.innerHTML=""; return true; }
     if(head==="check"){ runCheck(); return true; }
 
-    if(head!=="kubectl" && head!=="cilium" && head!=="k"){ print(t("cmdNF",{c:head}),"line-error"); return false; }
+    if(/cilium\s+hubble\s+enable/.test(line)){ hubbleOk=true; print(t("hubbleOn"),"line-ok"); return true; }
+    if(/cilium\s+status/.test(line)){ ciliumStatus(/\|\s*grep/i.test(line)); return true; }
+    if(/hubble\s+observe/.test(line)){ hubbleObserve(line); return true; }
+
+    if(head!=="kubectl" && head!=="cilium" && head!=="k" && head!=="hubble"){ print(t("cmdNF",{c:head}),"line-error"); return false; }
 
     var verb=parts[1]||"";
-
-    if(verb==="exec" && /cilium\s+policy\s+get/.test(line)){ printPolicyGet(); setStep("verdicts",true); return true; }
-
     if(verb==="exec" && /curl/.test(line)){
-      var src = /test-pod/.test(line) ? "testpod" : (/backend/.test(line) ? "backend" : (/frontend/.test(line) ? "frontend" : "other"));
+      var src = /backend/.test(line) ? "backend" : (/frontend/.test(line) ? "frontend" : "other");
       var m=line.match(/https?:\/\/([^\s\/|]+)/); var host=m?m[1]:"";
-      if(!host){ print(t("noIp"),"line-error"); print(t("noIpHint"),"line-warn"); return false; }
-      var hp=host.split(":"); var hh=hp[0]; var port=hp[1]||"80";
-      var hm=line.match(/\|\s*head\s+-?n?\s*([0-9]+)/); var limit=hm?parseInt(hm[1],10):0;
-      if(hh==="localhost"||hh==="127.0.0.1"){ printNginx(limit); return true; }
-      if(/\./.test(hh) && !/^10\.0\.0\./.test(hh)){ print("HTTP/1.1 301 Moved Permanently","line-muted"); return true; }
-      if(src==="frontend" && hh===BACKEND_IP && port==="80"){ printNginx(limit); setStep("allowed",true); return true; }
-      if(src==="backend" && hh===FRONTEND_IP){ setStep("blocked",true); return false; }
+      if(!host){ print(t("noIp"),"line-error"); return false; }
+      var hh=host.split(":")[0];
+      if(src==="frontend" && hh===BACKEND_IP){ allowedGen=true; refreshMetrics(); if(!/-o\s+\/dev\/null/.test(line)){ printNginx(); } return true; }
+      if(src==="backend" && hh===FRONTEND_IP){ droppedGen=true; refreshMetrics(); return false; }
       return false;
-    }
-    if(verb==="delete" && /test-pod/.test(line)){ print(t("podDeleted"),"line-muted"); return true; }
-    if(verb==="get" && /(ciliumendpoints|ciliumendpoint|cep)/.test(parts[2]||"")){
-      print("NAME       SECURITY IDENTITY   ENDPOINT STATE   IPV4         IPV6");
-      print("backend    34521               ready            10.0.0.214");
-      print("frontend   34522               ready            10.0.0.28");
-      return true;
-    }
-    if(verb==="get" && /(pods?|po)$/.test(parts[2]||"")){
-      print("NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE");
-      print("frontend-6f8c9d4b7-x2k9p     1/1     Running   0          20m   10.0.0.28     worker-1");
-      print("backend-7d9f5c8a6-q4m2t      1/1     Running   0          20m   10.0.0.214    worker-2");
-      return true;
     }
     print(t("kNF"),"line-error"); return false;
   }
 
+  var NGINX=["<!DOCTYPE html>","<html>","<head>","<title>Welcome to nginx!</title>","</head>","<body>","<h1>Welcome to nginx!</h1>","</body>","</html>"];
+  function printNginx(){ NGINX.forEach(function(l){ print(l,"line-muted"); }); }
+
   function handle(raw){
     var cmd=raw.trim(); if(!cmd) return;
     var asg=cmd.match(/^([A-Za-z_][A-Za-z0-9_]*)=\$\((.+)\)$/);
-    if(asg){ vars[asg[1]]=substitute(asg[2]); if(vars.FRONTEND_IP && vars.BACKEND_IP) setStep("ips",true); return; }
+    if(asg){ vars[asg[1]]=substitute(asg[2]); return; }
     cmd=expand(cmd);
     var toks=cmd.split(/\s*(\&\&|\|\|)\s*/);
     var ok=exec(toks[0]);
@@ -602,11 +612,11 @@ window.I18N = {
 
   function runCheck(){
     print(t("checkHeader"),"line-muted");
-    print((steps.ips     ?"  [x] ":"  [ ] ")+t("chkIps"),      steps.ips?"line-ok":"line-warn");
-    print((steps.allowed ?"  [x] ":"  [ ] ")+t("chkAllowed"),  steps.allowed?"line-ok":"line-warn");
-    print((steps.blocked ?"  [x] ":"  [ ] ")+t("chkBlocked"),  steps.blocked?"line-ok":"line-warn");
-    print((steps.verdicts?"  [x] ":"  [ ] ")+t("chkVerdicts"), steps.verdicts?"line-ok":"line-warn");
-    if(steps.ips&&steps.allowed&&steps.blocked&&steps.verdicts) print(t("chkAll"),"line-ok");
+    print((steps.hubble ?"  [x] ":"  [ ] ")+t("chkHubble"),  steps.hubble?"line-ok":"line-warn");
+    print((steps.allowed?"  [x] ":"  [ ] ")+t("chkAllowed"), steps.allowed?"line-ok":"line-warn");
+    print((steps.dropped?"  [x] ":"  [ ] ")+t("chkDropped"), steps.dropped?"line-ok":"line-warn");
+    print((steps.filter ?"  [x] ":"  [ ] ")+t("chkFilter"),  steps.filter?"line-ok":"line-warn");
+    if(steps.hubble&&steps.allowed&&steps.dropped&&steps.filter) print(t("chkAll"),"line-ok");
   }
 
   function runScript(text){
@@ -674,10 +684,11 @@ window.I18N = {
     document.querySelectorAll("[data-i18n-title]").forEach(function(el){ var k=el.getAttribute("data-i18n-title"); if(d[k]!==undefined) el.setAttribute("title",d[k]); });
     document.querySelectorAll("[data-i18n-aria]").forEach(function(el){ var k=el.getAttribute("data-i18n-aria"); if(d[k]!==undefined) el.setAttribute("aria-label",d[k]); });
     document.getElementById("hintText").textContent=t("hint"+hi);
+    refreshMetrics();
   }
   window.setLabWorkspaceLang = applyLang;
 
-  applyLang(lang); banner(); input.focus();
+  applyLang(lang); banner(); refreshMetrics(); input.focus();
 })();
 
 var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
