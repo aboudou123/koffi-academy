@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Multi-Agent APIM Platform · Chapitre 1 | Atelier — Koffi Academy</title>
-  <meta name="description" content="Atelier Koffi Academy — Chapitre 1 : re-provisionnement de la fondation Azure (OpenAI + APIM + AKS) et déploiement des agents Lab 1 + Lab 2 sur AKS.">
+  <title>Multi-Agent APIM Platform · Chapitre 2 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Chapitre 2 : serveur MCP GitHub officiel câblé à une fixture locale, handshake stdio JSON-RPC et appel mutant.">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -163,15 +163,15 @@ button{cursor:pointer}
         <span class="brand__k">Koffi Academy</span>
         <span class="brand__sep">|</span>
         <span class="brand__title">Multi-Agent APIM Platform</span>
-        <span class="chip-ch">CH.1</span>
+        <span class="chip-ch">CH.2</span>
       </span>
     </a>
     <div class="labbar__spacer"></div>
     <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">120:00</span></span>
     <nav class="actions" aria-label="Lab actions">
+      <a class="topbtn" href="../laboratoire-apim-multi-agent-lab"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter1">Chapitre 1</span></a>
       <a class="topbtn" href="../laboratoire-apim-multi-agent"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
       <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
-      <a class="topbtn" href="../laboratoire-apim-multi-agent-lab-2"><span data-i18n="navChapter2">Chapitre 2</span> <i class="fa-solid fa-arrow-right-long"></i></a>
       <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
       <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
       <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
@@ -183,7 +183,7 @@ button{cursor:pointer}
       <div class="work-tabs" role="tablist">
         <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
         <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
-        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-dharmachakra"></i><span data-i18n="tabFiles">K8s Manifests</span></button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-brands fa-github"></i><span data-i18n="tabFiles">Fixtures</span></button>
       </div>
       <div class="work-surface">
         <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
@@ -195,28 +195,28 @@ button{cursor:pointer}
         </section>
         <section class="view datasets-view" id="datasetsView" role="tabpanel">
           <div class="filebar">
-            <button type="button" class="filetab is-active" data-file="k8s/namespace.yaml">namespace.yaml</button>
-            <button type="button" class="filetab" data-file="k8s/apim-mcp.yaml">apim-mcp.yaml</button>
-            <button type="button" class="filetab" data-file="k8s/azure-agent.yaml">azure-agent.yaml</button>
+            <button type="button" class="filetab is-active" data-file="fixtures/github-fixture/github_fixture.py">github_fixture.py</button>
+            <button type="button" class="filetab" data-file="fixtures/github-fixture/run-fixture.sh">run-fixture.sh</button>
+            <button type="button" class="filetab" data-file="scripts/github-mcp-handshake.sh">github-mcp-handshake.sh</button>
           </div>
           <div class="runbar">
-            <div class="runbar__title"><i class="fa-solid fa-dharmachakra"></i><span id="fileLabel">/root/capstone/k8s/namespace.yaml</span></div>
+            <div class="runbar__title"><i class="fa-brands fa-github"></i><span id="fileLabel">/root/capstone/fixtures/github-fixture/github_fixture.py</span></div>
             <div class="runbar__actions">
               <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
               <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
             </div>
           </div>
           <div class="dataset-grid">
-            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Collez le manifeste fourni dans les instructions, puis Enregistrer."></textarea>
+            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Inspectez ou modifiez le fichier de la fixture."></textarea>
             <aside class="dataset-side">
               <div class="metric-grid">
-                <div class="metric"><span class="metric__k" data-i18n="mFoundation">Fondation</span><div class="metric__v" id="mFoundation">—</div></div>
-                <div class="metric"><span class="metric__k" data-i18n="mPods">Pods</span><div class="metric__v" id="mPods">0/2</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mFixture">Fixture</span><div class="metric__v" id="mFixture">—</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mTools">Outils MCP</span><div class="metric__v" id="mTools">0/3</div></div>
               </div>
               <div class="file-list">
-                <div class="file-pill"><i class="fa-brands fa-microsoft"></i>Azure OpenAI · APIM</div>
-                <div class="file-pill"><i class="fa-solid fa-dharmachakra"></i>AKS (2 nœuds)</div>
-                <div class="file-pill"><i class="fa-solid fa-cubes"></i>apim-mcp · azure-agent</div>
+                <div class="file-pill"><i class="fa-solid fa-flask-vial"></i>fixture GitHub :9006</div>
+                <div class="file-pill"><i class="fa-solid fa-plug"></i>github-mcp-server v1.0.3</div>
+                <div class="file-pill"><i class="fa-solid fa-code"></i>JSON-RPC stdio</div>
               </div>
             </aside>
           </div>
@@ -230,54 +230,48 @@ button{cursor:pointer}
         <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
       </div>
       <div class="instructions__body">
-        <h1 class="lab-title" data-i18n="instrTitle">Fondation Azure & déploiement sur AKS</h1>
-        <p class="lab-sub" data-i18n="instrSub">Vous re-provisionnez la fondation des Lab 1 et Lab 2 — Azure OpenAI, APIM (Consumption) et un cluster AKS — puis vous déployez côte à côte sur AKS l'agent Azure MCP et le serveur APIM MCP. Ces deux pods sont la base que le supervisor orchestrera aux chapitres suivants.</p>
+        <h1 class="lab-title" data-i18n="instrTitle">Serveur MCP GitHub & fixture locale</h1>
+        <p class="lab-sub" data-i18n="instrSub">Vous branchez le serveur <code>github-mcp-server</code> officiel sur une fixture locale (aucun GitHub réel requis), pilotez le handshake MCP stdio à la main, et effectuez un appel mutant. À la fin, le supervisor disposera des trois surfaces MCP : APIM, GitHub et Azure.</p>
 
         <div class="progress-card">
           <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="step is-open" data-step="login">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Connexion Azure & groupe de ressources</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step is-open" data-step="fixture">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Démarrer la fixture GitHub (port 9006)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s1b">Chargez les identifiants du service principal injectés dans la VM et connectez-vous, puis créez le groupe de ressources de la capstone. Dans le <strong>Terminal</strong> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">source /root/.azure-credentials &amp;&amp; az login --service-principal --username "$AZURE_CLIENT_ID" --password "$AZURE_CLIENT_SECRET" --tenant "$AZURE_TENANT_ID"
-az group create --name rg-multi-agent-apim-capstone --location eastus --output table</pre></div>
-            <p style="margin:10px 0 0;color:var(--soft)" data-i18n="s1n">Toutes les ressources Azure de ce lab atterrissent dans <code>rg-multi-agent-apim-capstone</code> ; le script de nettoyage supprime tout le groupe à la fin.</p>
+            <span data-i18n="s1b">Inspectez <code>github_fixture.py</code> dans l'onglet <strong>Fixtures</strong> (sous-ensemble de l'API REST GitHub : create_branch, create_or_update_file, create_pull_request), puis démarrez-la :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/fixtures/github-fixture/run-fixture.sh
+curl -sf http://localhost:9006/healthz | jq
+tail -F /tmp/github-fixture.log &amp;</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="provision">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Provisionner Azure OpenAI + APIM + AKS</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="image">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Confirmer l'image pré-téléchargée</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s2b">Les trois ressources sont indépendantes et lentes. Le script lance APIM en <code>--no-wait</code> pendant qu'AKS et Azure OpenAI provisionnent, déploie <code>gpt-4o</code>, et écrit les chaînes de connexion dans <code>/root/capstone/.foundation-env</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/provision-foundation.sh</pre></div>
-            <p style="margin:10px 0 0;color:var(--soft)" data-i18n="s2n">Compter 10-15 minutes. Les versions épinglées dans <code>/root/capstone/README.txt</code> comptent pour les chapitres 2 à 5.</p>
+            <span data-i18n="s2b">Le script de setup a déjà tiré <code>ghcr.io/github/github-mcp-server:v1.0.3</code> pour éviter la latence au premier appel. Confirmez-le :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">docker image inspect ghcr.io/github/github-mcp-server:v1.0.3 --format '{{.Id}} {{.Created}}'</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="build">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Construire & pousser les images</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="handshake">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Piloter le handshake stdio</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s3b">Deux projets C# allégés (sous <code>AzureAgent</code> et <code>ApimMcpServer</code>) reprennent les Lab 1 + Lab 2 sans le superflu. Construisez les images et poussez-les dans l'ACR rattaché à l'AKS :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/build-and-push-images.sh</pre></div>
-            <p style="margin:10px 0 0;color:var(--soft)" data-i18n="s3n">Cela produit <code>azure-agent:capstone</code> et <code>apim-mcp:capstone</code> (taggés aussi <code>:latest</code>). Durée : 2-3 minutes.</p>
+            <span data-i18n="s3b">Le protocole MCP stdio est une suite de trames JSON-RPC séparées par des retours à la ligne. Envoyez les trois trames (initialize, notifications/initialized, tools/list) dans un conteneur one-shot :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/github-mcp-handshake.sh | tee /tmp/github-mcp-tools.txt
+grep -oE '"name":"(create_branch|create_or_update_file|create_pull_request)"' /tmp/github-mcp-tools.txt | sort -u</pre></div>
+            <p style="margin:10px 0 0;color:var(--soft)" data-i18n="s3n">Vous devez voir les trois outils. Si vous en voyez moins, vérifiez le log : github-mcp-server interroge la racine <code>/api/v3/</code> de la fixture au démarrage.</p>
           </div>
         </article>
 
-        <article class="step" data-step="deploy">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Déployer sur AKS & vérifier</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="mutate">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Un appel mutant via le serveur MCP</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s4b">Récupérez le kubeconfig de l'AKS et appliquez les manifestes de l'onglet <strong>K8s Manifests</strong> (namespace, apim-mcp, azure-agent) :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">az aks get-credentials --resource-group rg-multi-agent-apim-capstone --name aks-capstone --overwrite-existing
-kubectl apply -f /root/capstone/k8s/
-kubectl wait --for=condition=available --timeout=180s deployment/apim-mcp -n capstone
-kubectl wait --for=condition=available --timeout=180s deployment/azure-agent -n capstone</pre></div>
-            <span data-i18n="s4b2">Vérifiez l'endpoint de santé du serveur APIM MCP via un port-forward (l'image aspnet n'a pas de <code>wget</code>) :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl -n capstone port-forward svc/apim-mcp 18080:8080 &gt;/dev/null 2&gt;&amp;1 &amp;
-sleep 2
-curl -sf http://localhost:18080/healthz</pre></div>
+            <span data-i18n="s4b">Appelez <code>create_branch</code> à travers le serveur MCP pour prouver l'aller-retour de bout en bout, puis vérifiez l'entrée dans le log de la fixture :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">bash /root/capstone/scripts/github-mcp-create-branch.sh
+grep create_branch /tmp/github-fixture.log | tail -3</pre></div>
           </div>
         </article>
 
@@ -285,10 +279,10 @@ curl -sf http://localhost:18080/healthz</pre></div>
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <ul class="crit">
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Connecté à Azure et groupe de ressources créé.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Fondation provisionnée (OpenAI + APIM + AKS).</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Images azure-agent et apim-mcp poussées.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Les deux pods disponibles, /healthz répond.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Fixture GitHub démarrée et /healthz OK.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Image github-mcp-server v1.0.3 confirmée.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Handshake réussi : les 3 outils listés.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Appel create_branch passé via MCP.</span></li>
             </ul>
             <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
           </div>
@@ -309,7 +303,7 @@ curl -sf http://localhost:18080/healthz</pre></div>
   <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
   <div class="help-body">
     <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.</p>
-    <div class="hint" id="hintText" data-i18n="hint0">Commencez par vous connecter à Azure et créer le groupe de ressources (Étape 1).</div>
+    <div class="hint" id="hintText" data-i18n="hint0">Démarrez d'abord la fixture GitHub sur le port 9006 (Étape 1).</div>
     <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
   </div>
 </section>
@@ -319,115 +313,118 @@ curl -sf http://localhost:18080/healthz</pre></div>
 <script>
 window.I18N = {
   "fr":{
-    "navOverview":"Aperçu","navChapter2":"Chapitre 2","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
-    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"K8s Manifests",
-    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Collez le manifeste fourni dans les instructions, puis Enregistrer.",
-    "mFoundation":"Fondation","mPods":"Pods",
-    "instrHead":"Instructions","instrTitle":"Fondation Azure & déploiement sur AKS",
-    "instrSub":"Vous re-provisionnez la fondation des Lab 1 et Lab 2 — Azure OpenAI, APIM (Consumption) et un cluster AKS — puis vous déployez côte à côte sur AKS l'agent Azure MCP et le serveur APIM MCP. Ces deux pods sont la base que le supervisor orchestrera aux chapitres suivants.",
+    "navChapter1":"Chapitre 1","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Fixtures",
+    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Inspectez ou modifiez le fichier de la fixture.",
+    "mFixture":"Fixture","mTools":"Outils MCP",
+    "instrHead":"Instructions","instrTitle":"Serveur MCP GitHub & fixture locale",
+    "instrSub":"Vous branchez le serveur <code>github-mcp-server</code> officiel sur une fixture locale (aucun GitHub réel requis), pilotez le handshake MCP stdio à la main, et effectuez un appel mutant. À la fin, le supervisor disposera des trois surfaces MCP : APIM, GitHub et Azure.",
     "progLabel":"Progression","copy":"Copier","copied":"Copié",
-    "s1h":"Étape 1 · Connexion Azure & groupe de ressources","s1b":"Chargez les identifiants du service principal injectés dans la VM et connectez-vous, puis créez le groupe de ressources de la capstone. Dans le <strong>Terminal</strong> :","s1n":"Toutes les ressources Azure de ce lab atterrissent dans <code>rg-multi-agent-apim-capstone</code> ; le script de nettoyage supprime tout le groupe à la fin.",
-    "s2h":"Étape 2 · Provisionner Azure OpenAI + APIM + AKS","s2b":"Les trois ressources sont indépendantes et lentes. Le script lance APIM en <code>--no-wait</code> pendant qu'AKS et Azure OpenAI provisionnent, déploie <code>gpt-4o</code>, et écrit les chaînes de connexion dans <code>/root/capstone/.foundation-env</code> :","s2n":"Compter 10-15 minutes. Les versions épinglées dans <code>/root/capstone/README.txt</code> comptent pour les chapitres 2 à 5.",
-    "s3h":"Étape 3 · Construire & pousser les images","s3b":"Deux projets C# allégés (sous <code>AzureAgent</code> et <code>ApimMcpServer</code>) reprennent les Lab 1 + Lab 2 sans le superflu. Construisez les images et poussez-les dans l'ACR rattaché à l'AKS :","s3n":"Cela produit <code>azure-agent:capstone</code> et <code>apim-mcp:capstone</code> (taggés aussi <code>:latest</code>). Durée : 2-3 minutes.",
-    "s4h":"Étape 4 · Déployer sur AKS & vérifier","s4b":"Récupérez le kubeconfig de l'AKS et appliquez les manifestes de l'onglet <strong>K8s Manifests</strong> (namespace, apim-mcp, azure-agent) :","s4b2":"Vérifiez l'endpoint de santé du serveur APIM MCP via un port-forward (l'image aspnet n'a pas de <code>wget</code>) :",
+    "s1h":"Étape 1 · Démarrer la fixture GitHub (port 9006)","s1b":"Inspectez <code>github_fixture.py</code> dans l'onglet <strong>Fixtures</strong> (sous-ensemble de l'API REST GitHub : create_branch, create_or_update_file, create_pull_request), puis démarrez-la :",
+    "s2h":"Étape 2 · Confirmer l'image pré-téléchargée","s2b":"Le script de setup a déjà tiré <code>ghcr.io/github/github-mcp-server:v1.0.3</code> pour éviter la latence au premier appel. Confirmez-le :",
+    "s3h":"Étape 3 · Piloter le handshake stdio","s3b":"Le protocole MCP stdio est une suite de trames JSON-RPC séparées par des retours à la ligne. Envoyez les trois trames (initialize, notifications/initialized, tools/list) dans un conteneur one-shot :","s3n":"Vous devez voir les trois outils. Si vous en voyez moins, vérifiez le log : github-mcp-server interroge la racine <code>/api/v3/</code> de la fixture au démarrage.",
+    "s4h":"Étape 4 · Un appel mutant via le serveur MCP","s4b":"Appelez <code>create_branch</code> à travers le serveur MCP pour prouver l'aller-retour de bout en bout, puis vérifiez l'entrée dans le log de la fixture :",
     "critH":"Critères de réussite",
-    "c1":"Connecté à Azure et groupe de ressources créé.","c2":"Fondation provisionnée (OpenAI + APIM + AKS).","c3":"Images azure-agent et apim-mcp poussées.","c4":"Les deux pods disponibles, /healthz répond.",
+    "c1":"Fixture GitHub démarrée et /healthz OK.","c2":"Image github-mcp-server v1.0.3 confirmée.","c3":"Handshake réussi : les 3 outils listés.","c4":"Appel create_branch passé via MCP.",
     "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
     "skip":"Ignorer","check":"Vérifier",
     "helpTitle":"Copilote de l'atelier","helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.","nextHint":"Indice suivant",
-    "hint0":"Commencez par vous connecter à Azure et créer le groupe de ressources (Étape 1).",
-    "hint1":"La connexion utilise un service principal pré-injecté ; aucune saisie de mot de passe.",
-    "hint2":"Le provisioning est long : APIM tourne en --no-wait pendant qu'AKS/OpenAI montent.",
-    "hint3":"kubectl wait bloque jusqu'à ce que le déploiement soit disponible ou que le délai expire.",
-    "hint4":"L'image aspnet n'a pas de wget : utilisez un port-forward puis curl sur /healthz.",
+    "hint0":"Démarrez d'abord la fixture GitHub sur le port 9006 (Étape 1).",
+    "hint1":"La fixture implémente juste ce qu'il faut : create_branch, create_or_update_file, create_pull_request.",
+    "hint2":"github-mcp-server interroge /api/v3/ au démarrage pour détecter l'URL de base.",
+    "hint3":"Le handshake stdio = 3 trames JSON-RPC : initialize, notifications/initialized, tools/list.",
+    "hint4":"L'appel create_branch traverse le serveur MCP puis atterrit dans le log de la fixture.",
     "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — VM apim-capstone (Koffi Academy)",
-    "bEnv":"Azure CLI + kubectl + docker prêts. Dépôt : /root/capstone","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
-    "hHeader":"Commandes disponibles :","hLogin":"connexion Azure (service principal)","hRg":"créer le groupe de ressources","hProv":"provisionner la fondation","hBuild":"construire & pousser les images","hCreds":"récupérer le kubeconfig AKS","hApply":"appliquer les manifestes","hWait":"attendre un déploiement","hCurl":"tester l'endpoint /healthz","hCheck":"vérifier la progression",
-    "loginOk":"Login successful. Souscription : Koffi-Capstone-Sub (active)","rgOk":"Location    Name","rgRow":"eastus      rg-multi-agent-apim-capstone",
-    "provHint":"Astuce : le provisioning prend 10-15 min en réel — ici il est simulé.","applyNoNs":"error: namespace \"capstone\" manquant — appliquez d'abord namespace.yaml","applyHint":"Astuce : enregistrez d'abord les manifestes dans l'onglet K8s Manifests.",
-    "checkHeader":"Progression de la tâche :","chkLogin":"Connecté + groupe de ressources","chkProv":"Fondation provisionnée","chkBuild":"Images construites & poussées","chkDeploy":"Pods déployés + /healthz OK","chkAll":"Tous les critères sont remplis. Chapitre 1 terminé !","skipped":"Étape ignorée.",
-    "cmdNF":"{c} : commande introuvable. Tapez `help`.","kNF":"error: commande non simulée dans cet atelier.","catNF":"cat : {f} : aucun fichier de ce type",
-    "tSavedFile":"Manifeste enregistré","tDone":"Chapitre 1 terminé — fondation déployée"
+    "bEnv":"docker + jq + curl prêts. Fixture : /root/capstone/fixtures/github-fixture","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hRun":"démarrer la fixture GitHub","hCurl":"tester /healthz de la fixture","hTail":"suivre le log de la fixture","hInspect":"inspecter l'image github-mcp-server","hHand":"piloter le handshake stdio","hBranch":"appel mutant create_branch","hGrep":"filtrer dans un fichier/log","hCheck":"vérifier la progression",
+    "fxUp":"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)","fxHealth":"{ \"status\": \"ok\", \"service\": \"github-fixture\" }","fxTail":"[tail] suivi de /tmp/github-fixture.log","fxDown":"curl: (7) Failed to connect to localhost port 9006",
+    "imgLine":"sha256:ab12cd34ef56  2025-05-12T09:33:00Z","imgMiss":"Error: No such image — relancez le script de setup",
+    "needFixture":"Astuce : démarrez d'abord la fixture (Étape 1).","needHand":"Astuce : lancez d'abord le handshake (Étape 3).",
+    "checkHeader":"Progression de la tâche :","chkFx":"Fixture GitHub démarrée","chkImg":"Image github-mcp-server confirmée","chkHand":"Handshake réussi (3 outils)","chkMut":"Appel create_branch via MCP","chkAll":"Tous les critères sont remplis. Chapitre 2 terminé !","skipped":"Étape ignorée.",
+    "cmdNF":"{c} : commande introuvable. Tapez `help`.","catNF":"cat : {f} : aucun fichier de ce type",
+    "tSavedFile":"Fichier enregistré","tDone":"Chapitre 2 terminé — surface MCP GitHub prête"
   },
   "de":{
-    "navOverview":"Übersicht","navChapter2":"Kapitel 2","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
-    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"K8s Manifests",
-    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Fügen Sie das Manifest aus den Anweisungen ein und speichern Sie.",
-    "mFoundation":"Grundlage","mPods":"Pods",
-    "instrHead":"Anleitung","instrTitle":"Azure-Grundlage & Deployment auf AKS",
-    "instrSub":"Sie provisionieren die Grundlage von Lab 1 und Lab 2 neu — Azure OpenAI, APIM (Consumption) und einen AKS-Cluster — und deployen dann den Azure-MCP-Agent und den APIM-MCP-Server nebeneinander auf AKS. Diese beiden Pods sind die Basis, die der Supervisor in den nächsten Kapiteln orchestriert.",
+    "navChapter1":"Kapitel 1","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Fixtures",
+    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Inspizieren oder bearbeiten Sie die Fixture-Datei.",
+    "mFixture":"Fixture","mTools":"MCP-Tools",
+    "instrHead":"Anleitung","instrTitle":"GitHub-MCP-Server & lokale Fixture",
+    "instrSub":"Sie verbinden den offiziellen <code>github-mcp-server</code> mit einer lokalen Fixture (kein echtes GitHub nötig), steuern den MCP-stdio-Handshake manuell und führen einen mutierenden Aufruf aus. Am Ende verfügt der Supervisor über die drei MCP-Oberflächen: APIM, GitHub und Azure.",
     "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
-    "s1h":"Schritt 1 · Azure-Login & Ressourcengruppe","s1b":"Laden Sie die in die VM injizierten Service-Principal-Credentials und melden Sie sich an, dann erstellen Sie die Capstone-Ressourcengruppe. Im <strong>Terminal</strong>:","s1n":"Alle Azure-Ressourcen dieses Labs landen in <code>rg-multi-agent-apim-capstone</code>; das Cleanup-Skript löscht am Ende die gesamte Gruppe.",
-    "s2h":"Schritt 2 · Azure OpenAI + APIM + AKS provisionieren","s2b":"Die drei Ressourcen sind unabhängig und langsam. Das Skript startet APIM mit <code>--no-wait</code>, während AKS und Azure OpenAI provisionieren, deployt <code>gpt-4o</code> und schreibt die Verbindungsstrings nach <code>/root/capstone/.foundation-env</code>:","s2n":"Rechnen Sie mit 10-15 Minuten. Die gepinnten Versionen in <code>/root/capstone/README.txt</code> sind für die Kapitel 2-5 wichtig.",
-    "s3h":"Schritt 3 · Images bauen & pushen","s3b":"Zwei schlanke C#-Projekte (unter <code>AzureAgent</code> und <code>ApimMcpServer</code>) bilden Lab 1 + Lab 2 ohne Ballast ab. Bauen Sie die Images und pushen Sie sie in die an AKS angebundene ACR:","s3n":"Das erzeugt <code>azure-agent:capstone</code> und <code>apim-mcp:capstone</code> (auch als <code>:latest</code> getaggt). Dauer: 2-3 Minuten.",
-    "s4h":"Schritt 4 · Auf AKS deployen & prüfen","s4b":"Holen Sie das AKS-Kubeconfig und wenden Sie die Manifeste aus dem Reiter <strong>K8s Manifests</strong> an (namespace, apim-mcp, azure-agent):","s4b2":"Prüfen Sie den Health-Endpoint des APIM-MCP-Servers über ein Port-Forward (das aspnet-Image hat kein <code>wget</code>):",
+    "s1h":"Schritt 1 · GitHub-Fixture starten (Port 9006)","s1b":"Inspizieren Sie <code>github_fixture.py</code> im Reiter <strong>Fixtures</strong> (Teilmenge der GitHub-REST-API: create_branch, create_or_update_file, create_pull_request) und starten Sie sie:",
+    "s2h":"Schritt 2 · Vorab geladenes Image bestätigen","s2b":"Das Setup-Skript hat <code>ghcr.io/github/github-mcp-server:v1.0.3</code> bereits gezogen, um Latenz beim ersten Aufruf zu vermeiden. Bestätigen Sie es:",
+    "s3h":"Schritt 3 · Den stdio-Handshake steuern","s3b":"Das MCP-stdio-Protokoll ist eine Folge zeilengetrennter JSON-RPC-Frames. Senden Sie die drei Frames (initialize, notifications/initialized, tools/list) in einen One-Shot-Container:","s3n":"Sie sollten alle drei Tools sehen. Sehen Sie weniger, prüfen Sie das Log: github-mcp-server fragt beim Start die <code>/api/v3/</code>-Wurzel der Fixture ab.",
+    "s4h":"Schritt 4 · Ein mutierender Aufruf über den MCP-Server","s4b":"Rufen Sie <code>create_branch</code> über den MCP-Server auf, um den End-to-End-Roundtrip zu beweisen, und prüfen Sie dann den Eintrag im Fixture-Log:",
     "critH":"Erfolgskriterien",
-    "c1":"Bei Azure angemeldet und Ressourcengruppe erstellt.","c2":"Grundlage provisioniert (OpenAI + APIM + AKS).","c3":"Images azure-agent und apim-mcp gepusht.","c4":"Beide Pods verfügbar, /healthz antwortet.",
+    "c1":"GitHub-Fixture gestartet und /healthz OK.","c2":"Image github-mcp-server v1.0.3 bestätigt.","c3":"Handshake erfolgreich: 3 Tools gelistet.","c4":"create_branch-Aufruf über MCP ausgeführt.",
     "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
     "skip":"Überspringen","check":"Prüfen",
     "helpTitle":"Lab-Copilot","helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.","nextHint":"Nächster Hinweis",
-    "hint0":"Melden Sie sich zuerst bei Azure an und erstellen Sie die Ressourcengruppe (Schritt 1).",
-    "hint1":"Der Login nutzt einen vorinjizierten Service Principal; keine Passworteingabe.",
-    "hint2":"Das Provisioning ist langsam: APIM läuft mit --no-wait, während AKS/OpenAI hochfahren.",
-    "hint3":"kubectl wait blockiert, bis das Deployment verfügbar ist oder das Timeout greift.",
-    "hint4":"Das aspnet-Image hat kein wget: Port-Forward verwenden und dann curl auf /healthz.",
+    "hint0":"Starten Sie zuerst die GitHub-Fixture auf Port 9006 (Schritt 1).",
+    "hint1":"Die Fixture implementiert genau das Nötige: create_branch, create_or_update_file, create_pull_request.",
+    "hint2":"github-mcp-server fragt beim Start /api/v3/ ab, um die Basis-URL zu ermitteln.",
+    "hint3":"Der stdio-Handshake = 3 JSON-RPC-Frames: initialize, notifications/initialized, tools/list.",
+    "hint4":"Der create_branch-Aufruf läuft durch den MCP-Server und landet im Fixture-Log.",
     "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — VM apim-capstone (Koffi Academy)",
-    "bEnv":"Azure CLI + kubectl + docker bereit. Repository: /root/capstone","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
-    "hHeader":"Verfügbare Befehle:","hLogin":"Azure-Login (Service Principal)","hRg":"Ressourcengruppe erstellen","hProv":"Grundlage provisionieren","hBuild":"Images bauen & pushen","hCreds":"AKS-Kubeconfig holen","hApply":"Manifeste anwenden","hWait":"auf ein Deployment warten","hCurl":"den /healthz-Endpoint testen","hCheck":"Fortschritt prüfen",
-    "loginOk":"Login successful. Subscription: Koffi-Capstone-Sub (aktiv)","rgOk":"Location    Name","rgRow":"eastus      rg-multi-agent-apim-capstone",
-    "provHint":"Tipp: Das Provisioning dauert real 10-15 Min — hier ist es simuliert.","applyNoNs":"error: Namespace \"capstone\" fehlt — wenden Sie zuerst namespace.yaml an","applyHint":"Tipp: speichern Sie die Manifeste zuerst im Reiter K8s Manifests.",
-    "checkHeader":"Fortschritt der Aufgabe:","chkLogin":"Angemeldet + Ressourcengruppe","chkProv":"Grundlage provisioniert","chkBuild":"Images gebaut & gepusht","chkDeploy":"Pods deployt + /healthz OK","chkAll":"Alle Kriterien erfüllt. Kapitel 1 abgeschlossen!","skipped":"Schritt übersprungen.",
-    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","kNF":"error: Befehl in diesem Labor nicht simuliert.","catNF":"cat: {f}: keine solche Datei",
-    "tSavedFile":"Manifest gespeichert","tDone":"Kapitel 1 abgeschlossen — Grundlage deployt"
+    "bEnv":"docker + jq + curl bereit. Fixture: /root/capstone/fixtures/github-fixture","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hRun":"die GitHub-Fixture starten","hCurl":"/healthz der Fixture testen","hTail":"das Fixture-Log verfolgen","hInspect":"das github-mcp-server-Image inspizieren","hHand":"den stdio-Handshake steuern","hBranch":"mutierender create_branch-Aufruf","hGrep":"in einer Datei/im Log filtern","hCheck":"Fortschritt prüfen",
+    "fxUp":"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)","fxHealth":"{ \"status\": \"ok\", \"service\": \"github-fixture\" }","fxTail":"[tail] verfolge /tmp/github-fixture.log","fxDown":"curl: (7) Failed to connect to localhost port 9006",
+    "imgLine":"sha256:ab12cd34ef56  2025-05-12T09:33:00Z","imgMiss":"Error: No such image — Setup-Skript erneut ausführen",
+    "needFixture":"Tipp: starten Sie zuerst die Fixture (Schritt 1).","needHand":"Tipp: führen Sie zuerst den Handshake aus (Schritt 3).",
+    "checkHeader":"Fortschritt der Aufgabe:","chkFx":"GitHub-Fixture gestartet","chkImg":"github-mcp-server-Image bestätigt","chkHand":"Handshake erfolgreich (3 Tools)","chkMut":"create_branch-Aufruf über MCP","chkAll":"Alle Kriterien erfüllt. Kapitel 2 abgeschlossen!","skipped":"Schritt übersprungen.",
+    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","catNF":"cat: {f}: keine solche Datei",
+    "tSavedFile":"Datei gespeichert","tDone":"Kapitel 2 abgeschlossen — GitHub-MCP-Oberfläche bereit"
   },
   "en":{
-    "navOverview":"Overview","navChapter2":"Chapter 2","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
-    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"K8s Manifests",
-    "btnClear":"Clear","btnSave":"Save","phPaste":"Paste the manifest from the instructions, then Save.",
-    "mFoundation":"Foundation","mPods":"Pods",
-    "instrHead":"Instructions","instrTitle":"Azure foundation & deployment to AKS",
-    "instrSub":"You re-provision the Lab 1 and Lab 2 foundation — Azure OpenAI, APIM (Consumption) and an AKS cluster — then deploy the Azure MCP agent and the APIM MCP server side by side on AKS. These two pods are the base the supervisor orchestrates in the next chapters.",
+    "navChapter1":"Chapter 1","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Fixtures",
+    "btnClear":"Clear","btnSave":"Save","phPaste":"Inspect or edit the fixture file.",
+    "mFixture":"Fixture","mTools":"MCP tools",
+    "instrHead":"Instructions","instrTitle":"GitHub MCP server & local fixture",
+    "instrSub":"You wire the official <code>github-mcp-server</code> to a local fixture (no real GitHub needed), drive the MCP stdio handshake by hand, and make one mutating call. By the end, the supervisor will have all three MCP surfaces: APIM, GitHub and Azure.",
     "progLabel":"Progress","copy":"Copy","copied":"Copied",
-    "s1h":"Step 1 · Azure login & resource group","s1b":"Load the service principal credentials injected into the VM and log in, then create the capstone resource group. In the <strong>Terminal</strong>:","s1n":"All Azure resources for this lab land in <code>rg-multi-agent-apim-capstone</code>; the cleanup script tears the whole group down at the end.",
-    "s2h":"Step 2 · Provision Azure OpenAI + APIM + AKS","s2b":"The three resources are independent and slow. The script runs APIM with <code>--no-wait</code> while AKS and Azure OpenAI provision, deploys <code>gpt-4o</code>, and writes the connection strings to <code>/root/capstone/.foundation-env</code>:","s2n":"Expect 10-15 minutes. The pinned versions in <code>/root/capstone/README.txt</code> matter for chapters 2-5.",
-    "s3h":"Step 3 · Build & push the images","s3b":"Two trimmed C# projects (under <code>AzureAgent</code> and <code>ApimMcpServer</code>) mirror Lab 1 + Lab 2 without the noise. Build the images and push them to the ACR attached to AKS:","s3n":"This produces <code>azure-agent:capstone</code> and <code>apim-mcp:capstone</code> (also tagged <code>:latest</code>). Time: 2-3 minutes.",
-    "s4h":"Step 4 · Deploy to AKS & verify","s4b":"Get the AKS kubeconfig and apply the manifests from the <strong>K8s Manifests</strong> tab (namespace, apim-mcp, azure-agent):","s4b2":"Verify the APIM MCP server's health endpoint via a port-forward (the aspnet image has no <code>wget</code>):",
+    "s1h":"Step 1 · Start the GitHub fixture (port 9006)","s1b":"Inspect <code>github_fixture.py</code> in the <strong>Fixtures</strong> tab (a subset of GitHub's REST API: create_branch, create_or_update_file, create_pull_request), then start it:",
+    "s2h":"Step 2 · Confirm the pre-pulled image","s2b":"The setup script already pulled <code>ghcr.io/github/github-mcp-server:v1.0.3</code> so first-call latency is no surprise. Confirm it:",
+    "s3h":"Step 3 · Drive the stdio handshake","s3b":"The MCP stdio protocol is newline-delimited JSON-RPC frames. Send the three frames (initialize, notifications/initialized, tools/list) into a one-shot container:","s3n":"You should see all three tools. If you see fewer, check the log: github-mcp-server hits the fixture's <code>/api/v3/</code> root at startup.",
+    "s4h":"Step 4 · One mutating call through the MCP server","s4b":"Call <code>create_branch</code> through the MCP server to prove the round trip end to end, then check the entry in the fixture log:",
     "critH":"Success criteria",
-    "c1":"Logged in to Azure and resource group created.","c2":"Foundation provisioned (OpenAI + APIM + AKS).","c3":"Images azure-agent and apim-mcp pushed.","c4":"Both pods available, /healthz responds.",
+    "c1":"GitHub fixture started and /healthz OK.","c2":"Image github-mcp-server v1.0.3 confirmed.","c3":"Handshake succeeded: 3 tools listed.","c4":"create_branch call made through MCP.",
     "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
     "skip":"Skip","check":"Check",
     "helpTitle":"Lab Copilot","helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.","nextHint":"Next hint",
-    "hint0":"First log in to Azure and create the resource group (Step 1).",
-    "hint1":"Login uses a pre-injected service principal; no password typing.",
-    "hint2":"Provisioning is slow: APIM runs with --no-wait while AKS/OpenAI come up.",
-    "hint3":"kubectl wait blocks until the deployment is available or the timeout hits.",
-    "hint4":"The aspnet image has no wget: use a port-forward then curl /healthz.",
+    "hint0":"First start the GitHub fixture on port 9006 (Step 1).",
+    "hint1":"The fixture implements just enough: create_branch, create_or_update_file, create_pull_request.",
+    "hint2":"github-mcp-server hits /api/v3/ at startup to detect the base URL.",
+    "hint3":"The stdio handshake = 3 JSON-RPC frames: initialize, notifications/initialized, tools/list.",
+    "hint4":"The create_branch call goes through the MCP server then lands in the fixture log.",
     "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — apim-capstone VM (Koffi Academy)",
-    "bEnv":"Azure CLI + kubectl + docker ready. Repository: /root/capstone","bTip":"Tip: type `help` for commands, `check` for progress.",
-    "hHeader":"Available commands:","hLogin":"Azure login (service principal)","hRg":"create the resource group","hProv":"provision the foundation","hBuild":"build & push the images","hCreds":"get the AKS kubeconfig","hApply":"apply the manifests","hWait":"wait for a deployment","hCurl":"test the /healthz endpoint","hCheck":"check your progress",
-    "loginOk":"Login successful. Subscription: Koffi-Capstone-Sub (active)","rgOk":"Location    Name","rgRow":"eastus      rg-multi-agent-apim-capstone",
-    "provHint":"Tip: provisioning takes 10-15 min for real — here it is simulated.","applyNoNs":"error: namespace \"capstone\" missing — apply namespace.yaml first","applyHint":"Tip: save the manifests in the K8s Manifests tab first.",
-    "checkHeader":"Task progress:","chkLogin":"Logged in + resource group","chkProv":"Foundation provisioned","chkBuild":"Images built & pushed","chkDeploy":"Pods deployed + /healthz OK","chkAll":"All criteria met. Chapter 1 complete!","skipped":"Step skipped.",
-    "cmdNF":"{c}: command not found. Type `help`.","kNF":"error: command not simulated in this lab.","catNF":"cat: {f}: no such file",
-    "tSavedFile":"Manifest saved","tDone":"Chapter 1 complete — foundation deployed"
+    "bEnv":"docker + jq + curl ready. Fixture: /root/capstone/fixtures/github-fixture","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hRun":"start the GitHub fixture","hCurl":"test the fixture /healthz","hTail":"follow the fixture log","hInspect":"inspect the github-mcp-server image","hHand":"drive the stdio handshake","hBranch":"mutating create_branch call","hGrep":"filter in a file/log","hCheck":"check your progress",
+    "fxUp":"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)","fxHealth":"{ \"status\": \"ok\", \"service\": \"github-fixture\" }","fxTail":"[tail] following /tmp/github-fixture.log","fxDown":"curl: (7) Failed to connect to localhost port 9006",
+    "imgLine":"sha256:ab12cd34ef56  2025-05-12T09:33:00Z","imgMiss":"Error: No such image — re-run the setup script",
+    "needFixture":"Tip: start the fixture first (Step 1).","needHand":"Tip: run the handshake first (Step 3).",
+    "checkHeader":"Task progress:","chkFx":"GitHub fixture started","chkImg":"github-mcp-server image confirmed","chkHand":"Handshake succeeded (3 tools)","chkMut":"create_branch call via MCP","chkAll":"All criteria met. Chapter 2 complete!","skipped":"Step skipped.",
+    "cmdNF":"{c}: command not found. Type `help`.","catNF":"cat: {f}: no such file",
+    "tSavedFile":"File saved","tDone":"Chapter 2 complete — GitHub MCP surface ready"
   }
 };
 
 (function(){
   "use strict";
-  var FILES=["k8s/namespace.yaml","k8s/apim-mcp.yaml","k8s/azure-agent.yaml"];
+  var FILES=["fixtures/github-fixture/github_fixture.py","fixtures/github-fixture/run-fixture.sh","scripts/github-mcp-handshake.sh"];
   var SEED={
-    "k8s/namespace.yaml":"apiVersion: v1\nkind: Namespace\nmetadata:\n  name: capstone\n",
-    "k8s/apim-mcp.yaml":"apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: apim-mcp\n  namespace: capstone\nspec:\n  replicas: 1\n  selector:\n    matchLabels: {app: apim-mcp}\n  template:\n    metadata:\n      labels: {app: apim-mcp}\n    spec:\n      containers:\n      - name: apim-mcp\n        image: apim-mcp:capstone\n        ports:\n        - containerPort: 8080\n        readinessProbe:\n          httpGet: {path: /healthz, port: 8080}\n---\napiVersion: v1\nkind: Service\nmetadata:\n  name: apim-mcp\n  namespace: capstone\nspec:\n  selector: {app: apim-mcp}\n  ports:\n  - port: 8080\n    targetPort: 8080\n",
-    "k8s/azure-agent.yaml":"apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: azure-agent\n  namespace: capstone\nspec:\n  replicas: 1\n  selector:\n    matchLabels: {app: azure-agent}\n  template:\n    metadata:\n      labels: {app: azure-agent}\n    spec:\n      containers:\n      - name: azure-agent\n        image: azure-agent:capstone\n        ports:\n        - containerPort: 8090\n"
+    "fixtures/github-fixture/github_fixture.py":"# Koffi Academy - fixture GitHub locale (sous-ensemble de l'API REST)\nfrom flask import Flask, request, jsonify\napp = Flask(__name__)\n\n@app.get(\"/healthz\")\ndef healthz():\n    return jsonify(status=\"ok\", service=\"github-fixture\")\n\n# racine interrogee par github-mcp-server au demarrage\n@app.get(\"/api/v3/\")\ndef api_root():\n    return jsonify(installed_version=\"3.11\")\n\n# create_branch -> POST refs / create_or_update_file -> PUT contents\n# create_pull_request -> POST pulls\n# (routes Flask completes dans le fichier fourni par le lab)\nif __name__ == \"__main__\":\n    app.run(host=\"0.0.0.0\", port=9006)\n",
+    "fixtures/github-fixture/run-fixture.sh":"#!/bin/bash\n# Koffi Academy - demarre la fixture GitHub sur le port 9006\ncd \"$(dirname \"$0\")\"\nnohup python3 github_fixture.py > /tmp/github-fixture.log 2>&1 &\nsleep 1\necho \"GitHub fixture listening on :9006 (log: /tmp/github-fixture.log)\"\n",
+    "scripts/github-mcp-handshake.sh":"#!/bin/bash\n# Koffi Academy - handshake stdio MCP (initialize + initialized + tools/list)\nprintf '%s\\n' \\\n  '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"koffi\",\"version\":\"1.0\"}}}' \\\n  '{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}' \\\n  '{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}' \\\n| docker run -i --rm \\\n    -e GITHUB_HOST=http://host.docker.internal:9006 \\\n    -e GITHUB_PERSONAL_ACCESS_TOKEN=koffi-fixture-token \\\n    ghcr.io/github/github-mcp-server:v1.0.3 stdio\n"
   };
   var I=window.I18N; var lang=localStorage.getItem("preferred-lang"); if(!I[lang])lang="de";
   function t(key,vars){var s=(I[lang]&&I[lang][key]!==undefined)?I[lang][key]:(I.en[key]!==undefined?I.en[key]:key);if(vars)Object.keys(vars).forEach(function(k){s=s.replace(new RegExp("\\{"+k+"\\}","g"),vars[k]);});return s;}
 
   var FS={}; FILES.forEach(function(f){FS[f]=SEED[f]||"";});
   var currentFile=FILES[0];
-  var st={login:false,provision:false,build:false,deploy:false};
-  var loggedIn=false, rgDone=false, provDone=false, buildDone=false, applied=false, waitApim=false, waitAgent=false, healthOk=false; var hi=0;
+  var st={fixture:false,image:false,handshake:false,mutate:false};
+  var fixtureUp=false, imageOk=false, handshakeOk=false, mutateOk=false; var hi=0;
 
   var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput"), editor=document.getElementById("fileEditor");
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
@@ -435,76 +432,73 @@ window.I18N = {
   function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
   function banner(){out.innerHTML="";print(t("bSsh"),"line-muted");print(t("bUbuntu"),"line-muted");print(t("bEnv"),"line-muted");print(t("bTip"),"line-muted");print("");}
 
-  function podCount(){return (waitApim?1:0)+(waitAgent?1:0);}
-  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["login","provision","build","deploy"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
-  function refresh(){document.getElementById("mFoundation").textContent=provDone?"OK":"—";document.getElementById("mPods").textContent=podCount()+"/2";}
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["fixture","image","handshake","mutate"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
+  function refresh(){document.getElementById("mFixture").textContent=fixtureUp?"OK":"—";document.getElementById("mTools").textContent=(handshakeOk?3:0)+"/3";}
 
   function norm(p){return p?p.trim().replace(/^\.\//,"").replace(/^\/root\/capstone\//,"").replace(/\/+$/,""):"";}
   function resolve(p){p=norm(p);return FS[p]!==undefined?p:null;}
 
-  function applyManifests(){
-    var nsOk=FS["k8s/namespace.yaml"]&&/kind:\s*Namespace/.test(FS["k8s/namespace.yaml"]);
-    if(!nsOk){print(t("applyNoNs"),"line-error");print(t("applyHint"),"line-warn");return;}
-    print("namespace/capstone created","line-ok");
-    print("deployment.apps/apim-mcp created","line-ok");
-    print("service/apim-mcp created","line-ok");
-    print("deployment.apps/azure-agent created","line-ok");
-    applied=true;
-  }
-
   function handle(raw){
     var cmd=raw.trim(); if(!cmd) return; var parts=cmd.split(/\s+/); var head=parts[0];
     if(head==="help"){print(t("hHeader"),"line-muted");
-      print("  az login --service-principal ...             "+t("hLogin"));
-      print("  az group create ...                          "+t("hRg"));
-      print("  bash scripts/provision-foundation.sh         "+t("hProv"));
-      print("  bash scripts/build-and-push-images.sh        "+t("hBuild"));
-      print("  az aks get-credentials ...                   "+t("hCreds"));
-      print("  kubectl apply -f /root/capstone/k8s/         "+t("hApply"));
-      print("  kubectl wait ... deployment/<n> -n capstone  "+t("hWait"));
-      print("  curl -sf http://localhost:18080/healthz      "+t("hCurl"));
+      print("  bash fixtures/github-fixture/run-fixture.sh  "+t("hRun"));
+      print("  curl -sf http://localhost:9006/healthz | jq  "+t("hCurl"));
+      print("  tail -F /tmp/github-fixture.log &            "+t("hTail"));
+      print("  docker image inspect github-mcp-server ...   "+t("hInspect"));
+      print("  bash scripts/github-mcp-handshake.sh         "+t("hHand"));
+      print("  bash scripts/github-mcp-create-branch.sh     "+t("hBranch"));
+      print("  grep ... <file|log>                          "+t("hGrep"));
       print("  check   ·   clear                          "+t("hCheck"));return;}
     if(head==="clear"){out.innerHTML="";return;}
     if(head==="check"){runCheck();return;}
-    if(head==="source"){if(/azure-credentials/.test(cmd)&&/az login/.test(cmd)){loggedIn=true;print(t("loginOk"),"line-ok");}return;}
-    if(head==="sleep"){return;}
     if(head==="cat"){var f=resolve(parts[1]);if(f&&FS[f])FS[f].split("\n").forEach(function(l){print(l);});else print(t("catNF",{f:parts[1]||""}),"line-error");return;}
-    if(head==="bash"){
-      if(/provision-foundation\.sh/.test(cmd)){print("Provisioning Azure OpenAI, APIM (--no-wait) and AKS...","line-muted");print("  deployed model: gpt-4o","line-muted");print("  wrote /root/capstone/.foundation-env","line-ok");provDone=true;refresh();setStep("provision",true);print(t("provHint"),"line-warn");return;}
-      if(/build-and-push-images\.sh/.test(cmd)){print("Building azure-agent:capstone ...","line-muted");print("Building apim-mcp:capstone ...","line-muted");print("Pushed azure-agent:capstone, apim-mcp:capstone to ACR (also :latest)","line-ok");buildDone=true;setStep("build",true);return;}
-      print("bash: "+(parts[1]||"")+": script non simulé dans cet atelier","line-warn");return;
-    }
+    if(head==="tail"){if(/github-fixture\.log/.test(cmd))print(t("fxTail"),"line-muted");return;}
     if(head==="curl"){
-      if(/18080\/healthz/.test(cmd)){ if(applied&&waitApim){print("ok","line-ok");healthOk=true;setStep("deploy",true);} else {print("curl: (7) Failed to connect to localhost port 18080","line-error");} return; }
+      if(/9006\/healthz/.test(cmd)){ if(fixtureUp){print(t("fxHealth"),"line-ok");} else {print(t("fxDown"),"line-error");print(t("needFixture"),"line-warn");} return; }
       print("curl: endpoint non simulé dans cet atelier","line-warn");return;
     }
-    if(head!=="az"&&head!=="kubectl"&&head!=="k"){print(t("cmdNF",{c:head}),"line-error");return;}
-    if(head==="az"){
-      if(parts[1]==="login"){loggedIn=true;print(t("loginOk"),"line-ok");return;}
-      if(parts[1]==="group"&&parts[2]==="create"){rgDone=true;print(t("rgOk"));print(t("rgRow"),"line-ok");if(loggedIn)setStep("login",true);return;}
-      if(parts[1]==="aks"&&parts[2]==="get-credentials"){print("Merged \"aks-capstone\" as current context in /root/.kube/config","line-ok");return;}
-      print("az: sous-commande non simulée dans cet atelier","line-warn");return;
+    if(head==="grep"){
+      if(/create_branch|create_or_update_file|create_pull_request/.test(cmd)){
+        if(handshakeOk){print('"name":"create_branch"');print('"name":"create_or_update_file"');print('"name":"create_pull_request"');}
+        else{print(t("needHand"),"line-warn");}
+        return;
+      }
+      if(/create_branch/.test(cmd)&&/github-fixture\.log/.test(cmd)){
+        if(mutateOk){print("[fixture] POST /api/v3/repos/koffi/apim-config/git/refs  create_branch ref=refs/heads/feature/orders-v1 sha=c0ffee");}
+        else{print("(aucune entrée create_branch — lancez d'abord l'appel mutant)","line-warn");}
+        return;
+      }
+      print("(grep: aucune correspondance)","line-muted");return;
     }
-    // kubectl
-    if(parts[1]==="apply"){applyManifests();return;}
-    if(parts[1]==="wait"){
-      if(!applied){print("error: no matching resources found","line-error");return;}
-      if(/apim-mcp/.test(cmd)){waitApim=true;print("deployment.apps/apim-mcp condition met","line-ok");}
-      else if(/azure-agent/.test(cmd)){waitAgent=true;print("deployment.apps/azure-agent condition met","line-ok");}
-      refresh();return;
+    if(head==="docker"){
+      if(parts[1]==="image"&&parts[2]==="inspect"){ if(/github-mcp-server:v1\.0\.3/.test(cmd)){imageOk=true;print(t("imgLine"),"line-ok");setStep("image",true);} else {print(t("imgMiss"),"line-error");} return; }
+      print("docker: sous-commande non simulée dans cet atelier","line-warn");return;
     }
-    if(parts[1]==="-n"&&parts[2]==="capstone"&&parts[3]==="port-forward"){print("Forwarding from 127.0.0.1:18080 -> 8080","line-muted");return;}
-    if(parts[1]==="get"&&parts[2]==="pods"){print("NAME                          READY   STATUS    AGE");print("apim-mcp-6c8f7d9b4-abcde      1/1     "+(waitApim?"Running":"Pending")+"   2m");print("azure-agent-58b9d6c4-fghij    1/1     "+(waitAgent?"Running":"Pending")+"   2m");return;}
-    print(t("kNF"),"line-error");
+    if(head==="bash"){
+      if(/run-fixture\.sh/.test(cmd)){fixtureUp=true;print(t("fxUp"),"line-ok");refresh();setStep("fixture",true);return;}
+      if(/github-mcp-handshake\.sh/.test(cmd)){
+        if(!fixtureUp){print(t("needFixture"),"line-warn");}
+        print('{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","serverInfo":{"name":"github-mcp-server","version":"1.0.3"}}}');
+        print('{"jsonrpc":"2.0","id":2,"result":{"tools":[{"name":"create_branch"},{"name":"create_or_update_file"},{"name":"create_pull_request"}]}}');
+        handshakeOk=true;refresh();setStep("handshake",true);return;
+      }
+      if(/github-mcp-create-branch\.sh/.test(cmd)){
+        if(!fixtureUp){print(t("needFixture"),"line-warn");}
+        print('{"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":"branch feature/orders-v1 created (sha c0ffee)"}]}}',"line-ok");
+        mutateOk=true;setStep("mutate",true);return;
+      }
+      print("bash: "+(parts[1]||"")+": script non simulé dans cet atelier","line-warn");return;
+    }
+    print(t("cmdNF",{c:head}),"line-error");
   }
 
   function runCheck(){
     print(t("checkHeader"),"line-muted");
-    print((st.login?"  [x] ":"  [ ] ")+t("chkLogin"),st.login?"line-ok":"line-warn");
-    print((st.provision?"  [x] ":"  [ ] ")+t("chkProv"),st.provision?"line-ok":"line-warn");
-    print((st.build?"  [x] ":"  [ ] ")+t("chkBuild"),st.build?"line-ok":"line-warn");
-    print((st.deploy?"  [x] ":"  [ ] ")+t("chkDeploy"),st.deploy?"line-ok":"line-warn");
-    if(st.login&&st.provision&&st.build&&st.deploy)print(t("chkAll"),"line-ok");
+    print((st.fixture?"  [x] ":"  [ ] ")+t("chkFx"),st.fixture?"line-ok":"line-warn");
+    print((st.image?"  [x] ":"  [ ] ")+t("chkImg"),st.image?"line-ok":"line-warn");
+    print((st.handshake?"  [x] ":"  [ ] ")+t("chkHand"),st.handshake?"line-ok":"line-warn");
+    print((st.mutate?"  [x] ":"  [ ] ")+t("chkMut"),st.mutate?"line-ok":"line-warn");
+    if(st.fixture&&st.image&&st.handshake&&st.mutate)print(t("chkAll"),"line-ok");
   }
 
   function runScript(text){
