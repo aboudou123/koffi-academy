@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Akeyless SSH Certificates · Chapitre 1 | Atelier — Koffi Academy</title>
-  <meta name="description" content="Atelier Koffi Academy — Chapitre 1 : créer une clé CA SSH dans Akeyless, exporter sa clé publique et définir un Certificate Issuer.">
+  <title>Akeyless SSH Certificates · Chapitre 3 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Chapitre 3 : générer une paire de clés, obtenir un certificat SSH éphémère d'Akeyless et se connecter sans authorized_keys.">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -149,15 +149,16 @@ button{cursor:pointer}
         <span class="brand__k">Koffi Academy</span>
         <span class="brand__sep">|</span>
         <span class="brand__title">Akeyless SSH Certificates</span>
-        <span class="chip-ch">CH.1</span>
+        <span class="chip-ch">CH.3</span>
       </span>
     </a>
     <div class="labbar__spacer"></div>
     <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">45:00</span></span>
     <nav class="actions" aria-label="Lab actions">
+      <a class="topbtn" href="../laboratoire-akeyless-ssh-lab-2"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter2">Chapitre 2</span></a>
       <a class="topbtn" href="../laboratoire-akeyless-ssh"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
       <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
-      <a class="topbtn" href="../laboratoire-akeyless-ssh-lab-2"><span data-i18n="navChapter2">Chapitre 2</span> <i class="fa-solid fa-arrow-right-long"></i></a>
+      <a class="topbtn" href="../laboratoire-akeyless-ssh-lab-4"><span data-i18n="navChapter4">Chapitre 4</span> <i class="fa-solid fa-arrow-right-long"></i></a>
       <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
       <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
       <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
@@ -195,60 +196,62 @@ button{cursor:pointer}
         <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
       </div>
       <div class="instructions__body">
-        <h1 class="lab-title" data-i18n="instrTitle">Clé CA SSH & Certificate Issuer</h1>
-        <p class="lab-sub" data-i18n="instrSub">Vous créez dans Akeyless une clé d'autorité de certification (CA) RSA — sa clé privée ne quitte jamais Akeyless — exportez sa clé publique, puis définissez un SSH Certificate Issuer et un rôle d'accès. Ce sont les fondations de l'émission de certificats SSH éphémères.</p>
-        <div class="tnote"><i class="fa-solid fa-circle-info"></i><span data-i18n="tnote">Ce chapitre se déroule entièrement sur l'onglet <strong>Terminal</strong> (workstation). L'onglet <strong>SSH Target</strong> servira au chapitre 2.</span></div>
+        <h1 class="lab-title" data-i18n="instrTitle">Émettre & utiliser un certificat</h1>
+        <p class="lab-sub" data-i18n="instrSub">Vous générez une paire de clés SSH locale, demandez à Akeyless un certificat éphémère (5 min) qui lie cette clé à l'utilisateur ubuntu, puis vous connectez au serveur cible — sans jamais ajouter de clé dans authorized_keys.</p>
+        <div class="tnote"><i class="fa-solid fa-circle-info"></i><span data-i18n="tnote">Les étapes 1 à 3 sont sur l'onglet <strong>Terminal</strong> (workstation). L'étape 4 vérifie sur l'onglet <strong>SSH Target</strong> l'absence d'authorized_keys.</span></div>
 
         <div class="progress-card">
           <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="step is-open" data-step="cakey">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Authentifier la CLI & créer la clé CA</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step is-open" data-step="keygen">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Générer une paire de clés SSH</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <span class="hosttag hosttag--ws" data-i18n="hostWs">Terminal · workstation</span>
-            <span data-i18n="s1b">Configurez la CLI avec votre API Key (depuis la console Akeyless, section Auth Methods), vérifiez l'accès, puis créez une clé RSA qui servira d'autorité de certification SSH :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">akeyless configure --profile default --access-id &lt;YOUR_ACCESS_ID&gt; --access-key &lt;YOUR_ACCESS_KEY&gt;
-akeyless list-items
-akeyless create-classic-key --name /ssh/lab-ca-key --alg RSA2048
-akeyless describe-item --name /ssh/lab-ca-key</pre></div>
+            <span data-i18n="s1b">Générez une paire de clés RSA locale ; le certificat sera lié à cette paire. Dans l'onglet <strong>Terminal</strong> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">ssh-keygen -t rsa -b 2048 -f /root/.ssh/lab_key -N ""
+ls -la /root/.ssh/lab_key*</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="export">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Exporter la clé publique de la CA</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="cert">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Demander un certificat à Akeyless</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <span class="hosttag hosttag--ws" data-i18n="hostWs">Terminal · workstation</span>
-            <span data-i18n="s2b">Exportez la partie publique de la CA. C'est la seule partie qui doit quitter Akeyless — elle sera distribuée aux serveurs pour leur indiquer quelle CA approuver :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">akeyless export-classic-key --name /ssh/lab-ca-key --export-public-key > /root/workspace/akeyless_ca.pub
-cat /root/workspace/akeyless_ca.pub</pre></div>
-            <p style="margin:9px 0 0;color:var(--soft)" data-i18n="s2n">Vous devez voir une clé publique au format <code>ssh-rsa AAAA...</code>.</p>
+            <span data-i18n="s2b">Demandez à Akeyless de signer votre clé publique (TTL 300 s), puis inspectez la fenêtre de validité du certificat :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">akeyless get-ssh-certificate \
+  --cert-issuer-name /ssh/lab-issuer \
+  --cert-username ubuntu \
+  --public-key-file-path /root/.ssh/lab_key.pub \
+  --ttl 300 \
+  > /root/.ssh/lab_key-cert.pub
+ssh-keygen -L -f /root/.ssh/lab_key-cert.pub</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="issuer">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Créer le SSH Certificate Issuer</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="connect">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Se connecter au serveur cible</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <span class="hosttag hosttag--ws" data-i18n="hostWs">Terminal · workstation</span>
-            <span data-i18n="s3b">Créez un Certificate Issuer qui définit les règles d'émission. <code>--allowed-users</code> restreint les comptes accessibles ; <code>--ttl 600</code> fixe le TTL maximum (10 min) :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">akeyless create-ssh-cert-issuer \
-  --name /ssh/lab-issuer \
-  --signer-key-name /ssh/lab-ca-key \
-  --allowed-users ubuntu \
-  --ttl 600</pre></div>
+            <span data-i18n="s3b">Connectez-vous au serveur cible avec votre clé privée et le certificat. Vous devez voir <code>ubuntu</code> et <code>ssh-target</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">ssh -i /root/.ssh/lab_key \
+  -o CertificateFile=/root/.ssh/lab_key-cert.pub \
+  ubuntu@ssh-target \
+  -o StrictHostKeyChecking=no \
+  "whoami && hostname"</pre></div>
           </div>
         </article>
 
-        <article class="step" data-step="role">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Créer un rôle d'accès</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step" data-step="verify">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Vérifier l'absence d'authorized_keys</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span class="hosttag hosttag--ws" data-i18n="hostWs">Terminal · workstation</span>
-            <span data-i18n="s4b">Créez un rôle autorisant la demande de certificats, puis associez votre méthode d'authentification (API Key) à ce rôle :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">akeyless create-role --name /ssh/lab-role
-akeyless set-role-rule --role-name /ssh/lab-role --path '/ssh/*' --capability read
-akeyless auth-method list
-akeyless assoc-role-am --role-name /ssh/lab-role --am-name &lt;YOUR_AUTH_METHOD_NAME&gt;</pre></div>
+            <span class="hosttag hosttag--tgt" data-i18n="hostTgt">SSH Target · serveur cible</span>
+            <span data-i18n="s4b">Sur l'onglet <strong>SSH Target</strong>, vérifiez qu'aucun authorized_keys n'existe pour ubuntu — le certificat était la seule crédential nécessaire :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">cat /home/ubuntu/.ssh/authorized_keys 2>/dev/null || echo "No authorized_keys file — certificate auth only"</pre></div>
+            <span class="hosttag hosttag--ws" style="margin-top:12px" data-i18n="hostWs">Terminal · workstation</span>
+            <span data-i18n="s4b2">Confirmez aussi que le Certificate Issuer est bien configuré :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">akeyless describe-item --name /ssh/lab-issuer</pre></div>
           </div>
         </article>
 
@@ -256,10 +259,10 @@ akeyless assoc-role-am --role-name /ssh/lab-role --am-name &lt;YOUR_AUTH_METHOD_
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <ul class="crit">
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">CLI authentifiée & clé CA /ssh/lab-ca-key créée.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Clé publique de la CA exportée.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">SSH Certificate Issuer créé (TTL max 600 s).</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Rôle créé et associé à l'auth method.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Paire de clés lab_key / lab_key.pub générée.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Certificat éphémère obtenu (TTL 5 min).</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Connexion réussie (ubuntu @ ssh-target).</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Aucun authorized_keys utilisé.</span></li>
             </ul>
             <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
           </div>
@@ -280,7 +283,7 @@ akeyless assoc-role-am --role-name /ssh/lab-role --am-name &lt;YOUR_AUTH_METHOD_
   <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
   <div class="help-body">
     <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.</p>
-    <div class="hint" id="hintText" data-i18n="hint0">Configurez d'abord la CLI Akeyless, puis créez la clé CA (Étape 1).</div>
+    <div class="hint" id="hintText" data-i18n="hint0">Générez d'abord la paire de clés SSH (Étape 1).</div>
     <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
   </div>
 </section>
@@ -290,97 +293,103 @@ akeyless assoc-role-am --role-name /ssh/lab-role --am-name &lt;YOUR_AUTH_METHOD_
 <script>
 window.I18N = {
   "fr":{
-    "navOverview":"Aperçu","navChapter2":"Chapitre 2","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "navChapter2":"Chapitre 2","navChapter4":"Chapitre 4","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
     "reloadTitle":"Réinitialiser les terminaux","termAria":"Terminal workstation","termAriaTgt":"Terminal SSH cible","tabWs":"Terminal","tabTgt":"SSH Target",
-    "instrHead":"Instructions","instrTitle":"Clé CA SSH & Certificate Issuer",
-    "instrSub":"Vous créez dans Akeyless une clé d'autorité de certification (CA) RSA — sa clé privée ne quitte jamais Akeyless — exportez sa clé publique, puis définissez un SSH Certificate Issuer et un rôle d'accès. Ce sont les fondations de l'émission de certificats SSH éphémères.",
-    "tnote":"Ce chapitre se déroule entièrement sur l'onglet <strong>Terminal</strong> (workstation). L'onglet <strong>SSH Target</strong> servira au chapitre 2.",
+    "instrHead":"Instructions","instrTitle":"Émettre & utiliser un certificat",
+    "instrSub":"Vous générez une paire de clés SSH locale, demandez à Akeyless un certificat éphémère (5 min) qui lie cette clé à l'utilisateur ubuntu, puis vous connectez au serveur cible — sans jamais ajouter de clé dans authorized_keys.",
+    "tnote":"Les étapes 1 à 3 sont sur l'onglet <strong>Terminal</strong> (workstation). L'étape 4 vérifie sur l'onglet <strong>SSH Target</strong> l'absence d'authorized_keys.",
     "progLabel":"Progression","copy":"Copier","copied":"Copié","hostWs":"Terminal · workstation","hostTgt":"SSH Target · serveur cible",
-    "s1h":"Étape 1 · Authentifier la CLI & créer la clé CA","s1b":"Configurez la CLI avec votre API Key (depuis la console Akeyless, section Auth Methods), vérifiez l'accès, puis créez une clé RSA qui servira d'autorité de certification SSH :",
-    "s2h":"Étape 2 · Exporter la clé publique de la CA","s2b":"Exportez la partie publique de la CA. C'est la seule partie qui doit quitter Akeyless — elle sera distribuée aux serveurs pour leur indiquer quelle CA approuver :","s2n":"Vous devez voir une clé publique au format <code>ssh-rsa AAAA...</code>.",
-    "s3h":"Étape 3 · Créer le SSH Certificate Issuer","s3b":"Créez un Certificate Issuer qui définit les règles d'émission. <code>--allowed-users</code> restreint les comptes accessibles ; <code>--ttl 600</code> fixe le TTL maximum (10 min) :",
-    "s4h":"Étape 4 · Créer un rôle d'accès","s4b":"Créez un rôle autorisant la demande de certificats, puis associez votre méthode d'authentification (API Key) à ce rôle :",
+    "s1h":"Étape 1 · Générer une paire de clés SSH","s1b":"Générez une paire de clés RSA locale ; le certificat sera lié à cette paire. Dans l'onglet <strong>Terminal</strong> :",
+    "s2h":"Étape 2 · Demander un certificat à Akeyless","s2b":"Demandez à Akeyless de signer votre clé publique (TTL 300 s), puis inspectez la fenêtre de validité du certificat :",
+    "s3h":"Étape 3 · Se connecter au serveur cible","s3b":"Connectez-vous au serveur cible avec votre clé privée et le certificat. Vous devez voir <code>ubuntu</code> et <code>ssh-target</code> :",
+    "s4h":"Étape 4 · Vérifier l'absence d'authorized_keys","s4b":"Sur l'onglet <strong>SSH Target</strong>, vérifiez qu'aucun authorized_keys n'existe pour ubuntu — le certificat était la seule crédential nécessaire :","s4b2":"Confirmez aussi que le Certificate Issuer est bien configuré :",
     "critH":"Critères de réussite",
-    "c1":"CLI authentifiée & clé CA /ssh/lab-ca-key créée.","c2":"Clé publique de la CA exportée.","c3":"SSH Certificate Issuer créé (TTL max 600 s).","c4":"Rôle créé et associé à l'auth method.",
+    "c1":"Paire de clés lab_key / lab_key.pub générée.","c2":"Certificat éphémère obtenu (TTL 5 min).","c3":"Connexion réussie (ubuntu @ ssh-target).","c4":"Aucun authorized_keys utilisé.",
     "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
     "skip":"Ignorer","check":"Vérifier",
     "helpTitle":"Copilote de l'atelier","helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.","nextHint":"Indice suivant",
-    "hint0":"Configurez d'abord la CLI Akeyless, puis créez la clé CA (Étape 1).",
-    "hint1":"La clé privée de la CA reste dans Akeyless ; seule la clé publique est exportée.",
-    "hint2":"L'issuer définit les utilisateurs autorisés et le TTL maximum des certificats.",
-    "hint3":"Le rôle + l'association d'auth method autorisent la demande de certificats.",
-    "hint4":"Tout se fait sur la workstation ; le serveur cible vient au chapitre 2.",
+    "hint0":"Générez d'abord la paire de clés SSH (Étape 1).",
+    "hint1":"Le certificat lie votre clé publique à l'utilisateur ubuntu pour une durée limitée.",
+    "hint2":"ssh-keygen -L affiche le champ Valid : la fenêtre exacte de validité.",
+    "hint3":"L'option CertificateFile présente le certificat lors de la connexion SSH.",
+    "hint4":"Aucun authorized_keys : la confiance vient uniquement de la CA (chapitre 2).",
     "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — VM akeyless-workstation (Koffi Academy)","bUbuntuT":"Ubuntu 24.04 LTS — VM ssh-target (Koffi Academy)",
-    "bEnv":"Akeyless CLI + ssh-keygen prêts. Dossier : /root/workspace","bEnvT":"sshd actif. Cet onglet sera utilisé au chapitre 2.","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
-    "hHeader":"Commandes disponibles :","hConf":"configurer la CLI (API Key)","hList":"lister les items","hKey":"créer la clé CA","hExport":"exporter la clé publique","hIssuer":"créer le Certificate Issuer","hRole":"créer / associer le rôle","hAm":"lister les auth methods","hCheck":"vérifier la progression",
-    "confOk":"Profile default configured.","listOk":"/ssh/ (folder)","keyOk":"key /ssh/lab-ca-key created","describeKey":"name: /ssh/lab-ca-key\ntype: classic-key\nalg: RSA2048","caPub":"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7koffilabca0xQ: akeyless-ca","exportNote":"(clé publique écrite dans /root/workspace/akeyless_ca.pub)","issuerOk":"ssh cert issuer /ssh/lab-issuer created (allowed-users: ubuntu, ttl: 600)","roleOk":"role /ssh/lab-role created","ruleOk":"rule added: /ssh/* read","amList":"api-key-lab (api_key)","assocOk":"role /ssh/lab-role associated with api-key-lab",
-    "needConf":"error: profil non configuré — lancez d'abord akeyless configure","needKey":"error: la clé /ssh/lab-ca-key n'existe pas — créez-la d'abord (Étape 1)","caMissing":"cat: /root/workspace/akeyless_ca.pub: No such file or directory","caHint":"Astuce : exportez d'abord la clé publique (Étape 2).",
-    "wrongHost":"(cette commande s'exécute sur l'autre onglet)","tgtSoon":"Cet onglet (serveur cible) est utilisé à partir du chapitre 2.",
-    "checkHeader":"Progression de la tâche :","chkK":"Clé CA créée","chkE":"Clé publique exportée","chkI":"Certificate Issuer créé","chkR":"Rôle créé & associé","chkAll":"Tous les critères sont remplis. Chapitre 1 terminé !","skipped":"Étape ignorée.",
+    "bEnv":"Akeyless CLI + ssh prêts. CA & issuer en place (chapitres 1-2).","bEnvT":"sshd configuré : confiance dans la CA Akeyless (chapitre 2).","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hKeygen":"générer la paire de clés","hLs":"lister les fichiers de clés","hGet":"demander un certificat","hInspect":"inspecter le certificat (ssh-keygen -L)","hSsh":"se connecter au serveur cible","hDesc":"décrire le Certificate Issuer","hAuth":"vérifier authorized_keys (cible)","hCheck":"vérifier la progression",
+    "keygenOk":"Generating public/private rsa key pair.\nYour identification has been saved in /root/.ssh/lab_key\nYour public key has been saved in /root/.ssh/lab_key.pub","lsOk":"-rw------- 1 root root 1823 /root/.ssh/lab_key\n-rw-r--r-- 1 root root  411 /root/.ssh/lab_key.pub",
+    "certNote":"(certificat écrit dans /root/.ssh/lab_key-cert.pub)","certInspect":"/root/.ssh/lab_key-cert.pub:\n        Type: ssh-rsa-cert-v01@openssh.com user certificate\n        Public key: RSA-CERT SHA256:k0ffiLabCertHashAbCd\n        Signing CA: RSA SHA256:akeylessCaHash0xQ\n        Key ID: \"akeyless-cert\"\n        Valid: from 2026-06-21T10:00:00 to 2026-06-21T10:05:00\n        Principals: ubuntu",
+    "sshOut":"ubuntu\nssh-target","issuerDesc":"name: /ssh/lab-issuer\ntype: ssh-cert-issuer\nallowed-users: ubuntu\nttl: 600","noAuth":"No authorized_keys file — certificate auth only",
+    "needKey":"error: /root/.ssh/lab_key.pub introuvable — générez d'abord la paire de clés (Étape 1)","needCert":"error: certificat introuvable — demandez-le d'abord (Étape 2)","sshExpiredHint":"Astuce : obtenez d'abord un certificat (Étape 2).",
+    "wrongHostWs":"(exécutez cette commande sur l'onglet SSH Target)","wrongHostTgt":"(exécutez cette commande sur l'onglet Terminal / workstation)",
+    "checkHeader":"Progression de la tâche :","chkK":"Paire de clés générée","chkC":"Certificat éphémère obtenu","chkS":"Connexion réussie","chkA":"Aucun authorized_keys utilisé","chkAll":"Tous les critères sont remplis. Chapitre 3 terminé !","skipped":"Étape ignorée.",
     "cmdNF":"{c} : commande introuvable. Tapez `help`.","akNF":"akeyless: sous-commande non simulée dans cet atelier.","catNF":"cat : {f} : aucun fichier de ce type",
-    "tDone":"Chapitre 1 terminé — CA & issuer en place"
+    "tDone":"Chapitre 3 terminé — accès par certificat réussi"
   },
   "de":{
-    "navOverview":"Übersicht","navChapter2":"Kapitel 2","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "navChapter2":"Kapitel 2","navChapter4":"Kapitel 4","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
     "reloadTitle":"Terminals zurücksetzen","termAria":"Workstation-Terminal","termAriaTgt":"SSH-Ziel-Terminal","tabWs":"Terminal","tabTgt":"SSH Target",
-    "instrHead":"Anleitung","instrTitle":"SSH-CA-Schlüssel & Certificate Issuer",
-    "instrSub":"Sie erstellen in Akeyless einen RSA-CA-Schlüssel — sein privater Schlüssel verlässt Akeyless nie — exportieren seinen öffentlichen Schlüssel und definieren dann einen SSH Certificate Issuer und eine Zugriffsrolle. Das ist die Grundlage für die Ausstellung kurzlebiger SSH-Zertifikate.",
-    "tnote":"Dieses Kapitel läuft vollständig im Reiter <strong>Terminal</strong> (Workstation). Der Reiter <strong>SSH Target</strong> wird in Kapitel 2 verwendet.",
+    "instrHead":"Anleitung","instrTitle":"Zertifikat ausstellen & nutzen",
+    "instrSub":"Sie erzeugen ein lokales SSH-Schlüsselpaar, fordern von Akeyless ein kurzlebiges Zertifikat (5 Min) an, das diesen Schlüssel an den Benutzer ubuntu bindet, und verbinden sich dann mit dem Zielserver — ohne je einen Schlüssel in authorized_keys hinzuzufügen.",
+    "tnote":"Die Schritte 1-3 laufen im Reiter <strong>Terminal</strong> (Workstation). Schritt 4 prüft im Reiter <strong>SSH Target</strong> das Fehlen von authorized_keys.",
     "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert","hostWs":"Terminal · Workstation","hostTgt":"SSH Target · Zielserver",
-    "s1h":"Schritt 1 · CLI authentifizieren & CA-Schlüssel erstellen","s1b":"Konfigurieren Sie die CLI mit Ihrem API-Key (aus der Akeyless-Konsole, Bereich Auth Methods), prüfen Sie den Zugriff und erstellen Sie dann einen RSA-Schlüssel, der als SSH-Zertifizierungsstelle dient:",
-    "s2h":"Schritt 2 · Öffentlichen CA-Schlüssel exportieren","s2b":"Exportieren Sie den öffentlichen Teil der CA. Das ist der einzige Teil, der Akeyless verlassen muss — er wird an Server verteilt, um ihnen mitzuteilen, welcher CA sie vertrauen sollen:","s2n":"Sie sollten einen öffentlichen Schlüssel im Format <code>ssh-rsa AAAA...</code> sehen.",
-    "s3h":"Schritt 3 · Den SSH Certificate Issuer erstellen","s3b":"Erstellen Sie einen Certificate Issuer, der die Ausstellungsregeln definiert. <code>--allowed-users</code> beschränkt die zugänglichen Konten; <code>--ttl 600</code> setzt die maximale TTL (10 Min):",
-    "s4h":"Schritt 4 · Eine Zugriffsrolle erstellen","s4b":"Erstellen Sie eine Rolle, die das Anfordern von Zertifikaten erlaubt, und verknüpfen Sie dann Ihre Auth-Methode (API-Key) mit dieser Rolle:",
+    "s1h":"Schritt 1 · SSH-Schlüsselpaar erzeugen","s1b":"Erzeugen Sie ein lokales RSA-Schlüsselpaar; das Zertifikat wird an dieses Paar gebunden. Im Reiter <strong>Terminal</strong>:",
+    "s2h":"Schritt 2 · Ein Zertifikat von Akeyless anfordern","s2b":"Lassen Sie Akeyless Ihren öffentlichen Schlüssel signieren (TTL 300 s) und prüfen Sie dann das Gültigkeitsfenster des Zertifikats:",
+    "s3h":"Schritt 3 · Mit dem Zielserver verbinden","s3b":"Verbinden Sie sich mit dem Zielserver mit Ihrem privaten Schlüssel und dem Zertifikat. Sie sollten <code>ubuntu</code> und <code>ssh-target</code> sehen:",
+    "s4h":"Schritt 4 · Fehlen von authorized_keys prüfen","s4b":"Prüfen Sie im Reiter <strong>SSH Target</strong>, dass kein authorized_keys für ubuntu existiert — das Zertifikat war die einzige nötige Credential:","s4b2":"Bestätigen Sie auch, dass der Certificate Issuer korrekt konfiguriert ist:",
     "critH":"Erfolgskriterien",
-    "c1":"CLI authentifiziert & CA-Schlüssel /ssh/lab-ca-key erstellt.","c2":"Öffentlicher CA-Schlüssel exportiert.","c3":"SSH Certificate Issuer erstellt (max. TTL 600 s).","c4":"Rolle erstellt und mit der Auth-Methode verknüpft.",
+    "c1":"Schlüsselpaar lab_key / lab_key.pub erzeugt.","c2":"Kurzlebiges Zertifikat erhalten (TTL 5 Min).","c3":"Verbindung erfolgreich (ubuntu @ ssh-target).","c4":"Kein authorized_keys verwendet.",
     "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
     "skip":"Überspringen","check":"Prüfen",
     "helpTitle":"Lab-Copilot","helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.","nextHint":"Nächster Hinweis",
-    "hint0":"Konfigurieren Sie zuerst die Akeyless-CLI und erstellen Sie dann den CA-Schlüssel (Schritt 1).",
-    "hint1":"Der private CA-Schlüssel bleibt in Akeyless; nur der öffentliche wird exportiert.",
-    "hint2":"Der Issuer definiert die erlaubten Benutzer und die maximale TTL der Zertifikate.",
-    "hint3":"Rolle + Auth-Method-Verknüpfung erlauben das Anfordern von Zertifikaten.",
-    "hint4":"Alles passiert auf der Workstation; der Zielserver kommt in Kapitel 2.",
+    "hint0":"Erzeugen Sie zuerst das SSH-Schlüsselpaar (Schritt 1).",
+    "hint1":"Das Zertifikat bindet Ihren öffentlichen Schlüssel zeitlich begrenzt an den Benutzer ubuntu.",
+    "hint2":"ssh-keygen -L zeigt das Valid-Feld: das genaue Gültigkeitsfenster.",
+    "hint3":"Die Option CertificateFile legt das Zertifikat bei der SSH-Verbindung vor.",
+    "hint4":"Kein authorized_keys: das Vertrauen kommt nur von der CA (Kapitel 2).",
     "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — VM akeyless-workstation (Koffi Academy)","bUbuntuT":"Ubuntu 24.04 LTS — VM ssh-target (Koffi Academy)",
-    "bEnv":"Akeyless CLI + ssh-keygen bereit. Ordner: /root/workspace","bEnvT":"sshd aktiv. Dieser Reiter wird in Kapitel 2 verwendet.","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
-    "hHeader":"Verfügbare Befehle:","hConf":"die CLI konfigurieren (API-Key)","hList":"Items auflisten","hKey":"den CA-Schlüssel erstellen","hExport":"den öffentlichen Schlüssel exportieren","hIssuer":"den Certificate Issuer erstellen","hRole":"die Rolle erstellen / verknüpfen","hAm":"Auth-Methoden auflisten","hCheck":"Fortschritt prüfen",
-    "confOk":"Profile default configured.","listOk":"/ssh/ (folder)","keyOk":"key /ssh/lab-ca-key created","describeKey":"name: /ssh/lab-ca-key\ntype: classic-key\nalg: RSA2048","caPub":"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7koffilabca0xQ: akeyless-ca","exportNote":"(öffentlicher Schlüssel nach /root/workspace/akeyless_ca.pub geschrieben)","issuerOk":"ssh cert issuer /ssh/lab-issuer created (allowed-users: ubuntu, ttl: 600)","roleOk":"role /ssh/lab-role created","ruleOk":"rule added: /ssh/* read","amList":"api-key-lab (api_key)","assocOk":"role /ssh/lab-role associated with api-key-lab",
-    "needConf":"error: Profil nicht konfiguriert — führen Sie zuerst akeyless configure aus","needKey":"error: Schlüssel /ssh/lab-ca-key existiert nicht — erstellen Sie ihn zuerst (Schritt 1)","caMissing":"cat: /root/workspace/akeyless_ca.pub: No such file or directory","caHint":"Tipp: exportieren Sie zuerst den öffentlichen Schlüssel (Schritt 2).",
-    "wrongHost":"(dieser Befehl läuft im anderen Reiter)","tgtSoon":"Dieser Reiter (Zielserver) wird ab Kapitel 2 verwendet.",
-    "checkHeader":"Fortschritt der Aufgabe:","chkK":"CA-Schlüssel erstellt","chkE":"Öffentlicher Schlüssel exportiert","chkI":"Certificate Issuer erstellt","chkR":"Rolle erstellt & verknüpft","chkAll":"Alle Kriterien erfüllt. Kapitel 1 abgeschlossen!","skipped":"Schritt übersprungen.",
+    "bEnv":"Akeyless CLI + ssh bereit. CA & Issuer vorhanden (Kapitel 1-2).","bEnvT":"sshd konfiguriert: Vertrauen in die Akeyless-CA (Kapitel 2).","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hKeygen":"das Schlüsselpaar erzeugen","hLs":"die Schlüsseldateien auflisten","hGet":"ein Zertifikat anfordern","hInspect":"das Zertifikat prüfen (ssh-keygen -L)","hSsh":"mit dem Zielserver verbinden","hDesc":"den Certificate Issuer beschreiben","hAuth":"authorized_keys prüfen (Ziel)","hCheck":"Fortschritt prüfen",
+    "keygenOk":"Generating public/private rsa key pair.\nYour identification has been saved in /root/.ssh/lab_key\nYour public key has been saved in /root/.ssh/lab_key.pub","lsOk":"-rw------- 1 root root 1823 /root/.ssh/lab_key\n-rw-r--r-- 1 root root  411 /root/.ssh/lab_key.pub",
+    "certNote":"(Zertifikat nach /root/.ssh/lab_key-cert.pub geschrieben)","certInspect":"/root/.ssh/lab_key-cert.pub:\n        Type: ssh-rsa-cert-v01@openssh.com user certificate\n        Public key: RSA-CERT SHA256:k0ffiLabCertHashAbCd\n        Signing CA: RSA SHA256:akeylessCaHash0xQ\n        Key ID: \"akeyless-cert\"\n        Valid: from 2026-06-21T10:00:00 to 2026-06-21T10:05:00\n        Principals: ubuntu",
+    "sshOut":"ubuntu\nssh-target","issuerDesc":"name: /ssh/lab-issuer\ntype: ssh-cert-issuer\nallowed-users: ubuntu\nttl: 600","noAuth":"No authorized_keys file — certificate auth only",
+    "needKey":"error: /root/.ssh/lab_key.pub nicht gefunden — erzeugen Sie zuerst das Schlüsselpaar (Schritt 1)","needCert":"error: Zertifikat nicht gefunden — fordern Sie es zuerst an (Schritt 2)","sshExpiredHint":"Tipp: holen Sie zuerst ein Zertifikat (Schritt 2).",
+    "wrongHostWs":"(führen Sie diesen Befehl im Reiter SSH Target aus)","wrongHostTgt":"(führen Sie diesen Befehl im Reiter Terminal / Workstation aus)",
+    "checkHeader":"Fortschritt der Aufgabe:","chkK":"Schlüsselpaar erzeugt","chkC":"Kurzlebiges Zertifikat erhalten","chkS":"Verbindung erfolgreich","chkA":"Kein authorized_keys verwendet","chkAll":"Alle Kriterien erfüllt. Kapitel 3 abgeschlossen!","skipped":"Schritt übersprungen.",
     "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","akNF":"akeyless: Unterbefehl in diesem Labor nicht simuliert.","catNF":"cat: {f}: keine solche Datei",
-    "tDone":"Kapitel 1 abgeschlossen — CA & Issuer stehen"
+    "tDone":"Kapitel 3 abgeschlossen — Zertifikatszugriff erfolgreich"
   },
   "en":{
-    "navOverview":"Overview","navChapter2":"Chapter 2","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "navChapter2":"Chapter 2","navChapter4":"Chapter 4","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
     "reloadTitle":"Reset the terminals","termAria":"Workstation terminal","termAriaTgt":"SSH target terminal","tabWs":"Terminal","tabTgt":"SSH Target",
-    "instrHead":"Instructions","instrTitle":"SSH CA key & Certificate Issuer",
-    "instrSub":"In Akeyless you create an RSA Certificate Authority key — its private key never leaves Akeyless — export its public key, then define an SSH Certificate Issuer and an access role. These are the foundations for issuing short-lived SSH certificates.",
-    "tnote":"This chapter runs entirely in the <strong>Terminal</strong> tab (workstation). The <strong>SSH Target</strong> tab is used in chapter 2.",
+    "instrHead":"Instructions","instrTitle":"Issue & use a certificate",
+    "instrSub":"You generate a local SSH key pair, request a short-lived certificate (5 min) from Akeyless that binds this key to the ubuntu user, then connect to the target server — without ever adding a key to authorized_keys.",
+    "tnote":"Steps 1-3 are in the <strong>Terminal</strong> tab (workstation). Step 4 verifies in the <strong>SSH Target</strong> tab that no authorized_keys exists.",
     "progLabel":"Progress","copy":"Copy","copied":"Copied","hostWs":"Terminal · workstation","hostTgt":"SSH Target · target server",
-    "s1h":"Step 1 · Authenticate the CLI & create the CA key","s1b":"Configure the CLI with your API Key (from the Akeyless console, Auth Methods section), verify access, then create an RSA key that will serve as the SSH Certificate Authority:",
-    "s2h":"Step 2 · Export the CA public key","s2b":"Export the public part of the CA. This is the only part that needs to leave Akeyless — it will be distributed to servers to tell them which CA to trust:","s2n":"You should see a public key in <code>ssh-rsa AAAA...</code> format.",
-    "s3h":"Step 3 · Create the SSH Certificate Issuer","s3b":"Create a Certificate Issuer that defines the issuance rules. <code>--allowed-users</code> restricts which accounts are reachable; <code>--ttl 600</code> sets the maximum TTL (10 min):",
-    "s4h":"Step 4 · Create an access role","s4b":"Create a role that allows requesting certificates, then associate your authentication method (API Key) with this role:",
+    "s1h":"Step 1 · Generate an SSH key pair","s1b":"Generate a local RSA key pair; the certificate will be bound to this pair. In the <strong>Terminal</strong> tab:",
+    "s2h":"Step 2 · Request a certificate from Akeyless","s2b":"Ask Akeyless to sign your public key (TTL 300 s), then inspect the certificate's validity window:",
+    "s3h":"Step 3 · Connect to the target server","s3b":"Connect to the target server with your private key and the certificate. You should see <code>ubuntu</code> and <code>ssh-target</code>:",
+    "s4h":"Step 4 · Verify no authorized_keys","s4b":"In the <strong>SSH Target</strong> tab, verify no authorized_keys exists for ubuntu — the certificate was the only credential needed:","s4b2":"Also confirm the Certificate Issuer is configured correctly:",
     "critH":"Success criteria",
-    "c1":"CLI authenticated & CA key /ssh/lab-ca-key created.","c2":"CA public key exported.","c3":"SSH Certificate Issuer created (max TTL 600 s).","c4":"Role created and associated with the auth method.",
+    "c1":"Key pair lab_key / lab_key.pub generated.","c2":"Short-lived certificate obtained (TTL 5 min).","c3":"Connection succeeded (ubuntu @ ssh-target).","c4":"No authorized_keys used.",
     "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
     "skip":"Skip","check":"Check",
     "helpTitle":"Lab Copilot","helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.","nextHint":"Next hint",
-    "hint0":"First configure the Akeyless CLI, then create the CA key (Step 1).",
-    "hint1":"The CA private key stays in Akeyless; only the public key is exported.",
-    "hint2":"The issuer defines the allowed users and the maximum certificate TTL.",
-    "hint3":"The role + auth-method association allow requesting certificates.",
-    "hint4":"Everything happens on the workstation; the target server comes in chapter 2.",
+    "hint0":"First generate the SSH key pair (Step 1).",
+    "hint1":"The certificate binds your public key to the ubuntu user for a limited time.",
+    "hint2":"ssh-keygen -L shows the Valid field: the exact validity window.",
+    "hint3":"The CertificateFile option presents the certificate during the SSH connection.",
+    "hint4":"No authorized_keys: trust comes only from the CA (chapter 2).",
     "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — akeyless-workstation VM (Koffi Academy)","bUbuntuT":"Ubuntu 24.04 LTS — ssh-target VM (Koffi Academy)",
-    "bEnv":"Akeyless CLI + ssh-keygen ready. Folder: /root/workspace","bEnvT":"sshd active. This tab is used in chapter 2.","bTip":"Tip: type `help` for commands, `check` for progress.",
-    "hHeader":"Available commands:","hConf":"configure the CLI (API Key)","hList":"list items","hKey":"create the CA key","hExport":"export the public key","hIssuer":"create the Certificate Issuer","hRole":"create / associate the role","hAm":"list auth methods","hCheck":"check your progress",
-    "confOk":"Profile default configured.","listOk":"/ssh/ (folder)","keyOk":"key /ssh/lab-ca-key created","describeKey":"name: /ssh/lab-ca-key\ntype: classic-key\nalg: RSA2048","caPub":"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7koffilabca0xQ: akeyless-ca","exportNote":"(public key written to /root/workspace/akeyless_ca.pub)","issuerOk":"ssh cert issuer /ssh/lab-issuer created (allowed-users: ubuntu, ttl: 600)","roleOk":"role /ssh/lab-role created","ruleOk":"rule added: /ssh/* read","amList":"api-key-lab (api_key)","assocOk":"role /ssh/lab-role associated with api-key-lab",
-    "needConf":"error: profile not configured — run akeyless configure first","needKey":"error: key /ssh/lab-ca-key does not exist — create it first (Step 1)","caMissing":"cat: /root/workspace/akeyless_ca.pub: No such file or directory","caHint":"Tip: export the public key first (Step 2).",
-    "wrongHost":"(this command runs in the other tab)","tgtSoon":"This tab (target server) is used from chapter 2.",
-    "checkHeader":"Task progress:","chkK":"CA key created","chkE":"Public key exported","chkI":"Certificate Issuer created","chkR":"Role created & associated","chkAll":"All criteria met. Chapter 1 complete!","skipped":"Step skipped.",
+    "bEnv":"Akeyless CLI + ssh ready. CA & issuer in place (chapters 1-2).","bEnvT":"sshd configured: trust in the Akeyless CA (chapter 2).","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hKeygen":"generate the key pair","hLs":"list the key files","hGet":"request a certificate","hInspect":"inspect the certificate (ssh-keygen -L)","hSsh":"connect to the target server","hDesc":"describe the Certificate Issuer","hAuth":"check authorized_keys (target)","hCheck":"check your progress",
+    "keygenOk":"Generating public/private rsa key pair.\nYour identification has been saved in /root/.ssh/lab_key\nYour public key has been saved in /root/.ssh/lab_key.pub","lsOk":"-rw------- 1 root root 1823 /root/.ssh/lab_key\n-rw-r--r-- 1 root root  411 /root/.ssh/lab_key.pub",
+    "certNote":"(certificate written to /root/.ssh/lab_key-cert.pub)","certInspect":"/root/.ssh/lab_key-cert.pub:\n        Type: ssh-rsa-cert-v01@openssh.com user certificate\n        Public key: RSA-CERT SHA256:k0ffiLabCertHashAbCd\n        Signing CA: RSA SHA256:akeylessCaHash0xQ\n        Key ID: \"akeyless-cert\"\n        Valid: from 2026-06-21T10:00:00 to 2026-06-21T10:05:00\n        Principals: ubuntu",
+    "sshOut":"ubuntu\nssh-target","issuerDesc":"name: /ssh/lab-issuer\ntype: ssh-cert-issuer\nallowed-users: ubuntu\nttl: 600","noAuth":"No authorized_keys file — certificate auth only",
+    "needKey":"error: /root/.ssh/lab_key.pub not found — generate the key pair first (Step 1)","needCert":"error: certificate not found — request it first (Step 2)","sshExpiredHint":"Tip: obtain a certificate first (Step 2).",
+    "wrongHostWs":"(run this command in the SSH Target tab)","wrongHostTgt":"(run this command in the Terminal / workstation tab)",
+    "checkHeader":"Task progress:","chkK":"Key pair generated","chkC":"Short-lived certificate obtained","chkS":"Connection succeeded","chkA":"No authorized_keys used","chkAll":"All criteria met. Chapter 3 complete!","skipped":"Step skipped.",
     "cmdNF":"{c}: command not found. Type `help`.","akNF":"akeyless: subcommand not simulated in this lab.","catNF":"cat: {f}: no such file",
-    "tDone":"Chapter 1 complete — CA & issuer in place"
+    "tDone":"Chapter 3 complete — certificate access succeeded"
   }
 };
 
@@ -393,75 +402,66 @@ window.I18N = {
     ws:{out:document.getElementById("outWs"),input:document.getElementById("inWs"),prompt:"root@akeyless-workstation:~#",banner:["bSsh","bUbuntu","bEnv","bTip"]},
     tgt:{out:document.getElementById("outTgt"),input:document.getElementById("inTgt"),prompt:"root@ssh-target:~#",banner:["bSsh","bUbuntuT","bEnvT","bTip"]}
   };
-  var FS={};
-  var st={cakey:false,export:false,issuer:false,role:false};
-  var configured=false, caKey=false, caExported=false, issuerOk=false, roleCreated=false, ruleOk=false, assocOk=false; var hi=0;
+  var st={keygen:false,cert:false,connect:false,verify:false};
+  var keyGen=false, certIssued=false, connected=false; var hi=0;
 
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
-  function print(host,text,cls){var o=HOSTS[host].out;var l=document.createElement("div");if(cls)l.className=cls;l.innerHTML=esc(text);o.appendChild(l);o.scrollTop=o.scrollHeight;}
+  function print(host,text,cls){var o=HOSTS[host].out;String(text).split("\n").forEach(function(line){var l=document.createElement("div");if(cls)l.className=cls;l.innerHTML=esc(line);o.appendChild(l);});o.scrollTop=o.scrollHeight;}
   function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
   function banner(host){var H=HOSTS[host];H.out.innerHTML="";H.banner.forEach(function(k){print(host,t(k),"line-muted");});print(host,"");}
 
-  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["cakey","export","issuer","role"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
-
-  function norm(p){return p?p.trim().replace(/^\.\//,"").replace(/^\/root\/workspace\//,"").replace(/\/+$/,""):"";}
-
-  function akeyless(host,parts,cmd){
-    var sc=parts[1]||"";
-    if(sc==="configure"){configured=true;print(host,t("confOk"),"line-ok");return;}
-    if(!configured){print(host,t("needConf"),"line-error");return;}
-    if(sc==="list-items"){print(host,t("listOk"));return;}
-    if(sc==="create-classic-key"){caKey=true;print(host,t("keyOk"),"line-ok");setStep("cakey",true);return;}
-    if(sc==="describe-item"){ if(/lab-issuer/.test(cmd)){print(host,"name: /ssh/lab-issuer\ntype: ssh-cert-issuer\nallowed-users: ubuntu");} else {if(!caKey){print(host,t("needKey"),"line-error");return;}t("describeKey").split("\n").forEach(function(l){print(host,l);});} return; }
-    if(sc==="export-classic-key"){ if(!caKey){print(host,t("needKey"),"line-error");return;} caExported=true;FS["akeyless_ca.pub"]=t("caPub");print(host,t("exportNote"),"line-muted");return; }
-    if(sc==="create-ssh-cert-issuer"){issuerOk=true;print(host,t("issuerOk"),"line-ok");setStep("issuer",true);return;}
-    if(sc==="create-role"){roleCreated=true;print(host,t("roleOk"),"line-ok");return;}
-    if(sc==="set-role-rule"){ruleOk=true;print(host,t("ruleOk"),"line-muted");return;}
-    if(sc==="auth-method"&&parts[2]==="list"){print(host,t("amList"));return;}
-    if(sc==="assoc-role-am"){assocOk=true;print(host,t("assocOk"),"line-ok");if(roleCreated&&ruleOk)setStep("role",true);return;}
-    print(host,t("akNF"),"line-warn");
-  }
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["keygen","cert","connect","verify"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
 
   function handle(host,raw){
     var cmd=raw.trim(); if(!cmd) return;
-    var redir=cmd.match(/^(.*?)\s*>\s*(\S+)\s*$/); var redirPath=null;
-    if(redir){cmd=redir[1].trim();redirPath=redir[2];}
+    var redir=cmd.match(/^(.*?)\s*>\s*(\S+)\s*$/); if(redir){cmd=redir[1].trim();}
     var parts=cmd.split(/\s+/); var head=parts[0];
     if(head==="help"){print(host,t("hHeader"),"line-muted");
       if(host==="ws"){
-        print(host,"  akeyless configure ...                       "+t("hConf"));
-        print(host,"  akeyless list-items                          "+t("hList"));
-        print(host,"  akeyless create-classic-key ...              "+t("hKey"));
-        print(host,"  akeyless export-classic-key ... > file       "+t("hExport"));
-        print(host,"  akeyless create-ssh-cert-issuer ...          "+t("hIssuer"));
-        print(host,"  akeyless create-role / assoc-role-am ...     "+t("hRole"));
-        print(host,"  akeyless auth-method list                    "+t("hAm"));
-        print(host,"  check   ·   clear                          "+t("hCheck"));
-      } else { print(host,t("tgtSoon"),"line-warn"); }
+        print(host,"  ssh-keygen -t rsa -b 2048 -f lab_key -N \"\"   "+t("hKeygen"));
+        print(host,"  ls -la /root/.ssh/lab_key*                   "+t("hLs"));
+        print(host,"  akeyless get-ssh-certificate ... > cert      "+t("hGet"));
+        print(host,"  ssh-keygen -L -f lab_key-cert.pub            "+t("hInspect"));
+        print(host,"  ssh -i lab_key -o CertificateFile=... ...    "+t("hSsh"));
+        print(host,"  akeyless describe-item --name /ssh/lab-issuer "+t("hDesc"));
+      } else { print(host,"  cat /home/ubuntu/.ssh/authorized_keys ...    "+t("hAuth")); }
+      print(host,"  check   ·   clear");
       return;}
     if(head==="clear"){HOSTS[host].out.innerHTML="";return;}
     if(head==="check"){runCheck(host);return;}
+
     if(host==="tgt"){
-      if(head==="cat"||head==="sudo"||head==="echo"||head==="systemctl"){print(host,t("tgtSoon"),"line-warn");return;}
-      print(host,t("tgtSoon"),"line-warn");return;
+      if(head==="cat"&&/authorized_keys/.test(cmd)){print(host,t("noAuth"),"line-ok");setStep("verify",true);return;}
+      if(head==="echo"&&/No authorized_keys/.test(cmd)){print(host,t("noAuth"),"line-ok");setStep("verify",true);return;}
+      print(host,t("cmdNF",{c:head}),"line-error");return;
     }
-    // workstation
-    if(head==="cat"){var f=norm(parts[1]);if(/akeyless_ca\.pub/.test(parts[1]||"")){ if(caExported){print(host,FS["akeyless_ca.pub"]);} else {print(host,t("caMissing"),"line-error");print(host,t("caHint"),"line-warn");} return;} print(host,t("catNF",{f:parts[1]||""}),"line-error");return;}
-    if(head==="akeyless"){ if(redirPath&&parts[1]==="export-classic-key"){akeyless(host,parts,cmd);} else {akeyless(host,parts,cmd);} return; }
+    // ws host
+    if(head==="ssh-keygen"){
+      if(/-L/.test(cmd)){ if(!certIssued){print(host,t("needCert"),"line-error");return;} print(host,t("certInspect"));return; }
+      keyGen=true;print(host,t("keygenOk"),"line-ok");setStep("keygen",true);return;
+    }
+    if(head==="ls"){ if(/lab_key/.test(cmd)){ if(!keyGen){print(host,"ls: cannot access '/root/.ssh/lab_key*': No such file or directory","line-warn");return;} print(host,t("lsOk"));return; } print(host,"");return; }
+    if(head==="akeyless"){
+      if(parts[1]==="get-ssh-certificate"){ if(!keyGen){print(host,t("needKey"),"line-error");return;} certIssued=true;print(host,t("certNote"),"line-muted");setStep("cert",true);return; }
+      if(parts[1]==="describe-item"){print(host,t("issuerDesc"));return;}
+      print(host,t("akNF"),"line-warn");return;
+    }
+    if(head==="ssh"){
+      if(!certIssued){print(host,"ubuntu@ssh-target: Permission denied (publickey).","line-error");print(host,t("sshExpiredHint"),"line-warn");return;}
+      print(host,t("sshOut"),"line-ok");connected=true;setStep("connect",true);return;
+    }
+    if(head==="cat"&&/authorized_keys/.test(cmd)){print(host,t("wrongHostTgt"),"line-warn");return;}
     print(host,t("cmdNF",{c:head}),"line-error");
   }
 
   function runCheck(host){
     print(host,t("checkHeader"),"line-muted");
-    print(host,(st.cakey?"  [x] ":"  [ ] ")+t("chkK"),st.cakey?"line-ok":"line-warn");
-    print(host,(st.export?"  [x] ":"  [ ] ")+t("chkE"),st.export?"line-ok":"line-warn");
-    print(host,(st.issuer?"  [x] ":"  [ ] ")+t("chkI"),st.issuer?"line-ok":"line-warn");
-    print(host,(st.role?"  [x] ":"  [ ] ")+t("chkR"),st.role?"line-ok":"line-warn");
-    if(st.cakey&&st.export&&st.issuer&&st.role)print(host,t("chkAll"),"line-ok");
+    print(host,(st.keygen?"  [x] ":"  [ ] ")+t("chkK"),st.keygen?"line-ok":"line-warn");
+    print(host,(st.cert?"  [x] ":"  [ ] ")+t("chkC"),st.cert?"line-ok":"line-warn");
+    print(host,(st.connect?"  [x] ":"  [ ] ")+t("chkS"),st.connect?"line-ok":"line-warn");
+    print(host,(st.verify?"  [x] ":"  [ ] ")+t("chkA"),st.verify?"line-ok":"line-warn");
+    if(st.keygen&&st.cert&&st.connect&&st.verify)print(host,t("chkAll"),"line-ok");
   }
-  // mark export step when ca exported AND user inspected (cat) — simplify: mark on export
-  var _origAk=akeyless;
-  akeyless=function(host,parts,cmd){_origAk(host,parts,cmd);if(parts[1]==="export-classic-key"&&caExported)setStep("export",true);};
 
   function runScript(host,text){
     var lines=text.replace(/\r/g,"").split("\n"); var i=0;
