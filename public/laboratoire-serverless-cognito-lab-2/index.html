@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Serverless REST API · Chapitre 1 | Atelier — Koffi Academy</title>
-  <meta name="description" content="Atelier Koffi Academy — Chapitre 1 : créer une table DynamoDB, un rôle d'exécution IAM et une fonction Lambda Python.">
+  <title>Serverless REST API · Chapitre 2 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Chapitre 2 : créer une HTTP API avec API Gateway, l'intégration Lambda, les routes GET/POST et un stage prod.">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -163,15 +163,16 @@ button{cursor:pointer}
         <span class="brand__k">Koffi Academy</span>
         <span class="brand__sep">|</span>
         <span class="brand__title">Serverless REST API · Cognito</span>
-        <span class="chip-ch">CH.1</span>
+        <span class="chip-ch">CH.2</span>
       </span>
     </a>
     <div class="labbar__spacer"></div>
     <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">45:00</span></span>
     <nav class="actions" aria-label="Lab actions">
+      <a class="topbtn" href="../laboratoire-serverless-cognito-lab"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navChapter1">Chapitre 1</span></a>
       <a class="topbtn" href="../laboratoire-serverless-cognito"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
       <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
-      <a class="topbtn" href="../laboratoire-serverless-cognito-lab-2"><span data-i18n="navChapter2">Chapitre 2</span> <i class="fa-solid fa-arrow-right-long"></i></a>
+      <a class="topbtn" href="../laboratoire-serverless-cognito-lab-3"><span data-i18n="navChapter3">Chapitre 3</span> <i class="fa-solid fa-arrow-right-long"></i></a>
       <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
       <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
       <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
@@ -183,7 +184,7 @@ button{cursor:pointer}
       <div class="work-tabs" role="tablist">
         <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
         <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
-        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-file-code"></i><span data-i18n="tabFiles">Files</span></button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-file-lines"></i><span data-i18n="tabFiles">Resources</span></button>
       </div>
       <div class="work-surface">
         <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
@@ -195,28 +196,26 @@ button{cursor:pointer}
         </section>
         <section class="view datasets-view" id="datasetsView" role="tabpanel">
           <div class="filebar">
-            <button type="button" class="filetab is-active" data-file="trust-policy.json">trust-policy.json</button>
-            <button type="button" class="filetab" data-file="dynamodb-policy.json">dynamodb-policy.json</button>
-            <button type="button" class="filetab" data-file="lambda_function.py">lambda_function.py</button>
+            <button type="button" class="filetab is-active" data-file="lab-ids.env">lab-ids.env</button>
           </div>
           <div class="runbar">
-            <div class="runbar__title"><i class="fa-solid fa-file-code"></i><span id="fileLabel">/root/serverless-lab/trust-policy.json</span></div>
+            <div class="runbar__title"><i class="fa-solid fa-file-lines"></i><span id="fileLabel">/root/serverless-lab/lab-ids.env</span></div>
             <div class="runbar__actions">
               <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
               <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
             </div>
           </div>
           <div class="dataset-grid">
-            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Consultez ou modifiez le fichier."></textarea>
+            <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Identifiants des ressources sauvegardés."></textarea>
             <aside class="dataset-side">
               <div class="metric-grid">
-                <div class="metric"><span class="metric__k" data-i18n="mTable">Table</span><div class="metric__v" id="mTable">—</div></div>
-                <div class="metric"><span class="metric__k" data-i18n="mLambda">Lambda</span><div class="metric__v" id="mLambda">—</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mApi">API</span><div class="metric__v" id="mApi">—</div></div>
+                <div class="metric"><span class="metric__k" data-i18n="mRoutes">Routes</span><div class="metric__v" id="mRoutes">0/2</div></div>
               </div>
               <div class="file-list">
-                <div class="file-pill"><i class="fa-solid fa-database"></i>DynamoDB Items</div>
-                <div class="file-pill"><i class="fa-solid fa-user-shield"></i>rôle d'exécution IAM</div>
-                <div class="file-pill"><i class="fa-brands fa-python"></i>Lambda Python 3.12</div>
+                <div class="file-pill"><i class="fa-solid fa-network-wired"></i>HTTP API v2</div>
+                <div class="file-pill"><i class="fa-solid fa-route"></i>GET / POST /items</div>
+                <div class="file-pill"><i class="fa-solid fa-rocket"></i>stage prod</div>
               </div>
             </aside>
           </div>
@@ -230,115 +229,70 @@ button{cursor:pointer}
         <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
       </div>
       <div class="instructions__body">
-        <h1 class="lab-title" data-i18n="instrTitle">Table DynamoDB & fonction Lambda</h1>
-        <p class="lab-sub" data-i18n="instrSub">Vous créez une table DynamoDB <code>Items</code>, un rôle d'exécution IAM pour Lambda, et une fonction Lambda Python qui gère les opérations GET (scan) et POST (put-item). Cette fonction sera exposée par API Gateway au chapitre 2.</p>
+        <h1 class="lab-title" data-i18n="instrTitle">HTTP API avec API Gateway</h1>
+        <p class="lab-sub" data-i18n="instrSub">Vous créez une HTTP API (API Gateway v2), la câblez à votre Lambda via une intégration proxy, ajoutez les routes <code>GET /items</code> et <code>POST /items</code>, déployez sur un stage <code>prod</code>, et testez les endpoints publics avec curl. La protection JWT viendra au chapitre 3.</p>
 
         <div class="progress-card">
           <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
           <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="step is-open" data-step="table">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Dossier de travail & table DynamoDB</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+        <article class="step is-open" data-step="create">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · HTTP API & intégration Lambda</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s1b">Définissez la région, créez le dossier de travail, puis la table avec <code>itemId</code> comme clé de partition. Dans le <strong>Terminal</strong> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">export AWS_DEFAULT_REGION=us-east-1
-mkdir -p /root/serverless-lab
-aws dynamodb create-table \
-  --table-name Items \
-  --attribute-definitions AttributeName=itemId,AttributeType=S \
-  --key-schema AttributeName=itemId,KeyType=HASH \
-  --billing-mode PAY_PER_REQUEST
-aws dynamodb wait table-exists --table-name Items</pre></div>
-          </div>
-        </article>
-
-        <article class="step" data-step="role">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Rôle d'exécution Lambda</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
-          <div class="step__body">
-            <span data-i18n="s2b">Récupérez l'ID du compte, créez la trust policy et le rôle, puis attachez une policy donnant les droits DynamoDB CRUD et CloudWatch Logs (les policies sont enregistrées en fichiers dans l'onglet <strong>Files</strong>) :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-cat > /root/serverless-lab/trust-policy.json << 'TRUSTEOF'
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    { "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" }
-  ]
-}
-TRUSTEOF
-ROLE_ARN=$(aws iam create-role \
-  --role-name serverless-lab-lambda-role \
-  --assume-role-policy-document file:///root/serverless-lab/trust-policy.json \
-  --query 'Role.Arn' --output text)
-cat > /root/serverless-lab/dynamodb-policy.json << 'POLEOF'
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    { "Effect": "Allow", "Action": ["dynamodb:PutItem","dynamodb:GetItem","dynamodb:Scan","dynamodb:DeleteItem"], "Resource": "arn:aws:dynamodb:us-east-1:*:table/Items" },
-    { "Effect": "Allow", "Action": ["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents"], "Resource": "arn:aws:logs:*:*:*" }
-  ]
-}
-POLEOF
-aws iam put-role-policy \
-  --role-name serverless-lab-lambda-role \
-  --policy-name dynamodb-crud-policy \
-  --policy-document file:///root/serverless-lab/dynamodb-policy.json
-sleep 10</pre></div>
-          </div>
-        </article>
-
-        <article class="step" data-step="lambda">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Fonction Lambda Python</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
-          <div class="step__body">
-            <span data-i18n="s3b">Créez le handler qui lit la méthode HTTP depuis l'event API Gateway et exécute un scan (GET) ou un put-item (POST). Enregistrez <code>lambda_function.py</code> :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcPy">cat > /root/serverless-lab/lambda_function.py << 'PYEOF'
-import boto3
-import json
-import uuid
-
-dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table("Items")
-
-def handler(event, context):
-    method = event.get("requestContext", {}).get("http", {}).get("method", "GET")
-    if method == "GET":
-        result = table.scan()
-        return {"statusCode": 200, "headers": {"Content-Type": "application/json"},
-                "body": json.dumps(result.get("Items", []))}
-    if method == "POST":
-        body = json.loads(event.get("body", "{}"))
-        item_id = body.get("itemId", str(uuid.uuid4()))
-        name = body.get("name", "unnamed")
-        table.put_item(Item={"itemId": item_id, "name": name})
-        return {"statusCode": 201, "headers": {"Content-Type": "application/json"},
-                "body": json.dumps({"itemId": item_id, "name": name})}
-    return {"statusCode": 405, "body": "Method Not Allowed"}
-PYEOF</pre></div>
-            <span data-i18n="s3b2">Empaquetez et déployez la fonction :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">cd /root/serverless-lab && zip -j lambda.zip lambda_function.py
-aws lambda create-function \
+            <span data-i18n="s1b">Chargez les identifiants sauvegardés, récupérez l'ARN de la Lambda, créez l'HTTP API puis l'intégration proxy. Dans le <strong>Terminal</strong> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">source /root/serverless-lab/lab-ids.env
+LAMBDA_ARN=$(aws lambda get-function \
   --function-name serverless-lab-api \
-  --runtime python3.12 \
-  --handler lambda_function.handler \
-  --role "$ROLE_ARN" \
-  --zip-file fileb:///root/serverless-lab/lambda.zip \
-  --timeout 15</pre></div>
+  --query 'Configuration.FunctionArn' --output text)
+API_ID=$(aws apigatewayv2 create-api \
+  --name serverless-lab-api --protocol-type HTTP \
+  --query 'ApiId' --output text)
+INTEGRATION_ID=$(aws apigatewayv2 create-integration \
+  --api-id "$API_ID" --integration-type AWS_PROXY \
+  --integration-uri "$LAMBDA_ARN" --payload-format-version 2.0 \
+  --query 'IntegrationId' --output text)</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="routes">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Routes & permission d'invocation</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s2b">Créez les routes <code>GET /items</code> et <code>POST /items</code>, puis autorisez API Gateway à invoquer la Lambda :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">aws apigatewayv2 create-route --api-id "$API_ID" \
+  --route-key "GET /items" --target "integrations/$INTEGRATION_ID"
+aws apigatewayv2 create-route --api-id "$API_ID" \
+  --route-key "POST /items" --target "integrations/$INTEGRATION_ID"
+aws lambda add-permission \
+  --function-name serverless-lab-api \
+  --statement-id apigateway-invoke \
+  --action lambda:InvokeFunction \
+  --principal apigateway.amazonaws.com \
+  --source-arn "arn:aws:execute-api:us-east-1:${ACCOUNT_ID}:${API_ID}/*"</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="stage">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Déployer sur le stage prod</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s3b">Créez le stage <code>prod</code> avec auto-deploy, puis construisez l'URL de l'endpoint :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">aws apigatewayv2 create-stage --api-id "$API_ID" --stage-name prod --auto-deploy
+API_URL="https://${API_ID}.execute-api.us-east-1.amazonaws.com/prod"
+echo "API URL: $API_URL"</pre></div>
           </div>
         </article>
 
         <article class="step" data-step="test">
-          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Tester la Lambda & sauvegarder les IDs</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Tester l'endpoint public</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
-            <span data-i18n="s4b">Invoquez la Lambda avec un event GET simulé, puis vérifiez la réponse (200, liste vide) et sauvegardez les identifiants pour les chapitres suivants :</span>
-            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">aws lambda invoke \
-  --function-name serverless-lab-api \
-  --payload '{"requestContext":{"http":{"method":"GET"}}}' \
-  --cli-binary-format raw-in-base64-out \
-  /root/serverless-lab/response.json
-cat /root/serverless-lab/response.json
-echo "export AWS_DEFAULT_REGION=us-east-1" > /root/serverless-lab/lab-ids.env
-echo "export ACCOUNT_ID=$ACCOUNT_ID" >> /root/serverless-lab/lab-ids.env
-echo "export ROLE_ARN=$ROLE_ARN" >> /root/serverless-lab/lab-ids.env</pre></div>
+            <span data-i18n="s4b">Postez un item, listez-les, puis sauvegardez l'ID et l'URL de l'API pour les chapitres suivants :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">curl -s -X POST "$API_URL/items" \
+  -H "Content-Type: application/json" \
+  -d '{"itemId": "item-001", "name": "Widget"}' | python3 -m json.tool
+curl -s "$API_URL/items" | python3 -m json.tool
+echo "export API_ID=$API_ID" >> /root/serverless-lab/lab-ids.env
+echo "export API_URL=$API_URL" >> /root/serverless-lab/lab-ids.env
+echo "export INTEGRATION_ID=$INTEGRATION_ID" >> /root/serverless-lab/lab-ids.env</pre></div>
           </div>
         </article>
 
@@ -346,10 +300,10 @@ echo "export ROLE_ARN=$ROLE_ARN" >> /root/serverless-lab/lab-ids.env</pre></div>
           <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
           <div class="step__body">
             <ul class="crit">
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Table DynamoDB Items créée et active.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Rôle d'exécution + policy DynamoDB/Logs en place.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Fonction Lambda serverless-lab-api déployée.</span></li>
-              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Invocation GET réussie (200, liste vide).</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">HTTP API et intégration Lambda créées.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Routes GET/POST + permission d'invocation.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Stage prod déployé, URL obtenue.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">POST puis GET publics réussis (Widget visible).</span></li>
             </ul>
             <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
           </div>
@@ -370,7 +324,7 @@ echo "export ROLE_ARN=$ROLE_ARN" >> /root/serverless-lab/lab-ids.env</pre></div>
   <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
   <div class="help-body">
     <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.</p>
-    <div class="hint" id="hintText" data-i18n="hint0">Commencez par créer la table DynamoDB (Étape 1).</div>
+    <div class="hint" id="hintText" data-i18n="hint0">Créez d'abord l'HTTP API et l'intégration Lambda (Étape 1).</div>
     <button type="button" class="toolbtn toolbtn--primary" id="nextHint"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
   </div>
 </section>
@@ -380,115 +334,115 @@ echo "export ROLE_ARN=$ROLE_ARN" >> /root/serverless-lab/lab-ids.env</pre></div>
 <script>
 window.I18N = {
   "fr":{
-    "navOverview":"Aperçu","navChapter2":"Chapitre 2","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
-    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Files",
-    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Consultez ou modifiez le fichier.",
-    "mTable":"Table","mLambda":"Lambda",
-    "instrHead":"Instructions","instrTitle":"Table DynamoDB & fonction Lambda",
-    "instrSub":"Vous créez une table DynamoDB <code>Items</code>, un rôle d'exécution IAM pour Lambda, et une fonction Lambda Python qui gère les opérations GET (scan) et POST (put-item). Cette fonction sera exposée par API Gateway au chapitre 2.",
+    "navChapter1":"Chapitre 1","navChapter3":"Chapitre 3","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFiles":"Resources",
+    "btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Identifiants des ressources sauvegardés.",
+    "mApi":"API","mRoutes":"Routes",
+    "instrHead":"Instructions","instrTitle":"HTTP API avec API Gateway",
+    "instrSub":"Vous créez une HTTP API (API Gateway v2), la câblez à votre Lambda via une intégration proxy, ajoutez les routes <code>GET /items</code> et <code>POST /items</code>, déployez sur un stage <code>prod</code>, et testez les endpoints publics avec curl. La protection JWT viendra au chapitre 3.",
     "progLabel":"Progression","copy":"Copier","copied":"Copié",
-    "s1h":"Étape 1 · Dossier de travail & table DynamoDB","s1b":"Définissez la région, créez le dossier de travail, puis la table avec <code>itemId</code> comme clé de partition. Dans le <strong>Terminal</strong> :",
-    "s2h":"Étape 2 · Rôle d'exécution Lambda","s2b":"Récupérez l'ID du compte, créez la trust policy et le rôle, puis attachez une policy donnant les droits DynamoDB CRUD et CloudWatch Logs (les policies sont enregistrées en fichiers dans l'onglet <strong>Files</strong>) :",
-    "s3h":"Étape 3 · Fonction Lambda Python","s3b":"Créez le handler qui lit la méthode HTTP depuis l'event API Gateway et exécute un scan (GET) ou un put-item (POST). Enregistrez <code>lambda_function.py</code> :","s3b2":"Empaquetez et déployez la fonction :",
-    "s4h":"Étape 4 · Tester la Lambda & sauvegarder les IDs","s4b":"Invoquez la Lambda avec un event GET simulé, puis vérifiez la réponse (200, liste vide) et sauvegardez les identifiants pour les chapitres suivants :",
+    "s1h":"Étape 1 · HTTP API & intégration Lambda","s1b":"Chargez les identifiants sauvegardés, récupérez l'ARN de la Lambda, créez l'HTTP API puis l'intégration proxy. Dans le <strong>Terminal</strong> :",
+    "s2h":"Étape 2 · Routes & permission d'invocation","s2b":"Créez les routes <code>GET /items</code> et <code>POST /items</code>, puis autorisez API Gateway à invoquer la Lambda :",
+    "s3h":"Étape 3 · Déployer sur le stage prod","s3b":"Créez le stage <code>prod</code> avec auto-deploy, puis construisez l'URL de l'endpoint :",
+    "s4h":"Étape 4 · Tester l'endpoint public","s4b":"Postez un item, listez-les, puis sauvegardez l'ID et l'URL de l'API pour les chapitres suivants :",
     "critH":"Critères de réussite",
-    "c1":"Table DynamoDB Items créée et active.","c2":"Rôle d'exécution + policy DynamoDB/Logs en place.","c3":"Fonction Lambda serverless-lab-api déployée.","c4":"Invocation GET réussie (200, liste vide).",
+    "c1":"HTTP API et intégration Lambda créées.","c2":"Routes GET/POST + permission d'invocation.","c3":"Stage prod déployé, URL obtenue.","c4":"POST puis GET publics réussis (Widget visible).",
     "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
     "skip":"Ignorer","check":"Vérifier",
     "helpTitle":"Copilote de l'atelier","helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.","nextHint":"Indice suivant",
-    "hint0":"Commencez par créer la table DynamoDB (Étape 1).",
-    "hint1":"PAY_PER_REQUEST évite de provisionner une capacité fixe — idéal pour un lab.",
-    "hint2":"La trust policy autorise le service lambda.amazonaws.com à assumer le rôle.",
-    "hint3":"Le handler lit requestContext.http.method pour distinguer GET et POST.",
-    "hint4":"L'invocation directe simule un event API Gateway au format payload v2.",
+    "hint0":"Créez d'abord l'HTTP API et l'intégration Lambda (Étape 1).",
+    "hint1":"L'intégration AWS_PROXY transmet l'event brut à la Lambda (payload v2.0).",
+    "hint2":"La route-key combine méthode et chemin : « GET /items ».",
+    "hint3":"add-permission autorise apigateway.amazonaws.com à invoquer la fonction.",
+    "hint4":"Le stage prod en auto-deploy publie immédiatement chaque changement.",
     "bSsh":"Connexion SSH établie.","bUbuntu":"Ubuntu 24.04 LTS — VM serverless-workstation (Koffi Academy)",
-    "bEnv":"AWS CLI v2 + python3 + zip prêts. Dossier : /root/serverless-lab","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
-    "hHeader":"Commandes disponibles :","hDdb":"créer / attendre la table DynamoDB","hSts":"obtenir l'ID du compte","hRole":"créer le rôle + attacher la policy","hZip":"empaqueter la fonction","hLambda":"créer / invoquer la Lambda","hCat":"afficher un fichier","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
-    "ddbCreating":"{ \"TableDescription\": { \"TableName\": \"Items\", \"TableStatus\": \"CREATING\" } }","ddbActive":"Table Items est maintenant ACTIVE","acctId":"123456789012","roleArn":"arn:aws:iam::123456789012:role/serverless-lab-lambda-role","policyOk":"(policy en ligne dynamodb-crud-policy attachée)","zipOk":"  adding: lambda_function.py (deflated 54%)",
-    "fnCreated":"{ \"FunctionName\": \"serverless-lab-api\", \"Runtime\": \"python3.12\", \"State\": \"Active\" }","needRole":"error: le rôle d'exécution est introuvable — créez-le d'abord (Étape 2)","invokeOk":"{ \"StatusCode\": 200, \"ExecutedVersion\": \"$LATEST\" }","respJson":"{\"statusCode\": 200, \"headers\": {\"Content-Type\": \"application/json\"}, \"body\": \"[]\"}","needLambda":"error: la fonction n'existe pas — créez-la d'abord (Étape 3)",
-    "checkHeader":"Progression de la tâche :","chkT":"Table DynamoDB créée","chkR":"Rôle + policy en place","chkL":"Lambda déployée","chkI":"Invocation GET 200","chkAll":"Tous les critères sont remplis. Chapitre 1 terminé !","skipped":"Étape ignorée.",
+    "bEnv":"AWS CLI v2 + curl + python3 prêts. Dossier : /root/serverless-lab","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hSource":"charger les identifiants sauvegardés","hCreate":"créer l'API + l'intégration","hRoute":"ajouter une route","hPerm":"autoriser l'invocation Lambda","hStage":"créer le stage prod","hCurl":"tester l'endpoint (curl)","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "lambdaArn":"arn:aws:lambda:us-east-1:123456789012:function:serverless-lab-api","apiCreated":"abcd1234ef","integCreated":"i9z8y7x6","routeGet":"(route créée : GET /items)","routePost":"(route créée : POST /items)","permOk":"(permission apigateway-invoke ajoutée)","stageOk":"(stage prod créé, auto-deploy activé)",
+    "needApi":"Astuce : créez d'abord l'API et l'intégration (Étape 1).","needStage":"curl: (6) impossible de résoudre l'hôte — déployez d'abord le stage (Étape 3)",
+    "postResp":"{\n    \"itemId\": \"item-001\",\n    \"name\": \"Widget\"\n}","getResp":"[\n    {\n        \"itemId\": \"item-001\",\n        \"name\": \"Widget\"\n    }\n]","getEmpty":"[]",
+    "checkHeader":"Progression de la tâche :","chkC":"API + intégration créées","chkR":"Routes + permission","chkS":"Stage prod déployé","chkT":"POST/GET publics OK","chkAll":"Tous les critères sont remplis. Chapitre 2 terminé !","skipped":"Étape ignorée.",
     "cmdNF":"{c} : commande introuvable. Tapez `help`.","awsNF":"aws: sous-commande non simulée dans cet atelier.","catNF":"cat : {f} : aucun fichier de ce type",
-    "tSavedFile":"Fichier enregistré","tDone":"Chapitre 1 terminé — backend serverless en place"
+    "tSavedFile":"Fichier enregistré","tDone":"Chapitre 2 terminé — API publique en ligne"
   },
   "de":{
-    "navOverview":"Übersicht","navChapter2":"Kapitel 2","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
-    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Files",
-    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Sehen Sie die Datei an oder bearbeiten Sie sie.",
-    "mTable":"Tabelle","mLambda":"Lambda",
-    "instrHead":"Anleitung","instrTitle":"DynamoDB-Tabelle & Lambda-Funktion",
-    "instrSub":"Sie erstellen eine DynamoDB-Tabelle <code>Items</code>, eine IAM-Ausführungsrolle für Lambda und eine Python-Lambda-Funktion, die GET (scan) und POST (put-item) behandelt. Diese Funktion wird in Kapitel 2 über API Gateway bereitgestellt.",
+    "navChapter1":"Kapitel 1","navChapter3":"Kapitel 3","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFiles":"Resources",
+    "btnClear":"Leeren","btnSave":"Speichern","phPaste":"Gespeicherte Ressourcen-IDs.",
+    "mApi":"API","mRoutes":"Routes",
+    "instrHead":"Anleitung","instrTitle":"HTTP-API mit API Gateway",
+    "instrSub":"Sie erstellen eine HTTP-API (API Gateway v2), verbinden sie über eine Proxy-Integration mit Ihrer Lambda, fügen die Routen <code>GET /items</code> und <code>POST /items</code> hinzu, deployen auf einem <code>prod</code>-Stage und testen die öffentlichen Endpoints mit curl. Der JWT-Schutz folgt in Kapitel 3.",
     "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
-    "s1h":"Schritt 1 · Arbeitsordner & DynamoDB-Tabelle","s1b":"Setzen Sie die Region, erstellen Sie den Arbeitsordner und dann die Tabelle mit <code>itemId</code> als Partitionsschlüssel. Im <strong>Terminal</strong>:",
-    "s2h":"Schritt 2 · Lambda-Ausführungsrolle","s2b":"Holen Sie die Account-ID, erstellen Sie die Trust Policy und die Rolle, dann hängen Sie eine Policy mit DynamoDB-CRUD- und CloudWatch-Logs-Rechten an (Policies werden als Dateien im Reiter <strong>Files</strong> gespeichert):",
-    "s3h":"Schritt 3 · Python-Lambda-Funktion","s3b":"Erstellen Sie den Handler, der die HTTP-Methode aus dem API-Gateway-Event liest und einen scan (GET) oder put-item (POST) ausführt. Speichern Sie <code>lambda_function.py</code>:","s3b2":"Paketieren und deployen Sie die Funktion:",
-    "s4h":"Schritt 4 · Lambda testen & IDs speichern","s4b":"Rufen Sie die Lambda mit einem simulierten GET-Event auf, prüfen Sie die Antwort (200, leere Liste) und speichern Sie die IDs für die nächsten Kapitel:",
+    "s1h":"Schritt 1 · HTTP-API & Lambda-Integration","s1b":"Laden Sie die gespeicherten IDs, holen Sie die Lambda-ARN, erstellen Sie die HTTP-API und dann die Proxy-Integration. Im <strong>Terminal</strong>:",
+    "s2h":"Schritt 2 · Routen & Invoke-Berechtigung","s2b":"Erstellen Sie die Routen <code>GET /items</code> und <code>POST /items</code> und erlauben Sie API Gateway, die Lambda aufzurufen:",
+    "s3h":"Schritt 3 · Auf prod-Stage deployen","s3b":"Erstellen Sie das <code>prod</code>-Stage mit Auto-Deploy und bauen Sie die Endpoint-URL:",
+    "s4h":"Schritt 4 · Öffentlichen Endpoint testen","s4b":"Posten Sie ein Item, listen Sie sie auf und speichern Sie die API-ID und -URL für die nächsten Kapitel:",
     "critH":"Erfolgskriterien",
-    "c1":"DynamoDB-Tabelle Items erstellt und aktiv.","c2":"Ausführungsrolle + DynamoDB/Logs-Policy vorhanden.","c3":"Lambda-Funktion serverless-lab-api deployt.","c4":"GET-Aufruf erfolgreich (200, leere Liste).",
+    "c1":"HTTP-API und Lambda-Integration erstellt.","c2":"GET/POST-Routen + Invoke-Berechtigung.","c3":"prod-Stage deployt, URL erhalten.","c4":"Öffentliches POST und GET erfolgreich (Widget sichtbar).",
     "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
     "skip":"Überspringen","check":"Prüfen",
     "helpTitle":"Lab-Copilot","helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.","nextHint":"Nächster Hinweis",
-    "hint0":"Erstellen Sie zuerst die DynamoDB-Tabelle (Schritt 1).",
-    "hint1":"PAY_PER_REQUEST vermeidet feste Kapazität — ideal für ein Lab.",
-    "hint2":"Die Trust Policy erlaubt dem Service lambda.amazonaws.com, die Rolle anzunehmen.",
-    "hint3":"Der Handler liest requestContext.http.method, um GET und POST zu unterscheiden.",
-    "hint4":"Der direkte Aufruf simuliert ein API-Gateway-Event im Payload-v2-Format.",
+    "hint0":"Erstellen Sie zuerst die HTTP-API und die Lambda-Integration (Schritt 1).",
+    "hint1":"Die AWS_PROXY-Integration übergibt das rohe Event an die Lambda (Payload v2.0).",
+    "hint2":"Der Route-Key kombiniert Methode und Pfad: „GET /items\".",
+    "hint3":"add-permission erlaubt apigateway.amazonaws.com, die Funktion aufzurufen.",
+    "hint4":"Das prod-Stage mit Auto-Deploy veröffentlicht jede Änderung sofort.",
     "bSsh":"SSH-Verbindung hergestellt.","bUbuntu":"Ubuntu 24.04 LTS — VM serverless-workstation (Koffi Academy)",
-    "bEnv":"AWS CLI v2 + python3 + zip bereit. Ordner: /root/serverless-lab","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
-    "hHeader":"Verfügbare Befehle:","hDdb":"DynamoDB-Tabelle erstellen / warten","hSts":"Account-ID abrufen","hRole":"Rolle erstellen + Policy anhängen","hZip":"die Funktion paketieren","hLambda":"Lambda erstellen / aufrufen","hCat":"eine Datei anzeigen","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
-    "ddbCreating":"{ \"TableDescription\": { \"TableName\": \"Items\", \"TableStatus\": \"CREATING\" } }","ddbActive":"Tabelle Items ist jetzt ACTIVE","acctId":"123456789012","roleArn":"arn:aws:iam::123456789012:role/serverless-lab-lambda-role","policyOk":"(Inline-Policy dynamodb-crud-policy angehängt)","zipOk":"  adding: lambda_function.py (deflated 54%)",
-    "fnCreated":"{ \"FunctionName\": \"serverless-lab-api\", \"Runtime\": \"python3.12\", \"State\": \"Active\" }","needRole":"error: Ausführungsrolle nicht gefunden — erstellen Sie sie zuerst (Schritt 2)","invokeOk":"{ \"StatusCode\": 200, \"ExecutedVersion\": \"$LATEST\" }","respJson":"{\"statusCode\": 200, \"headers\": {\"Content-Type\": \"application/json\"}, \"body\": \"[]\"}","needLambda":"error: die Funktion existiert nicht — erstellen Sie sie zuerst (Schritt 3)",
-    "checkHeader":"Fortschritt der Aufgabe:","chkT":"DynamoDB-Tabelle erstellt","chkR":"Rolle + Policy vorhanden","chkL":"Lambda deployt","chkI":"GET-Aufruf 200","chkAll":"Alle Kriterien erfüllt. Kapitel 1 abgeschlossen!","skipped":"Schritt übersprungen.",
+    "bEnv":"AWS CLI v2 + curl + python3 bereit. Ordner: /root/serverless-lab","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hSource":"die gespeicherten IDs laden","hCreate":"API + Integration erstellen","hRoute":"eine Route hinzufügen","hPerm":"Lambda-Invoke erlauben","hStage":"das prod-Stage erstellen","hCurl":"den Endpoint testen (curl)","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "lambdaArn":"arn:aws:lambda:us-east-1:123456789012:function:serverless-lab-api","apiCreated":"abcd1234ef","integCreated":"i9z8y7x6","routeGet":"(Route erstellt: GET /items)","routePost":"(Route erstellt: POST /items)","permOk":"(Berechtigung apigateway-invoke hinzugefügt)","stageOk":"(prod-Stage erstellt, Auto-Deploy aktiviert)",
+    "needApi":"Tipp: erstellen Sie zuerst die API und die Integration (Schritt 1).","needStage":"curl: (6) Host nicht auflösbar — deployen Sie zuerst das Stage (Schritt 3)",
+    "postResp":"{\n    \"itemId\": \"item-001\",\n    \"name\": \"Widget\"\n}","getResp":"[\n    {\n        \"itemId\": \"item-001\",\n        \"name\": \"Widget\"\n    }\n]","getEmpty":"[]",
+    "checkHeader":"Fortschritt der Aufgabe:","chkC":"API + Integration erstellt","chkR":"Routen + Berechtigung","chkS":"prod-Stage deployt","chkT":"Öffentliches POST/GET OK","chkAll":"Alle Kriterien erfüllt. Kapitel 2 abgeschlossen!","skipped":"Schritt übersprungen.",
     "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.","awsNF":"aws: Unterbefehl in diesem Labor nicht simuliert.","catNF":"cat: {f}: keine solche Datei",
-    "tSavedFile":"Datei gespeichert","tDone":"Kapitel 1 abgeschlossen — Serverless-Backend steht"
+    "tSavedFile":"Datei gespeichert","tDone":"Kapitel 2 abgeschlossen — öffentliche API online"
   },
   "en":{
-    "navOverview":"Overview","navChapter2":"Chapter 2","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
-    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Files",
-    "btnClear":"Clear","btnSave":"Save","phPaste":"View or edit the file.",
-    "mTable":"Table","mLambda":"Lambda",
-    "instrHead":"Instructions","instrTitle":"DynamoDB table & Lambda function",
-    "instrSub":"You create a DynamoDB table <code>Items</code>, an IAM execution role for Lambda, and a Python Lambda function that handles GET (scan) and POST (put-item) operations. This function will be exposed via API Gateway in chapter 2.",
+    "navChapter1":"Chapter 1","navChapter3":"Chapter 3","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFiles":"Resources",
+    "btnClear":"Clear","btnSave":"Save","phPaste":"Saved resource IDs.",
+    "mApi":"API","mRoutes":"Routes",
+    "instrHead":"Instructions","instrTitle":"HTTP API with API Gateway",
+    "instrSub":"You create an HTTP API (API Gateway v2), wire it to your Lambda via a proxy integration, add the <code>GET /items</code> and <code>POST /items</code> routes, deploy to a <code>prod</code> stage, and test the public endpoints with curl. JWT protection comes in chapter 3.",
     "progLabel":"Progress","copy":"Copy","copied":"Copied",
-    "s1h":"Step 1 · Working directory & DynamoDB table","s1b":"Set the region, create the working directory, then the table with <code>itemId</code> as the partition key. In the <strong>Terminal</strong>:",
-    "s2h":"Step 2 · Lambda execution role","s2b":"Get the account ID, create the trust policy and the role, then attach a policy granting DynamoDB CRUD and CloudWatch Logs permissions (policies are saved as files in the <strong>Files</strong> tab):",
-    "s3h":"Step 3 · Python Lambda function","s3b":"Create the handler that reads the HTTP method from the API Gateway event and runs a scan (GET) or put-item (POST). Save <code>lambda_function.py</code>:","s3b2":"Package and deploy the function:",
-    "s4h":"Step 4 · Test the Lambda & save IDs","s4b":"Invoke the Lambda with a simulated GET event, check the response (200, empty list) and save the IDs for the next chapters:",
+    "s1h":"Step 1 · HTTP API & Lambda integration","s1b":"Load the saved IDs, get the Lambda ARN, create the HTTP API then the proxy integration. In the <strong>Terminal</strong>:",
+    "s2h":"Step 2 · Routes & invoke permission","s2b":"Create the <code>GET /items</code> and <code>POST /items</code> routes, then allow API Gateway to invoke the Lambda:",
+    "s3h":"Step 3 · Deploy to the prod stage","s3b":"Create the <code>prod</code> stage with auto-deploy, then build the endpoint URL:",
+    "s4h":"Step 4 · Test the public endpoint","s4b":"Post an item, list them, then save the API ID and URL for the next chapters:",
     "critH":"Success criteria",
-    "c1":"DynamoDB Items table created and active.","c2":"Execution role + DynamoDB/Logs policy in place.","c3":"Lambda function serverless-lab-api deployed.","c4":"GET invocation succeeded (200, empty list).",
+    "c1":"HTTP API and Lambda integration created.","c2":"GET/POST routes + invoke permission.","c3":"prod stage deployed, URL obtained.","c4":"Public POST then GET succeeded (Widget visible).",
     "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
     "skip":"Skip","check":"Check",
     "helpTitle":"Lab Copilot","helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.","nextHint":"Next hint",
-    "hint0":"First create the DynamoDB table (Step 1).",
-    "hint1":"PAY_PER_REQUEST avoids provisioning fixed capacity — ideal for a lab.",
-    "hint2":"The trust policy lets the lambda.amazonaws.com service assume the role.",
-    "hint3":"The handler reads requestContext.http.method to tell GET from POST.",
-    "hint4":"The direct invoke simulates an API Gateway event in payload v2 format.",
+    "hint0":"First create the HTTP API and the Lambda integration (Step 1).",
+    "hint1":"The AWS_PROXY integration passes the raw event to the Lambda (payload v2.0).",
+    "hint2":"The route key combines method and path: \"GET /items\".",
+    "hint3":"add-permission lets apigateway.amazonaws.com invoke the function.",
+    "hint4":"The prod stage with auto-deploy publishes every change immediately.",
     "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — serverless-workstation VM (Koffi Academy)",
-    "bEnv":"AWS CLI v2 + python3 + zip ready. Folder: /root/serverless-lab","bTip":"Tip: type `help` for commands, `check` for progress.",
-    "hHeader":"Available commands:","hDdb":"create / wait for the DynamoDB table","hSts":"get the account ID","hRole":"create the role + attach the policy","hZip":"package the function","hLambda":"create / invoke the Lambda","hCat":"display a file","hCheck":"check your progress","hClear":"clear the terminal",
-    "ddbCreating":"{ \"TableDescription\": { \"TableName\": \"Items\", \"TableStatus\": \"CREATING\" } }","ddbActive":"Table Items is now ACTIVE","acctId":"123456789012","roleArn":"arn:aws:iam::123456789012:role/serverless-lab-lambda-role","policyOk":"(inline policy dynamodb-crud-policy attached)","zipOk":"  adding: lambda_function.py (deflated 54%)",
-    "fnCreated":"{ \"FunctionName\": \"serverless-lab-api\", \"Runtime\": \"python3.12\", \"State\": \"Active\" }","needRole":"error: execution role not found — create it first (Step 2)","invokeOk":"{ \"StatusCode\": 200, \"ExecutedVersion\": \"$LATEST\" }","respJson":"{\"statusCode\": 200, \"headers\": {\"Content-Type\": \"application/json\"}, \"body\": \"[]\"}","needLambda":"error: the function does not exist — create it first (Step 3)",
-    "checkHeader":"Task progress:","chkT":"DynamoDB table created","chkR":"Role + policy in place","chkL":"Lambda deployed","chkI":"GET invocation 200","chkAll":"All criteria met. Chapter 1 complete!","skipped":"Step skipped.",
+    "bEnv":"AWS CLI v2 + curl + python3 ready. Folder: /root/serverless-lab","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hSource":"load the saved IDs","hCreate":"create the API + integration","hRoute":"add a route","hPerm":"allow Lambda invoke","hStage":"create the prod stage","hCurl":"test the endpoint (curl)","hCheck":"check your progress","hClear":"clear the terminal",
+    "lambdaArn":"arn:aws:lambda:us-east-1:123456789012:function:serverless-lab-api","apiCreated":"abcd1234ef","integCreated":"i9z8y7x6","routeGet":"(route created: GET /items)","routePost":"(route created: POST /items)","permOk":"(permission apigateway-invoke added)","stageOk":"(prod stage created, auto-deploy enabled)",
+    "needApi":"Tip: create the API and integration first (Step 1).","needStage":"curl: (6) Could not resolve host — deploy the stage first (Step 3)",
+    "postResp":"{\n    \"itemId\": \"item-001\",\n    \"name\": \"Widget\"\n}","getResp":"[\n    {\n        \"itemId\": \"item-001\",\n        \"name\": \"Widget\"\n    }\n]","getEmpty":"[]",
+    "checkHeader":"Task progress:","chkC":"API + integration created","chkR":"Routes + permission","chkS":"prod stage deployed","chkT":"Public POST/GET OK","chkAll":"All criteria met. Chapter 2 complete!","skipped":"Step skipped.",
     "cmdNF":"{c}: command not found. Type `help`.","awsNF":"aws: subcommand not simulated in this lab.","catNF":"cat: {f}: no such file",
-    "tSavedFile":"File saved","tDone":"Chapter 1 complete — serverless backend in place"
+    "tSavedFile":"File saved","tDone":"Chapter 2 complete — public API online"
   }
 };
 
 (function(){
   "use strict";
-  var FILES=["trust-policy.json","dynamodb-policy.json","lambda_function.py"];
-  var SEED={
-    "trust-policy.json":"{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    { \"Effect\": \"Allow\", \"Principal\": { \"Service\": \"lambda.amazonaws.com\" }, \"Action\": \"sts:AssumeRole\" }\n  ]\n}\n",
-    "dynamodb-policy.json":"{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    { \"Effect\": \"Allow\", \"Action\": [\"dynamodb:PutItem\",\"dynamodb:GetItem\",\"dynamodb:Scan\",\"dynamodb:DeleteItem\"], \"Resource\": \"arn:aws:dynamodb:us-east-1:*:table/Items\" },\n    { \"Effect\": \"Allow\", \"Action\": [\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"], \"Resource\": \"arn:aws:logs:*:*:*\" }\n  ]\n}\n",
-    "lambda_function.py":"import boto3\nimport json\nimport uuid\n\ndynamodb = boto3.resource(\"dynamodb\")\ntable = dynamodb.Table(\"Items\")\n\ndef handler(event, context):\n    method = event.get(\"requestContext\", {}).get(\"http\", {}).get(\"method\", \"GET\")\n    if method == \"GET\":\n        result = table.scan()\n        return {\"statusCode\": 200, \"body\": json.dumps(result.get(\"Items\", []))}\n    if method == \"POST\":\n        body = json.loads(event.get(\"body\", \"{}\"))\n        item_id = body.get(\"itemId\", str(uuid.uuid4()))\n        name = body.get(\"name\", \"unnamed\")\n        table.put_item(Item={\"itemId\": item_id, \"name\": name})\n        return {\"statusCode\": 201, \"body\": json.dumps({\"itemId\": item_id, \"name\": name})}\n    return {\"statusCode\": 405, \"body\": \"Method Not Allowed\"}\n"
-  };
+  var FILES=["lab-ids.env"];
+  var SEED={"lab-ids.env":"export AWS_DEFAULT_REGION=us-east-1\nexport ACCOUNT_ID=123456789012\nexport ROLE_ARN=arn:aws:iam::123456789012:role/serverless-lab-lambda-role\n"};
   var I=window.I18N; var lang=localStorage.getItem("preferred-lang"); if(!I[lang])lang="de";
   function t(key,vars){var s=(I[lang]&&I[lang][key]!==undefined)?I[lang][key]:(I.en[key]!==undefined?I.en[key]:key);if(vars)Object.keys(vars).forEach(function(k){s=s.replace(new RegExp("\\{"+k+"\\}","g"),vars[k]);});return s;}
 
   var FS={}; FILES.forEach(function(f){FS[f]=SEED[f]||"";});
   var currentFile=FILES[0];
-  var st={table:false,role:false,lambda:false,test:false};
-  var tableOk=false, roleOk=false, policyOk=false, lambdaOk=false, invoked=false; var hi=0;
+  var st={create:false,routes:false,stage:false,test:false};
+  var apiOk=false, integOk=false, getRoute=false, postRoute=false, permOk=false, stageOk=false, posted=false, listed=false; var hi=0;
+  var apiId="abcd1234ef", apiUrl="https://abcd1234ef.execute-api.us-east-1.amazonaws.com/prod";
 
   var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput"), editor=document.getElementById("fileEditor");
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
@@ -496,26 +450,24 @@ window.I18N = {
   function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
   function banner(){out.innerHTML="";print(t("bSsh"),"line-muted");print(t("bUbuntu"),"line-muted");print(t("bEnv"),"line-muted");print(t("bTip"),"line-muted");print("");}
 
-  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["table","role","lambda","test"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
-  function refresh(){document.getElementById("mTable").textContent=tableOk?"ACTIVE":"—";document.getElementById("mLambda").textContent=lambdaOk?"Active":"—";}
+  function routeCount(){return (getRoute?1:0)+(postRoute?1:0);}
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["create","routes","stage","test"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
+  function refresh(){document.getElementById("mApi").textContent=apiOk?apiId:"—";document.getElementById("mRoutes").textContent=routeCount()+"/2";}
 
   function norm(p){return p?p.trim().replace(/^\.\//,"").replace(/^\/root\/serverless-lab\//,"").replace(/\/+$/,""):"";}
   function resolve(p){p=norm(p);return FS[p]!==undefined?p:null;}
 
-  function aws(parts,full){
+  function aws(parts,cmd){
     var svc=parts[1]||"";
-    if(svc==="dynamodb"){
-      if(parts[2]==="create-table"){tableOk=true;print(t("ddbCreating"),"line-ok");refresh();setStep("table",true);return;}
-      if(parts[2]==="wait"){print(t("ddbActive"),"line-muted");return;}
-    }
-    if(svc==="sts"&&parts[2]==="get-caller-identity"){print(t("acctId"));return;}
-    if(svc==="iam"){
-      if(parts[2]==="create-role"){roleOk=true;print(t("roleArn"),"line-ok");if(policyOk)setStep("role",true);return;}
-      if(parts[2]==="put-role-policy"){policyOk=true;print(t("policyOk"),"line-muted");if(roleOk)setStep("role",true);return;}
-    }
     if(svc==="lambda"){
-      if(parts[2]==="create-function"){ if(!roleOk){print(t("needRole"),"line-error");return;} lambdaOk=true;print(t("fnCreated"),"line-ok");refresh();setStep("lambda",true);return; }
-      if(parts[2]==="invoke"){ if(!lambdaOk){print(t("needLambda"),"line-error");return;} invoked=true;print(t("invokeOk"),"line-ok");FS["response.json"]=I.en.respJson;setStep("test",true);return; }
+      if(parts[2]==="get-function"){print(t("lambdaArn"));return;}
+      if(parts[2]==="add-permission"){permOk=true;print(t("permOk"),"line-muted");if(getRoute&&postRoute)setStep("routes",true);return;}
+    }
+    if(svc==="apigatewayv2"){
+      if(parts[2]==="create-api"){apiOk=true;print(t("apiCreated"));refresh();if(integOk)setStep("create",true);return;}
+      if(parts[2]==="create-integration"){ if(!apiOk){print(t("needApi"),"line-warn");return;} integOk=true;print(t("integCreated"));if(apiOk)setStep("create",true);return; }
+      if(parts[2]==="create-route"){ if(/POST/.test(cmd)){postRoute=true;print(t("routePost"),"line-muted");}else{getRoute=true;print(t("routeGet"),"line-muted");} refresh(); if(getRoute&&postRoute&&permOk)setStep("routes",true); return; }
+      if(parts[2]==="create-stage"){stageOk=true;print(t("stageOk"),"line-muted");setStep("stage",true);return;}
     }
     print(t("awsNF"),"line-warn");
   }
@@ -527,41 +479,42 @@ window.I18N = {
     else if(/^[A-Za-z_]\w*=/.test(cmd)&&!/\$\(/.test(cmd)){return;}
     var parts=cmd.split(/\s+/); var head=parts[0];
     if(head==="help"){print(t("hHeader"),"line-muted");
-      print("  aws dynamodb create-table ...                "+t("hDdb"));
-      print("  aws sts get-caller-identity ...              "+t("hSts"));
-      print("  aws iam create-role / put-role-policy        "+t("hRole"));
-      print("  zip -j lambda.zip lambda_function.py         "+t("hZip"));
-      print("  aws lambda create-function / invoke          "+t("hLambda"));
-      print("  cat <file>                                   "+t("hCat"));
+      print("  source /root/serverless-lab/lab-ids.env       "+t("hSource"));
+      print("  aws apigatewayv2 create-api / create-integration "+t("hCreate"));
+      print("  aws apigatewayv2 create-route ...             "+t("hRoute"));
+      print("  aws lambda add-permission ...                "+t("hPerm"));
+      print("  aws apigatewayv2 create-stage ...            "+t("hStage"));
+      print("  curl ... \"$API_URL/items\"                   "+t("hCurl"));
       print("  check   ·   clear                          "+t("hCheck"));return;}
     if(head==="clear"){out.innerHTML="";return;}
     if(head==="check"){runCheck();return;}
-    if(head==="export"||head==="mkdir"||head==="sleep"||head==="cd"||head==="source"){return;}
-    if(head==="echo"){return;}
-    if(head==="zip"||/\bzip\b/.test(head)){print(t("zipOk"),"line-muted");return;}
-    if(head==="cat"){var f=resolve(parts[1]);if(f&&FS[f]){FS[f].split("\n").forEach(function(l){print(l);});}else if(norm(parts[1])==="response.json"&&invoked){print(t("respJson"));}else print(t("catNF",{f:parts[1]||""}),"line-error");return;}
+    if(head==="source"||head==="cd"||head==="mkdir"||head==="sleep"||head==="export"){return;}
+    if(head==="echo"){ if(/[>]/.test(cmd))return; var msg=cmd.replace(/^echo\s+/,"").replace(/^["']|["']$/g,"").replace(/\$API_URL/g,apiUrl).replace(/\$API_ID/g,apiId);print(msg);return; }
+    if(head==="cat"){var f=resolve(parts[1]);if(f&&FS[f])FS[f].split("\n").forEach(function(l){print(l);});else print(t("catNF",{f:parts[1]||""}),"line-error");return;}
+    if(head==="curl"){
+      if(!stageOk){print(t("needStage"),"line-warn");return;}
+      if(/-X\s+POST/.test(cmd)){posted=true;print(t("postResp"),"line-ok");return;}
+      listed=true;print(posted?t("getResp"):t("getEmpty"),"line-ok");setStep("test",true);return;
+    }
     if(head==="aws"){aws(parts,cmd);return;}
     print(t("cmdNF",{c:head}),"line-error");
   }
 
   function runCheck(){
     print(t("checkHeader"),"line-muted");
-    print((st.table?"  [x] ":"  [ ] ")+t("chkT"),st.table?"line-ok":"line-warn");
-    print((st.role?"  [x] ":"  [ ] ")+t("chkR"),st.role?"line-ok":"line-warn");
-    print((st.lambda?"  [x] ":"  [ ] ")+t("chkL"),st.lambda?"line-ok":"line-warn");
-    print((st.test?"  [x] ":"  [ ] ")+t("chkI"),st.test?"line-ok":"line-warn");
-    if(st.table&&st.role&&st.lambda&&st.test)print(t("chkAll"),"line-ok");
+    print((st.create?"  [x] ":"  [ ] ")+t("chkC"),st.create?"line-ok":"line-warn");
+    print((st.routes?"  [x] ":"  [ ] ")+t("chkR"),st.routes?"line-ok":"line-warn");
+    print((st.stage?"  [x] ":"  [ ] ")+t("chkS"),st.stage?"line-ok":"line-warn");
+    print((st.test?"  [x] ":"  [ ] ")+t("chkT"),st.test?"line-ok":"line-warn");
+    if(st.create&&st.routes&&st.stage&&st.test)print(t("chkAll"),"line-ok");
   }
 
   function runScript(text){
     var lines=text.replace(/\r/g,"").split("\n"); var i=0;
     while(i<lines.length){var line=lines[i];
-      var hd=line.match(/^\s*cat\s*>\s*(\S+)\s*<<\s*['"]?([A-Za-z0-9_]+)['"]?\s*$/);
-      if(hd){print(document.getElementById("termPrompt").textContent+" "+line,"line-cmd");var path=hd[1],delim=hd[2],body=[];i++;while(i<lines.length&&lines[i].trim()!==delim){body.push(lines[i]);i++;}i++;var f=resolve(path)||norm(path);FS[f]=body.join("\n")+"\n";if(f===currentFile)editor.value=FS[f];print("("+norm(path)+" "+(lang==="de"?"gespeichert":lang==="en"?"saved":"enregistré")+")","line-muted");continue;}
-      // multi-line command continuation with trailing backslash
+      if(line.trim()===""){i++;continue;}
       var full=line;
       while(/\\\s*$/.test(full)&&i+1<lines.length){full=full.replace(/\\\s*$/,"").trim()+" "+lines[i+1].trim();i++;}
-      if(full.trim()===""){i++;continue;}
       print(document.getElementById("termPrompt").textContent+" "+full,"line-cmd");handle(full);i++;}
   }
 
