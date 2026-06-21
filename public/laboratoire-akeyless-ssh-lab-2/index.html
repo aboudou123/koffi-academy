@@ -453,6 +453,51 @@ window.I18N = {
     HOSTS[host].input.addEventListener("paste",function(e){var txt=(e.clipboardData||window.clipboardData).getData("text");if(txt&&txt.indexOf("\n")!==-1){e.preventDefault();runScript(host,txt);HOSTS[host].input.value="";}});
   }
   wire("ws");wire("tgt");
+  /* === LabVM real-shell integration (akeyless multi-host) === */
+  (function(){
+    function motd(){
+      var ts=new Date().toUTCString();
+      return ["Welcome to Ubuntu 24.04.2 LTS (GNU/Linux 6.8.0-41-generic x86_64)","",
+        " * Documentation:  https://help.ubuntu.com",
+        " * Management:     https://landscape.canonical.com",
+        " * Support:        https://ubuntu.com/pro","",
+        " System information as of "+ts,"",
+        "  System load:  0.08               Processes:             129",
+        "  Usage of /:   13.7% of 78.32GB   Users logged in:       1",
+        "  Memory usage: 28%                IPv4 address for eth0: 10.0.2.15",
+        "  Swap usage:   0%","",
+        "Last login: "+ts+" from 10.0.2.2",""];
+    }
+    function initAk(){
+      if(!window.LabVM||typeof HOSTS!=="object"||typeof handle!=="function") return;
+      ["ws","tgt"].forEach(function(host){
+        var H=HOSTS[host]; if(!H) return;
+        var out=H.out, inp=H.input;
+        var form=document.getElementById(host==="ws"?"formWs":"formTgt");
+        if(!out||!inp) return; if(form&&form.__labvm) return; if(form) form.__labvm=true;
+        var ps=form?form.querySelector(".terminal-prompt"):null;
+        function vprint(t,c){var d=document.createElement("div");if(c)d.className=c;d.textContent=t;out.appendChild(d);out.scrollTop=out.scrollHeight;}
+        var base=(H.prompt||"root@host:~#").trim();
+        var m=base.match(/([^\s@(]+)@([^:\s]+):/);
+        var user=m?m[1]:"root",hn=m?m[2]:"host";
+        var sym=/#\s*$/.test(base)?"#":"$";
+        var vm=window.LabVM.create({user:user,host:hn,home:"/root",print:vprint,clear:function(){out.innerHTML="";},
+          prompt:function(v){return user+"@"+hn+":"+v.displayCwd()+sym;},
+          fallback:function(line){handle(host,line);}});
+        vm.fs.mkdirp("/root");
+        var labLines=Array.prototype.slice.call(out.children).map(function(n){return {t:n.textContent,c:n.className};});
+        out.innerHTML="";
+        motd().forEach(function(l){vprint(l,"line-muted");});
+        labLines.forEach(function(x){vprint(x.t,x.c);});
+        out.scrollTop=0;
+        if(ps) ps.textContent=vm.promptText();
+        if(form) form.addEventListener("submit",function(e){e.preventDefault();e.stopImmediatePropagation();var v=inp.value;inp.value="";vm.submit(v);if(ps)ps.textContent=vm.promptText();},true);
+        inp.addEventListener("paste",function(e){var tx=(e.clipboardData||window.clipboardData).getData("text");if(tx&&tx.indexOf("\n")!==-1){e.preventDefault();e.stopImmediatePropagation();vm.paste(tx);inp.value="";if(ps)ps.textContent=vm.promptText();}},true);
+      });
+    }
+    if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",initAk); else setTimeout(initAk,0);
+  })();
+  /* === end LabVM real-shell integration === */
 
   document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");var tb=b.getAttribute("data-tab");document.querySelectorAll(".view").forEach(function(v){v.classList.toggle("is-active",v.getAttribute("data-view")===tb);});HOSTS[tb].input.focus();});});
   function activeHost(){return document.querySelector(".tab.is-active").getAttribute("data-tab");}
@@ -493,6 +538,7 @@ function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('k
 document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
 document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
 </script>
+<script src="../assets/js/lab-vm.js?v=20260621c"></script>
 <script src="../assets/js/terminal-manager.js?v=20260621c"></script>
 </body>
 </html>
