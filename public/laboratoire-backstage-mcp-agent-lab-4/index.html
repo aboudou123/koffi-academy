@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Backstage MCP Agent · Chapitre 4 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Chapitre 4 : rentabiliser le surcoût en tokens en traitant un prompt ambigu que le client déterministe ne peut désambiguïser.">
+  <meta name="theme-color" content="#071a2f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+  <style>
+:root{--bg:#07111f;--panel:#10182b;--line:rgba(255,255,255,.11);--muted:#94a3b8;--soft:#c8d4e4;--text:#f7fbff;--navy:#07294d;--teal:#20d3b6;--green:#54e39a;--amber:#f8b85f;--orange:#f89035;--danger:#ff6b6b;--shadow:0 24px 80px rgba(0,0,0,.34)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);overflow-x:hidden}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,textarea,input{font:inherit}
+button{cursor:pointer}
+.lab-shell{width:100%;max-width:100%;min-height:100vh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(circle at 20% -10%,rgba(32,211,182,.18),transparent 28%),radial-gradient(circle at 88% 4%,rgba(248,144,53,.18),transparent 30%),linear-gradient(135deg,#08111f 0%,#0b1730 52%,#09101e 100%)}
+.topline{height:4px;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));opacity:.95}
+.labbar{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(10,17,31,.88);backdrop-filter:blur(18px);position:sticky;top:0;z-index:30}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand__mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#f9d77e,#d6a02d 55%,#b97911);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(214,160,45,.30);flex-shrink:0}
+.brand__mark svg{width:62%;height:62%;display:block}
+.brand__text{min-width:0;display:flex;align-items:center;gap:10px}
+.brand__k{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#fff;white-space:nowrap}
+.brand__sep{color:rgba(255,255,255,.3);font-size:16px}
+.brand__title{font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip-ch{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;color:#071a2f;background:linear-gradient(135deg,#f9d77e,#d6a02d);padding:4px 9px;border-radius:999px;white-space:nowrap}
+.labbar__spacer{flex:1}
+.lab-timer{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#fff;background:rgba(32,211,182,.12);border:1px solid rgba(32,211,182,.32);border-radius:999px;padding:7px 13px}
+.lab-timer i{color:var(--teal);font-size:12px}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
+.topbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:rgba(255,255,255,.9);border-radius:8px;padding:8px 13px;font-weight:700;font-size:13px;line-height:1.15;transition:.16s}
+.topbtn:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.28)}
+.topbtn--ai{background:linear-gradient(135deg,#6d73ff,#8468ff);border-color:rgba(255,255,255,.12);box-shadow:0 10px 28px rgba(109,115,255,.24)}
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 12px 7px 9px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+.lab-main{width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1.42fr) minmax(360px,.82fr);gap:0;flex:1;min-height:0}
+.workspace{min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--line);background:rgba(7,12,22,.54)}
+.work-tabs{display:flex;align-items:center;gap:2px;padding:0 14px;background:rgba(255,255,255,.05);border-bottom:1px solid var(--line);min-height:44px}
+.work-tabs__reload{margin-right:6px;border:0;background:transparent;color:var(--soft);font-size:14px;padding:6px}
+.tab{position:relative;border:0;background:transparent;color:rgba(255,255,255,.72);display:inline-flex;align-items:center;gap:8px;padding:13px 14px;font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;transition:.16s}
+.tab.is-active{color:#fff}
+.tab.is-active:after{content:"";position:absolute;left:10px;right:10px;bottom:0;height:2px;background:var(--teal);border-radius:999px}
+.work-surface{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr)}
+.view{display:none;min-height:0}
+.view.is-active{display:flex}
+.terminal-view{flex-direction:column;background:#0d0f12}
+.terminal-output{flex:1;min-height:360px;max-height:calc(100vh - 160px);overflow:auto;padding:20px 22px;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.62;color:#e8edf2;white-space:pre-wrap;word-break:break-word}
+.terminal-output .line-muted{color:#8ea3b8}
+.terminal-output .line-ok{color:#52ef9f}
+.terminal-output .line-warn{color:#ffce73}
+.terminal-output .line-error{color:#ff7d7d}
+.terminal-output .line-cmd{color:#fff}
+.terminal-output .line-json{color:#9fd0ff}
+.terminal-inputbar{display:flex;align-items:center;gap:10px;border-top:1px solid #23262b;background:#0a0c0f;padding:12px 16px}
+.terminal-prompt{font-family:'JetBrains Mono',monospace;font-size:13px;color:#8cf0ce;white-space:nowrap}
+.terminal-input{flex:1;border:0;outline:0;background:transparent;color:#fff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;min-width:0}
+.runbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:rgba(10,17,31,.88);border-bottom:1px solid var(--line)}
+.runbar__title{display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--soft);min-width:0}
+.runbar__title i{color:var(--teal)}
+.datasets-view{flex-direction:column;background:#0b1222}
+.endpoints{padding:20px;overflow:auto}
+.done-card{border:1px solid rgba(84,227,154,.3);background:rgba(84,227,154,.08);border-radius:14px;padding:22px;text-align:center}
+.done-card i{font-size:34px;color:var(--green)}
+.done-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;margin:12px 0 6px;color:#fff}
+.done-card p{font-size:13.5px;color:var(--soft);line-height:1.6;margin:0}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:16px}
+.cmp__col{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.05);border-radius:11px;padding:14px}
+.cmp__col h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;margin:0 0 8px;color:#fff;display:flex;align-items:center;gap:7px}
+.cmp__col p{font-size:12px;color:var(--soft);line-height:1.55;margin:0}
+.cmp--det h4 i{color:var(--amber)}.cmp--agt h4 i{color:var(--teal)}
+.instructions{min-width:0;background:linear-gradient(180deg,rgba(20,28,49,.97),rgba(15,21,38,.98));display:flex;flex-direction:column;min-height:0}
+.instructions.is-hidden{display:none}
+.instructions__head{display:flex;align-items:center;gap:12px;padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.instructions__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;margin:0}
+.instructions__head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:20px;line-height:1;padding:4px;border-radius:7px}
+.instructions__body{min-width:0;overflow:auto;padding:20px 18px 24px;flex:1}
+.lab-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:25px;line-height:1.16;font-weight:800;letter-spacing:-.02em;margin:0 0 12px;color:#fff}
+.lab-sub{font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.78);margin:0 0 20px}
+.progress-card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:12px;padding:14px 15px;margin-bottom:18px}
+.progress-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.progress-row span:first-child{font-size:12px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.08em}
+.progress-row span:last-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:#fff}
+.progress-track{height:8px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));border-radius:999px;transition:width .25s}
+.step{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.step__top{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none}
+.step__check{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:transparent;flex-shrink:0;font-size:12px}
+.step.is-done .step__check{background:rgba(84,227,154,.16);border-color:rgba(84,227,154,.42);color:var(--green)}
+.step h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:16.5px;line-height:1.22;font-weight:800;letter-spacing:-.01em;margin:0;color:#fff;flex:1}
+.step__chev{color:var(--soft);font-size:13px;transition:transform .2s}
+.step.is-open .step__chev{transform:rotate(90deg)}
+.step__body{display:none;border-top:1px solid rgba(255,255,255,.10);padding:16px 18px 18px;color:rgba(255,255,255,.82);font-size:13.6px;line-height:1.62}
+.step.is-open .step__body{display:block}
+.step__body code{font-family:'JetBrains Mono',monospace;font-size:12.4px;background:#06090f;border:1px solid rgba(255,255,255,.10);border-radius:6px;padding:2px 6px;color:#a8fff0}
+.codewrap{position:relative;margin:12px 0 0}
+.copybtn{position:absolute;top:8px;right:8px;z-index:2;border:1px solid rgba(255,255,255,.18);background:rgba(20,28,49,.92);color:#cfe;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:800;transition:.16s}
+.copybtn:hover{background:rgba(32,211,182,.18);border-color:rgba(32,211,182,.5)}
+.copybtn.is-copied{color:var(--green);border-color:rgba(84,227,154,.5)}
+.codebox{max-width:100%;margin:0;border:1px solid rgba(255,255,255,.12);background:#050505;border-radius:10px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.55;color:#eaf2ff;overflow:auto;white-space:pre}
+.crit{list-style:none;margin:6px 0 0;padding:0}
+.crit li{display:flex;align-items:flex-start;gap:10px;padding:7px 0;font-size:13.4px;color:rgba(255,255,255,.84)}
+.crit li i{color:var(--green);font-size:12px;margin-top:3px;flex-shrink:0}
+.help-panel{position:fixed;right:18px;bottom:74px;width:min(420px,calc(100vw - 36px));background:#10182b;border:1px solid rgba(255,255,255,.15);box-shadow:var(--shadow);border-radius:14px;overflow:hidden;z-index:60;display:none}
+.help-panel.is-open{display:block}
+.help-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:linear-gradient(135deg,#202b50,#2c3562);border-bottom:1px solid var(--line)}
+.help-head h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;margin:0}
+.help-head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:18px;border-radius:7px;padding:4px}
+.help-body{padding:16px;color:var(--soft);font-size:13.5px;line-height:1.58}
+.hint{border-left:3px solid var(--teal);background:rgba(32,211,182,.08);padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0;color:#dff}
+.lab-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px;border-top:1px solid var(--line);background:rgba(7,12,22,.6)}
+.btn-skip{background:transparent;border:1px solid rgba(255,255,255,.18);color:var(--soft);border-radius:9px;padding:9px 20px;font-weight:700;font-size:13px}
+.btn-check{background:var(--green);color:#062018;border:0;border-radius:9px;padding:9px 26px;font-weight:800;font-size:13px;box-shadow:0 8px 22px rgba(84,227,154,.26)}
+.inst-fab{display:none;position:fixed;bottom:20px;right:20px;z-index:45;align-items:center;gap:8px;background:var(--teal);color:#071a2f;border:0;border-radius:999px;padding:12px 20px;font-size:13px;font-weight:700;font-family:inherit;box-shadow:0 8px 28px rgba(32,211,182,.42)}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(20px);background:#0f1830;border:1px solid rgba(32,211,182,.4);color:#eafffb;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:80}
+.toast.is-on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:1080px){.lab-main{grid-template-columns:1fr}.workspace{border-right:0}.terminal-output{max-height:none}}
+@media(max-width:768px){
+  .labbar{padding:8px 12px;gap:8px;flex-wrap:wrap}.brand__title,.chip-ch{display:none}.labbar__spacer{display:none}
+  .actions{order:3;width:100%;display:flex;flex-wrap:wrap;gap:6px}.topbtn{font-size:11.5px;padding:7px 10px;gap:5px;min-height:32px}
+  #toggleInstructions{display:none}.topbtn--ai{flex:1}
+  .lab-main{display:flex;flex-direction:column}.workspace{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .work-surface{flex:1;min-height:0;overflow:hidden}.terminal-output{height:calc(100svh - 220px);min-height:260px;max-height:none;overflow:auto}
+  .instructions{position:fixed;inset:0;z-index:50;display:flex!important;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+  .instructions:not(.is-hidden){transform:translateY(0)}.inst-fab{display:inline-flex}.inst-fab.is-gone{display:none}
+  .lab-title{font-size:22px}.work-tabs{overflow-x:auto}.tab{white-space:nowrap}.cmp{grid-template-columns:1fr}
+}
+  </style>
+</head>
+<body>
+<div class="lab-shell">
+  <div class="topline"></div>
+  <header class="labbar">
+    <a class="brand" href="../laboratoire">
+      <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+      <span class="brand__text">
+        <span class="brand__k">Koffi Academy</span>
+        <span class="brand__sep">|</span>
+        <span class="brand__title">Backstage MCP Python Agent</span>
+        <span class="chip-ch">CH.4</span>
+      </span>
+    </a>
+    <div class="labbar__spacer"></div>
+    <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">75:00</span></span>
+    <nav class="actions" aria-label="Lab actions">
+      <a class="topbtn" href="../laboratoire-backstage-mcp-agent-lab-3"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navPrev">Chapitre 3</span></a>
+      <a class="topbtn" href="../laboratoire-backstage-mcp-agent"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
+      <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
+      <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
+      <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
+      <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+    </nav>
+  </header>
+
+  <main class="lab-main">
+    <section class="workspace" aria-label="Workspace">
+      <div class="work-tabs" role="tablist">
+        <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
+        <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-scale-balanced"></i><span data-i18n="tabRecap">Bilan</span></button>
+      </div>
+      <div class="work-surface">
+        <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
+          <div class="terminal-output" id="terminalOutput" aria-live="polite"></div>
+          <form class="terminal-inputbar" id="terminalForm">
+            <span class="terminal-prompt" id="termPrompt">root@backstage102-c2:~/agent$</span>
+            <input class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" data-i18n-aria="termAria" aria-label="Terminal command" autofocus>
+          </form>
+        </section>
+        <section class="view datasets-view" id="datasetsView" role="tabpanel">
+          <div class="runbar">
+            <div class="runbar__title"><i class="fa-solid fa-scale-balanced"></i><span data-i18n="recapTitle">Bilan honnête : prix vs capacité</span></div>
+          </div>
+          <div class="endpoints">
+            <div class="done-card">
+              <i class="fa-solid fa-circle-check"></i>
+              <h3 data-i18n="doneH">Agent ReAct maîtrisé de bout en bout</h3>
+              <p data-i18n="doneP">Une étiquette de prix (ratio de tokens) attachée à une capacité (traiter les prompts ambigus).</p>
+            </div>
+            <div class="cmp">
+              <div class="cmp__col cmp--det"><h4><i class="fa-solid fa-bolt"></i>Client déterministe</h4><p data-i18n="cmpDet">Prompt nommant l'entité : 1 appel, coût plancher (~331 tokens). Mais incapable de désambiguïser « le service qui possède /payments ».</p></div>
+              <div class="cmp__col cmp--agt"><h4><i class="fa-solid fa-robot"></i>Agent ReAct Python</h4><p data-i18n="cmpAgt">2-3x plus de tokens sur un prompt simple, mais désambiguïse en lisant les descriptions — ce que le client déterministe ne peut pas faire.</p></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="instructions" id="instructions">
+      <div class="instructions__head">
+        <h2 data-i18n="instrHead">Instructions</h2>
+        <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
+      </div>
+      <div class="instructions__body">
+        <h1 class="lab-title" data-i18n="instrTitle">Rentabiliser : prompt ambigu</h1>
+        <p class="lab-sub" data-i18n="instrSub">Le chapitre 3 a mesuré honnêtement le surcoût. Ici vous le rentabilisez : lancez l'agent sur un prompt ambigu — <code>find the service that owns the /payments path</code> — que le client déterministe ne peut pas traiter, et capturez la trace.</p>
+
+        <div class="progress-card">
+          <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <article class="step is-open" data-step="run">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Lancer le prompt ambigu</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s1b">Dans le <strong>Terminal</strong>, lancez l'agent sur le prompt ambigu et tee la sortie :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">python agent.py 'find the service that owns the /payments path' | tee /tmp/agent-task4-output.txt</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="det">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Comparer au déterministe</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s2b">Reproduisez ce que ferait le client déterministe : une simple correspondance de nom (substring) :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">python -c "import json, mcp_client; allc = mcp_client.call_tool('catalog.query-catalog-entities', {'filter': {'kind': 'Component'}}); print('name-only match:', [e['metadata']['name'] for e in allc if 'payments' in e.get('metadata', {}).get('name','')])"</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="cost">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Le coût du run ambigu</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s3b">Extrayez le total de tokens du run ambigu (typiquement 30-60% de plus que le prompt simple) :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">grep "Total tokens" /tmp/agent-task4-output.txt</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="answer">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Vérifier la réponse</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s4b">Confirmez que l'agent a nommé <code>payments-api</code> (sa description mentionne « Owns the /payments and /refunds HTTP paths ») :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">grep -A 1 "=== Agent answer ===" /tmp/agent-task4-output.txt</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="crit">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <ul class="crit">
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Prompt ambigu exécuté, trace capturée.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Limite du client déterministe constatée.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Coût du run ambigu extrait.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Réponse correcte (payments-api) vérifiée.</span></li>
+            </ul>
+            <p style="margin:14px 0 0;color:var(--green);font-weight:700" data-i18n="finale">Bravo — agent ReAct construit, coût mesuré, et capacité gagnée prouvée !</p>
+            <p style="margin:10px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="lab-footer">
+        <button type="button" class="btn-skip" id="skipBtn" data-i18n="skip">Ignorer</button>
+        <button type="button" class="btn-check" id="checkBtn"><i class="fa-solid fa-circle-check"></i> <span data-i18n="check">Vérifier</span></button>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<button type="button" class="inst-fab" id="instFab" aria-label="Instructions"><i class="fa-solid fa-book-open"></i> <span data-i18n="instrHead">Instructions</span></button>
+
+<section class="help-panel" id="helpPanel" aria-label="Lab assistant">
+  <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
+  <div class="help-body">
+    <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos commandes et le journal du terminal à votre backend.</p>
+    <div class="hint" id="hintText" data-i18n="hint0">Lancez d'abord le prompt ambigu (Étape 1).</div>
+    <button type="button" id="nextHint" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(135deg,var(--orange),#ffb057);color:#fff;border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:800"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+window.I18N = {
+  "fr":{
+    "navPrev":"Chapitre 3","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabRecap":"Bilan",
+    "recapTitle":"Bilan honnête : prix vs capacité",
+    "doneH":"Agent ReAct maîtrisé de bout en bout","doneP":"Une étiquette de prix (ratio de tokens) attachée à une capacité (traiter les prompts ambigus).",
+    "cmpDet":"Prompt nommant l'entité : 1 appel, coût plancher (~331 tokens). Mais incapable de désambiguïser « le service qui possède /payments ».",
+    "cmpAgt":"2-3x plus de tokens sur un prompt simple, mais désambiguïse en lisant les descriptions — ce que le client déterministe ne peut pas faire.",
+    "instrHead":"Instructions","instrTitle":"Rentabiliser : prompt ambigu",
+    "instrSub":"Le chapitre 3 a mesuré honnêtement le surcoût. Ici vous le rentabilisez : lancez l'agent sur un prompt ambigu — <code>find the service that owns the /payments path</code> — que le client déterministe ne peut pas traiter, et capturez la trace.",
+    "progLabel":"Progression","copy":"Copier","copied":"Copié",
+    "s1h":"Étape 1 · Lancer le prompt ambigu","s1b":"Dans le <strong>Terminal</strong>, lancez l'agent sur le prompt ambigu et tee la sortie :",
+    "s2h":"Étape 2 · Comparer au déterministe","s2b":"Reproduisez ce que ferait le client déterministe : une simple correspondance de nom (substring) :",
+    "s3h":"Étape 3 · Le coût du run ambigu","s3b":"Extrayez le total de tokens du run ambigu (typiquement 30-60% de plus que le prompt simple) :",
+    "s4h":"Étape 4 · Vérifier la réponse","s4b":"Confirmez que l'agent a nommé <code>payments-api</code> (sa description mentionne « Owns the /payments and /refunds HTTP paths ») :",
+    "critH":"Critères de réussite",
+    "c1":"Prompt ambigu exécuté, trace capturée.","c2":"Limite du client déterministe constatée.","c3":"Coût du run ambigu extrait.","c4":"Réponse correcte (payments-api) vérifiée.",
+    "finale":"Bravo — agent ReAct construit, coût mesuré, et capacité gagnée prouvée !",
+    "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
+    "skip":"Ignorer","check":"Vérifier",
+    "helpTitle":"Copilote de l'atelier","helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos commandes et le journal du terminal à votre backend.","nextHint":"Indice suivant",
+    "hint0":"Lancez d'abord le prompt ambigu (Étape 1).",
+    "hint1":"L'agent appelle query-catalog-entities, lit les descriptions, puis repond.",
+    "hint2":"Le client deterministe ne fait qu'une correspondance de nom, pas de description.",
+    "hint3":"Le prompt ambigu coute ~30-60% de plus (un tour de lecture en plus).",
+    "hint4":"La description de payments-api : Owns the /payments and /refunds HTTP paths.",
+    "bWelcome":"VM backstage102-c2 — agent pret pour le prompt ambigu (Koffi Academy)","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hRun":"lancer l'agent (prompt ambigu)","hDet":"correspondance de nom (deterministe)","hCost":"extraire le total de tokens","hAns":"voir la reponse de l'agent","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "needRun":"error: aucune trace — lancez d'abord `python agent.py 'find the service...'` (Etape 1)",
+    "runOut":"=== Agent answer ===\\npayments-api owns the /payments path (description: Owns the /payments and /refunds HTTP paths)\\n\\n=== Token log ===\\n  turn 1: input=438 output=41\\n  turn 2: input=712 output=52\\n  turn 3: input=905 output=33\\n\\nTotal tokens (input+output, all turns): 2181",
+    "detOut":"name-only match: ['payments-api']",
+    "costOut":"Total tokens (input+output, all turns): 2181",
+    "ansOut":"=== Agent answer ===\\npayments-api owns the /payments path (description: Owns the /payments and /refunds HTTP paths)",
+    "checkHeader":"Progression de la tâche :","chkR":"Prompt ambigu exécuté","chkD":"Comparaison déterministe faite","chkC":"Coût extrait","chkA":"Réponse vérifiée (payments-api)","chkAll":"Tous les critères sont remplis. Chapitre 4 terminé — parcours complet !","skipped":"Étape ignorée.",
+    "cmdNF":"{c} : commande introuvable. Tapez `help`.",
+    "tDone":"Parcours terminé — capacité gagnée prouvée"
+  },
+  "de":{
+    "navPrev":"Kapitel 3","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabRecap":"Bilanz",
+    "recapTitle":"Ehrliche Bilanz: Preis vs Fähigkeit",
+    "doneH":"ReAct-Agent end-to-end beherrscht","doneP":"Ein Preisschild (Token-Verhältnis) an einer Fähigkeit (mehrdeutige Prompts behandeln).",
+    "cmpDet":"Prompt, der die Entität nennt: 1 Aufruf, Mindestkosten (~331 Tokens). Aber kann „der Service, der /payments besitzt“ nicht disambiguieren.",
+    "cmpAgt":"2-3x mehr Tokens bei einem einfachen Prompt, aber disambiguiert durch Lesen der Beschreibungen — was der deterministische Client nicht kann.",
+    "instrHead":"Anleitung","instrTitle":"Sich auszahlen: mehrdeutiger Prompt",
+    "instrSub":"Kapitel 3 hat den Mehraufwand ehrlich gemessen. Hier zahlt er sich aus: setzen Sie den Agenten auf einen mehrdeutigen Prompt an — <code>find the service that owns the /payments path</code> — den der deterministische Client nicht behandeln kann, und erfassen Sie die Trace.",
+    "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
+    "s1h":"Schritt 1 · Den mehrdeutigen Prompt starten","s1b":"Setzen Sie den Agenten im <strong>Terminal</strong> auf den mehrdeutigen Prompt an und tee'n Sie die Ausgabe:",
+    "s2h":"Schritt 2 · Mit dem Deterministischen vergleichen","s2b":"Reproduzieren Sie, was der deterministische Client täte: ein einfacher Namens-Match (Substring):",
+    "s3h":"Schritt 3 · Die Kosten des mehrdeutigen Runs","s3b":"Extrahieren Sie das Token-Total des mehrdeutigen Runs (typisch 30-60% mehr als der einfache Prompt):",
+    "s4h":"Schritt 4 · Die Antwort prüfen","s4b":"Bestätigen Sie, dass der Agent <code>payments-api</code> genannt hat (seine Beschreibung erwähnt „Owns the /payments and /refunds HTTP paths“):",
+    "critH":"Erfolgskriterien",
+    "c1":"Mehrdeutiger Prompt ausgeführt, Trace erfasst.","c2":"Grenze des deterministischen Clients festgestellt.","c3":"Kosten des mehrdeutigen Runs extrahiert.","c4":"Korrekte Antwort (payments-api) verifiziert.",
+    "finale":"Glückwunsch — ReAct-Agent gebaut, Kosten gemessen und gewonnene Fähigkeit bewiesen!",
+    "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
+    "skip":"Überspringen","check":"Prüfen",
+    "helpTitle":"Lab-Copilot","helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Befehle und das Terminal-Log an Ihr Backend.","nextHint":"Nächster Hinweis",
+    "hint0":"Starten Sie zuerst den mehrdeutigen Prompt (Schritt 1).",
+    "hint1":"Der Agent ruft query-catalog-entities auf, liest die Beschreibungen, dann antwortet er.",
+    "hint2":"Der deterministische Client macht nur einen Namens-Match, keine Beschreibung.",
+    "hint3":"Der mehrdeutige Prompt kostet ~30-60% mehr (ein zusätzlicher Lese-Turn).",
+    "hint4":"Beschreibung von payments-api: Owns the /payments and /refunds HTTP paths.",
+    "bWelcome":"VM backstage102-c2 — Agent bereit für den mehrdeutigen Prompt (Koffi Academy)","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hRun":"den Agenten starten (mehrdeutiger Prompt)","hDet":"Namens-Match (deterministisch)","hCost":"das Token-Total extrahieren","hAns":"die Antwort des Agenten ansehen","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "needRun":"error: keine Trace — starten Sie zuerst `python agent.py 'find the service...'` (Schritt 1)",
+    "runOut":"=== Agent answer ===\\npayments-api owns the /payments path (description: Owns the /payments and /refunds HTTP paths)\\n\\n=== Token log ===\\n  turn 1: input=438 output=41\\n  turn 2: input=712 output=52\\n  turn 3: input=905 output=33\\n\\nTotal tokens (input+output, all turns): 2181",
+    "detOut":"name-only match: ['payments-api']",
+    "costOut":"Total tokens (input+output, all turns): 2181",
+    "ansOut":"=== Agent answer ===\\npayments-api owns the /payments path (description: Owns the /payments and /refunds HTTP paths)",
+    "checkHeader":"Fortschritt der Aufgabe:","chkR":"Mehrdeutiger Prompt ausgeführt","chkD":"Deterministischer Vergleich gemacht","chkC":"Kosten extrahiert","chkA":"Antwort verifiziert (payments-api)","chkAll":"Alle Kriterien erfüllt. Kapitel 4 abgeschlossen — kompletter Pfad!","skipped":"Schritt übersprungen.",
+    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.",
+    "tDone":"Pfad abgeschlossen — gewonnene Fähigkeit bewiesen"
+  },
+  "en":{
+    "navPrev":"Chapter 3","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabRecap":"Recap",
+    "recapTitle":"Honest tally: price vs capability",
+    "doneH":"ReAct agent mastered end to end","doneP":"A price tag (token ratio) attached to a capability (handling ambiguous prompts).",
+    "cmpDet":"Prompt naming the entity: 1 call, floor cost (~331 tokens). But cannot disambiguate \"the service that owns /payments\".",
+    "cmpAgt":"2-3x more tokens on a simple prompt, but disambiguates by reading descriptions — which the deterministic client cannot do.",
+    "instrHead":"Instructions","instrTitle":"Earn it back: ambiguous prompt",
+    "instrSub":"Chapter 3 measured the overhead honestly. Here it earns its keep: run the agent on an ambiguous prompt — <code>find the service that owns the /payments path</code> — the deterministic client cannot handle, and capture the trace.",
+    "progLabel":"Progress","copy":"Copy","copied":"Copied",
+    "s1h":"Step 1 · Run the ambiguous prompt","s1b":"In the <strong>Terminal</strong>, run the agent on the ambiguous prompt and tee the output:",
+    "s2h":"Step 2 · Compare with the deterministic","s2b":"Reproduce what the deterministic client would do: a simple name (substring) match:",
+    "s3h":"Step 3 · The ambiguous run cost","s3b":"Extract the token total of the ambiguous run (typically 30-60% more than the simple prompt):",
+    "s4h":"Step 4 · Verify the answer","s4b":"Confirm the agent named <code>payments-api</code> (its description mentions \"Owns the /payments and /refunds HTTP paths\"):",
+    "critH":"Success criteria",
+    "c1":"Ambiguous prompt run, trace captured.","c2":"Deterministic client limit observed.","c3":"Ambiguous run cost extracted.","c4":"Correct answer (payments-api) verified.",
+    "finale":"Congratulations — ReAct agent built, cost measured, and the earned capability proven!",
+    "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
+    "skip":"Skip","check":"Check",
+    "helpTitle":"Lab Copilot","helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your commands and the terminal log to your backend.","nextHint":"Next hint",
+    "hint0":"Run the ambiguous prompt first (Step 1).",
+    "hint1":"The agent calls query-catalog-entities, reads the descriptions, then answers.",
+    "hint2":"The deterministic client only does a name match, not a description match.",
+    "hint3":"The ambiguous prompt costs ~30-60% more (one extra reading turn).",
+    "hint4":"payments-api description: Owns the /payments and /refunds HTTP paths.",
+    "bWelcome":"backstage102-c2 VM — agent ready for the ambiguous prompt (Koffi Academy)","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hRun":"run the agent (ambiguous prompt)","hDet":"name match (deterministic)","hCost":"extract the token total","hAns":"view the agent's answer","hCheck":"check your progress","hClear":"clear the terminal",
+    "needRun":"error: no trace — run `python agent.py 'find the service...'` first (Step 1)",
+    "runOut":"=== Agent answer ===\\npayments-api owns the /payments path (description: Owns the /payments and /refunds HTTP paths)\\n\\n=== Token log ===\\n  turn 1: input=438 output=41\\n  turn 2: input=712 output=52\\n  turn 3: input=905 output=33\\n\\nTotal tokens (input+output, all turns): 2181",
+    "detOut":"name-only match: ['payments-api']",
+    "costOut":"Total tokens (input+output, all turns): 2181",
+    "ansOut":"=== Agent answer ===\\npayments-api owns the /payments path (description: Owns the /payments and /refunds HTTP paths)",
+    "checkHeader":"Task progress:","chkR":"Ambiguous prompt run","chkD":"Deterministic comparison done","chkC":"Cost extracted","chkA":"Answer verified (payments-api)","chkAll":"All criteria met. Chapter 4 complete — full track done!","skipped":"Step skipped.",
+    "cmdNF":"{c}: command not found. Type `help`.",
+    "tDone":"Track complete — earned capability proven"
+  }
+};
+
+(function(){
+  "use strict";
+  var I=window.I18N; var lang=localStorage.getItem("preferred-lang"); if(!I[lang])lang="de";
+  function t(key,vars){var s=(I[lang]&&I[lang][key]!==undefined)?I[lang][key]:(I.en[key]!==undefined?I.en[key]:key);if(vars)Object.keys(vars).forEach(function(k){s=s.replace(new RegExp("\\{"+k+"\\}","g"),vars[k]);});return s;}
+
+  var st={run:false,det:false,cost:false,answer:false};
+  var ran=false; var hi=0;
+  var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput");
+  function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+  function print(text,cls){String(text).replace(/\\n/g,"\n").split("\n").forEach(function(line){var l=document.createElement("div");if(cls)l.className=cls;l.innerHTML=esc(line);out.appendChild(l);});out.scrollTop=out.scrollHeight;}
+  function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
+  function banner(){out.innerHTML="";print(t("bWelcome"),"line-muted");print(t("bTip"),"line-muted");print("");}
+
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["run","det","cost","answer"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
+
+  function handle(raw){
+    var cmd=raw.trim(); if(!cmd) return; var head=cmd.split(/\s+/)[0];
+    if(head==="help"){print(t("hHeader"),"line-muted");
+      print("  python agent.py 'find the service...' | tee ...  "+t("hRun"));
+      print("  python -c \"... 'payments' in name ...\"           "+t("hDet"));
+      print("  grep 'Total tokens' /tmp/agent-task4-output.txt  "+t("hCost"));
+      print("  grep -A 1 '=== Agent answer ===' ...             "+t("hAns"));
+      print("  check   ·   clear                             "+t("hCheck"));return;}
+    if(head==="clear"){out.innerHTML="";return;}
+    if(head==="check"){runCheck();return;}
+    if(/^export\b/.test(cmd)||/^source\b/.test(cmd)||/^cd\b/.test(cmd)){return;}
+    if(/python\s+agent\.py/.test(cmd)){print(t("runOut"));ran=true;setStep("run",true);return;}
+    if(/python/.test(cmd)&&/payments.*in/.test(cmd)){print(t("detOut"),"line-json");setStep("det",true);return;}
+    if(/grep/.test(cmd)&&/Total tokens/.test(cmd)){if(!ran){print(t("needRun"),"line-error");return;}print(t("costOut"),"line-ok");setStep("cost",true);return;}
+    if(/grep/.test(cmd)&&/Agent answer/.test(cmd)){if(!ran){print(t("needRun"),"line-error");return;}print(t("ansOut"),"line-ok");setStep("answer",true);return;}
+    print(t("cmdNF",{c:head}),"line-error");
+  }
+
+  function runCheck(){
+    print(t("checkHeader"),"line-muted");
+    print((st.run?"  [x] ":"  [ ] ")+t("chkR"),st.run?"line-ok":"line-warn");
+    print((st.det?"  [x] ":"  [ ] ")+t("chkD"),st.det?"line-ok":"line-warn");
+    print((st.cost?"  [x] ":"  [ ] ")+t("chkC"),st.cost?"line-ok":"line-warn");
+    print((st.answer?"  [x] ":"  [ ] ")+t("chkA"),st.answer?"line-ok":"line-warn");
+    if(st.run&&st.det&&st.cost&&st.answer)print(t("chkAll"),"line-ok");
+  }
+
+  function runScript(text){
+    var lines=text.replace(/\r/g,"").split("\n"); var i=0;
+    while(i<lines.length){var line=lines[i];
+      if(line.trim()===""){i++;continue;}
+      print(document.getElementById("termPrompt").textContent+" "+line,"line-cmd");handle(line);i++;}
+  }
+
+  document.getElementById("terminalForm").addEventListener("submit",function(e){e.preventDefault();var v=input.value;print(document.getElementById("termPrompt").textContent+" "+v,"line-cmd");input.value="";handle(v);});
+  input.addEventListener("paste",function(e){var txt=(e.clipboardData||window.clipboardData).getData("text");if(txt&&txt.indexOf("\n")!==-1){e.preventDefault();runScript(txt);input.value="";}});
+
+  document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");var tb=b.getAttribute("data-tab");document.getElementById("terminalView").classList.toggle("is-active",tb==="terminal");document.getElementById("datasetsView").classList.toggle("is-active",tb==="datasets");if(tb==="terminal")input.focus();});});
+  function switchTab(w){document.querySelectorAll(".tab").forEach(function(b){if(b.getAttribute("data-tab")===w)b.click();});}
+  document.getElementById("reloadBtn").addEventListener("click",function(){banner();switchTab("terminal");input.focus();});
+  document.querySelectorAll(".step__top").forEach(function(top){top.addEventListener("click",function(){top.parentElement.classList.toggle("is-open");});});
+  document.getElementById("checkBtn").addEventListener("click",function(){switchTab("terminal");runCheck();});
+  document.getElementById("skipBtn").addEventListener("click",function(){var all=document.querySelectorAll(".step");var idx=-1;all.forEach(function(s,i){if(s.classList.contains("is-open"))idx=i;});all.forEach(function(s){s.classList.remove("is-open");});var nx=all[Math.min(idx+1,all.length-1)];if(nx)nx.classList.add("is-open");toast(t("skipped"));});
+
+  var instr=document.getElementById("instructions"),fab=document.getElementById("instFab");
+  function hideInstr(h){instr.classList.toggle("is-hidden",h);fab.classList.toggle("is-gone",!h);}
+  document.getElementById("toggleInstructions").addEventListener("click",function(){hideInstr(!instr.classList.contains("is-hidden"));});
+  document.getElementById("closeInstructions").addEventListener("click",function(){hideInstr(true);});
+  fab.addEventListener("click",function(){hideInstr(false);});
+  var help=document.getElementById("helpPanel");
+  document.getElementById("openHelp").addEventListener("click",function(){help.classList.add("is-open");});
+  document.getElementById("closeHelp").addEventListener("click",function(){help.classList.remove("is-open");});
+  document.getElementById("nextHint").addEventListener("click",function(){hi=(hi+1)%5;document.getElementById("hintText").textContent=t("hint"+hi);});
+
+  document.querySelectorAll(".copybtn").forEach(function(btn){btn.addEventListener("click",function(){var pre=btn.parentElement.querySelector(".codebox");var text=pre?pre.textContent:"";function done(){btn.textContent=t("copied");btn.classList.add("is-copied");setTimeout(function(){btn.textContent=t("copy");btn.classList.remove("is-copied");},1400);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,done);}else{var ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(e){}ta.remove();done();}});});
+
+  var remaining=75*60,tEl=document.getElementById("labTimer");
+  setInterval(function(){if(remaining>0)remaining--;var m=Math.floor(remaining/60),s=remaining%60;tEl.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;},1000);
+
+  function applyLang(l){if(!I[l])return;lang=l;localStorage.setItem("preferred-lang",l);document.documentElement.lang=l;var d=I[l];
+    document.querySelectorAll("[data-i18n]").forEach(function(el){var k=el.getAttribute("data-i18n");if(d[k]!==undefined)el.innerHTML=d[k];});
+    document.querySelectorAll("[data-i18n-title]").forEach(function(el){var k=el.getAttribute("data-i18n-title");if(d[k]!==undefined)el.setAttribute("title",d[k]);});
+    document.querySelectorAll("[data-i18n-aria]").forEach(function(el){var k=el.getAttribute("data-i18n-aria");if(d[k]!==undefined)el.setAttribute("aria-label",d[k]);});
+    document.getElementById("hintText").textContent=t("hint"+hi);}
+  window.setLabWorkspaceLang=applyLang;
+  applyLang(lang);banner();input.focus();
+})();
+
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(l){if(window.setLabWorkspaceLang)window.setLabWorkspaceLang(l);klSync(l);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>
