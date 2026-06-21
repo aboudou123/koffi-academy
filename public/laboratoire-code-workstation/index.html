@@ -600,7 +600,6 @@ button{cursor:pointer}
   function handleCommand(command){
     var raw = command.trim();
     if(!raw) return;
-    printRaw('<span class="prompt">$ ' + escapeHtml(raw) + '</span>');
     var parts = raw.split(/\\s+/);
     var cmd = parts[0].toLowerCase();
     var arg = parts.slice(1).join(" ");
@@ -656,6 +655,46 @@ button{cursor:pointer}
   document.querySelectorAll("[data-open-tab]").forEach(function(btn){
     btn.addEventListener("click", function(){ setTab(btn.getAttribute("data-open-tab")); });
   });
+  /* === LabVM real-shell integration (code-workstation) === */
+  (function(){
+    function motd(){
+      var ts=new Date().toUTCString();
+      return ["Welcome to Ubuntu 24.04.2 LTS (GNU/Linux 6.8.0-41-generic x86_64)","",
+        " * Documentation:  https://help.ubuntu.com",
+        " * Management:     https://landscape.canonical.com",
+        " * Support:        https://ubuntu.com/pro","",
+        " System information as of "+ts,"",
+        "  System load:  0.08               Processes:             129",
+        "  Usage of /:   13.7% of 78.32GB   Users logged in:       1",
+        "  Memory usage: 28%                IPv4 address for eth0: 10.0.2.15",
+        "  Swap usage:   0%","",
+        "Last login: "+ts+" from 10.0.2.2",""];
+    }
+    function initCW(){
+      if(!window.LabVM||typeof handleCommand!=="function") return;
+      var out=document.getElementById("terminalOutput");
+      var inp=document.getElementById("terminalInput");
+      var form=document.getElementById("terminalForm");
+      var ps=form?form.querySelector(".terminal-prompt"):null;
+      if(!out||!inp) return; if(form&&form.__labvm) return; if(form) form.__labvm=true;
+      function vprint(t,c){var d=document.createElement("div");if(c)d.className=c;d.textContent=t;out.appendChild(d);out.scrollTop=out.scrollHeight;}
+      var vm=window.LabVM.create({user:"student",host:"koffi-lab",home:"/home/student/koffi-lab",
+        print:vprint,clear:function(){out.innerHTML="";},
+        prompt:function(v){return "student@koffi-lab:"+v.displayCwd()+"$";},
+        fallback:function(line){handleCommand(line);}});
+      vm.fs.mkdirp("/home/student/koffi-lab");
+      var labLines=Array.prototype.slice.call(out.children).map(function(n){return {t:n.textContent,c:n.className};});
+      out.innerHTML="";
+      motd().forEach(function(l){vprint(l,"line-muted");});
+      labLines.forEach(function(x){vprint(x.t,x.c);});
+      out.scrollTop=0;
+      if(ps) ps.textContent=vm.promptText();
+      if(form) form.addEventListener("submit",function(e){e.preventDefault();e.stopImmediatePropagation();var v=inp.value;inp.value="";vm.submit(v);if(ps)ps.textContent=vm.promptText();},true);
+      inp.addEventListener("paste",function(e){var tx=(e.clipboardData||window.clipboardData).getData("text");if(tx&&tx.indexOf("\n")!==-1){e.preventDefault();e.stopImmediatePropagation();vm.paste(tx);inp.value="";if(ps)ps.textContent=vm.promptText();}},true);
+    }
+    if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",initCW); else setTimeout(initCW,0);
+  })();
+  /* === end LabVM real-shell integration === */
   document.getElementById("terminalForm").addEventListener("submit", function(event){
     event.preventDefault();
     handleCommand(terminalInput.value);
@@ -700,6 +739,7 @@ button{cursor:pointer}
   updateProgress();
 })();
 </script>
+<script src="../assets/js/lab-vm.js?v=20260621c"></script>
 <script src="../assets/js/terminal-manager.js?v=20260621c"></script>
 </body>
 </html>
