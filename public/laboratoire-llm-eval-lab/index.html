@@ -434,6 +434,7 @@ python /root/evaluation/datasets/validate_dataset.py /root/evaluation/datasets/k
 
 <div class="toast" id="toast"></div>
 
+<script src="../assets/js/lab-vm.js"></script>
 <script>
 window.I18N = {
   "fr":{
@@ -580,12 +581,15 @@ window.I18N = {
     return s;
   }
 
-  var FS = {};
-  FS[DATASET] = "[]\n";
-  FS[SCRIPT]  = "";
+  // Real in-browser shell + virtual filesystem (LabVM). The two lab files live
+  // at canonical absolute paths; the editor keys (DATASET/SCRIPT) map to them.
+  var DATASET_PATH = "/root/evaluation/datasets/kubernetes_eval.json";
+  var SCRIPT_PATH  = "/root/evaluation/datasets/validate_dataset.py";
+  var EDITOR_PATH = {}; EDITOR_PATH[DATASET] = DATASET_PATH; EDITOR_PATH[SCRIPT] = SCRIPT_PATH;
+  var vm = null;
+  function dsContent(){ var c = vm ? vm.fs.read(DATASET_PATH) : null; return (c==null||c==="") ? "[]\n" : c; }
+  function scContent(){ var c = vm ? vm.fs.read(SCRIPT_PATH) : null; return c==null ? "" : c; }
 
-  var venvActive = false;
-  var venvReady = true;
   var currentFile = DATASET;
   var steps = { dataset:false, script:false, validate:false };
   var hi = 0;
@@ -596,7 +600,6 @@ window.I18N = {
   var editor = document.getElementById("fileEditor");
 
   function esc(v){ return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];}); }
-  function prompt(){ return (venvActive?"(venv) ":"")+"koffi@llm-eval:~$"; }
   function print(text, cls){
     var line = document.createElement("div");
     if(cls) line.className = cls;
@@ -623,7 +626,7 @@ window.I18N = {
   function analyze(){
     var res = { ok:false, items:0, ids:0, cats:0, kw:0, problems:[], data:null };
     var data;
-    try { data = JSON.parse(FS[DATASET]); }
+    try { data = JSON.parse(dsContent()); }
     catch(e){ res.problems.push(t("pJson",{e:e.message})); return res; }
     if(!Array.isArray(data) || data.length===0){ res.problems.push(t("pArray")); return res; }
     res.data = data;
@@ -682,30 +685,15 @@ window.I18N = {
     opts = opts || {};
     var r = analyze();
     if(r.ok) setStep("dataset", true);
-    var sc = FS[SCRIPT] || "";
+    var sc = scContent();
     if(sc.trim().length>40 && /def\s+validate/.test(sc)) setStep("script", true);
     if(opts.ranValidation && r.ok) setStep("validate", true);
     return r;
   }
 
   /* ---------- terminal ---------- */
-  function norm(path){ return path ? path.trim().replace(/^\.\//,"").replace(/^\/root\/evaluation\//,"").replace(/\/+$/,"") : ""; }
-  function resolve(path){
-    if(!path) return null;
-    var p = norm(path);
-    if(p===DATASET || p==="kubernetes_eval.json" || p==="datasets/kubernetes_eval.json") return DATASET;
-    if(p===SCRIPT || p==="validate_dataset.py" || p==="datasets/validate_dataset.py") return SCRIPT;
-    if(FS[p]!==undefined) return p;
-    return null;
-  }
-  function writeFile(path, body){
-    var key = resolve(path) || norm(path);
-    FS[key] = (body.charAt(body.length-1)==="\n") ? body : body+"\n";
-    if(key===DATASET){ refreshMetrics(); evalSteps(); if(currentFile===DATASET) editor.value = FS[DATASET]; }
-    else if(key===SCRIPT){ evalSteps(); if(currentFile===SCRIPT) editor.value = FS[SCRIPT]; }
-  }
-  function dsExists(){ var v=(FS[DATASET]||"").trim(); return v!=="" && v!=="[]"; }
-  function scExists(){ return (FS[SCRIPT]||"").trim()!==""; }
+  function dsExists(){ var v=dsContent().trim(); return v!=="" && v!=="[]"; }
+  function scExists(){ return scContent().trim()!==""; }
 
   function runValidation(arg){
     var r = analyze();
@@ -735,130 +723,100 @@ window.I18N = {
     evalSteps({ ranValidation:true });
   }
 
-  function handle(raw){
-    var cmd = raw.trim();
-    if(!cmd) return;
-    var parts = cmd.split(/\s+/);
-    var head = parts[0];
-
-    if(head==="help"){
-      print(t("hHeader"), "line-muted");
-      print("  mkdir -p <dir>                        " + t("hMkdir"));
-      print("  cat > <file> << 'EOF' ... EOF         " + t("hWrite"));
-      print("  chmod +x <file>                       " + t("hChmod"));
-      print("  ls [-la] [dir]                        " + t("hLs"));
-      print("  source venv/bin/activate              " + t("hSource"));
-      print("  python validate_dataset.py [file]     " + t("hPython"));
-      print("  check                                 " + t("hCheck"));
-      print("  clear                                 " + t("hClear"));
-      return;
-    }
-    if(head==="clear"){ out.innerHTML=""; return; }
-    if(head==="pwd"){ print("/root/evaluation"); return; }
-    if(head==="whoami"){ print("root"); return; }
-    if(head==="mkdir"){ return; }
-    if(head==="chmod"){ return; }
-    if(head==="echo"){ print(cmd.slice(4).trim().replace(/^["']|["']$/g,"")); return; }
-    if(head==="ls"){
-      var args = parts.slice(1).filter(function(a){ return a.charAt(0)!=="-"; });
-      var flags = parts.slice(1).filter(function(a){ return a.charAt(0)==="-"; }).join("");
-      var d = norm(args[0]);
-      var long = /l/.test(flags);
-      if(!args[0] || d==="" || d==="."){ print("datasets   validate_dataset.py   venv   README.md"); return; }
-      if(d==="datasets"){
-        if(long){
-          print("total 8");
-          if(dsExists()) print("-rw-r--r-- 1 root root  1832 Jun 20 07:30 kubernetes_eval.json");
-          if(scExists()) print("-rwxr-xr-x 1 root root  1564 Jun 20 07:31 validate_dataset.py");
-          if(!dsExists() && !scExists()) print("(dossier vide)", "line-muted");
-        } else {
-          var names=[]; if(dsExists()) names.push("kubernetes_eval.json"); if(scExists()) names.push("validate_dataset.py");
-          print(names.length?names.join("   "):"");
-        }
-        return;
-      }
-      if(d==="venv"){ print("bin   lib   pyvenv.cfg"); return; }
-      print(t("lsNF",{f:args[0]}), "line-error");
-      return;
-    }
-    if(head==="cat"){
-      var f = resolve(parts[1]);
-      if(f && FS[f]!==undefined){ FS[f].split("\n").forEach(function(l){ print(l); }); }
-      else print(t("catNF",{f:parts[1]||""}), "line-error");
-      return;
-    }
-    if(head==="source"){
-      if(/activate/.test(cmd)){ venvActive = true; termPrompt.textContent = prompt(); print(t("venvOn"), "line-muted"); }
-      else print(t("sourceUsage"), "line-error");
-      return;
-    }
-    if(head==="python" || head==="python3"){
-      var arg1 = parts[1] || "";
-      if(arg1==="-m" && parts[2]==="venv"){ venvReady = true; return; }
-      if(arg1==="-c"){ runValidation(); return; }
-      if(/validate_dataset\.py$/.test(arg1) || resolve(arg1)===SCRIPT){
-        if(!FS[SCRIPT] || !FS[SCRIPT].trim()){
-          print(t("pyNoScript"), "line-error");
-          print(t("pyHint"), "line-warn");
-          return;
-        }
-        if(!venvActive) print(t("pyNotActive"), "line-warn");
-        runValidation(parts[2]);
-        return;
-      }
-      print(t("pyBadFile",{f:arg1}), "line-error");
-      return;
-    }
-    if(head==="check"){
-      var r = evalSteps();
-      print(t("checkHeader"), "line-muted");
-      print((steps.dataset?"  [x] ":"  [ ] ") + t("chkDataset"), steps.dataset?"line-ok":"line-warn");
-      print((steps.script ?"  [x] ":"  [ ] ") + t("chkScript"), steps.script?"line-ok":"line-warn");
-      print((steps.validate?"  [x] ":"  [ ] ") + t("chkValidate"), steps.validate?"line-ok":"line-warn");
-      if(steps.dataset&&steps.script&&steps.validate) print(t("chkAll"), "line-ok");
-      else if(!r.ok && r.problems.length) print("  - " + r.problems[0], "line-warn");
-      return;
-    }
-    print(t("cmdNF",{c:head}), "line-error");
+  /* The terminal is a real in-browser shell (LabVM). Generic commands
+     (cd/ls/mkdir/cat/touch/rm/echo/tree/here-doc...) come from the VM; the
+     lab-specific commands below are registered on top and drive validation. */
+  function labHelp(){
+    print(t("hHeader"), "line-muted");
+    print("  mkdir -p <dir>                        " + t("hMkdir"));
+    print("  cat > <file> << 'EOF' ... EOF         " + t("hWrite"));
+    print("  chmod +x <file>                       " + t("hChmod"));
+    print("  ls [-la] [dir]                        " + t("hLs"));
+    print("  cat <file>                            " + t("hCat"));
+    print("  source venv/bin/activate              " + t("hSource"));
+    print("  python validate_dataset.py [file]     " + t("hPython"));
+    print("  check                                 " + t("hCheck"));
+    print("  clear                                 " + t("hClear"));
+    print("  cd · pwd · touch · rm · echo · tree · whoami · date", "line-muted");
   }
 
-  // Run a pasted block line by line, with here-document (cat > file << 'EOF') support.
-  function runScript(text){
-    var lines = text.replace(/\r/g,"").split("\n");
-    var i = 0;
-    while(i < lines.length){
-      var line = lines[i];
-      var hd = line.match(/^\s*cat\s*>\s*(\S+)\s*<<\s*['"]?([A-Za-z0-9_]+)['"]?\s*$/);
-      if(hd){
-        print(prompt() + " " + line, "line-cmd");
-        var path = hd[1], delim = hd[2], body = [];
-        i++;
-        while(i < lines.length && lines[i].trim() !== delim){ body.push(lines[i]); i++; }
-        i++; // skip the closing delimiter
-        writeFile(path, body.join("\n"));
-        continue;
-      }
-      if(line.trim() === ""){ i++; continue; }
-      print(prompt() + " " + line, "line-cmd");
-      handle(line);
-      i++;
+  function cmdSource(ctx, v){
+    var target = ctx.operands[0] || "";
+    if(/activate$/.test(target)){
+      v.env.venv = true;
+      print(t("venvOn"), "line-muted");
+    } else {
+      print(t("sourceUsage"), "line-error");
     }
   }
+
+  function cmdPython(ctx, v){
+    var a1 = ctx.operands[0] || "";
+    if(a1==="-m" && ctx.operands[1]==="venv"){ return; }
+    if(a1==="-c"){ runValidation(); return; }
+    var abs = v.fs.resolve(a1, v.cwd);
+    var body = v.fs.read(abs);
+    var looksValidator = /validate_dataset\.py$/.test(a1) || (body!==null && /def\s+validate/.test(body));
+    if(looksValidator){
+      if(!scExists()){
+        print(t("pyNoScript"), "line-error");
+        print(t("pyHint"), "line-warn");
+        return;
+      }
+      if(!v.env.venv) print(t("pyNotActive"), "line-warn");
+      runValidation(ctx.operands[1]);
+      return;
+    }
+    print(t("pyBadFile",{f:a1}), "line-error");
+  }
+
+  function cmdCheck(){
+    var r = evalSteps();
+    print(t("checkHeader"), "line-muted");
+    print((steps.dataset?"  [x] ":"  [ ] ") + t("chkDataset"), steps.dataset?"line-ok":"line-warn");
+    print((steps.script ?"  [x] ":"  [ ] ") + t("chkScript"), steps.script?"line-ok":"line-warn");
+    print((steps.validate?"  [x] ":"  [ ] ") + t("chkValidate"), steps.validate?"line-ok":"line-warn");
+    if(steps.dataset&&steps.script&&steps.validate) print(t("chkAll"), "line-ok");
+    else if(!r.ok && r.problems.length) print("  - " + r.problems[0], "line-warn");
+  }
+
+  function syncEditorFromVFS(){
+    if(!vm || document.activeElement===editor) return;
+    var c = vm.fs.read(EDITOR_PATH[currentFile]);
+    if(c!==null) editor.value = c;
+  }
+
+  vm = LabVM.create({
+    user:"koffi", host:"llm-eval", home:"/root",
+    print: print,
+    clear: function(){ out.innerHTML=""; },
+    prompt: function(v){ return (v.env.venv?"(venv) ":"")+"koffi@llm-eval:"+v.displayCwd()+"$"; },
+    onChange: function(){ refreshMetrics(); evalSteps(); syncEditorFromVFS(); },
+    commands: { help: labHelp, source: cmdSource, python: cmdPython, python3: cmdPython, check: cmdCheck }
+  });
+
+  // Seed the lab filesystem. The two target files are created by the learner.
+  vm.fs.mkdirp("/root/venv/bin");
+  vm.fs.writeFile("/root/venv/bin/activate", "# source this file to activate the venv\n", {});
+  vm.fs.writeFile("/root/README.md", "# LLM Evaluation Lab\n\nFolge der Anleitung rechts. Jeder Befehl läuft in einer echten\nin-Browser-Shell mit virtuellem Dateisystem.\n", {});
+
+  function updatePrompt(){ termPrompt.textContent = vm.promptText(); }
 
   document.getElementById("terminalForm").addEventListener("submit", function(e){
     e.preventDefault();
     var v = input.value;
-    print(prompt() + " " + v, "line-cmd");
     input.value = "";
-    handle(v);
+    vm.submit(v);
+    updatePrompt();
   });
 
   input.addEventListener("paste", function(e){
     var txt = (e.clipboardData || window.clipboardData).getData("text");
     if(txt && txt.indexOf("\n") !== -1){
       e.preventDefault();
-      runScript(txt);
+      vm.paste(txt);
       input.value = "";
+      updatePrompt();
     }
   });
 
@@ -874,19 +832,24 @@ window.I18N = {
     });
   });
 
-  /* ---------- file editor ---------- */
+  /* ---------- file editor (backed by the same virtual filesystem) ---------- */
+  function editorWrite(path, body){
+    if(!vm) return;
+    vm.fs.writeFile(EDITOR_PATH[path], body, { makeParents:true });
+    refreshMetrics(); evalSteps();
+  }
   function selectFile(path){
     currentFile = path;
-    editor.value = FS[path];
+    var c = vm ? vm.fs.read(EDITOR_PATH[path]) : null;
+    editor.value = c!==null ? c : (path===DATASET ? "[]\n" : "");
     document.getElementById("fileLabel").textContent = path;
     document.querySelectorAll(".filetab").forEach(function(b){ b.classList.toggle("is-active", b.getAttribute("data-file")===path); });
   }
   document.querySelectorAll(".filetab").forEach(function(b){
-    b.addEventListener("click", function(){ FS[currentFile]=editor.value; selectFile(b.getAttribute("data-file")); });
+    b.addEventListener("click", function(){ editorWrite(currentFile, editor.value); selectFile(b.getAttribute("data-file")); });
   });
   document.getElementById("saveFile").addEventListener("click", function(){
-    FS[currentFile] = editor.value;
-    refreshMetrics();
+    editorWrite(currentFile, editor.value);
     var r = evalSteps();
     if(currentFile===DATASET){
       if(r.data===null) toast(t("tJsonBad"));
@@ -898,7 +861,7 @@ window.I18N = {
   });
   document.getElementById("resetFile").addEventListener("click", function(){
     editor.value = currentFile===DATASET ? "[]\n" : "";
-    FS[currentFile] = editor.value; refreshMetrics();
+    editorWrite(currentFile, editor.value);
   });
   document.getElementById("reloadBtn").addEventListener("click", function(){ banner(); input.focus(); });
 
@@ -972,6 +935,7 @@ window.I18N = {
   banner();
   selectFile(DATASET);
   refreshMetrics();
+  updatePrompt();
   input.focus();
 })();
 
