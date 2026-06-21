@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CAIPE Dev Box · Chapitre 3 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Chapitre 3 : déclencher le flux self-service avec un seul prompt au superviseur CAIPE et suivre le routage vers les sous-agents.">
+  <meta name="theme-color" content="#071a2f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+  <style>
+:root{--bg:#07111f;--panel:#10182b;--line:rgba(255,255,255,.11);--muted:#94a3b8;--soft:#c8d4e4;--text:#f7fbff;--navy:#07294d;--teal:#20d3b6;--green:#54e39a;--amber:#f8b85f;--orange:#f89035;--danger:#ff6b6b;--shadow:0 24px 80px rgba(0,0,0,.34)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);overflow-x:hidden}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,textarea,input{font:inherit}
+button{cursor:pointer}
+.lab-shell{width:100%;max-width:100%;min-height:100vh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(circle at 20% -10%,rgba(32,211,182,.18),transparent 28%),radial-gradient(circle at 88% 4%,rgba(248,144,53,.18),transparent 30%),linear-gradient(135deg,#08111f 0%,#0b1730 52%,#09101e 100%)}
+.topline{height:4px;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));opacity:.95}
+.labbar{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(10,17,31,.88);backdrop-filter:blur(18px);position:sticky;top:0;z-index:30}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand__mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#f9d77e,#d6a02d 55%,#b97911);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(214,160,45,.30);flex-shrink:0}
+.brand__mark svg{width:62%;height:62%;display:block}
+.brand__text{min-width:0;display:flex;align-items:center;gap:10px}
+.brand__k{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#fff;white-space:nowrap}
+.brand__sep{color:rgba(255,255,255,.3);font-size:16px}
+.brand__title{font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip-ch{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;color:#071a2f;background:linear-gradient(135deg,#f9d77e,#d6a02d);padding:4px 9px;border-radius:999px;white-space:nowrap}
+.labbar__spacer{flex:1}
+.lab-timer{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#fff;background:rgba(32,211,182,.12);border:1px solid rgba(32,211,182,.32);border-radius:999px;padding:7px 13px}
+.lab-timer i{color:var(--teal);font-size:12px}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
+.topbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:rgba(255,255,255,.9);border-radius:8px;padding:8px 13px;font-weight:700;font-size:13px;line-height:1.15;transition:.16s}
+.topbtn:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.28)}
+.topbtn--ai{background:linear-gradient(135deg,#6d73ff,#8468ff);border-color:rgba(255,255,255,.12);box-shadow:0 10px 28px rgba(109,115,255,.24)}
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 12px 7px 9px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+.lab-main{width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1.42fr) minmax(360px,.82fr);gap:0;flex:1;min-height:0}
+.workspace{min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--line);background:rgba(7,12,22,.54)}
+.work-tabs{display:flex;align-items:center;gap:2px;padding:0 14px;background:rgba(255,255,255,.05);border-bottom:1px solid var(--line);min-height:44px}
+.work-tabs__reload{margin-right:6px;border:0;background:transparent;color:var(--soft);font-size:14px;padding:6px}
+.tab{position:relative;border:0;background:transparent;color:rgba(255,255,255,.72);display:inline-flex;align-items:center;gap:8px;padding:13px 14px;font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;transition:.16s}
+.tab.is-active{color:#fff}
+.tab.is-active:after{content:"";position:absolute;left:10px;right:10px;bottom:0;height:2px;background:var(--teal);border-radius:999px}
+.work-surface{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr)}
+.view{display:none;min-height:0}
+.view.is-active{display:flex}
+.terminal-view{flex-direction:column;background:#0d0f12}
+.terminal-output{flex:1;min-height:360px;max-height:calc(100vh - 160px);overflow:auto;padding:20px 22px;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.62;color:#e8edf2;white-space:pre-wrap;word-break:break-word}
+.terminal-output .line-muted{color:#8ea3b8}
+.terminal-output .line-ok{color:#52ef9f}
+.terminal-output .line-warn{color:#ffce73}
+.terminal-output .line-error{color:#ff7d7d}
+.terminal-output .line-cmd{color:#fff}
+.terminal-output .line-agent{color:#8fb4ff}
+.terminal-inputbar{display:flex;align-items:center;gap:10px;border-top:1px solid #23262b;background:#0a0c0f;padding:12px 16px}
+.terminal-prompt{font-family:'JetBrains Mono',monospace;font-size:13px;color:#8cf0ce;white-space:nowrap}
+.terminal-input{flex:1;border:0;outline:0;background:transparent;color:#fff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;min-width:0}
+.runbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:rgba(10,17,31,.88);border-bottom:1px solid var(--line)}
+.runbar__title{display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--soft);min-width:0}
+.runbar__title i{color:var(--teal)}
+.datasets-view{flex-direction:column;background:#0b1222}
+.flow{padding:20px;overflow:auto}
+.fl{display:flex;align-items:flex-start;gap:13px;position:relative;padding-bottom:16px}
+.fl:before{content:"";position:absolute;left:18px;top:36px;bottom:-2px;width:2px;background:rgba(255,255,255,.12)}
+.fl:last-child:before{display:none}
+.fl__i{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;z-index:1}
+.fl--sup .fl__i{background:rgba(109,115,255,.16);color:#9aa0ff}
+.fl--bs .fl__i{background:rgba(25,148,132,.16);color:#3fcdb8}
+.fl--argo .fl__i{background:rgba(239,123,77,.16);color:#f7a07d}
+.fl--slack .fl__i{background:rgba(84,227,154,.16);color:#7fe7ad}
+.fl__b{min-width:0;padding-top:3px}
+.fl__t{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:#fff}
+.fl__d{font-size:12.5px;color:var(--soft);line-height:1.5;margin-top:2px}
+.instructions{min-width:0;background:linear-gradient(180deg,rgba(20,28,49,.97),rgba(15,21,38,.98));display:flex;flex-direction:column;min-height:0}
+.instructions.is-hidden{display:none}
+.instructions__head{display:flex;align-items:center;gap:12px;padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.instructions__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;margin:0}
+.instructions__head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:20px;line-height:1;padding:4px;border-radius:7px}
+.instructions__body{min-width:0;overflow:auto;padding:20px 18px 24px;flex:1}
+.lab-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:25px;line-height:1.16;font-weight:800;letter-spacing:-.02em;margin:0 0 12px;color:#fff}
+.lab-sub{font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.78);margin:0 0 20px}
+.progress-card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:12px;padding:14px 15px;margin-bottom:18px}
+.progress-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.progress-row span:first-child{font-size:12px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.08em}
+.progress-row span:last-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:#fff}
+.progress-track{height:8px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));border-radius:999px;transition:width .25s}
+.step{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.step__top{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none}
+.step__check{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:transparent;flex-shrink:0;font-size:12px}
+.step.is-done .step__check{background:rgba(84,227,154,.16);border-color:rgba(84,227,154,.42);color:var(--green)}
+.step h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:16.5px;line-height:1.22;font-weight:800;letter-spacing:-.01em;margin:0;color:#fff;flex:1}
+.step__chev{color:var(--soft);font-size:13px;transition:transform .2s}
+.step.is-open .step__chev{transform:rotate(90deg)}
+.step__body{display:none;border-top:1px solid rgba(255,255,255,.10);padding:16px 18px 18px;color:rgba(255,255,255,.82);font-size:13.6px;line-height:1.62}
+.step.is-open .step__body{display:block}
+.step__body code{font-family:'JetBrains Mono',monospace;font-size:12.4px;background:#06090f;border:1px solid rgba(255,255,255,.10);border-radius:6px;padding:2px 6px;color:#a8fff0}
+.codewrap{position:relative;margin:12px 0 0}
+.copybtn{position:absolute;top:8px;right:8px;z-index:2;border:1px solid rgba(255,255,255,.18);background:rgba(20,28,49,.92);color:#cfe;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:800;transition:.16s}
+.copybtn:hover{background:rgba(32,211,182,.18);border-color:rgba(32,211,182,.5)}
+.copybtn.is-copied{color:var(--green);border-color:rgba(84,227,154,.5)}
+.codebox{max-width:100%;margin:0;border:1px solid rgba(255,255,255,.12);background:#050505;border-radius:10px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.55;color:#eaf2ff;overflow:auto;white-space:pre}
+.crit{list-style:none;margin:6px 0 0;padding:0}
+.crit li{display:flex;align-items:flex-start;gap:10px;padding:7px 0;font-size:13.4px;color:rgba(255,255,255,.84)}
+.crit li i{color:var(--green);font-size:12px;margin-top:3px;flex-shrink:0}
+.help-panel{position:fixed;right:18px;bottom:74px;width:min(420px,calc(100vw - 36px));background:#10182b;border:1px solid rgba(255,255,255,.15);box-shadow:var(--shadow);border-radius:14px;overflow:hidden;z-index:60;display:none}
+.help-panel.is-open{display:block}
+.help-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:linear-gradient(135deg,#202b50,#2c3562);border-bottom:1px solid var(--line)}
+.help-head h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;margin:0}
+.help-head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:18px;border-radius:7px;padding:4px}
+.help-body{padding:16px;color:var(--soft);font-size:13.5px;line-height:1.58}
+.hint{border-left:3px solid var(--teal);background:rgba(32,211,182,.08);padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0;color:#dff}
+.lab-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px;border-top:1px solid var(--line);background:rgba(7,12,22,.6)}
+.btn-skip{background:transparent;border:1px solid rgba(255,255,255,.18);color:var(--soft);border-radius:9px;padding:9px 20px;font-weight:700;font-size:13px}
+.btn-check{background:var(--green);color:#062018;border:0;border-radius:9px;padding:9px 26px;font-weight:800;font-size:13px;box-shadow:0 8px 22px rgba(84,227,154,.26)}
+.inst-fab{display:none;position:fixed;bottom:20px;right:20px;z-index:45;align-items:center;gap:8px;background:var(--teal);color:#071a2f;border:0;border-radius:999px;padding:12px 20px;font-size:13px;font-weight:700;font-family:inherit;box-shadow:0 8px 28px rgba(32,211,182,.42)}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(20px);background:#0f1830;border:1px solid rgba(32,211,182,.4);color:#eafffb;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:80}
+.toast.is-on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:1080px){.lab-main{grid-template-columns:1fr}.workspace{border-right:0}.terminal-output{max-height:none}}
+@media(max-width:768px){
+  .labbar{padding:8px 12px;gap:8px;flex-wrap:wrap}.brand__title,.chip-ch{display:none}.labbar__spacer{display:none}
+  .actions{order:3;width:100%;display:flex;flex-wrap:wrap;gap:6px}.topbtn{font-size:11.5px;padding:7px 10px;gap:5px;min-height:32px}
+  #toggleInstructions{display:none}.topbtn--ai{flex:1}
+  .lab-main{display:flex;flex-direction:column}.workspace{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .work-surface{flex:1;min-height:0;overflow:hidden}.terminal-output{height:calc(100svh - 220px);min-height:260px;max-height:none;overflow:auto}
+  .instructions{position:fixed;inset:0;z-index:50;display:flex!important;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+  .instructions:not(.is-hidden){transform:translateY(0)}.inst-fab{display:inline-flex}.inst-fab.is-gone{display:none}
+  .lab-title{font-size:22px}.work-tabs{overflow-x:auto}.tab{white-space:nowrap}
+}
+  </style>
+</head>
+<body>
+<div class="lab-shell">
+  <div class="topline"></div>
+  <header class="labbar">
+    <a class="brand" href="../laboratoire">
+      <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+      <span class="brand__text">
+        <span class="brand__k">Koffi Academy</span>
+        <span class="brand__sep">|</span>
+        <span class="brand__title">Self-Service Dev Box via CAIPE</span>
+        <span class="chip-ch">CH.3</span>
+      </span>
+    </a>
+    <div class="labbar__spacer"></div>
+    <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">90:00</span></span>
+    <nav class="actions" aria-label="Lab actions">
+      <a class="topbtn" href="../laboratoire-dev-box-caipe-lab-2"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navPrev">Chapitre 2</span></a>
+      <a class="topbtn" href="../laboratoire-dev-box-caipe-lab-4"><span data-i18n="navNext">Chapitre 4</span> <i class="fa-solid fa-arrow-right-long"></i></a>
+      <a class="topbtn" href="../laboratoire-dev-box-caipe"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
+      <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
+      <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
+      <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
+      <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+    </nav>
+  </header>
+
+  <main class="lab-main">
+    <section class="workspace" aria-label="Workspace">
+      <div class="work-tabs" role="tablist">
+        <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
+        <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-diagram-project"></i><span data-i18n="tabFlow">Flux</span></button>
+      </div>
+      <div class="work-surface">
+        <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
+          <div class="terminal-output" id="terminalOutput" aria-live="polite"></div>
+          <form class="terminal-inputbar" id="terminalForm">
+            <span class="terminal-prompt" id="termPrompt">dev@dev-box-flow:~$</span>
+            <input class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" data-i18n-aria="termAria" aria-label="Terminal command" autofocus>
+          </form>
+        </section>
+        <section class="view datasets-view" id="datasetsView" role="tabpanel">
+          <div class="runbar">
+            <div class="runbar__title"><i class="fa-solid fa-diagram-project"></i><span data-i18n="flowTitle">Un prompt, quatre sous-agents</span></div>
+          </div>
+          <div class="flow">
+            <div class="fl fl--sup"><div class="fl__i"><i class="fa-solid fa-robot"></i></div><div class="fl__b"><div class="fl__t">Supervisor</div><div class="fl__d" data-i18n="flSup">Reçoit le prompt « Create a dev box for me named alpha » et planifie le routage (LangGraph).</div></div></div>
+            <div class="fl fl--bs"><div class="fl__i"><i class="fa-solid fa-book-open"></i></div><div class="fl__b"><div class="fl__t">Backstage sub-agent</div><div class="fl__d" data-i18n="flBs">Exécute le template dev-box : fetch + publish:gitea + catalog:register pour la dev box alpha.</div></div></div>
+            <div class="fl fl--argo"><div class="fl__i"><i class="fa-solid fa-octopus-deploy"></i></div><div class="fl__b"><div class="fl__t">ArgoCD sub-agent</div><div class="fl__d" data-i18n="flArgo">Réconcilie l'application dev-box-alpha sur le cluster (Synced/Healthy).</div></div></div>
+            <div class="fl fl--slack"><div class="fl__i"><i class="fa-brands fa-slack"></i></div><div class="fl__b"><div class="fl__t">Slack sub-agent</div><div class="fl__d" data-i18n="flSlack">Poste « Dev box alpha is ready » sur #dev-boxes (chapitre 4).</div></div></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="instructions" id="instructions">
+      <div class="instructions__head">
+        <h2 data-i18n="instrHead">Instructions</h2>
+        <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
+      </div>
+      <div class="instructions__body">
+        <h1 class="lab-title" data-i18n="instrTitle">Déclencher le flux</h1>
+        <p class="lab-sub" data-i18n="instrSub">Vous envoyez un seul prompt en langage naturel au superviseur CAIPE. Suivez le routage : le superviseur délègue au sous-agent Backstage (scaffolding), puis le sous-agent ArgoCD réconcilie la dev box sur le cluster.</p>
+
+        <div class="progress-card">
+          <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <article class="step is-open" data-step="prompt">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Envoyer le prompt</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s1b">Envoyez la demande self-service au superviseur dans le <strong>Terminal</strong> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">caipe prompt "Create a dev box for me named alpha"</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="scaffold">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Suivre le scaffolding Backstage</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s2b">Vérifiez que le sous-agent Backstage a publié le repo et enregistré l'entité au catalogue :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">caipe trace --task dev-box-alpha</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="reconcile">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Réconciliation ArgoCD</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s3b">Confirmez que l'application ArgoCD de la dev box est <code>Synced</code> et <code>Healthy</code> :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl get application dev-box-alpha -n argocd</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="workload">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Vérifier la dev box</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s4b">Vérifiez que le workload de la dev box alpha tourne sur le cluster :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl get pods -n dev-box-alpha</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="crit">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <ul class="crit">
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Prompt envoyé et routé par le superviseur.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Scaffolding Backstage tracé (publish + register).</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">Application ArgoCD Synced/Healthy.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Workload de la dev box Running.</span></li>
+            </ul>
+            <p style="margin:14px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="lab-footer">
+        <button type="button" class="btn-skip" id="skipBtn" data-i18n="skip">Ignorer</button>
+        <button type="button" class="btn-check" id="checkBtn"><i class="fa-solid fa-circle-check"></i> <span data-i18n="check">Vérifier</span></button>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<button type="button" class="inst-fab" id="instFab" aria-label="Instructions"><i class="fa-solid fa-book-open"></i> <span data-i18n="instrHead">Instructions</span></button>
+
+<section class="help-panel" id="helpPanel" aria-label="Lab assistant">
+  <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
+  <div class="help-body">
+    <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos commandes et le journal du terminal à votre backend.</p>
+    <div class="hint" id="hintText" data-i18n="hint0">Envoyez le prompt exact au superviseur (Étape 1).</div>
+    <button type="button" id="nextHint" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(135deg,var(--orange),#ffb057);color:#fff;border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:800"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+window.I18N = {
+  "fr":{
+    "navPrev":"Chapitre 2","navNext":"Chapitre 4","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabFlow":"Flux",
+    "flowTitle":"Un prompt, quatre sous-agents",
+    "flSup":"Reçoit le prompt « Create a dev box for me named alpha » et planifie le routage (LangGraph).",
+    "flBs":"Exécute le template dev-box : fetch + publish:gitea + catalog:register pour la dev box alpha.",
+    "flArgo":"Réconcilie l'application dev-box-alpha sur le cluster (Synced/Healthy).",
+    "flSlack":"Poste « Dev box alpha is ready » sur #dev-boxes (chapitre 4).",
+    "instrHead":"Instructions","instrTitle":"Déclencher le flux",
+    "instrSub":"Vous envoyez un seul prompt en langage naturel au superviseur CAIPE. Suivez le routage : le superviseur délègue au sous-agent Backstage (scaffolding), puis le sous-agent ArgoCD réconcilie la dev box sur le cluster.",
+    "progLabel":"Progression","copy":"Copier","copied":"Copié",
+    "s1h":"Étape 1 · Envoyer le prompt","s1b":"Envoyez la demande self-service au superviseur dans le <strong>Terminal</strong> :",
+    "s2h":"Étape 2 · Suivre le scaffolding Backstage","s2b":"Vérifiez que le sous-agent Backstage a publié le repo et enregistré l'entité au catalogue :",
+    "s3h":"Étape 3 · Réconciliation ArgoCD","s3b":"Confirmez que l'application ArgoCD de la dev box est <code>Synced</code> et <code>Healthy</code> :",
+    "s4h":"Étape 4 · Vérifier la dev box","s4b":"Vérifiez que le workload de la dev box alpha tourne sur le cluster :",
+    "critH":"Critères de réussite",
+    "c1":"Prompt envoyé et routé par le superviseur.","c2":"Scaffolding Backstage tracé (publish + register).","c3":"Application ArgoCD Synced/Healthy.","c4":"Workload de la dev box Running.",
+    "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
+    "skip":"Ignorer","check":"Vérifier",
+    "helpTitle":"Copilote de l'atelier","helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos commandes et le journal du terminal à votre backend.","nextHint":"Indice suivant",
+    "hint0":"Envoyez le prompt exact au superviseur (Étape 1).",
+    "hint1":"Le superviseur lit l'intention et choisit le sous-agent Backstage en premier.",
+    "hint2":"caipe trace montre les actions du scaffolder (publish:gitea, catalog:register).",
+    "hint3":"ArgoCD detecte le nouveau repo Gitea et reconcilie l'application.",
+    "hint4":"La dev box vit dans son propre namespace dev-box-alpha.",
+    "bWelcome":"VM dev-box-flow — superviseur CAIPE pret (Koffi Academy)","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hPrompt":"envoyer un prompt au superviseur","hTrace":"tracer un flux par sous-agent","hApp":"état de l'application ArgoCD","hPods":"pods de la dev box","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "needPrompt":"error: aucun flux en cours — envoyez d'abord `caipe prompt \"Create a dev box for me named alpha\"` (Etape 1)",
+    "promptOut":"supervisor: intent = provision dev box (name=alpha, size=small)\nsupervisor -> backstage-agent: run template 'dev-box'\nbackstage-agent: fetch:template ok\nbackstage-agent: publish:gitea -> dev-box-alpha ok\nbackstage-agent: catalog:register ok\nsupervisor -> argocd-agent: sync application dev-box-alpha\nargocd-agent: application created, syncing...\nsupervisor -> slack-agent: notify #dev-boxes\ndone. trace id: dev-box-alpha",
+    "traceOut":"task dev-box-alpha\n  [backstage] fetch:template       ok\n  [backstage] publish:gitea        repo=dev-box-alpha\n  [backstage] catalog:register     entity=component:default/dev-box-alpha\n  [argocd]    app created          dev-box-alpha\n  [slack]     queued notification  #dev-boxes",
+    "appOut":"NAME            SYNC STATUS   HEALTH STATUS\ndev-box-alpha   Synced        Healthy",
+    "podsOut":"NAME                          READY   STATUS    RESTARTS   AGE\ndev-box-alpha-7d8c9f5b-2kq7r   1/1     Running   0          40s",
+    "checkHeader":"Progression de la tâche :","chkP":"Prompt envoyé","chkS":"Scaffolding tracé","chkR":"ArgoCD Synced/Healthy","chkW":"Dev box Running","chkAll":"Tous les critères sont remplis. Chapitre 3 terminé !","skipped":"Étape ignorée.",
+    "cmdNF":"{c} : commande introuvable. Tapez `help`.",
+    "tDone":"Chapitre 3 terminé — flux self-service déclenché"
+  },
+  "de":{
+    "navPrev":"Kapitel 2","navNext":"Kapitel 4","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabFlow":"Flow",
+    "flowTitle":"Ein Prompt, vier Sub-Agents",
+    "flSup":"Empfängt den Prompt „Create a dev box for me named alpha“ und plant das Routing (LangGraph).",
+    "flBs":"Führt das dev-box-Template aus: fetch + publish:gitea + catalog:register für die Dev Box alpha.",
+    "flArgo":"Reconciled die Anwendung dev-box-alpha auf dem Cluster (Synced/Healthy).",
+    "flSlack":"Postet „Dev box alpha is ready“ in #dev-boxes (Kapitel 4).",
+    "instrHead":"Anleitung","instrTitle":"Den Flow auslösen",
+    "instrSub":"Sie senden einen einzigen natürlichsprachlichen Prompt an den CAIPE-Supervisor. Verfolgen Sie das Routing: der Supervisor delegiert an den Backstage-Sub-Agent (Scaffolding), dann reconciled der ArgoCD-Sub-Agent die Dev Box auf dem Cluster.",
+    "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
+    "s1h":"Schritt 1 · Den Prompt senden","s1b":"Senden Sie die Self-Service-Anfrage im <strong>Terminal</strong> an den Supervisor:",
+    "s2h":"Schritt 2 · Backstage-Scaffolding verfolgen","s2b":"Prüfen Sie, dass der Backstage-Sub-Agent das Repo publiziert und die Entität im Katalog registriert hat:",
+    "s3h":"Schritt 3 · ArgoCD-Reconciliation","s3b":"Bestätigen Sie, dass die ArgoCD-Anwendung der Dev Box <code>Synced</code> und <code>Healthy</code> ist:",
+    "s4h":"Schritt 4 · Die Dev Box prüfen","s4b":"Prüfen Sie, dass der Workload der Dev Box alpha auf dem Cluster läuft:",
+    "critH":"Erfolgskriterien",
+    "c1":"Prompt gesendet und vom Supervisor geroutet.","c2":"Backstage-Scaffolding verfolgt (publish + register).","c3":"ArgoCD-Anwendung Synced/Healthy.","c4":"Dev-Box-Workload Running.",
+    "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
+    "skip":"Überspringen","check":"Prüfen",
+    "helpTitle":"Lab-Copilot","helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Befehle und das Terminal-Log an Ihr Backend.","nextHint":"Nächster Hinweis",
+    "hint0":"Senden Sie den exakten Prompt an den Supervisor (Schritt 1).",
+    "hint1":"Der Supervisor liest die Absicht und wählt zuerst den Backstage-Sub-Agent.",
+    "hint2":"caipe trace zeigt die Scaffolder-Aktionen (publish:gitea, catalog:register).",
+    "hint3":"ArgoCD erkennt das neue Gitea-Repo und reconciled die Anwendung.",
+    "hint4":"Die Dev Box lebt in ihrem eigenen Namespace dev-box-alpha.",
+    "bWelcome":"VM dev-box-flow — CAIPE-Supervisor bereit (Koffi Academy)","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hPrompt":"einen Prompt an den Supervisor senden","hTrace":"einen Flow nach Sub-Agent verfolgen","hApp":"Status der ArgoCD-Anwendung","hPods":"Pods der Dev Box","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "needPrompt":"error: kein laufender Flow — senden Sie zuerst `caipe prompt \"Create a dev box for me named alpha\"` (Schritt 1)",
+    "promptOut":"supervisor: intent = provision dev box (name=alpha, size=small)\nsupervisor -> backstage-agent: run template 'dev-box'\nbackstage-agent: fetch:template ok\nbackstage-agent: publish:gitea -> dev-box-alpha ok\nbackstage-agent: catalog:register ok\nsupervisor -> argocd-agent: sync application dev-box-alpha\nargocd-agent: application created, syncing...\nsupervisor -> slack-agent: notify #dev-boxes\ndone. trace id: dev-box-alpha",
+    "traceOut":"task dev-box-alpha\n  [backstage] fetch:template       ok\n  [backstage] publish:gitea        repo=dev-box-alpha\n  [backstage] catalog:register     entity=component:default/dev-box-alpha\n  [argocd]    app created          dev-box-alpha\n  [slack]     queued notification  #dev-boxes",
+    "appOut":"NAME            SYNC STATUS   HEALTH STATUS\ndev-box-alpha   Synced        Healthy",
+    "podsOut":"NAME                          READY   STATUS    RESTARTS   AGE\ndev-box-alpha-7d8c9f5b-2kq7r   1/1     Running   0          40s",
+    "checkHeader":"Fortschritt der Aufgabe:","chkP":"Prompt gesendet","chkS":"Scaffolding verfolgt","chkR":"ArgoCD Synced/Healthy","chkW":"Dev Box Running","chkAll":"Alle Kriterien erfüllt. Kapitel 3 abgeschlossen!","skipped":"Schritt übersprungen.",
+    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.",
+    "tDone":"Kapitel 3 abgeschlossen — Self-Service-Flow ausgelöst"
+  },
+  "en":{
+    "navPrev":"Chapter 2","navNext":"Chapter 4","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabFlow":"Flow",
+    "flowTitle":"One prompt, four sub-agents",
+    "flSup":"Receives the prompt \"Create a dev box for me named alpha\" and plans the routing (LangGraph).",
+    "flBs":"Runs the dev-box template: fetch + publish:gitea + catalog:register for the alpha dev box.",
+    "flArgo":"Reconciles the dev-box-alpha application onto the cluster (Synced/Healthy).",
+    "flSlack":"Posts \"Dev box alpha is ready\" to #dev-boxes (chapter 4).",
+    "instrHead":"Instructions","instrTitle":"Trigger the flow",
+    "instrSub":"You send a single natural-language prompt to the CAIPE supervisor. Follow the routing: the supervisor delegates to the Backstage sub-agent (scaffolding), then the ArgoCD sub-agent reconciles the dev box onto the cluster.",
+    "progLabel":"Progress","copy":"Copy","copied":"Copied",
+    "s1h":"Step 1 · Send the prompt","s1b":"Send the self-service request to the supervisor in the <strong>Terminal</strong>:",
+    "s2h":"Step 2 · Follow the Backstage scaffolding","s2b":"Verify the Backstage sub-agent published the repo and registered the entity in the catalog:",
+    "s3h":"Step 3 · ArgoCD reconciliation","s3b":"Confirm the dev box's ArgoCD application is <code>Synced</code> and <code>Healthy</code>:",
+    "s4h":"Step 4 · Verify the dev box","s4b":"Verify the alpha dev box workload is running on the cluster:",
+    "critH":"Success criteria",
+    "c1":"Prompt sent and routed by the supervisor.","c2":"Backstage scaffolding traced (publish + register).","c3":"ArgoCD application Synced/Healthy.","c4":"Dev box workload Running.",
+    "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
+    "skip":"Skip","check":"Check",
+    "helpTitle":"Lab Copilot","helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your commands and the terminal log to your backend.","nextHint":"Next hint",
+    "hint0":"Send the exact prompt to the supervisor (Step 1).",
+    "hint1":"The supervisor reads the intent and picks the Backstage sub-agent first.",
+    "hint2":"caipe trace shows the scaffolder actions (publish:gitea, catalog:register).",
+    "hint3":"ArgoCD detects the new Gitea repo and reconciles the application.",
+    "hint4":"The dev box lives in its own dev-box-alpha namespace.",
+    "bWelcome":"dev-box-flow VM — CAIPE supervisor ready (Koffi Academy)","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hPrompt":"send a prompt to the supervisor","hTrace":"trace a flow by sub-agent","hApp":"ArgoCD application status","hPods":"dev box pods","hCheck":"check your progress","hClear":"clear the terminal",
+    "needPrompt":"error: no flow in progress — send `caipe prompt \"Create a dev box for me named alpha\"` first (Step 1)",
+    "promptOut":"supervisor: intent = provision dev box (name=alpha, size=small)\nsupervisor -> backstage-agent: run template 'dev-box'\nbackstage-agent: fetch:template ok\nbackstage-agent: publish:gitea -> dev-box-alpha ok\nbackstage-agent: catalog:register ok\nsupervisor -> argocd-agent: sync application dev-box-alpha\nargocd-agent: application created, syncing...\nsupervisor -> slack-agent: notify #dev-boxes\ndone. trace id: dev-box-alpha",
+    "traceOut":"task dev-box-alpha\n  [backstage] fetch:template       ok\n  [backstage] publish:gitea        repo=dev-box-alpha\n  [backstage] catalog:register     entity=component:default/dev-box-alpha\n  [argocd]    app created          dev-box-alpha\n  [slack]     queued notification  #dev-boxes",
+    "appOut":"NAME            SYNC STATUS   HEALTH STATUS\ndev-box-alpha   Synced        Healthy",
+    "podsOut":"NAME                          READY   STATUS    RESTARTS   AGE\ndev-box-alpha-7d8c9f5b-2kq7r   1/1     Running   0          40s",
+    "checkHeader":"Task progress:","chkP":"Prompt sent","chkS":"Scaffolding traced","chkR":"ArgoCD Synced/Healthy","chkW":"Dev box Running","chkAll":"All criteria met. Chapter 3 complete!","skipped":"Step skipped.",
+    "cmdNF":"{c}: command not found. Type `help`.",
+    "tDone":"Chapter 3 complete — self-service flow triggered"
+  }
+};
+
+(function(){
+  "use strict";
+  var I=window.I18N; var lang=localStorage.getItem("preferred-lang"); if(!I[lang])lang="de";
+  function t(key,vars){var s=(I[lang]&&I[lang][key]!==undefined)?I[lang][key]:(I.en[key]!==undefined?I.en[key]:key);if(vars)Object.keys(vars).forEach(function(k){s=s.replace(new RegExp("\\{"+k+"\\}","g"),vars[k]);});return s;}
+
+  var st={prompt:false,scaffold:false,reconcile:false,workload:false};
+  var promptSent=false; var hi=0;
+  var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput");
+  function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+  function print(text,cls){String(text).split("\n").forEach(function(line){var l=document.createElement("div");if(cls)l.className=cls;l.innerHTML=esc(line);out.appendChild(l);});out.scrollTop=out.scrollHeight;}
+  function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
+  function banner(){out.innerHTML="";print(t("bWelcome"),"line-muted");print(t("bTip"),"line-muted");print("");}
+
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["prompt","scaffold","reconcile","workload"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
+
+  function handle(raw){
+    var cmd=raw.trim(); if(!cmd) return; var parts=cmd.split(/\s+/); var head=parts[0];
+    if(head==="help"){print(t("hHeader"),"line-muted");
+      print("  caipe prompt \"...\"                              "+t("hPrompt"));
+      print("  caipe trace --task dev-box-alpha                "+t("hTrace"));
+      print("  kubectl get application dev-box-alpha -n argocd "+t("hApp"));
+      print("  kubectl get pods -n dev-box-alpha               "+t("hPods"));
+      print("  check   ·   clear                             "+t("hCheck"));return;}
+    if(head==="clear"){out.innerHTML="";return;}
+    if(head==="check"){runCheck();return;}
+    if(/^caipe\s+prompt/.test(cmd)){print(t("promptOut"),"line-agent");promptSent=true;setStep("prompt",true);return;}
+    if(/^caipe\s+trace/.test(cmd)){if(!promptSent){print(t("needPrompt"),"line-error");return;}print(t("traceOut"));setStep("scaffold",true);return;}
+    if(/^kubectl\s+get\s+application\b/.test(cmd)){if(!promptSent){print(t("needPrompt"),"line-error");return;}print(t("appOut"));setStep("reconcile",true);return;}
+    if(/^kubectl\s+get\s+pods/.test(cmd)){if(!promptSent){print(t("needPrompt"),"line-error");return;}print(t("podsOut"));setStep("workload",true);return;}
+    print(t("cmdNF",{c:head}),"line-error");
+  }
+
+  function runCheck(){
+    print(t("checkHeader"),"line-muted");
+    print((st.prompt?"  [x] ":"  [ ] ")+t("chkP"),st.prompt?"line-ok":"line-warn");
+    print((st.scaffold?"  [x] ":"  [ ] ")+t("chkS"),st.scaffold?"line-ok":"line-warn");
+    print((st.reconcile?"  [x] ":"  [ ] ")+t("chkR"),st.reconcile?"line-ok":"line-warn");
+    print((st.workload?"  [x] ":"  [ ] ")+t("chkW"),st.workload?"line-ok":"line-warn");
+    if(st.prompt&&st.scaffold&&st.reconcile&&st.workload)print(t("chkAll"),"line-ok");
+  }
+
+  function runScript(text){
+    var lines=text.replace(/\r/g,"").split("\n"); var i=0;
+    while(i<lines.length){var line=lines[i];
+      if(line.trim()===""){i++;continue;}
+      print(document.getElementById("termPrompt").textContent+" "+line,"line-cmd");handle(line);i++;}
+  }
+
+  document.getElementById("terminalForm").addEventListener("submit",function(e){e.preventDefault();var v=input.value;print(document.getElementById("termPrompt").textContent+" "+v,"line-cmd");input.value="";handle(v);});
+  input.addEventListener("paste",function(e){var txt=(e.clipboardData||window.clipboardData).getData("text");if(txt&&txt.indexOf("\n")!==-1){e.preventDefault();runScript(txt);input.value="";}});
+
+  document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");var tb=b.getAttribute("data-tab");document.getElementById("terminalView").classList.toggle("is-active",tb==="terminal");document.getElementById("datasetsView").classList.toggle("is-active",tb==="datasets");if(tb==="terminal")input.focus();});});
+  function switchTab(w){document.querySelectorAll(".tab").forEach(function(b){if(b.getAttribute("data-tab")===w)b.click();});}
+  document.getElementById("reloadBtn").addEventListener("click",function(){banner();switchTab("terminal");input.focus();});
+  document.querySelectorAll(".step__top").forEach(function(top){top.addEventListener("click",function(){top.parentElement.classList.toggle("is-open");});});
+  document.getElementById("checkBtn").addEventListener("click",function(){switchTab("terminal");runCheck();});
+  document.getElementById("skipBtn").addEventListener("click",function(){var all=document.querySelectorAll(".step");var idx=-1;all.forEach(function(s,i){if(s.classList.contains("is-open"))idx=i;});all.forEach(function(s){s.classList.remove("is-open");});var nx=all[Math.min(idx+1,all.length-1)];if(nx)nx.classList.add("is-open");toast(t("skipped"));});
+
+  var instr=document.getElementById("instructions"),fab=document.getElementById("instFab");
+  function hideInstr(h){instr.classList.toggle("is-hidden",h);fab.classList.toggle("is-gone",!h);}
+  document.getElementById("toggleInstructions").addEventListener("click",function(){hideInstr(!instr.classList.contains("is-hidden"));});
+  document.getElementById("closeInstructions").addEventListener("click",function(){hideInstr(true);});
+  fab.addEventListener("click",function(){hideInstr(false);});
+  var help=document.getElementById("helpPanel");
+  document.getElementById("openHelp").addEventListener("click",function(){help.classList.add("is-open");});
+  document.getElementById("closeHelp").addEventListener("click",function(){help.classList.remove("is-open");});
+  document.getElementById("nextHint").addEventListener("click",function(){hi=(hi+1)%5;document.getElementById("hintText").textContent=t("hint"+hi);});
+
+  document.querySelectorAll(".copybtn").forEach(function(btn){btn.addEventListener("click",function(){var pre=btn.parentElement.querySelector(".codebox");var text=pre?pre.textContent:"";function done(){btn.textContent=t("copied");btn.classList.add("is-copied");setTimeout(function(){btn.textContent=t("copy");btn.classList.remove("is-copied");},1400);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,done);}else{var ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(e){}ta.remove();done();}});});
+
+  var remaining=90*60,tEl=document.getElementById("labTimer");
+  setInterval(function(){if(remaining>0)remaining--;var m=Math.floor(remaining/60),s=remaining%60;tEl.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;},1000);
+
+  function applyLang(l){if(!I[l])return;lang=l;localStorage.setItem("preferred-lang",l);document.documentElement.lang=l;var d=I[l];
+    document.querySelectorAll("[data-i18n]").forEach(function(el){var k=el.getAttribute("data-i18n");if(d[k]!==undefined)el.innerHTML=d[k];});
+    document.querySelectorAll("[data-i18n-title]").forEach(function(el){var k=el.getAttribute("data-i18n-title");if(d[k]!==undefined)el.setAttribute("title",d[k]);});
+    document.querySelectorAll("[data-i18n-aria]").forEach(function(el){var k=el.getAttribute("data-i18n-aria");if(d[k]!==undefined)el.setAttribute("aria-label",d[k]);});
+    document.getElementById("hintText").textContent=t("hint"+hi);}
+  window.setLabWorkspaceLang=applyLang;
+  applyLang(lang);banner();input.focus();
+})();
+
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(l){if(window.setLabWorkspaceLang)window.setLabWorkspaceLang(l);klSync(l);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>
