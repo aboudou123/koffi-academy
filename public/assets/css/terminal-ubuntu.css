@@ -197,9 +197,13 @@
 
 .ubuntu-terminal .terminal-output,
 .ubuntu-terminal__output {
-  flex: 1 1 auto;
+  /* Size to content and sit at the top (real-terminal feel): the prompt follows
+     the last output line instead of being pushed to the very bottom, and the
+     free space stays BELOW the input for typing/pasting long blocks. When the
+     output grows past the available height it shrinks and scrolls internally. */
+  flex: 0 1 auto;
   height: auto;
-  min-height: 420px;
+  min-height: 0;
   max-height: none;
   overflow: auto;
   padding: 16px 18px 12px;
