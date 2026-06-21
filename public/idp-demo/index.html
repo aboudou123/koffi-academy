@@ -582,11 +582,22 @@ button{cursor:pointer;border:none;background:none;font:inherit}
 .sw-track.on .sw-thumb{transform:translateX(16px)}
 .integ-logo{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:#f1f5f9;margin-right:10px;flex-shrink:0}
 
-/* ─── Auth guard overlay ─────────────────────────────────────────────────────── */
-#authGuard{position:fixed;inset:0;z-index:500;background:#0f172a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
-#authGuard i{font-size:26px;color:#3b82f6}
-#authGuard span{font-size:13px;color:#64748b}
-#authGuard.resolved{display:none}
+/* ─── Auth required popup (non-blocking) ─────────────────────────────────────── */
+#authPrompt{position:fixed;inset:0;z-index:600;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:20px}
+#authPrompt.open{display:flex}
+#authPrompt .ap-card{background:#fff;border-radius:16px;max-width:420px;width:100%;padding:28px;box-shadow:0 20px 60px rgba(15,23,42,.35);text-align:center}
+#authPrompt .ap-icon{width:56px;height:56px;border-radius:14px;background:#eff6ff;color:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px}
+#authPrompt h3{font-size:18px;font-weight:700;color:#0f172a;margin:0 0 8px}
+#authPrompt p{font-size:13px;color:#64748b;margin:0 0 22px;line-height:1.5}
+#authPrompt .ap-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid transparent;margin-bottom:10px}
+#authPrompt .ap-login{background:#3b82f6;color:#fff}
+#authPrompt .ap-login:hover{background:#2563eb}
+#authPrompt .ap-register{background:#fff;color:#1e293b;border-color:#e2e8f0}
+#authPrompt .ap-register:hover{background:#f8fafc}
+#authPrompt .ap-cancel{background:transparent;color:#64748b;border:none;font-size:13px;padding:6px;margin:4px 0 0;width:100%;cursor:pointer}
+#authPrompt .ap-cancel:hover{color:#0f172a}
+#authPrompt .ap-error{display:none;font-size:12px;color:#b45309;background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;margin-bottom:14px}
+#authPrompt .ap-error.show{display:block}
 
 /* ─── Responsive ──────────────────────────────────────────────────────────────── */
 @media(max-width:768px){
@@ -866,10 +877,23 @@ button{cursor:pointer;border:none;background:none;font:inherit}
   </div>
 </div>
 
-<!-- ═══ AUTH GUARD ════════════════════════════════════════════════════════════════ -->
-<div id="authGuard">
-  <i class="fa-solid fa-spinner fa-spin"></i>
-  <span>Authentifizierung wird geprüft…</span>
+<!-- ═══ AUTH REQUIRED POPUP (only shown on protected actions) ═══════════════════ -->
+<div id="authPrompt" role="dialog" aria-modal="true" aria-labelledby="authPromptTitle">
+  <div class="ap-card">
+    <div class="ap-icon"><i class="fa-solid fa-lock"></i></div>
+    <h3 id="authPromptTitle" data-i18n="auth.title">Anmeldung erforderlich</h3>
+    <p data-i18n="auth.desc">Diese Funktion ist angemeldeten Nutzern vorbehalten. Melde dich an oder erstelle ein Konto, um fortzufahren.</p>
+    <div class="ap-error" id="authPromptError"></div>
+    <button type="button" class="ap-btn ap-login" onclick="authPromptLogin()">
+      <i class="fa-solid fa-right-to-bracket"></i>
+      <span data-i18n="auth.login">Anmelden</span>
+    </button>
+    <button type="button" class="ap-btn ap-register" onclick="authPromptRegister()">
+      <i class="fa-solid fa-user-plus"></i>
+      <span data-i18n="auth.register">Konto erstellen</span>
+    </button>
+    <button type="button" class="ap-cancel" onclick="closeAuthModal()" data-i18n="auth.cancel">Abbrechen — öffentlich weiterlesen</button>
+  </div>
 </div>
 
 <!-- ═══ TOAST ════════════════════════════════════════════════════════════════════ -->
@@ -898,6 +922,11 @@ var I18N = {
     'search.placeholder': 'Aktion suchen…',
     'modal.run': 'Aktion wird ausgeführt…',
     'toast.success': 'Aktion erfolgreich gestartet',
+    'auth.title': 'Anmeldung erforderlich',
+    'auth.desc': 'Diese Funktion ist angemeldeten Nutzern vorbehalten. Melde dich an oder erstelle ein Konto, um fortzufahren.',
+    'auth.login': 'Anmelden', 'auth.register': 'Konto erstellen',
+    'auth.cancel': 'Abbrechen — öffentlich weiterlesen',
+    'auth.unavailable': 'Anmeldedienst aktuell nicht erreichbar. Bitte später erneut versuchen.',
     'modal.offline': 'Server nicht erreichbar',
     'modal.offline.hint': 'Starte server.js, um Workflows zu persistieren.',
     'modal.success.title': 'Workflow ausgeführt',
@@ -984,6 +1013,11 @@ var I18N = {
     'search.placeholder': 'Search action…',
     'modal.run': 'Running action…',
     'toast.success': 'Action successfully started',
+    'auth.title': 'Sign-in required',
+    'auth.desc': 'This feature is reserved for signed-in users. Sign in or create an account to continue.',
+    'auth.login': 'Sign in', 'auth.register': 'Create account',
+    'auth.cancel': 'Cancel — keep browsing publicly',
+    'auth.unavailable': 'Sign-in service is currently unavailable. Please try again later.',
     'modal.offline': 'Server unreachable',
     'modal.offline.hint': 'Start server.js to persist workflows.',
     'modal.success.title': 'Workflow executed',
@@ -1070,6 +1104,11 @@ var I18N = {
     'search.placeholder': 'Rechercher une action…',
     'modal.run': 'Exécution en cours…',
     'toast.success': 'Action démarrée avec succès',
+    'auth.title': 'Connexion requise',
+    'auth.desc': 'Cette fonctionnalité est réservée aux utilisateurs connectés. Connecte-toi ou crée un compte pour continuer.',
+    'auth.login': 'Se connecter', 'auth.register': 'Créer un compte',
+    'auth.cancel': 'Annuler — continuer la lecture publique',
+    'auth.unavailable': 'Service de connexion momentanément indisponible. Réessaie plus tard.',
     'modal.offline': 'Serveur inaccessible',
     'modal.offline.hint': 'Démarrez server.js pour persister les workflows.',
     'modal.success.title': 'Workflow exécuté',
@@ -1253,16 +1292,36 @@ var ACTIONS = [
   },
 ];
 
+/* ─── Safe storage (never throws if cookies/storage are blocked) ─────────────── */
+function safeGet(store, key) {
+  try { return window[store].getItem(key); } catch (e) { return null; }
+}
+function safeSet(store, key, val) {
+  try { window[store].setItem(key, val); return true; } catch (e) { return false; }
+}
+function safeRemove(store, key) {
+  try { window[store].removeItem(key); } catch (e) {}
+}
+
 /* ─── State ────────────────────────────────────────────────────────────────── */
-var lang = localStorage.getItem('preferred-lang') || 'de';
+var lang = safeGet('localStorage', 'preferred-lang') || 'de';
 if (!I18N[lang]) lang = 'de';
 var activeFilter = 'all';
 var activeCard = null;
 var IDP_API_BASE = window.location.protocol === 'file:' ? 'http://127.0.0.1:4173' : '';
 
-/* ─── Auth state ───────────────────────────────────────────────────────────── */
-var isAuthenticated = false;
+/* ─── Auth state machine ─────────────────────────────────────────────────────
+   AUTH.state ∈ { 'initializing', 'authenticated', 'unauthenticated', 'error' }
+   The state NEVER blocks public content — it only gates protected actions.     */
+var AUTH = { state: 'initializing', user: null };
+var isAuthenticated = false;          // legacy mirror, kept in sync with AUTH.state
 var FIREBASE_VER = '10.8.0';
+var AUTH_TIMEOUT_MS = 6000;           // background session check budget
+var API_TIMEOUT_MS = 8000;            // per-request budget for backend calls
+var _fbAuth = null;                   // Firebase Auth instance once loaded
+var _pendingAction = null;            // in-session closure to replay after login
+var _pendingIntent = null;            // serialisable intent to replay across a redirect
+var PENDING_KEY = 'idp_pending_intent';
 
 /* ─── i18n ─────────────────────────────────────────────────────────────────── */
 function t(key) { return (I18N[lang] && I18N[lang][key]) || (I18N.de[key]) || key; }
@@ -1270,7 +1329,7 @@ function t(key) { return (I18N[lang] && I18N[lang][key]) || (I18N.de[key]) || ke
 function applyLang(l) {
   if (!I18N[l]) return;
   lang = l;
-  localStorage.setItem('preferred-lang', l);
+  safeSet('localStorage', 'preferred-lang', l);
   document.documentElement.lang = l;
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var k = el.getAttribute('data-i18n');
@@ -1481,7 +1540,32 @@ function updateUserUI(user) {
   if (tAvatar) tAvatar.textContent = initials;
 }
 
+/* ─── Auth state transitions ─────────────────────────────────────────────────
+   setAuthState is the single place that mutates AUTH. It updates the legacy
+   `isAuthenticated` mirror, refreshes the user UI, and — when the user becomes
+   authenticated — replays any action that was waiting behind the auth popup.   */
+function setAuthState(state, user) {
+  AUTH.state = state;
+  AUTH.user = user || null;
+  isAuthenticated = (state === 'authenticated');
+  if (state === 'authenticated') {
+    updateUserUI(user);
+    resumeAfterLogin();
+  }
+}
+
+/* Background session check. NEVER blocks the page: public content is already
+   rendered. A hard timeout guarantees we leave `initializing` within a few
+   seconds even if the identity provider's CDN hangs (the old 10-20 min bug).  */
 function initFirebaseAuth() {
+  var settled = false;
+  var timer = setTimeout(function() {
+    if (settled) return;
+    settled = true;
+    console.warn('[auth] session check exceeded ' + AUTH_TIMEOUT_MS + 'ms — continuing as guest');
+    setAuthState('unauthenticated');
+  }, AUTH_TIMEOUT_MS);
+
   Promise.all([
     import('https://www.gstatic.com/firebasejs/' + FIREBASE_VER + '/firebase-app.js'),
     import('https://www.gstatic.com/firebasejs/' + FIREBASE_VER + '/firebase-auth.js'),
@@ -1489,25 +1573,123 @@ function initFirebaseAuth() {
   ]).then(function(mods) {
     var appMod = mods[0]; var authMod = mods[1]; var cfg = mods[2];
     var fbApp = appMod.getApps().length ? appMod.getApp() : appMod.initializeApp(cfg.firebaseConfig);
-    var fbAuth = authMod.getAuth(fbApp);
-    authMod.onAuthStateChanged(fbAuth, function(user) {
-      if (user) {
-        isAuthenticated = true;
-        updateUserUI(user);
-        document.getElementById('authGuard').classList.add('resolved');
-      } else {
-        location.href = '/login/?redirect=' + encodeURIComponent('/idp-demo/');
-      }
+    _fbAuth = authMod.getAuth(fbApp);
+    // Fires once on init, then again on every login/logout — keeps state live.
+    authMod.onAuthStateChanged(_fbAuth, function(user) {
+      if (!settled) { settled = true; clearTimeout(timer); }
+      setAuthState(user ? 'authenticated' : 'unauthenticated', user);
+    }, function(err) {
+      if (!settled) { settled = true; clearTimeout(timer); }
+      console.warn('[auth] auth listener error:', err && err.code);
+      setAuthState('error');
     });
-  }).catch(function() {
-    location.href = '/login/?redirect=' + encodeURIComponent('/idp-demo/');
+  }).catch(function(err) {
+    if (settled) return;
+    settled = true; clearTimeout(timer);
+    console.warn('[auth] identity provider unavailable — continuing as guest:', err && err.message);
+    setAuthState('error'); // public content stays usable; protected actions re-prompt
   });
 }
 
-/* ─── openModal: auth gate ─────────────────────────────────────────────────── */
+/* ─── Centralised protected-action gate ───────────────────────────────────────
+   The ONLY way protected features run. If authenticated → run immediately.
+   Otherwise the action is parked and the auth popup opens; the action replays
+   after a successful login (in-session via _pendingAction, or across a redirect
+   via a serialisable `intent`).                                                */
+function requireAuth(action, intent) {
+  if (AUTH.state === 'authenticated') { action(); return; }
+  _pendingAction = action;
+  _pendingIntent = intent || null;
+  openAuthModal();
+}
+
+function resumeAfterLogin() {
+  // 1) in-session pending closure (popup was open in this tab)
+  if (_pendingAction) {
+    var act = _pendingAction;
+    _pendingAction = null; _pendingIntent = null;
+    closeAuthModal();
+    try { act(); } catch (e) { console.warn('[auth] resume failed', e); }
+    return;
+  }
+  // 2) intent persisted before a login/register redirect
+  var raw = safeGet('sessionStorage', PENDING_KEY);
+  if (!raw) return;
+  safeRemove('sessionStorage', PENDING_KEY);
+  var intent; try { intent = JSON.parse(raw); } catch (e) { return; }
+  runIntent(intent);
+}
+
+// Replays a serialisable intent. Extend the switch as new protected actions appear.
+function runIntent(intent) {
+  if (!intent || !intent.type) return;
+  if (intent.type === 'openModal') _openModal(intent.id);
+}
+
+/* ─── Auth popup controls ─────────────────────────────────────────────────── */
+function openAuthModal() {
+  var err = document.getElementById('authPromptError');
+  if (err) {
+    err.classList.remove('show');
+    if (AUTH.state === 'error') { err.textContent = t('auth.unavailable'); err.classList.add('show'); }
+  }
+  document.getElementById('authPrompt').classList.add('open');
+}
+function closeAuthModal() {
+  // Cancelling discards the parked action — a refusal must never grant access.
+  _pendingAction = null; _pendingIntent = null;
+  document.getElementById('authPrompt').classList.remove('open');
+}
+function authPromptLogin() {
+  if (_pendingIntent) safeSet('sessionStorage', PENDING_KEY, JSON.stringify(_pendingIntent));
+  location.href = '/login/?redirect=' + encodeURIComponent('/idp-demo/');
+}
+function authPromptRegister() {
+  if (_pendingIntent) safeSet('sessionStorage', PENDING_KEY, JSON.stringify(_pendingIntent));
+  location.href = '/register/?redirect=' + encodeURIComponent('/idp-demo/');
+}
+
+/* Called when the backend rejects a token (401/403): the session expired or was
+   revoked. Public content stays; the action modal closes and the auth popup
+   re-opens so the next attempt re-authenticates. */
+function handleSessionExpired() {
+  setAuthState('unauthenticated');
+  if (document.getElementById('modalBackdrop')) {
+    document.getElementById('modalBackdrop').classList.remove('open');
+  }
+  openAuthModal();
+}
+
+/* ─── ID token for authenticated API calls ───────────────────────────────────
+   Resolves to a fresh Firebase ID token, or null when not signed in. Wrapped in
+   a timeout so a hung token refresh can never stall a request indefinitely.    */
+function getIdToken() {
+  if (AUTH.state !== 'authenticated' || !_fbAuth || !_fbAuth.currentUser) {
+    return Promise.resolve(null);
+  }
+  return Promise.race([
+    _fbAuth.currentUser.getIdToken().catch(function() { return null; }),
+    new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 4000); })
+  ]);
+}
+
+/* ─── apiFetch: timeout + abort + bearer token on every backend call ───────── */
+function apiFetch(pathName, options) {
+  options = options || {};
+  var controller = new AbortController();
+  var timer = setTimeout(function() { controller.abort(); }, options.timeout || API_TIMEOUT_MS);
+  return getIdToken().then(function(token) {
+    var headers = Object.assign({}, options.headers || {});
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    var opts = Object.assign({}, options, { headers: headers, signal: controller.signal });
+    delete opts.timeout;
+    return fetch(IDP_API_BASE + pathName, opts);
+  }).finally(function() { clearTimeout(timer); });
+}
+
+/* ─── openModal: routes every action through the protected-action gate ──────── */
 function openModal(id) {
-  if (!isAuthenticated) { location.href = '/login/?redirect=' + encodeURIComponent('/idp-demo/'); return; }
-  _openModal(id);
+  requireAuth(function() { _openModal(id); }, { type: 'openModal', id: id });
 }
 
 function _openModal(id) {
@@ -1684,7 +1866,7 @@ function persistScaleRun(v) {
   var commands = scaleCommands(v);
   var manifest = scaleYaml(v);
   var output = scaleOutput(v);
-  return fetch(IDP_API_BASE + '/api/idp/workflow-runs', {
+  return apiFetch('/api/idp/workflow-runs', {
     method:'POST',
     headers:{'content-type':'application/json'},
     body:JSON.stringify({
@@ -1694,9 +1876,12 @@ function persistScaleRun(v) {
       status:'done',
       context:'Scaled Kubernetes deployment ' + v.serviceName + ' in ' + v.namespace + ' from ' + v.currentReplicas + ' to ' + v.replicas + ' replicas on ' + v.cluster + '.'
     })
-  }).then(function(res){ if(!res.ok) throw new Error('audit skipped'); return res.json(); })
+  }).then(function(res){
+    if(res.status === 401 || res.status === 403){ handleSessionExpired(); throw new Error('session expired'); }
+    if(!res.ok) throw new Error('audit skipped'); return res.json();
+  })
   .then(function(run){
-    return fetch(IDP_API_BASE + '/api/idp/artifacts', {
+    return apiFetch('/api/idp/artifacts', {
       method:'POST',
       headers:{'content-type':'application/json'},
       body:JSON.stringify({
@@ -1785,7 +1970,7 @@ function runAction() {
   var card = activeCard;
   var values = readModalValues();
   var title = card ? (card.titleKey[lang] || card.titleKey.de) : t('btn.newAction');
-  fetch(IDP_API_BASE + '/api/idp/workflow-runs', {
+  apiFetch('/api/idp/workflow-runs', {
     method: 'POST',
     headers: {'content-type': 'application/json'},
     body: JSON.stringify({
@@ -1796,8 +1981,13 @@ function runAction() {
       context: 'Executed "' + title + '" via Self-Service portal.'
     })
   })
-  .then(function(res){ if (!res.ok) throw new Error('api'); return res.json(); })
+  .then(function(res){
+    if (res.status === 401 || res.status === 403) { handleSessionExpired(); return null; }
+    if (!res.ok) throw new Error('api');
+    return res.json();
+  })
   .then(function(run) {
+    if (!run) { btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> ' + t('btn.runagain'); btn.disabled = false; return; }
     document.getElementById('modalBody').innerHTML = genericResultHtml(card, values, run);
     btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> ' + t('btn.runagain');
     btn.disabled = false;
@@ -2151,11 +2341,19 @@ viewRegistry['settings'] = function() {
   '</div>';
 };
 
-/* ─── Boot ──────────────────────────────────────────────────────────────────── */
+/* ─── Boot ────────────────────────────────────────────────────────────────────
+   Public content renders first; the session check runs in the background and
+   never gates the UI. Esc closes the auth popup like the Cancel button.        */
 document.addEventListener('DOMContentLoaded', function(){
-  initFirebaseAuth();
   applyLang(lang);
   updateCounts();
+  initFirebaseAuth();
+  document.getElementById('authPrompt').addEventListener('click', function(e){
+    if (e.target === this) closeAuthModal();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && document.getElementById('authPrompt').classList.contains('open')) closeAuthModal();
+  });
   document.querySelectorAll('.sb-item[data-view]').forEach(function(item) {
     item.addEventListener('click', function(e) {
       e.preventDefault();

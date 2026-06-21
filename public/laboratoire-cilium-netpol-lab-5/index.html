@@ -163,6 +163,7 @@ button{cursor:pointer}
   .runbar{align-items:flex-start;flex-direction:column;gap:8px}
 }
   </style>
+  <link rel="stylesheet" href="../assets/css/terminal-ubuntu.css">
 </head>
 <body>
 <div class="lab-shell">
@@ -593,7 +594,9 @@ window.I18N = {
     print(t("kNF"),"line-error"); return false;
   }
 
-  var NGINX=["<!DOCTYPE html>","<html>","<head>","<title>Welcome to nginx!</title>","</head>","<body>","<h1>Welcome to nginx!</h1>","</body>","</html>"];
+  var NGINX=["<!DOCTYPE html>","<html>","<head>","<title>Welcome to nginx!</title>","</head>","<body>","<h1>Welcome to nginx!</h1>","
+<script src="../assets/js/terminal-manager.js"></script>
+</body>","</html>"];
   function printNginx(){ NGINX.forEach(function(l){ print(l,"line-muted"); }); }
 
   function handle(raw){

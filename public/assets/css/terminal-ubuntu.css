@@ -1,0 +1,500 @@
+/* Ubuntu-style terminal shell for Koffi Academy labs. */
+.terminal-view.ubuntu-terminal-enhanced {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: clamp(10px, 1.8vw, 18px);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(119, 41, 83, .18), transparent 32%),
+    linear-gradient(145deg, #242424 0%, #2d2d2d 100%);
+}
+
+.ubuntu-terminal {
+  width: 100%;
+  height: 100%;
+  min-height: clamp(480px, 68vh, 760px);
+  max-height: calc(100vh - 132px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 8px;
+  background: #300a24;
+  box-shadow: 0 22px 64px rgba(0, 0, 0, .32);
+}
+
+.ubuntu-terminal__bar {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  background: #2c2c2c;
+  border-bottom: 1px solid rgba(0, 0, 0, .38);
+}
+
+.ubuntu-terminal__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-height: 37px;
+  padding: 0 4px 0 2px;
+  color: #eeeeec;
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ubuntu-terminal__brand-icon {
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(238, 238, 236, .65);
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #eeeeec;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.ubuntu-terminal__brand-title {
+  white-space: nowrap;
+}
+
+.ubuntu-terminal__tabs {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 148, 158, .65) transparent;
+}
+
+.ubuntu-terminal__tab,
+.ubuntu-terminal__add {
+  min-height: 37px;
+  border: 0;
+  border-left: 1px solid rgba(255, 255, 255, .08);
+  border-right: 1px solid rgba(0, 0, 0, .26);
+  border-radius: 0;
+  background: transparent;
+  color: rgba(238, 238, 236, .78);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color .16s, border-color .16s, color .16s;
+}
+
+.ubuntu-terminal__tab:hover,
+.ubuntu-terminal__add:hover {
+  background: #343434;
+  border-color: transparent;
+  color: #fff;
+}
+
+.ubuntu-terminal__tab.is-active {
+  background: #1f1f1f;
+  border-color: transparent;
+  color: #eeeeec;
+  box-shadow: inset 0 -2px 0 #e95420;
+}
+
+.ubuntu-terminal__tab-label {
+  min-width: 0;
+}
+
+.ubuntu-terminal__tab-close {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: -2px -5px -2px 1px;
+  padding: 0;
+  background: transparent;
+  color: rgba(238, 238, 236, .62);
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.ubuntu-terminal__tab-close:hover {
+  background: rgba(255, 255, 255, .10);
+  color: #ffffff;
+}
+
+.ubuntu-terminal__add {
+  width: 32px;
+  flex: 0 0 auto;
+  padding: 0;
+  font-size: 18px;
+}
+
+.ubuntu-terminal__add:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.ubuntu-terminal__status {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(160px, 1fr);
+  align-items: center;
+  gap: 8px 16px;
+  padding: 10px 16px 8px;
+  background: #300a24;
+  border-bottom: 0;
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.ubuntu-terminal__status-title {
+  min-width: 0;
+  color: #f4f4f5;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.ubuntu-terminal__status-tip {
+  min-width: 0;
+  justify-self: end;
+  color: #8ae234;
+  overflow-wrap: anywhere;
+}
+
+.ubuntu-terminal__body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  background: #300a24;
+}
+
+.ubuntu-terminal__pane {
+  min-height: 0;
+  display: none;
+  flex-direction: column;
+}
+
+.ubuntu-terminal__pane.is-active {
+  display: flex;
+}
+
+.ubuntu-terminal .terminal-output,
+.ubuntu-terminal__output {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 420px;
+  max-height: none;
+  overflow: auto;
+  padding: 16px 18px 12px;
+  background: #300a24;
+  color: #eeeeec;
+  font-family: "JetBrains Mono", Consolas, "Liberation Mono", monospace;
+  font-size: 13.5px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(117, 117, 117, .86) #2c2c2c;
+}
+
+.ubuntu-terminal .terminal-output::-webkit-scrollbar,
+.ubuntu-terminal__output::-webkit-scrollbar,
+.ubuntu-terminal__tabs::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+
+.ubuntu-terminal .terminal-output::-webkit-scrollbar-track,
+.ubuntu-terminal__output::-webkit-scrollbar-track,
+.ubuntu-terminal__tabs::-webkit-scrollbar-track {
+  background: #2c2c2c;
+}
+
+.ubuntu-terminal .terminal-output::-webkit-scrollbar-thumb,
+.ubuntu-terminal__output::-webkit-scrollbar-thumb,
+.ubuntu-terminal__tabs::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(117, 117, 117, .86);
+  border: 2px solid #2c2c2c;
+}
+
+.ubuntu-terminal .terminal-output .line-muted,
+.ubuntu-terminal__output .line-muted {
+  color: #c8b7c3;
+}
+
+.ubuntu-terminal .terminal-output .line-ok,
+.ubuntu-terminal__output .line-ok {
+  color: #8ae234;
+}
+
+.ubuntu-terminal .terminal-output .line-warn,
+.ubuntu-terminal__output .line-warn {
+  color: #ffd47a;
+}
+
+.ubuntu-terminal .terminal-output .line-error,
+.ubuntu-terminal__output .line-error {
+  color: #ff8f8f;
+}
+
+.ubuntu-terminal .terminal-output .line-cmd,
+.ubuntu-terminal__output .line-cmd {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.ubuntu-terminal .terminal-inputbar,
+.ubuntu-terminal__inputbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 58px;
+  padding: 8px 18px 16px;
+  border-top: 0;
+  background: #300a24;
+}
+
+.ubuntu-terminal .terminal-prompt,
+.ubuntu-terminal__prompt {
+  flex: 0 0 auto;
+  color: #00d084;
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ubuntu-terminal .terminal-input,
+.ubuntu-terminal__input {
+  min-width: 0;
+  flex: 1;
+  min-height: 38px;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  color: #eeeeec;
+  caret-color: #eeeeec;
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 15px;
+  padding: 0;
+  box-shadow: none;
+}
+
+.ubuntu-terminal .terminal-input:focus,
+.ubuntu-terminal__input:focus {
+  box-shadow: none;
+}
+
+.ubuntu-terminal .terminal-input::placeholder,
+.ubuntu-terminal__input::placeholder {
+  color: rgba(238, 238, 236, .58);
+}
+
+.ubuntu-terminal__cursor {
+  width: 8px;
+  height: 1.2em;
+  display: inline-block;
+  background: #7dffa8;
+  animation: ubuntu-terminal-blink 1s steps(1) infinite;
+}
+
+@keyframes ubuntu-terminal-blink {
+  50% { opacity: 0; }
+}
+
+/* Shared lab instruction refinements loaded after each page's inline CSS. */
+.instructions {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(32, 211, 182, .10), transparent 28%),
+    linear-gradient(180deg, #131c31 0%, #182238 100%) !important;
+  border-left: 1px solid rgba(148, 163, 184, .18);
+}
+
+.instructions__head {
+  background: rgba(15, 23, 42, .82);
+  border-bottom: 1px solid rgba(148, 163, 184, .18) !important;
+}
+
+.instructions__body {
+  color: #e5edf8;
+}
+
+.progress-card,
+.step {
+  background: rgba(255, 255, 255, .055) !important;
+  border: 1px solid rgba(148, 163, 184, .22) !important;
+  box-shadow: 0 14px 38px rgba(2, 6, 23, .16);
+}
+
+.step {
+  border-radius: 10px !important;
+}
+
+.step__top {
+  background: rgba(255, 255, 255, .035);
+}
+
+.step__top:hover {
+  background: rgba(32, 211, 182, .07);
+}
+
+.step__body {
+  background: rgba(15, 23, 42, .28);
+  border-top: 1px solid rgba(148, 163, 184, .16) !important;
+}
+
+.step__body code {
+  background: rgba(32, 211, 182, .12) !important;
+  border: 1px solid rgba(32, 211, 182, .26) !important;
+  color: #99f6e4 !important;
+  border-radius: 6px;
+}
+
+.codewrap {
+  margin-top: 14px !important;
+}
+
+.codebox {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%) !important;
+  border: 1px solid #cbd5e1 !important;
+  border-left: 4px solid #20d3b6 !important;
+  border-radius: 10px !important;
+  color: #0f172a !important;
+  box-shadow: 0 18px 42px rgba(2, 6, 23, .20);
+  font-size: 12.5px !important;
+  line-height: 1.62 !important;
+  padding: 18px 18px !important;
+}
+
+.copybtn {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, .12) !important;
+  color: #f8fafc !important;
+  border-radius: 7px !important;
+  box-shadow: 0 8px 20px rgba(2, 6, 23, .18);
+}
+
+.copybtn:hover {
+  background: #164e63 !important;
+  border-color: rgba(45, 212, 191, .48) !important;
+}
+
+.copybtn.is-copied {
+  background: #14532d !important;
+  color: #dcfce7 !important;
+  border-color: rgba(74, 222, 128, .48) !important;
+}
+
+@media (max-width: 1080px) {
+  .terminal-view.ubuntu-terminal-enhanced {
+    padding: 12px;
+  }
+
+  .ubuntu-terminal {
+    min-height: clamp(460px, 72vh, 700px);
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .terminal-view.ubuntu-terminal-enhanced {
+    padding: 8px;
+  }
+
+  .ubuntu-terminal {
+    min-height: calc(100svh - 214px);
+    height: calc(100svh - 214px);
+    border-radius: 8px;
+  }
+
+  .ubuntu-terminal__bar {
+    min-height: 44px;
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  .ubuntu-terminal__brand {
+    min-height: 34px;
+    max-width: 42px;
+    overflow: hidden;
+    padding-right: 0;
+  }
+
+  .ubuntu-terminal__brand-title {
+    display: none;
+  }
+
+  .ubuntu-terminal__tab {
+    min-height: 34px;
+    padding: 0 9px;
+    font-size: 11.5px;
+  }
+
+  .ubuntu-terminal__add {
+    width: 30px;
+    min-height: 34px;
+  }
+
+  .ubuntu-terminal__status {
+    grid-template-columns: 1fr;
+    padding: 9px 12px;
+    font-size: 11.5px;
+  }
+
+  .ubuntu-terminal__status-tip {
+    justify-self: start;
+  }
+
+  .ubuntu-terminal .terminal-output,
+  .ubuntu-terminal__output {
+    min-height: 0;
+    padding: 14px 13px;
+    font-size: 12.5px;
+    line-height: 1.58;
+  }
+
+  .ubuntu-terminal .terminal-inputbar,
+  .ubuntu-terminal__inputbar {
+    min-height: 76px;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 13px 13px;
+  }
+
+  .ubuntu-terminal .terminal-prompt,
+  .ubuntu-terminal__prompt {
+    max-width: 100%;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .ubuntu-terminal .terminal-input,
+  .ubuntu-terminal__input {
+    width: 100%;
+    min-height: 42px;
+    font-size: 12.5px;
+  }
+}

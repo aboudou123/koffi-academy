@@ -173,6 +173,7 @@ button{cursor:pointer}
   .runbar{align-items:flex-start;flex-direction:column;gap:8px}.runbar__actions{width:100%;justify-content:flex-start}
 }
   </style>
+  <link rel="stylesheet" href="../assets/css/terminal-ubuntu.css">
 </head>
 <body>
 <div class="lab-shell">
@@ -541,7 +542,9 @@ window.I18N = {
     ["<!DOCTYPE html>","<html>","<head>","<title>Welcome to nginx!</title>","</head>","<body>",
      "<h1>Welcome to nginx!</h1>",
      "<p>If you see this page, the nginx web server is successfully installed and working.</p>",
-     "<p><em>Thank you for using nginx.</em></p>","</body>","</html>"].forEach(function(l){ print(l,"line-muted"); });
+     "<p><em>Thank you for using nginx.</em></p>","
+<script src="../assets/js/terminal-manager.js"></script>
+</body>","</html>"].forEach(function(l){ print(l,"line-muted"); });
   }
 
   function expand(s){ return s.replace(/\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?/g, function(_,n){ return (vars[n]!==undefined)?vars[n]:""; }); }

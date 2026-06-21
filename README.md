@@ -137,6 +137,43 @@ node server.js
 
 ---
 
+## Lancer une vraie VM de laboratoire en local avec Docker
+
+Le terminal des pages laboratoire peut se connecter à un runner Docker local.  
+Ce mode crée un container Ubuntu isolé par session et relie le terminal web au shell via WebSocket.
+
+### Démarrage rapide Windows PowerShell
+
+```powershell
+.\lab-runner\start-local-lab.ps1
+```
+
+Puis ouvre :
+
+```text
+http://127.0.0.1:4173/laboratoire-dev-box-caipe-lab/
+```
+
+Le terminal détecte automatiquement le runner local. Si Docker n'est pas prêt, la page reste en mode simulateur.
+
+### Démarrage manuel
+
+```powershell
+docker build -t koffi/local-dev-box:latest .\lab-runner\images\dev-box
+$env:KOFFI_LAB_IMAGE = "koffi/local-dev-box:latest"
+node server.js
+```
+
+### Notes
+
+- API locale seulement : `http://127.0.0.1:4173/api/labs/health`
+- Une session = un container Docker jetable.
+- TTL par défaut : 90 minutes.
+- Image de base : Ubuntu 24.04 avec `curl`, `git`, `jq`, `python3`, `nano`, `vim`, outils réseau.
+- Documentation détaillée : `lab-runner/README.md`
+
+---
+
 ## Technologies
 
 - HTML5, CSS3, JavaScript (ES5+)

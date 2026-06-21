@@ -166,6 +166,7 @@ a{color:inherit;text-decoration:none}
      var tg=e.target.closest('.toggle'); if(tg){var inp=document.querySelector(tg.getAttribute('data-target'));if(inp){var sh=inp.type==='password';inp.type=sh?'text':'password';var ic=tg.querySelector('i');ic.className=sh?'fa-solid fa-eye-slash':'fa-solid fa-eye';}return;}
    });
    var FIREBASE_VER='10.8.0';
+   var redirectTo=(new URLSearchParams(location.search)).get('redirect')||'';
 
    document.getElementById('registerForm').addEventListener('submit',function(e){
      e.preventDefault();
@@ -187,7 +188,10 @@ a{color:inherit;text-decoration:none}
        });
      }).then(function(){
        toast(I18N[lang].okReg,'#0f8a4f');
-       setTimeout(function(){location.href='/login';},1500);
+       // createUserWithEmailAndPassword already signs the user in: if we came
+       // from a protected action, go straight back there so it can resume.
+       var dest = redirectTo || '/login';
+       setTimeout(function(){location.href=dest;},1500);
      }).catch(function(err){
        b.disabled=false;
        var msg=lang==='fr'?'Une erreur est survenue.':lang==='en'?'An error occurred.':'Ein Fehler ist aufgetreten.';

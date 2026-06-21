@@ -170,6 +170,7 @@ button{cursor:pointer}
   .runbar{align-items:flex-start;flex-direction:column;gap:8px}.runbar__actions{width:100%;justify-content:flex-start}
 }
   </style>
+  <link rel="stylesheet" href="../assets/css/terminal-ubuntu.css">
 </head>
 <body>
 <div class="lab-shell">
@@ -509,7 +510,9 @@ window.I18N = {
   var NGINX=["<!DOCTYPE html>","<html>","<head>","<title>Welcome to nginx!</title>","</head>","<body>",
      "<h1>Welcome to nginx!</h1>",
      "<p>If you see this page, the nginx web server is successfully installed and working.</p>",
-     "<p><em>Thank you for using nginx.</em></p>","</body>","</html>"];
+     "<p><em>Thank you for using nginx.</em></p>","
+<script src="../assets/js/terminal-manager.js"></script>
+</body>","</html>"];
   function printNginx(limit){ var arr = limit?NGINX.slice(0,limit):NGINX; arr.forEach(function(l){ print(l,"line-muted"); }); }
 
   function printPolicyGet(){
