@@ -743,6 +743,35 @@ window.I18N = {
       print(document.getElementById("termPrompt").textContent+" "+line,"line-cmd");handle(line);i++;}
   }
 
+  /* === LabVM real-shell integration (auto-inserted) === */
+  (function(){
+    function initLabVM(){
+      if(!window.LabVM) return;
+      var out=document.getElementById("terminalOutput");
+      var inp=document.getElementById("terminalInput");
+      var form=document.getElementById("terminalForm");
+      var pp=document.getElementById("termPrompt");
+      if(!out||!inp||typeof handle!=="function") return;
+      if(form&&form.__labvm) return; if(form) form.__labvm=true;
+      function vprint(t,c){var d=document.createElement("div");if(c)d.className=c;d.textContent=t;out.appendChild(d);out.scrollTop=out.scrollHeight;}
+      var base=pp?pp.textContent.trim():"koffi@lab:~$";
+      var m=base.match(/([^\s@(]+)@([^:\s]+):/);
+      var user=m?m[1]:"koffi",host=m?m[2]:"lab";
+      var sym=/#\s*$/.test(base)?"#":"$";
+      var vm=window.LabVM.create({
+        user:user,host:host,home:"/root",
+        print:vprint,clear:function(){out.innerHTML="";},
+        prompt:function(v){var pre=(pp&&/\(venv\)/.test(pp.textContent))?"(venv) ":"";return pre+user+"@"+host+":"+v.displayCwd()+sym;},
+        fallback:function(line){handle(line);}
+      });
+      vm.fs.mkdirp("/root");
+      if(form) form.addEventListener("submit",function(e){e.preventDefault();e.stopImmediatePropagation();var v=inp.value;inp.value="";vm.submit(v);if(pp)pp.textContent=vm.promptText();},true);
+      inp.addEventListener("paste",function(e){var t=(e.clipboardData||window.clipboardData).getData("text");if(t&&t.indexOf("\n")!==-1){e.preventDefault();e.stopImmediatePropagation();vm.paste(t);inp.value="";if(pp)pp.textContent=vm.promptText();}},true);
+    }
+    if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",initLabVM); else setTimeout(initLabVM,0);
+  })();
+  /* === end LabVM real-shell integration === */
+  
   document.getElementById("terminalForm").addEventListener("submit",function(e){e.preventDefault();var v=input.value;print(document.getElementById("termPrompt").textContent+" "+v,"line-cmd");input.value="";handle(v);});
   input.addEventListener("paste",function(e){var txt=(e.clipboardData||window.clipboardData).getData("text");if(txt&&txt.indexOf("\n")!==-1){e.preventDefault();runScript(txt);input.value="";}});
 
@@ -790,6 +819,7 @@ function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('k
 document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
 document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
 </script>
+<script src="../assets/js/lab-vm.js"></script>
 <script src="../assets/js/terminal-manager.js"></script>
 </body>
 </html>

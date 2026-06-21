@@ -491,13 +491,32 @@
       runCommand(head, ctx);
     }
 
+    // In "fallback" mode the VM owns only real filesystem commands and hands
+    // everything else (the lab's simulated CLI: kubectl, akeyless, git, check…)
+    // to config.fallback so each lab keeps its own scripted behaviour.
+    var OWNED_FS = { cd:1, pwd:1, mkdir:1, rmdir:1, touch:1, rm:1, mv:1, cp:1, chmod:1, tree:1, head:1, tail:1, wc:1 };
+    function vfsHasTarget(ctx) {
+      var op = ctx.operands[0];
+      if (op === undefined) return true; // bare `ls`/`cat` → use the VFS
+      return fs.exists(fs.resolve(op, vm.cwd));
+    }
+
     function runCommand(head, ctx) {
       var custom = config.commands && config.commands[head];
       if (custom) { custom(ctx, vm); return; }
-      if (builtins[head]) {
-        builtins[head](ctx);
+
+      if (config.fallback) {
+        if (OWNED_FS[head]) { builtins[head](ctx); return; }
+        if (head === "clear") { builtins.clear(ctx); return; }
+        // ls / cat: serve real files the learner created, else let the lab speak.
+        if ((head === "ls" || head === "cat") && vfsHasTarget(ctx)) { builtins[head](ctx); return; }
+        // echo with redirection writes to the VFS; plain echo goes to the lab.
+        if (head === "echo" && ctx.redirect) { builtins.echo(ctx); return; }
+        config.fallback(ctx.raw, ctx);
         return;
       }
+
+      if (builtins[head]) { builtins[head](ctx); return; }
       emit(head + ": command not found", "line-error");
     }
 
@@ -557,6 +576,15 @@
         config.commands[head]({ head: head, args: red.tokens.slice(1), operands: red.tokens.slice(1), flags: [], stdin: body, redirect: red.redirect, emit: emit }, vm);
         return;
       }
+      // `tee file` also writes the body.
+      if (head === "tee" && red.tokens[1]) {
+        var teeAbs = fs.resolve(red.tokens[1], vm.cwd);
+        fs.writeFile(teeAbs, body, { makeParents: true, append: red.redirect && red.redirect.append });
+        emit(body.replace(/\n$/, ""));
+        changed();
+        return;
+      }
+      if (config.fallback) { config.fallback(hd.command); return; }
       emit(hd.command + ": here-document not supported here", "line-warn");
     }
 
