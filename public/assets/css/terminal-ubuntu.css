@@ -520,7 +520,11 @@
     overflow: hidden;
   }
 
-  .lab-main { min-height: 0; }
+  /* The single grid row must fill the shell height; otherwise it collapses to
+     content height and leaves dead space under BOTH columns (terminal grey gap
+     below + instructions not scrolling). minmax(0,1fr) forces a full-height row
+     and the columns stretch into it. */
+  .lab-main { min-height: 0; grid-template-rows: minmax(0, 1fr); align-items: stretch; }
   .workspace { min-height: 0; overflow: hidden; }
   .work-surface { min-height: 0; overflow: hidden; }
   .view.terminal-view.is-active { min-height: 0; }
@@ -535,7 +539,8 @@
     max-height: none;
   }
 
-  /* Instructions column: header stays fixed, body scrolls within the viewport. */
+  /* Instructions column: header pinned, body takes the rest and scrolls. */
   .instructions { min-height: 0; overflow: hidden; }
-  .instructions__body { min-height: 0; overflow-y: auto; }
+  .instructions__head { flex: 0 0 auto; }
+  .instructions__body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
 }
