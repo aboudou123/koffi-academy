@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="../assets/images/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crossplane Functions · Chapitre 2 | Atelier — Koffi Academy</title>
+  <meta name="description" content="Atelier Koffi Academy — Chapitre 2 : implémenter des tableaux de buckets S3 avec une logique Go templating (range, indexation, conditions par environnement).">
+  <meta name="theme-color" content="#071a2f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+  <style>
+:root{--bg:#07111f;--panel:#10182b;--line:rgba(255,255,255,.11);--muted:#94a3b8;--soft:#c8d4e4;--text:#f7fbff;--navy:#07294d;--teal:#20d3b6;--green:#54e39a;--amber:#f8b85f;--orange:#f89035;--danger:#ff6b6b;--shadow:0 24px 80px rgba(0,0,0,.34)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);overflow-x:hidden}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,textarea,input{font:inherit}
+button{cursor:pointer}
+.lab-shell{width:100%;max-width:100%;min-height:100vh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(circle at 20% -10%,rgba(32,211,182,.18),transparent 28%),radial-gradient(circle at 88% 4%,rgba(248,144,53,.18),transparent 30%),linear-gradient(135deg,#08111f 0%,#0b1730 52%,#09101e 100%)}
+.topline{height:4px;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));opacity:.95}
+.labbar{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(10,17,31,.88);backdrop-filter:blur(18px);position:sticky;top:0;z-index:30}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand__mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#f9d77e,#d6a02d 55%,#b97911);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(214,160,45,.30);flex-shrink:0}
+.brand__mark svg{width:62%;height:62%;display:block}
+.brand__text{min-width:0;display:flex;align-items:center;gap:10px}
+.brand__k{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#fff;white-space:nowrap}
+.brand__sep{color:rgba(255,255,255,.3);font-size:16px}
+.brand__title{font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip-ch{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;color:#071a2f;background:linear-gradient(135deg,#f9d77e,#d6a02d);padding:4px 9px;border-radius:999px;white-space:nowrap}
+.labbar__spacer{flex:1}
+.lab-timer{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#fff;background:rgba(32,211,182,.12);border:1px solid rgba(32,211,182,.32);border-radius:999px;padding:7px 13px}
+.lab-timer i{color:var(--teal);font-size:12px}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
+.topbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:rgba(255,255,255,.9);border-radius:8px;padding:8px 13px;font-weight:700;font-size:13px;line-height:1.15;transition:.16s}
+.topbtn:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.28)}
+.topbtn--ai{background:linear-gradient(135deg,#6d73ff,#8468ff);border-color:rgba(255,255,255,.12);box-shadow:0 10px 28px rgba(109,115,255,.24)}
+.kl-drop{position:relative;flex-shrink:0}
+.kl-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 12px 7px 9px;background:rgba(255,255,255,.1);border:1.5px solid rgba(214,160,45,.38);border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;transition:.18s;line-height:1}
+.kl-btn:hover{background:rgba(255,198,0,.18);border-color:rgba(255,198,0,.6)}
+.kl-btn .fi{width:20px;height:15px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-code{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff}
+.kl-caret{font-size:9px;color:rgba(255,255,255,.5);transition:transform .2s}
+.kl-drop.open .kl-caret{transform:rotate(180deg)}
+.kl-panel{position:absolute;top:calc(100% + 10px);right:0;min-width:172px;background:#0d2640;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 14px 42px rgba(0,0,0,.45);padding:6px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .22s cubic-bezier(.4,0,.2,1);z-index:500}
+.kl-drop.open .kl-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.kl-opt{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;transition:.14s}
+.kl-opt:hover{background:rgba(255,255,255,.08)}
+.kl-opt.kl-on{background:rgba(255,198,0,.15)}
+.kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
+.kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
+.kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+.lab-main{width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1.42fr) minmax(360px,.82fr);gap:0;flex:1;min-height:0}
+.workspace{min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--line);background:rgba(7,12,22,.54)}
+.work-tabs{display:flex;align-items:center;gap:2px;padding:0 14px;background:rgba(255,255,255,.05);border-bottom:1px solid var(--line);min-height:44px}
+.work-tabs__reload{margin-right:6px;border:0;background:transparent;color:var(--soft);font-size:14px;padding:6px}
+.tab{position:relative;border:0;background:transparent;color:rgba(255,255,255,.72);display:inline-flex;align-items:center;gap:8px;padding:13px 14px;font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;transition:.16s}
+.tab.is-active{color:#fff}
+.tab.is-active:after{content:"";position:absolute;left:10px;right:10px;bottom:0;height:2px;background:var(--teal);border-radius:999px}
+.work-surface{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr)}
+.view{display:none;min-height:0}
+.view.is-active{display:flex}
+.terminal-view{flex-direction:column;background:#0d0f12}
+.terminal-output{flex:1;min-height:360px;max-height:calc(100vh - 160px);overflow:auto;padding:20px 22px;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.62;color:#e8edf2;white-space:pre-wrap;word-break:break-word}
+.terminal-output .line-muted{color:#8ea3b8}
+.terminal-output .line-ok{color:#52ef9f}
+.terminal-output .line-warn{color:#ffce73}
+.terminal-output .line-error{color:#ff7d7d}
+.terminal-output .line-cmd{color:#fff}
+.terminal-inputbar{display:flex;align-items:center;gap:10px;border-top:1px solid #23262b;background:#0a0c0f;padding:12px 16px}
+.terminal-prompt{font-family:'JetBrains Mono',monospace;font-size:13px;color:#8cf0ce;white-space:nowrap}
+.terminal-input{flex:1;border:0;outline:0;background:transparent;color:#fff;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;min-width:0}
+.runbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:rgba(10,17,31,.88);border-bottom:1px solid var(--line)}
+.runbar__title{display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--soft);min-width:0}
+.runbar__title i{color:var(--teal)}
+.runbar__title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.runbar__actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.toolbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.07);color:#fff;border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:800;transition:.16s}
+.toolbtn--primary{border-color:transparent;background:linear-gradient(135deg,var(--orange),#ffb057);box-shadow:0 10px 24px rgba(248,144,53,.26)}
+.datasets-view{flex-direction:column;background:#0b1222}
+.filebar{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.filetab{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--soft);border-radius:8px 8px 0 0;padding:7px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700}
+.filetab.is-active{color:#fff;background:#0b1222;border-bottom-color:#0b1222}
+.dataset-editor{flex:1;min-height:420px;width:100%;border:0;outline:0;resize:none;padding:18px 20px;background:#0b1222;color:#d9f4ff;font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;line-height:1.6;tab-size:2}
+.instructions{min-width:0;background:linear-gradient(180deg,rgba(20,28,49,.97),rgba(15,21,38,.98));display:flex;flex-direction:column;min-height:0}
+.instructions.is-hidden{display:none}
+.instructions__head{display:flex;align-items:center;gap:12px;padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.instructions__head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;margin:0}
+.instructions__head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:20px;line-height:1;padding:4px;border-radius:7px}
+.instructions__body{min-width:0;overflow:auto;padding:20px 18px 24px;flex:1}
+.lab-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:25px;line-height:1.16;font-weight:800;letter-spacing:-.02em;margin:0 0 12px;color:#fff}
+.lab-sub{font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.78);margin:0 0 20px}
+.progress-card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:12px;padding:14px 15px;margin-bottom:18px}
+.progress-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.progress-row span:first-child{font-size:12px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.08em}
+.progress-row span:last-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:#fff}
+.progress-track{height:8px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));border-radius:999px;transition:width .25s}
+.step{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.step__top{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none}
+.step__check{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:transparent;flex-shrink:0;font-size:12px}
+.step.is-done .step__check{background:rgba(84,227,154,.16);border-color:rgba(84,227,154,.42);color:var(--green)}
+.step h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:16.5px;line-height:1.22;font-weight:800;letter-spacing:-.01em;margin:0;color:#fff;flex:1}
+.step__chev{color:var(--soft);font-size:13px;transition:transform .2s}
+.step.is-open .step__chev{transform:rotate(90deg)}
+.step__body{display:none;border-top:1px solid rgba(255,255,255,.10);padding:16px 18px 18px;color:rgba(255,255,255,.82);font-size:13.6px;line-height:1.62}
+.step.is-open .step__body{display:block}
+.step__body code{font-family:'JetBrains Mono',monospace;font-size:12.4px;background:#06090f;border:1px solid rgba(255,255,255,.10);border-radius:6px;padding:2px 6px;color:#a8fff0}
+.codewrap{position:relative;margin:12px 0 0}
+.copybtn{position:absolute;top:8px;right:8px;z-index:2;border:1px solid rgba(255,255,255,.18);background:rgba(20,28,49,.92);color:#cfe;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:800;transition:.16s}
+.copybtn:hover{background:rgba(32,211,182,.18);border-color:rgba(32,211,182,.5)}
+.copybtn.is-copied{color:var(--green);border-color:rgba(84,227,154,.5)}
+.codebox{max-width:100%;margin:0;border:1px solid rgba(255,255,255,.12);background:#050505;border-radius:10px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.55;color:#eaf2ff;overflow:auto;white-space:pre}
+.crit{list-style:none;margin:6px 0 0;padding:0}
+.crit li{display:flex;align-items:flex-start;gap:10px;padding:7px 0;font-size:13.4px;color:rgba(255,255,255,.84)}
+.crit li i{color:var(--green);font-size:12px;margin-top:3px;flex-shrink:0}
+.help-panel{position:fixed;right:18px;bottom:74px;width:min(420px,calc(100vw - 36px));background:#10182b;border:1px solid rgba(255,255,255,.15);box-shadow:var(--shadow);border-radius:14px;overflow:hidden;z-index:60;display:none}
+.help-panel.is-open{display:block}
+.help-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:linear-gradient(135deg,#202b50,#2c3562);border-bottom:1px solid var(--line)}
+.help-head h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;margin:0}
+.help-head button{margin-left:auto;border:0;background:transparent;color:#fff;font-size:18px;border-radius:7px;padding:4px}
+.help-body{padding:16px;color:var(--soft);font-size:13.5px;line-height:1.58}
+.hint{border-left:3px solid var(--teal);background:rgba(32,211,182,.08);padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0;color:#dff}
+.lab-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px;border-top:1px solid var(--line);background:rgba(7,12,22,.6)}
+.btn-skip{background:transparent;border:1px solid rgba(255,255,255,.18);color:var(--soft);border-radius:9px;padding:9px 20px;font-weight:700;font-size:13px}
+.btn-check{background:var(--green);color:#062018;border:0;border-radius:9px;padding:9px 26px;font-weight:800;font-size:13px;box-shadow:0 8px 22px rgba(84,227,154,.26)}
+.inst-fab{display:none;position:fixed;bottom:20px;right:20px;z-index:45;align-items:center;gap:8px;background:var(--teal);color:#071a2f;border:0;border-radius:999px;padding:12px 20px;font-size:13px;font-weight:700;font-family:inherit;box-shadow:0 8px 28px rgba(32,211,182,.42)}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(20px);background:#0f1830;border:1px solid rgba(32,211,182,.4);color:#eafffb;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:80}
+.toast.is-on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:1080px){.lab-main{grid-template-columns:1fr}.workspace{border-right:0}.terminal-output{max-height:none}}
+@media(max-width:768px){
+  .labbar{padding:8px 12px;gap:8px;flex-wrap:wrap}.brand__title,.chip-ch{display:none}.labbar__spacer{display:none}
+  .actions{order:3;width:100%;display:flex;flex-wrap:wrap;gap:6px}.topbtn{font-size:11.5px;padding:7px 10px;gap:5px;min-height:32px}
+  #toggleInstructions{display:none}.topbtn--ai{flex:1}
+  .lab-main{display:flex;flex-direction:column}.workspace{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .work-surface{flex:1;min-height:0;overflow:hidden}.terminal-output{height:calc(100svh - 220px);min-height:260px;max-height:none;overflow:auto}
+  .instructions{position:fixed;inset:0;z-index:50;display:flex!important;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+  .instructions:not(.is-hidden){transform:translateY(0)}.inst-fab{display:inline-flex}.inst-fab.is-gone{display:none}
+  .lab-title{font-size:22px}.work-tabs{overflow-x:auto}.tab{white-space:nowrap}.dataset-editor{min-height:240px}
+}
+  </style>
+</head>
+<body>
+<div class="lab-shell">
+  <div class="topline"></div>
+  <header class="labbar">
+    <a class="brand" href="../laboratoire">
+      <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9V31M15 20L26 9M15 20L26 31" stroke="#07294d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="9" r="2.7" fill="#07294d"/><circle cx="26" cy="31" r="2.7" fill="#07294d"/><circle cx="15" cy="20" r="2.2" fill="#07294d"/></svg></span>
+      <span class="brand__text">
+        <span class="brand__k">Koffi Academy</span>
+        <span class="brand__sep">|</span>
+        <span class="brand__title">Crossplane Composition Functions</span>
+        <span class="chip-ch">CH.2</span>
+      </span>
+    </a>
+    <div class="labbar__spacer"></div>
+    <span class="lab-timer"><i class="fa-regular fa-clock"></i><span id="labTimer">120:00</span></span>
+    <nav class="actions" aria-label="Lab actions">
+      <a class="topbtn" href="../laboratoire-crossplane-functions-lab"><i class="fa-solid fa-arrow-left-long"></i> <span data-i18n="navPrev">Chapitre 1</span></a>
+      <a class="topbtn" href="../laboratoire-crossplane-functions"><i class="fa-solid fa-circle-info"></i> <span data-i18n="navOverview">Aperçu</span></a>
+      <a class="topbtn" href="../laboratoire"><i class="fa-solid fa-table-cells-large"></i> <span data-i18n="navBack">Tous les labos</span></a>
+      <button type="button" class="topbtn" id="toggleInstructions"><i class="fa-solid fa-eye-slash"></i> <span data-i18n="navHide">Masquer</span></button>
+      <button type="button" class="topbtn topbtn--ai" id="openHelp"><i class="fa-solid fa-robot"></i> <span data-i18n="navAi">Besoin d'aide ? Demander à l'IA</span></button>
+      <div class="kl-drop" id="klDrop"><button type="button" class="kl-btn" id="klBtn" onclick="klToggle()" aria-haspopup="menu" aria-expanded="false" aria-label="Sprache wählen"><span class="fi fi-de" id="klFlag"></span><span class="kl-code" id="klCode">DE</span><i class="fas fa-chevron-down kl-caret"></i></button><div class="kl-panel" role="menu"><button type="button" class="kl-opt kl-on" data-kl="de" onclick="klPick('de')"><span class="fi fi-de"></span><span class="kl-opt-name">Deutsch</span><span class="kl-opt-code">DE</span></button><button type="button" class="kl-opt" data-kl="en" onclick="klPick('en')"><span class="fi fi-gb"></span><span class="kl-opt-name">English</span><span class="kl-opt-code">EN</span></button><button type="button" class="kl-opt" data-kl="fr" onclick="klPick('fr')"><span class="fi fi-fr"></span><span class="kl-opt-name">Français</span><span class="kl-opt-code">FR</span></button></div></div>
+    </nav>
+  </header>
+
+  <main class="lab-main">
+    <section class="workspace" aria-label="Workspace">
+      <div class="work-tabs" role="tablist">
+        <button type="button" class="work-tabs__reload" id="reloadBtn" data-i18n-title="reloadTitle" title="Terminal zurücksetzen" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
+        <button type="button" class="tab is-active" data-tab="terminal" role="tab"><i class="fa-solid fa-terminal"></i>Terminal</button>
+        <button type="button" class="tab" data-tab="datasets" role="tab"><i class="fa-solid fa-file-code"></i><span data-i18n="tabManifests">Manifests</span></button>
+      </div>
+      <div class="work-surface">
+        <section class="view terminal-view is-active" id="terminalView" role="tabpanel">
+          <div class="terminal-output" id="terminalOutput" aria-live="polite"></div>
+          <form class="terminal-inputbar" id="terminalForm">
+            <span class="terminal-prompt" id="termPrompt">root@platform-cluster:~/crossplane$</span>
+            <input class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" data-i18n-aria="termAria" aria-label="Terminal command" autofocus>
+          </form>
+        </section>
+        <section class="view datasets-view" id="datasetsView" role="tabpanel">
+          <div class="filebar">
+            <button type="button" class="filetab is-active" data-file="bucket-composition-arrays.yaml">bucket-composition-arrays.yaml</button>
+            <button type="button" class="filetab" data-file="single-bucket.yaml">single-bucket.yaml</button>
+            <button type="button" class="filetab" data-file="multi-bucket.yaml">multi-bucket.yaml</button>
+          </div>
+          <div class="runbar">
+            <div class="runbar__title"><i class="fa-solid fa-file-code"></i><span id="fileLabel">/root/crossplane/manifests/bucket-composition-arrays.yaml</span></div>
+            <div class="runbar__actions">
+              <button type="button" class="toolbtn" id="resetFile"><i class="fa-solid fa-rotate-left"></i><span data-i18n="btnClear">Vider</span></button>
+              <button type="button" class="toolbtn toolbtn--primary" id="saveFile"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="btnSave">Enregistrer</span></button>
+            </div>
+          </div>
+          <textarea class="dataset-editor" id="fileEditor" spellcheck="false" data-i18n-ph="phPaste" placeholder="Collez le manifeste fourni dans les instructions, puis Enregistrer."></textarea>
+        </section>
+      </div>
+    </section>
+
+    <aside class="instructions" id="instructions">
+      <div class="instructions__head">
+        <h2 data-i18n="instrHead">Instructions</h2>
+        <button type="button" id="closeInstructions" aria-label="Close">&times;</button>
+      </div>
+      <div class="instructions__body">
+        <h1 class="lab-title" data-i18n="instrTitle">Tableaux de buckets</h1>
+        <p class="lab-sub" data-i18n="instrSub">Vous implémentez une logique Go templating avancée pour gérer des tableaux de buckets S3 et des features conditionnelles — la vraie puissance des composition functions : une seule claim, plusieurs buckets, chacun avec sa configuration par environnement et tier.</p>
+
+        <div class="progress-card">
+          <div class="progress-row"><span data-i18n="progLabel">Progression</span><span id="progressText">0 / 4</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <article class="step is-open" data-step="arrays">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s1h">Étape 1 · Composition avec range</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s1b">Collez la composition array dans <code>bucket-composition-arrays.yaml</code> — une boucle <code>range</code> gère bucket unique OU tableau — Enregistrez et appliquez :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: bucket-aws-arrays
+  labels: { provider: aws, service: bucket, version: arrays }
+spec:
+  compositeTypeRef:
+    apiVersion: platform.koffi.academy/v1alpha1
+    kind: XBucket
+  mode: Pipeline
+  pipeline:
+  - step: create-bucket-resources
+    functionRef: { name: function-go-templating }
+    input:
+      apiVersion: gotemplating.fn.crossplane.io/v1beta1
+      kind: GoTemplate
+      source: Inline
+      inline:
+        template: |
+          {{- $spec := .observed.composite.resource.spec -}}
+          {{- $buckets := list -}}
+          {{- if $spec.buckets -}}
+            {{- $buckets = $spec.buckets -}}
+          {{- else -}}
+            {{- $single := dict "name" $spec.bucketName "environment" $spec.environment "tier" $spec.tier -}}
+            {{- $buckets = list $single -}}
+          {{- end -}}
+          {{- range $index, $bucket := $buckets }}
+          {{- $name := printf "koffi-crossplane-%s-%s-%d" $bucket.name $bucket.environment $index }}
+          ---
+          apiVersion: s3.aws.upbound.io/v1beta1
+          kind: Bucket
+          metadata:
+            name: {{ $name }}
+            annotations:
+              gotemplating.fn.crossplane.io/composition-resource-name: bucket-{{ $index }}
+          spec:
+            forProvider:
+              region: us-east-1
+              tags:
+                Environment: {{ $bucket.environment }}
+                Tier: {{ $bucket.tier }}
+                ArrayIndex: "{{ $index }}"
+            providerConfigRef: { name: default }
+          {{ if or (eq $bucket.environment "staging") (eq $bucket.environment "prod") }}
+          ---
+          apiVersion: s3.aws.upbound.io/v1beta1
+          kind: BucketVersioning
+          metadata:
+            name: koffi-crossplane-{{ $bucket.name }}-{{ $bucket.environment }}-{{ $index }}-versioning
+            annotations:
+              gotemplating.fn.crossplane.io/composition-resource-name: versioning-{{ $index }}
+          spec:
+            forProvider:
+              bucketRef: { name: {{ $name }} }
+              region: us-east-1
+              versioningConfiguration:
+                - status: Enabled
+            providerConfigRef: { name: default }
+          {{ end }}
+          {{ if eq $bucket.tier "premium" }}
+          ---
+          apiVersion: s3.aws.upbound.io/v1beta1
+          kind: BucketIntelligentTieringConfiguration
+          metadata:
+            name: koffi-crossplane-{{ $bucket.name }}-{{ $bucket.environment }}-{{ $index }}-tiering
+            annotations:
+              gotemplating.fn.crossplane.io/composition-resource-name: tiering-{{ $index }}
+          spec:
+            forProvider:
+              bucketRef: { name: {{ $name }} }
+              name: entire-bucket
+              region: us-east-1
+              status: Enabled
+            providerConfigRef: { name: default }
+          {{ end }}
+          {{- end }}
+  - step: auto-ready
+    functionRef: { name: function-auto-ready }</pre></div>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/crossplane/manifests/bucket-composition-arrays.yaml
+kubectl get composition</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="single">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s2h">Étape 2 · Tester un bucket unique (staging)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s2b">Collez la claim dans <code>single-bucket.yaml</code> (staging/standard → versioning activé), Enregistrez, appliquez et tracez :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">apiVersion: platform.koffi.academy/v1alpha1
+kind: BucketClaim
+metadata:
+  name: single-bucket
+  namespace: backend-team
+spec:
+  bucketName: webapp
+  environment: staging
+  tier: standard
+  writeConnectionSecretsToNamespace: backend-team
+  features: { versioning: true, encryption: true }
+  compositionRef: { name: bucket-aws-arrays }</pre></div>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/crossplane/manifests/single-bucket.yaml
+crossplane beta trace bucketclaim single-bucket -n backend-team</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="multi">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s3h">Étape 3 · Tester un tableau (3 buckets)</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s3b">Collez la claim multi-buckets dans <code>multi-bucket.yaml</code> — 3 buckets, env/tier différents — Enregistrez, appliquez et listez les buckets :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">apiVersion: platform.koffi.academy/v1alpha1
+kind: BucketClaim
+metadata:
+  name: team-buckets
+  namespace: backend-team
+spec:
+  bucketName: placeholder
+  environment: dev
+  tier: basic
+  writeConnectionSecretsToNamespace: backend-team
+  buckets:
+    - { name: users,  environment: dev,     tier: basic }
+    - { name: orders, environment: dev,     tier: standard }
+    - { name: stats,  environment: staging, tier: premium }
+  features: { versioning: true, encryption: false }
+  compositionRef: { name: bucket-aws-arrays }</pre></div>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">kubectl apply -f /root/crossplane/manifests/multi-bucket.yaml
+kubectl get bucket.s3.aws.upbound.io</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="trace">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="s4h">Étape 4 · Tracer le tableau</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <span data-i18n="s4b">Tracez la claim multi-buckets : une seule claim → un XBucket → trois buckets S3 avec config par environnement :</span>
+            <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox">crossplane beta trace bucketclaim team-buckets -n backend-team</pre></div>
+          </div>
+        </article>
+
+        <article class="step" data-step="crit">
+          <div class="step__top"><span class="step__check"><i class="fa-solid fa-check"></i></span><h3 data-i18n="critH">Critères de réussite</h3><i class="fa-solid fa-chevron-right step__chev"></i></div>
+          <div class="step__body">
+            <ul class="crit">
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c1">Composition array (range) créée.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c2">Bucket unique staging avec versioning.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c3">3 buckets créés depuis une seule claim.</span></li>
+              <li><i class="fa-solid fa-circle-check"></i><span data-i18n="c4">Config par env/tier vérifiée par trace.</span></li>
+            </ul>
+            <p style="margin:14px 0 0;color:var(--green);font-weight:700" data-i18n="finale">Bravo — vous maîtrisez les composition functions de Crossplane : logique conditionnelle, tableaux et features par environnement !</p>
+            <p style="margin:10px 0 0;color:var(--soft)" data-i18n="tipCheck">Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="lab-footer">
+        <button type="button" class="btn-skip" id="skipBtn" data-i18n="skip">Ignorer</button>
+        <button type="button" class="btn-check" id="checkBtn"><i class="fa-solid fa-circle-check"></i> <span data-i18n="check">Vérifier</span></button>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<button type="button" class="inst-fab" id="instFab" aria-label="Instructions"><i class="fa-solid fa-book-open"></i> <span data-i18n="instrHead">Instructions</span></button>
+
+<section class="help-panel" id="helpPanel" aria-label="Lab assistant">
+  <div class="help-head"><i class="fa-solid fa-robot"></i><h3 data-i18n="helpTitle">Copilote de l'atelier</h3><button type="button" id="closeHelp" aria-label="Close">&times;</button></div>
+  <div class="help-body">
+    <p data-i18n="helpBody">Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.</p>
+    <div class="hint" id="hintText" data-i18n="hint0">Créez d'abord la composition array (Étape 1).</div>
+    <button type="button" id="nextHint" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(135deg,var(--orange),#ffb057);color:#fff;border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:800"><i class="fa-solid fa-lightbulb"></i><span data-i18n="nextHint">Indice suivant</span></button>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+window.I18N = {
+  "fr":{
+    "navPrev":"Chapitre 1","navOverview":"Aperçu","navBack":"Tous les labos","navHide":"Masquer","navAi":"Besoin d'aide ? Demander à l'IA",
+    "reloadTitle":"Réinitialiser le terminal","termAria":"Commande terminal","tabManifests":"Manifests","btnClear":"Vider","btnSave":"Enregistrer","phPaste":"Collez le manifeste fourni dans les instructions, puis Enregistrer.",
+    "instrHead":"Instructions","instrTitle":"Tableaux de buckets",
+    "instrSub":"Vous implémentez une logique Go templating avancée pour gérer des tableaux de buckets S3 et des features conditionnelles — la vraie puissance des composition functions : une seule claim, plusieurs buckets, chacun avec sa configuration par environnement et tier.",
+    "progLabel":"Progression","copy":"Copier","copied":"Copié",
+    "s1h":"Étape 1 · Composition avec range","s1b":"Collez la composition array dans <code>bucket-composition-arrays.yaml</code> — une boucle <code>range</code> gère bucket unique OU tableau — Enregistrez et appliquez :",
+    "s2h":"Étape 2 · Tester un bucket unique (staging)","s2b":"Collez la claim dans <code>single-bucket.yaml</code> (staging/standard → versioning activé), Enregistrez, appliquez et tracez :",
+    "s3h":"Étape 3 · Tester un tableau (3 buckets)","s3b":"Collez la claim multi-buckets dans <code>multi-bucket.yaml</code> — 3 buckets, env/tier différents — Enregistrez, appliquez et listez les buckets :",
+    "s4h":"Étape 4 · Tracer le tableau","s4b":"Tracez la claim multi-buckets : une seule claim → un XBucket → trois buckets S3 avec config par environnement :",
+    "critH":"Critères de réussite",
+    "c1":"Composition array (range) créée.","c2":"Bucket unique staging avec versioning.","c3":"3 buckets créés depuis une seule claim.","c4":"Config par env/tier vérifiée par trace.",
+    "finale":"Bravo — vous maîtrisez les composition functions de Crossplane : logique conditionnelle, tableaux et features par environnement !",
+    "tipCheck":"Astuce : tapez <code>check</code> dans le terminal pour vérifier votre progression.",
+    "skip":"Ignorer","check":"Vérifier",
+    "helpTitle":"Copilote de l'atelier","helpBody":"Cet assistant vous oriente pas à pas. Dans la version connectée, ce panneau transmettra l'étape en cours, vos fichiers et le journal du terminal à votre backend.","nextHint":"Indice suivant",
+    "hint0":"Créez d'abord la composition array (Étape 1).",
+    "hint1":"range $index, $bucket := $buckets cree une ressource par bucket.",
+    "hint2":"Si spec.buckets est vide, on retombe sur le bucket unique top-level.",
+    "hint3":"staging/prod -> versioning ; premium -> intelligent tiering.",
+    "hint4":"L'index ($index) garantit des noms uniques : -0, -1, -2.",
+    "bWelcome":"Cluster platform-cluster — composition bucket-aws-arrays (Koffi Academy)","bTip":"Astuce : tapez `help` pour les commandes, `check` pour la progression.",
+    "hHeader":"Commandes disponibles :","hApply":"appliquer un manifeste","hComp":"lister les compositions","hBuckets":"lister les buckets S3","hTrace":"tracer une claim","hCheck":"vérifier la progression","hClear":"nettoyer le terminal",
+    "needArrays":"error: bucket-composition-arrays.yaml incomplet — collez la Composition (range) et Enregistrez (Etape 1)",
+    "needSingle":"error: single-bucket.yaml incomplet — collez la BucketClaim et Enregistrez (Etape 2)",
+    "needMulti":"error: multi-bucket.yaml incomplet — collez la BucketClaim (buckets array) et Enregistrez (Etape 3)",
+    "applyArrays":"composition.apiextensions.crossplane.io/bucket-aws-arrays created",
+    "compOut":"NAME                   XR-KIND   MODE\\nbucket-aws-functions   XBucket   Pipeline\\nbucket-aws-arrays      XBucket   Pipeline",
+    "applySingle":"bucketclaim.platform.koffi.academy/single-bucket created",
+    "traceSingle":"NAME                                                       SYNCED   READY   STATUS\\nBucketClaim/single-bucket (backend-team)                   True     True    Available\\n+- XBucket/single-bucket-7pj6m                              True     True    Available\\n   +- BucketVersioning/webapp-staging-0-versioning          True     True    Available\\n   +- Bucket/koffi-crossplane-webapp-staging-0              True     True    Available\\n[info] staging -> versioning Enabled",
+    "applyMulti":"bucketclaim.platform.koffi.academy/team-buckets created",
+    "bucketsOut":"NAME                                       READY   SYNCED\\nkoffi-crossplane-webapp-staging-0           True    True\\nkoffi-crossplane-users-dev-0                True    True\\nkoffi-crossplane-orders-dev-1               True    True\\nkoffi-crossplane-stats-staging-2            True    True",
+    "traceMulti":"NAME                                                       SYNCED   READY   STATUS\\nBucketClaim/team-buckets (backend-team)                    True     True    Available\\n+- XBucket/team-buckets-q4m2x                               True     True    Available\\n   +- Bucket/koffi-crossplane-users-dev-0                   True     True    Available\\n   +- Bucket/koffi-crossplane-orders-dev-1                  True     True    Available\\n   +- Bucket/koffi-crossplane-stats-staging-2              True     True    Available\\n   +- BucketVersioning/koffi...-stats-staging-2-versioning  True     True    Available\\n   +- BucketIntelligentTiering/koffi...-stats-staging-2     True     True    Available\\n[info] 1 claim -> 1 XBucket -> 3 S3 buckets (dev minimal, staging+premium = versioning+tiering)",
+    "checkHeader":"Progression de la tâche :","chkA":"Composition array créée","chkS":"Bucket staging + versioning","chkM":"3 buckets depuis une claim","chkT":"Trace multi-buckets vérifiée","chkAll":"Tous les critères sont remplis. Chapitre 2 terminé — parcours complet !","skipped":"Étape ignorée.",
+    "cmdNF":"{c} : commande introuvable. Tapez `help`.",
+    "tDone":"Parcours terminé — composition functions maîtrisées"
+  },
+  "de":{
+    "navPrev":"Kapitel 1","navOverview":"Übersicht","navBack":"Alle Labore","navHide":"Ausblenden","navAi":"Hilfe? KI fragen",
+    "reloadTitle":"Terminal zurücksetzen","termAria":"Terminal-Befehl","tabManifests":"Manifests","btnClear":"Leeren","btnSave":"Speichern","phPaste":"Fügen Sie das Manifest aus den Anweisungen ein und speichern Sie.",
+    "instrHead":"Anleitung","instrTitle":"Bucket-Arrays",
+    "instrSub":"Sie implementieren fortgeschrittene Go-Templating-Logik für Arrays von S3-Buckets und bedingte Features — die wahre Stärke der Composition Functions: eine einzige Claim, mehrere Buckets, jeder mit umgebungs- und tier-spezifischer Konfiguration.",
+    "progLabel":"Fortschritt","copy":"Kopieren","copied":"Kopiert",
+    "s1h":"Schritt 1 · Composition mit range","s1b":"Fügen Sie die Array-Composition in <code>bucket-composition-arrays.yaml</code> ein — eine <code>range</code>-Schleife behandelt Einzel-Bucket ODER Array — speichern und anwenden:",
+    "s2h":"Schritt 2 · Einzel-Bucket testen (staging)","s2b":"Fügen Sie die Claim in <code>single-bucket.yaml</code> ein (staging/standard → Versioning aktiviert), speichern, anwenden und tracen:",
+    "s3h":"Schritt 3 · Ein Array testen (3 Buckets)","s3b":"Fügen Sie die Multi-Bucket-Claim in <code>multi-bucket.yaml</code> ein — 3 Buckets, unterschiedliche env/tier — speichern, anwenden und Buckets auflisten:",
+    "s4h":"Schritt 4 · Das Array tracen","s4b":"Tracen Sie die Multi-Bucket-Claim: eine Claim → ein XBucket → drei S3-Buckets mit umgebungsspezifischer Konfiguration:",
+    "critH":"Erfolgskriterien",
+    "c1":"Array-Composition (range) erstellt.","c2":"Einzel-Bucket staging mit Versioning.","c3":"3 Buckets aus einer Claim erstellt.","c4":"Konfiguration pro env/tier per Trace geprüft.",
+    "finale":"Glückwunsch — Sie beherrschen die Composition Functions von Crossplane: bedingte Logik, Arrays und umgebungsspezifische Features!",
+    "tipCheck":"Tipp: Tippen Sie <code>check</code> im Terminal, um den Fortschritt zu prüfen.",
+    "skip":"Überspringen","check":"Prüfen",
+    "helpTitle":"Lab-Copilot","helpBody":"Dieser Assistent leitet Sie Schritt für Schritt. In der verbundenen Version übergibt dieses Panel den aktuellen Schritt, Ihre Dateien und das Terminal-Log an Ihr Backend.","nextHint":"Nächster Hinweis",
+    "hint0":"Erstellen Sie zuerst die Array-Composition (Schritt 1).",
+    "hint1":"range $index, $bucket := $buckets erstellt eine Ressource pro Bucket.",
+    "hint2":"Ist spec.buckets leer, fällt man auf den Einzel-Bucket (top-level) zurück.",
+    "hint3":"staging/prod -> Versioning ; premium -> Intelligent Tiering.",
+    "hint4":"Der Index ($index) garantiert eindeutige Namen: -0, -1, -2.",
+    "bWelcome":"Cluster platform-cluster — Composition bucket-aws-arrays (Koffi Academy)","bTip":"Tipp: `help` für Befehle, `check` für den Fortschritt.",
+    "hHeader":"Verfügbare Befehle:","hApply":"ein Manifest anwenden","hComp":"die Compositions auflisten","hBuckets":"die S3-Buckets auflisten","hTrace":"eine Claim tracen","hCheck":"Fortschritt prüfen","hClear":"Terminal leeren",
+    "needArrays":"error: bucket-composition-arrays.yaml unvollstaendig — fuegen Sie die Composition (range) ein und speichern (Schritt 1)",
+    "needSingle":"error: single-bucket.yaml unvollstaendig — fuegen Sie die BucketClaim ein und speichern (Schritt 2)",
+    "needMulti":"error: multi-bucket.yaml unvollstaendig — fuegen Sie die BucketClaim (buckets array) ein und speichern (Schritt 3)",
+    "applyArrays":"composition.apiextensions.crossplane.io/bucket-aws-arrays created",
+    "compOut":"NAME                   XR-KIND   MODE\\nbucket-aws-functions   XBucket   Pipeline\\nbucket-aws-arrays      XBucket   Pipeline",
+    "applySingle":"bucketclaim.platform.koffi.academy/single-bucket created",
+    "traceSingle":"NAME                                                       SYNCED   READY   STATUS\\nBucketClaim/single-bucket (backend-team)                   True     True    Available\\n+- XBucket/single-bucket-7pj6m                              True     True    Available\\n   +- BucketVersioning/webapp-staging-0-versioning          True     True    Available\\n   +- Bucket/koffi-crossplane-webapp-staging-0              True     True    Available\\n[info] staging -> Versioning Enabled",
+    "applyMulti":"bucketclaim.platform.koffi.academy/team-buckets created",
+    "bucketsOut":"NAME                                       READY   SYNCED\\nkoffi-crossplane-webapp-staging-0           True    True\\nkoffi-crossplane-users-dev-0                True    True\\nkoffi-crossplane-orders-dev-1               True    True\\nkoffi-crossplane-stats-staging-2            True    True",
+    "traceMulti":"NAME                                                       SYNCED   READY   STATUS\\nBucketClaim/team-buckets (backend-team)                    True     True    Available\\n+- XBucket/team-buckets-q4m2x                               True     True    Available\\n   +- Bucket/koffi-crossplane-users-dev-0                   True     True    Available\\n   +- Bucket/koffi-crossplane-orders-dev-1                  True     True    Available\\n   +- Bucket/koffi-crossplane-stats-staging-2              True     True    Available\\n   +- BucketVersioning/koffi...-stats-staging-2-versioning  True     True    Available\\n   +- BucketIntelligentTiering/koffi...-stats-staging-2     True     True    Available\\n[info] 1 Claim -> 1 XBucket -> 3 S3-Buckets (dev minimal, staging+premium = Versioning+Tiering)",
+    "checkHeader":"Fortschritt der Aufgabe:","chkA":"Array-Composition erstellt","chkS":"Bucket staging + Versioning","chkM":"3 Buckets aus einer Claim","chkT":"Multi-Bucket-Trace geprüft","chkAll":"Alle Kriterien erfüllt. Kapitel 2 abgeschlossen — kompletter Pfad!","skipped":"Schritt übersprungen.",
+    "cmdNF":"{c}: Befehl nicht gefunden. Tippen Sie `help`.",
+    "tDone":"Pfad abgeschlossen — Composition Functions beherrscht"
+  },
+  "en":{
+    "navPrev":"Chapter 1","navOverview":"Overview","navBack":"All labs","navHide":"Hide","navAi":"Need Help? Ask AI",
+    "reloadTitle":"Reset the terminal","termAria":"Terminal command","tabManifests":"Manifests","btnClear":"Clear","btnSave":"Save","phPaste":"Paste the manifest from the instructions, then Save.",
+    "instrHead":"Instructions","instrTitle":"Bucket arrays",
+    "instrSub":"You implement advanced Go templating logic to handle arrays of S3 buckets and conditional features — the real power of composition functions: one claim, multiple buckets, each with its per-environment and per-tier configuration.",
+    "progLabel":"Progress","copy":"Copy","copied":"Copied",
+    "s1h":"Step 1 · Composition with range","s1b":"Paste the array composition into <code>bucket-composition-arrays.yaml</code> — a <code>range</code> loop handles single bucket OR array — Save and apply:",
+    "s2h":"Step 2 · Test a single bucket (staging)","s2b":"Paste the claim into <code>single-bucket.yaml</code> (staging/standard → versioning enabled), Save, apply and trace:",
+    "s3h":"Step 3 · Test an array (3 buckets)","s3b":"Paste the multi-bucket claim into <code>multi-bucket.yaml</code> — 3 buckets, different env/tier — Save, apply and list the buckets:",
+    "s4h":"Step 4 · Trace the array","s4b":"Trace the multi-bucket claim: one claim → one XBucket → three S3 buckets with per-environment config:",
+    "critH":"Success criteria",
+    "c1":"Array composition (range) created.","c2":"Single staging bucket with versioning.","c3":"3 buckets created from one claim.","c4":"Per-env/tier config verified by trace.",
+    "finale":"Congratulations — you've mastered Crossplane composition functions: conditional logic, arrays and per-environment features!",
+    "tipCheck":"Tip: type <code>check</code> in the terminal to review your progress.",
+    "skip":"Skip","check":"Check",
+    "helpTitle":"Lab Copilot","helpBody":"This assistant guides you step by step. In the connected version, this panel will pass the current step, your files and the terminal log to your backend.","nextHint":"Next hint",
+    "hint0":"Create the array composition first (Step 1).",
+    "hint1":"range $index, $bucket := $buckets creates one resource per bucket.",
+    "hint2":"If spec.buckets is empty, fall back to the single top-level bucket.",
+    "hint3":"staging/prod -> versioning ; premium -> intelligent tiering.",
+    "hint4":"The index ($index) guarantees unique names: -0, -1, -2.",
+    "bWelcome":"platform-cluster — composition bucket-aws-arrays (Koffi Academy)","bTip":"Tip: type `help` for commands, `check` for progress.",
+    "hHeader":"Available commands:","hApply":"apply a manifest","hComp":"list the compositions","hBuckets":"list the S3 buckets","hTrace":"trace a claim","hCheck":"check your progress","hClear":"clear the terminal",
+    "needArrays":"error: bucket-composition-arrays.yaml incomplete — paste the Composition (range) and Save (Step 1)",
+    "needSingle":"error: single-bucket.yaml incomplete — paste the BucketClaim and Save (Step 2)",
+    "needMulti":"error: multi-bucket.yaml incomplete — paste the BucketClaim (buckets array) and Save (Step 3)",
+    "applyArrays":"composition.apiextensions.crossplane.io/bucket-aws-arrays created",
+    "compOut":"NAME                   XR-KIND   MODE\\nbucket-aws-functions   XBucket   Pipeline\\nbucket-aws-arrays      XBucket   Pipeline",
+    "applySingle":"bucketclaim.platform.koffi.academy/single-bucket created",
+    "traceSingle":"NAME                                                       SYNCED   READY   STATUS\\nBucketClaim/single-bucket (backend-team)                   True     True    Available\\n+- XBucket/single-bucket-7pj6m                              True     True    Available\\n   +- BucketVersioning/webapp-staging-0-versioning          True     True    Available\\n   +- Bucket/koffi-crossplane-webapp-staging-0              True     True    Available\\n[info] staging -> versioning Enabled",
+    "applyMulti":"bucketclaim.platform.koffi.academy/team-buckets created",
+    "bucketsOut":"NAME                                       READY   SYNCED\\nkoffi-crossplane-webapp-staging-0           True    True\\nkoffi-crossplane-users-dev-0                True    True\\nkoffi-crossplane-orders-dev-1               True    True\\nkoffi-crossplane-stats-staging-2            True    True",
+    "traceMulti":"NAME                                                       SYNCED   READY   STATUS\\nBucketClaim/team-buckets (backend-team)                    True     True    Available\\n+- XBucket/team-buckets-q4m2x                               True     True    Available\\n   +- Bucket/koffi-crossplane-users-dev-0                   True     True    Available\\n   +- Bucket/koffi-crossplane-orders-dev-1                  True     True    Available\\n   +- Bucket/koffi-crossplane-stats-staging-2              True     True    Available\\n   +- BucketVersioning/koffi...-stats-staging-2-versioning  True     True    Available\\n   +- BucketIntelligentTiering/koffi...-stats-staging-2     True     True    Available\\n[info] 1 claim -> 1 XBucket -> 3 S3 buckets (dev minimal, staging+premium = versioning+tiering)",
+    "checkHeader":"Task progress:","chkA":"Array composition created","chkS":"Staging bucket + versioning","chkM":"3 buckets from one claim","chkT":"Multi-bucket trace verified","chkAll":"All criteria met. Chapter 2 complete — full track done!","skipped":"Step skipped.",
+    "cmdNF":"{c}: command not found. Type `help`.",
+    "tDone":"Track complete — composition functions mastered"
+  }
+};
+
+(function(){
+  "use strict";
+  var FILES=["bucket-composition-arrays.yaml","single-bucket.yaml","multi-bucket.yaml"];
+  var I=window.I18N; var lang=localStorage.getItem("preferred-lang"); if(!I[lang])lang="de";
+  function t(key,vars){var s=(I[lang]&&I[lang][key]!==undefined)?I[lang][key]:(I.en[key]!==undefined?I.en[key]:key);if(vars)Object.keys(vars).forEach(function(k){s=s.replace(new RegExp("\\{"+k+"\\}","g"),vars[k]);});return s;}
+
+  var FS={}; FILES.forEach(function(f){FS[f]="";});
+  var currentFile=FILES[0];
+  var st={arrays:false,single:false,multi:false,trace:false};
+  var arraysApplied=false,singleApplied=false,multiApplied=false; var hi=0;
+
+  var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput"), editor=document.getElementById("fileEditor");
+  function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+  function print(text,cls){String(text).replace(/\\n/g,"\n").split("\n").forEach(function(line){var l=document.createElement("div");if(cls)l.className=cls;l.innerHTML=esc(line);out.appendChild(l);});out.scrollTop=out.scrollHeight;}
+  function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
+  function banner(){out.innerHTML="";print(t("bWelcome"),"line-muted");print(t("bTip"),"line-muted");print("");}
+
+  function hasArrays(){var c=FS["bucket-composition-arrays.yaml"]||"";return /bucket-aws-arrays/.test(c)&&/range/.test(c);}
+  function hasSingle(){var c=FS["single-bucket.yaml"]||"";return /kind:\s*BucketClaim/.test(c)&&/single-bucket/.test(c);}
+  function hasMulti(){var c=FS["multi-bucket.yaml"]||"";return /buckets:/.test(c)&&/team-buckets/.test(c);}
+  function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["arrays","single","multi","trace"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
+
+  function handle(raw){
+    var cmd=raw.trim(); if(!cmd) return; var head=cmd.split(/\s+/)[0];
+    if(head==="help"){print(t("hHeader"),"line-muted");
+      print("  kubectl apply -f manifests/<file>.yaml          "+t("hApply"));
+      print("  kubectl get composition                         "+t("hComp"));
+      print("  kubectl get bucket.s3.aws.upbound.io            "+t("hBuckets"));
+      print("  crossplane beta trace bucketclaim ...           "+t("hTrace"));
+      print("  check   ·   clear                             "+t("hCheck"));return;}
+    if(head==="clear"){out.innerHTML="";return;}
+    if(head==="check"){runCheck();return;}
+    if(/kubectl\s+apply\b/.test(cmd)&&/bucket-composition-arrays\.yaml/.test(cmd)){if(!hasArrays()){print(t("needArrays"),"line-error");return;}print(t("applyArrays"),"line-ok");arraysApplied=true;return;}
+    if(/kubectl\s+apply\b/.test(cmd)&&/single-bucket\.yaml/.test(cmd)){if(!hasSingle()){print(t("needSingle"),"line-error");return;}print(t("applySingle"),"line-ok");singleApplied=true;return;}
+    if(/kubectl\s+apply\b/.test(cmd)&&/multi-bucket\.yaml/.test(cmd)){if(!hasMulti()){print(t("needMulti"),"line-error");return;}print(t("applyMulti"),"line-ok");multiApplied=true;return;}
+    if(/kubectl\s+get\s+composition/.test(cmd)){if(!arraysApplied){print(t("needArrays"),"line-error");return;}print(t("compOut"));setStep("arrays",true);return;}
+    if(/crossplane\s+beta\s+trace.*single-bucket/.test(cmd)){if(!singleApplied){print(t("needSingle"),"line-error");return;}print(t("traceSingle"));setStep("single",true);return;}
+    if(/kubectl\s+get\s+bucket/.test(cmd)){if(!multiApplied){print(t("needMulti"),"line-error");return;}print(t("bucketsOut"));setStep("multi",true);return;}
+    if(/crossplane\s+beta\s+trace.*team-buckets/.test(cmd)){if(!multiApplied){print(t("needMulti"),"line-error");return;}print(t("traceMulti"));setStep("multi",true);setStep("trace",true);return;}
+    if(/crossplane\s+beta\s+trace/.test(cmd)){print(t("needSingle"),"line-error");return;}
+    print(t("cmdNF",{c:head}),"line-error");
+  }
+
+  function runCheck(){
+    print(t("checkHeader"),"line-muted");
+    print((st.arrays?"  [x] ":"  [ ] ")+t("chkA"),st.arrays?"line-ok":"line-warn");
+    print((st.single?"  [x] ":"  [ ] ")+t("chkS"),st.single?"line-ok":"line-warn");
+    print((st.multi?"  [x] ":"  [ ] ")+t("chkM"),st.multi?"line-ok":"line-warn");
+    print((st.trace?"  [x] ":"  [ ] ")+t("chkT"),st.trace?"line-ok":"line-warn");
+    if(st.arrays&&st.single&&st.multi&&st.trace)print(t("chkAll"),"line-ok");
+  }
+
+  function runScript(text){
+    var lines=text.replace(/\r/g,"").split("\n"); var i=0;
+    while(i<lines.length){var line=lines[i];
+      if(line.trim()===""){i++;continue;}
+      print(document.getElementById("termPrompt").textContent+" "+line,"line-cmd");handle(line);i++;}
+  }
+
+  document.getElementById("terminalForm").addEventListener("submit",function(e){e.preventDefault();var v=input.value;print(document.getElementById("termPrompt").textContent+" "+v,"line-cmd");input.value="";handle(v);});
+  input.addEventListener("paste",function(e){var txt=(e.clipboardData||window.clipboardData).getData("text");if(txt&&txt.indexOf("\n")!==-1){e.preventDefault();runScript(txt);input.value="";}});
+
+  document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");var tb=b.getAttribute("data-tab");document.getElementById("terminalView").classList.toggle("is-active",tb==="terminal");document.getElementById("datasetsView").classList.toggle("is-active",tb==="datasets");if(tb==="terminal")input.focus();});});
+  function switchTab(w){document.querySelectorAll(".tab").forEach(function(b){if(b.getAttribute("data-tab")===w)b.click();});}
+  function selectFile(p){currentFile=p;editor.value=FS[p];document.getElementById("fileLabel").textContent="/root/crossplane/manifests/"+p;document.querySelectorAll(".filetab").forEach(function(b){b.classList.toggle("is-active",b.getAttribute("data-file")===p);});}
+  document.querySelectorAll(".filetab").forEach(function(b){b.addEventListener("click",function(){FS[currentFile]=editor.value;selectFile(b.getAttribute("data-file"));});});
+  document.getElementById("saveFile").addEventListener("click",function(){FS[currentFile]=editor.value;toast(t("btnSave"));});
+  document.getElementById("resetFile").addEventListener("click",function(){editor.value="";FS[currentFile]="";});
+  document.getElementById("reloadBtn").addEventListener("click",function(){banner();switchTab("terminal");input.focus();});
+  document.querySelectorAll(".step__top").forEach(function(top){top.addEventListener("click",function(){top.parentElement.classList.toggle("is-open");});});
+  document.getElementById("checkBtn").addEventListener("click",function(){switchTab("terminal");runCheck();});
+  document.getElementById("skipBtn").addEventListener("click",function(){var all=document.querySelectorAll(".step");var idx=-1;all.forEach(function(s,i){if(s.classList.contains("is-open"))idx=i;});all.forEach(function(s){s.classList.remove("is-open");});var nx=all[Math.min(idx+1,all.length-1)];if(nx)nx.classList.add("is-open");toast(t("skipped"));});
+
+  var instr=document.getElementById("instructions"),fab=document.getElementById("instFab");
+  function hideInstr(h){instr.classList.toggle("is-hidden",h);fab.classList.toggle("is-gone",!h);}
+  document.getElementById("toggleInstructions").addEventListener("click",function(){hideInstr(!instr.classList.contains("is-hidden"));});
+  document.getElementById("closeInstructions").addEventListener("click",function(){hideInstr(true);});
+  fab.addEventListener("click",function(){hideInstr(false);});
+  var help=document.getElementById("helpPanel");
+  document.getElementById("openHelp").addEventListener("click",function(){help.classList.add("is-open");});
+  document.getElementById("closeHelp").addEventListener("click",function(){help.classList.remove("is-open");});
+  document.getElementById("nextHint").addEventListener("click",function(){hi=(hi+1)%5;document.getElementById("hintText").textContent=t("hint"+hi);});
+
+  document.querySelectorAll(".copybtn").forEach(function(btn){btn.addEventListener("click",function(){var pre=btn.parentElement.querySelector(".codebox");var text=pre?pre.textContent:"";function done(){btn.textContent=t("copied");btn.classList.add("is-copied");setTimeout(function(){btn.textContent=t("copy");btn.classList.remove("is-copied");},1400);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,done);}else{var ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(e){}ta.remove();done();}});});
+
+  var remaining=120*60,tEl=document.getElementById("labTimer");
+  setInterval(function(){if(remaining>0)remaining--;var m=Math.floor(remaining/60),s=remaining%60;tEl.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;},1000);
+
+  function applyLang(l){if(!I[l])return;lang=l;localStorage.setItem("preferred-lang",l);document.documentElement.lang=l;var d=I[l];
+    document.querySelectorAll("[data-i18n]").forEach(function(el){var k=el.getAttribute("data-i18n");if(d[k]!==undefined)el.innerHTML=d[k];});
+    document.querySelectorAll("[data-i18n-ph]").forEach(function(el){var k=el.getAttribute("data-i18n-ph");if(d[k]!==undefined)el.setAttribute("placeholder",d[k]);});
+    document.querySelectorAll("[data-i18n-title]").forEach(function(el){var k=el.getAttribute("data-i18n-title");if(d[k]!==undefined)el.setAttribute("title",d[k]);});
+    document.querySelectorAll("[data-i18n-aria]").forEach(function(el){var k=el.getAttribute("data-i18n-aria");if(d[k]!==undefined)el.setAttribute("aria-label",d[k]);});
+    document.getElementById("hintText").textContent=t("hint"+hi);}
+  window.setLabWorkspaceLang=applyLang;
+  applyLang(lang);banner();selectFile(FILES[0]);input.focus();
+})();
+
+var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
+function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
+function klPick(l){if(window.setLabWorkspaceLang)window.setLabWorkspaceLang(l);klSync(l);klClose();}
+function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
+document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+</script>
+</body>
+</html>
