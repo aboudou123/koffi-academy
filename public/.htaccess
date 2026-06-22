@@ -53,20 +53,17 @@ AddDefaultCharset UTF-8
 # Block pages that require a real backend or expose client-side pseudo-security
 <IfModule mod_rewrite.c>
   RewriteEngine On
-
-  # --- Sécurité : blocage de pages sensibles ---
-  RewriteRule ^sponsor/?$ pricing.html [L]
-  RewriteRule ^sponsor\.html$ pricing.html [L]
   RewriteRule ^admin/ - [F]
-  RewriteRule ^payment/(checkout|bank-transfer-request|paypal-success|paypal-cancel)\.html$ - [F]
+  # 2026-06-22: payment/* debloque apres durcissement du prix cote client
+  # (prix figes par une table fixe dans checkout.html / bank-transfer-request.html,
+  #  le parametre ?price= de l'URL n'est plus utilise). Rebloquer = decommenter.
+  # RewriteRule ^payment/(checkout|bank-transfer-request|paypal-success|paypal-cancel)\.html$ - [F]
   RewriteRule ^dashboard\.html$ - [F]
+  RewriteRule ^pricing\.html$ - [F]
+  RewriteRule ^login\.html$ - [F]
+  RewriteRule ^register\.html$ - [F]
   RewriteRule ^article\.html$ - [F]
   RewriteRule ^contact\.html$ - [F]
+  RewriteRule ^free-courses/github-actions\.html$ - [F]
   RewriteRule ^paid-courses/ - [F]
-
-  # --- Clean URLs : sert folder/index.html pour /folder ---
-  # Si ce n'est pas un fichier existant ET que folder/index.html existe → le servir
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}/index.html -f
-  RewriteRule ^(.+?)/?$ /$1/index.html [L]
 </IfModule>

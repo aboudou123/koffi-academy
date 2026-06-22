@@ -81,9 +81,19 @@ function setLanguage(l){if(!i18n[l])return;document.querySelectorAll('[data-i18n
 var P=new URLSearchParams(location.search);
 var COURSE=P.get('course')||'';
 var TITLE=P.get('title')?decodeURIComponent(P.get('title')):'Laboratoire';
-var PRICE=P.get('price')||'';
-var CUR=P.get('currency')||'EUR';
-if(!PRICE){var m=parseInt(P.get('min')||'0',10);PRICE=String(m>60?55:30);}
+
+/* ===== Table de prix FIXE (source de verite cote page) =====
+   Le prix n'est JAMAIS lu depuis l'URL : impossible de le manipuler
+   via ?price=. Tout cours inconnu retombe sur le tarif de base. ===== */
+var CUR='EUR';
+var PRICES={
+  'aws-build-vpc':30,
+  'aws-playground':55,
+  'crossplane-setup':35,
+  'k8s-kubeadm':30,
+  'vault-tokens':55
+};
+var PRICE=String(Object.prototype.hasOwnProperty.call(PRICES,COURSE)?PRICES[COURSE]:30);
 
 function buildPayPalUrl(){
   var origin=window.location.origin;

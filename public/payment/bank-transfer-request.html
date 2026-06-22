@@ -201,7 +201,9 @@ document.addEventListener('DOMContentLoaded', function() {
   if (langParam && i18n[langParam]) saved = langParam;
   setLanguage(saved);
 
-  var priceParam = params.get('price');
+  /* Prix fige par cours (jamais lu depuis l'URL) */
+  var PRICES = {'aws-build-vpc':30,'aws-playground':55,'crossplane-setup':35,'k8s-kubeadm':30,'vault-tokens':55};
+  var priceParam = (courseParam && Object.prototype.hasOwnProperty.call(PRICES, courseParam)) ? String(PRICES[courseParam]) : null;
   var titleParam = params.get('title');
   if (courseParam) {
     var sel = document.getElementById('inp-course');
