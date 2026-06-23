@@ -267,7 +267,7 @@
 
             <div class="sm-body">
                <div class="sm-wrapn">
-                  <p class="sm-lead">Jeder Beitrag &mdash; ganz gleich wie gro&szlig; &mdash; h&auml;lt diese Plattform am Leben. Ihre Unterst&uuml;tzung finanziert <strong>Forschung</strong>, erm&ouml;glicht <strong>neue, praxisnahe Lerninhalte</strong> und macht <strong>hochwertiges technisches Wissen f&uuml;r alle zug&auml;nglich</strong>. Gemeinsam demokratisieren wir den Zugang zu fortgeschrittener Ingenieur- und Technologiebildung.</p>
+                  <p class="sm-lead">Jeder Beitrag, ganz gleich wie gro&szlig;, h&auml;lt diese Plattform am Leben. Ihre Unterst&uuml;tzung finanziert <strong>Forschung</strong>, erm&ouml;glicht <strong>neue, praxisnahe Lerninhalte</strong> und macht <strong>hochwertiges technisches Wissen f&uuml;r alle zug&auml;nglich</strong>. Gemeinsam demokratisieren wir den Zugang zu fortgeschrittener Ingenieur- und Technologiebildung.</p>
 
                   <div class="sm-cards">
 
@@ -312,7 +312,7 @@
                      </div>
 
                   </div>
-                  <p class="sm-note">Jede Hilfe ist wertvoll &mdash; unabh&auml;ngig von der H&ouml;he Ihres Beitrags.</p>
+                  <p class="sm-note">Jede Hilfe ist wertvoll, unabh&auml;ngig von der H&ouml;he Ihres Beitrags.</p>
 
                   <div class="sm-impact">
                      <h2>Ihre Unterst&uuml;tzung bewirkt etwas</h2>
@@ -326,7 +326,7 @@
 
                   <div class="sm-quote">
                      <p>Wissen ver&auml;ndert Leben. Jede Unterst&uuml;tzung hilft uns dabei, hochwertige technische Bildung f&uuml;r die n&auml;chste Generation von Fachkr&auml;ften bereitzustellen.</p>
-                     <cite>&mdash; Koffitse Aboudou, Gr&uuml;nder &middot; Koffi Academy</cite>
+                     <cite>Koffitse Aboudou, Gr&uuml;nder &middot; Koffi Academy</cite>
                   </div>
 
                   <div class="sm-trust">
@@ -428,7 +428,7 @@
             <div id="modal-step2" style="display:none;">
                <h3><i class="fab fa-paypal" style="color:#0070ba;"></i> Sichere Spende mit PayPal</h3>
                <div class="selected-plan-info">
-                  <strong><span id="modal2PlanName">-</span></strong> —
+                  <strong><span id="modal2PlanName">-</span></strong> &middot;
                   <strong><span id="modal2PlanPrice">-</span> €</strong>
                </div>
                <div id="paypalButtonContainer" style="margin:20px 0; min-height:80px;"></div>
@@ -538,7 +538,7 @@
           const params = {
             cmd:           '_xclick',
             business:      PAYPAL_MERCHANT_ID,   // PayPal-Konto E-Mail
-            item_name:     'Unterstützung Koffi Academy — ' + selectedPlan + ' (' + parseFloat(selectedPrice).toFixed(2) + ' €)',
+            item_name:     'Unterstützung Koffi Academy - ' + selectedPlan + ' (' + parseFloat(selectedPrice).toFixed(2) + ' €)',
             amount:        parseFloat(selectedPrice).toFixed(2),
             currency_code: 'EUR',
             charset:       'UTF-8',
@@ -629,7 +629,7 @@
             saveOrderToFirestore(plan, price, null, ref);
 
             document.getElementById('successPlanInfo').textContent =
-              plan + ' — ' + price + '€ Beitrag';
+              plan + ' - ' + price + '€ Beitrag';
             document.getElementById('successOrderId').textContent =
               ref || 'PayPal-Zahlung bestätigt';
             showModalStep('step3');
@@ -687,21 +687,21 @@
       <script>
       var i18n = {
         de: {
-          'header-msg': 'Willkommen bei der Koffi Academy — Ihre Cloud- & DevOps-Reise beginnt hier.',
+          'header-msg': 'Willkommen bei der Koffi Academy: Ihre Cloud- & DevOps-Reise beginnt hier.',
           'nav-home': 'Startseite', 'nav-courses': 'Kurse',
           'nav-events': 'Veranstaltungen', 'nav-about-me': 'Über mich',
           'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Kontakt',
           'nav-about': 'Über uns', 'nav-support': 'Support', 'nav-login': 'Anmelden / Registrieren'
         },
         fr: {
-          'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
+          'header-msg': 'Cours en ligne : Des millions de personnes apprennent !',
           'nav-home': 'Accueil', 'nav-courses': 'Cours',
           'nav-events': 'Événements', 'nav-about-me': 'À propos de moi',
           'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
           'nav-about': 'À propos', 'nav-support': 'Support', 'nav-login': "Se connecter / S'inscrire"
         },
         en: {
-          'header-msg': 'Online Courses — Millions of people are learning!',
+          'header-msg': 'Online Courses: Millions of people are learning!',
           'nav-home': 'Home', 'nav-courses': 'Courses',
           'nav-events': 'Events', 'nav-about-me': 'About Me',
           'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
