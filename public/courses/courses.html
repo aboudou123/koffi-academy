@@ -700,8 +700,7 @@
          sortSelect.addEventListener('change', filterAndSort);
 
          document.getElementById('assessmentBtn').addEventListener('click', function() {
-            var msgs = { de: 'Die persönliche Lernpfad-Analyse wird in Kürze verfügbar sein!', en: 'The personalized learning path analysis will be available soon!', fr: 'L\'analyse de parcours personnalisé sera bientôt disponible !' };
-            alert(msgs[document.documentElement.lang] || msgs.de);
+            window.location.href = '/laboratoire';
          });
 
          // ── Init ──────────────────────────────────────────────
