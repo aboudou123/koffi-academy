@@ -82,7 +82,7 @@ AddDefaultCharset UTF-8
 # la regle anti-hotlink ci-dessus. Vary: Referer en filet de securite.
 <IfModule mod_headers.c>
   <FilesMatch "\.(mp4|webm|m4v|mov)$">
-    Header set Cache-Control "no-store, max-age=0"
-    Header set Vary "Referer"
+    Header always set Cache-Control "no-store, max-age=0"
+    Header always set Vary "Referer"
   </FilesMatch>
 </IfModule>
