@@ -75,3 +75,14 @@ AddDefaultCharset UTF-8
   RewriteCond %{HTTP_REFERER} !^https?://(www\.)?lingenieur\.de(/|$) [NC]
   RewriteRule ^assets/videos/.*\.(mp4|webm|m4v|mov)$ - [F,NC]
 </IfModule>
+
+# 2026-06-23: Empeche le cache partage de stocker la reponse du .mp4. Sans ca,
+# un acces direct sans referer (403) pourrait etre mis en cache puis servi a un
+# visiteur legitime, cassant la lecture. no-store => chaque requete repasse par
+# la regle anti-hotlink ci-dessus. Vary: Referer en filet de securite.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(mp4|webm|m4v|mov)$">
+    Header set Cache-Control "no-store, max-age=0"
+    Header set Vary "Referer"
+  </FilesMatch>
+</IfModule>
