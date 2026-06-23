@@ -68,6 +68,14 @@ a{color:inherit}
 .player__note{position:relative;font-size:13px;color:rgba(255,255,255,.78);font-weight:500}
 .player__soon{position:absolute;top:14px;right:14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(248,144,53,.9);padding:5px 11px;border-radius:999px}
 .player-video{width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;display:block;object-fit:contain;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;pointer-events:auto}
+/* Ticker d'information defilant en superposition (haut de la video) */
+.player-wrap{position:relative}
+.ticker{position:absolute;top:0;left:0;right:0;overflow:hidden;background:rgba(11,18,32,.72);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);border-radius:12px 12px 0 0;pointer-events:none;z-index:2}
+.ticker__track{display:inline-block;white-space:nowrap;padding:7px 0 7px 100%;color:#fff;font-weight:500;font-size:clamp(11px,2.6vw,15px);letter-spacing:.01em;text-shadow:0 1px 2px rgba(0,0,0,.55);animation:ticker-scroll 60s linear infinite;will-change:transform}
+.ticker__msg{padding:0 10px}
+.ticker__sep{opacity:.45;padding:0 2px}
+@keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+@media (prefers-reduced-motion:reduce){.ticker__track{animation-duration:120s}}
 .chapters{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column}
 .chapters li{display:flex;align-items:center;gap:13px;padding:11px 4px;border-top:1px solid var(--slate-100);font-size:14px;color:var(--slate-600)}
 .chapters li:first-child{border-top:0}
@@ -238,10 +246,20 @@ a{color:inherit}
                   <span class="tagx" data-i18n="vTag">7 chapitres · 46 min</span>
                </div>
                <div class="card__body">
-                  <video class="player-video" id="player" controls controlslist="nodownload noplaybackrate noremoteplayback" disablepictureinpicture disableremoteplayback preload="metadata" playsinline oncontextmenu="return false" draggable="false">
-                     <source src="../assets/videos/llm-eval.mp4" type="video/mp4">
-                     <span data-i18n="vNote">La vidéo méthodique sera publiée prochainement.</span>
-                  </video>
+                  <div class="player-wrap">
+                     <video class="player-video" id="player" controls controlslist="nodownload noplaybackrate noremoteplayback" disablepictureinpicture disableremoteplayback preload="metadata" playsinline oncontextmenu="return false" draggable="false">
+                        <source src="../assets/videos/llm-eval.mp4" type="video/mp4">
+                        <span data-i18n="vNote">La vidéo méthodique sera publiée prochainement.</span>
+                     </video>
+                     <div class="ticker" aria-hidden="true">
+                        <div class="ticker__track">
+                           <span class="ticker__msg">🇫🇷 Information importante : Le cours complet sera disponible en vidéo à partir du 1er octobre. L'accès à l'ensemble du contenu sera proposé via un abonnement mensuel ou annuel.</span>
+                           <span class="ticker__sep">•</span>
+                           <span class="ticker__msg">🇩🇪 Wichtige Information: Der vollständige Kurs wird ab dem 1. Oktober als Videokurs verfügbar sein. Der Zugang zu allen Inhalten erfolgt über ein monatliches oder jährliches Abonnement.</span>
+                           <span class="ticker__sep">•</span>
+                        </div>
+                     </div>
+                  </div>
                   <ol class="chapters">
                      <li><span class="num">01</span><span class="ttl" data-i18n="ch1">Pourquoi évaluer un LLM ?</span><span class="dur">04:30</span></li>
                      <li><span class="num">02</span><span class="ttl" data-i18n="ch2">Construire un jeu de tests (golden set)</span><span class="dur">06:00</span></li>
