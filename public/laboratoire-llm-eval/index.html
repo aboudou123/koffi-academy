@@ -74,6 +74,7 @@ a{color:inherit}
 .ticker__track{display:inline-block;white-space:nowrap;padding:8px 0 8px 100%;color:#fff;font-weight:700;font-size:clamp(11px,2.6vw,15px);letter-spacing:.015em;text-shadow:0 1px 3px rgba(0,0,0,.5);animation:ticker-scroll 60s linear infinite;will-change:transform}
 @keyframes ticker-bg{0%{background-position:0% 50%}100%{background-position:300% 50%}}
 .ticker__msg{padding:0 10px}
+.tflag{height:.95em;width:auto;vertical-align:-0.13em;border-radius:2px;margin-right:5px;box-shadow:0 0 0 1px rgba(255,255,255,.65)}
 .ticker__sep{opacity:.45;padding:0 2px}
 @keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
 @media (prefers-reduced-motion:reduce){.ticker__track{animation-duration:120s}}
@@ -254,9 +255,9 @@ a{color:inherit}
                      </video>
                      <div class="ticker" aria-hidden="true">
                         <div class="ticker__track">
-                           <span class="ticker__msg">🇫🇷 Information importante : Le cours complet sera disponible en vidéo à partir du 1er octobre. L'accès à l'ensemble du contenu sera proposé via un abonnement mensuel ou annuel.</span>
+                           <span class="ticker__msg"><svg class="tflag" viewBox="0 0 3 2" aria-hidden="true"><rect width="1" height="2" fill="#0055A4"/><rect width="1" height="2" x="1" fill="#fff"/><rect width="1" height="2" x="2" fill="#EF4135"/></svg> Information importante : Le cours complet sera disponible en vidéo à partir du 1er octobre. L'accès à l'ensemble du contenu sera proposé via un abonnement mensuel ou annuel.</span>
                            <span class="ticker__sep">•</span>
-                           <span class="ticker__msg">🇩🇪 Wichtige Information: Der vollständige Kurs wird ab dem 1. Oktober als Videokurs verfügbar sein. Der Zugang zu allen Inhalten erfolgt über ein monatliches oder jährliches Abonnement.</span>
+                           <span class="ticker__msg"><svg class="tflag" viewBox="0 0 5 3" aria-hidden="true"><rect width="5" height="1" fill="#000"/><rect width="5" height="1" y="1" fill="#DD0000"/><rect width="5" height="1" y="2" fill="#FFCE00"/></svg> Wichtige Information: Der vollständige Kurs wird ab dem 1. Oktober als Videokurs verfügbar sein. Der Zugang zu allen Inhalten erfolgt über ein monatliches oder jährliches Abonnement.</span>
                            <span class="ticker__sep">•</span>
                         </div>
                      </div>
