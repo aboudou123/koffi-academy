@@ -70,9 +70,12 @@ a{color:inherit}
 .player-video{width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;display:block;object-fit:contain;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;pointer-events:auto}
 /* Ticker d'information defilant en superposition (haut de la video) */
 .player-wrap{position:relative}
-.ticker{position:absolute;top:0;left:0;right:0;overflow:hidden;background:linear-gradient(90deg,#f5731a,#ef3e2f,#f59a1e,#f5731a);background-size:300% 100%;animation:ticker-bg 7s ease infinite;border-radius:12px 12px 0 0;box-shadow:0 2px 12px rgba(239,62,47,.4);pointer-events:none;z-index:2}
+.player-wrap:fullscreen,.player-wrap:-webkit-full-screen{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:#000}
+.player-wrap:fullscreen .player-video,.player-wrap:-webkit-full-screen .player-video{width:100%;height:100%;aspect-ratio:auto;border-radius:0;object-fit:contain}
+.player-wrap:fullscreen .ticker,.player-wrap:-webkit-full-screen .ticker{border-radius:0}
+.ticker{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);overflow:hidden;background:linear-gradient(90deg,#ff7a00,#ff1e4d,#ff2d8a,#ffb000,#ff7a00);background-size:400% 100%;animation:ticker-bg 6s linear infinite;box-shadow:0 4px 18px rgba(255,30,77,.55);pointer-events:none;z-index:2}
 .ticker__track{display:inline-block;white-space:nowrap;padding:8px 0 8px 100%;color:#fff;font-weight:700;font-size:clamp(11px,2.6vw,15px);letter-spacing:.015em;text-shadow:0 1px 3px rgba(0,0,0,.5);animation:ticker-scroll 60s linear infinite;will-change:transform}
-@keyframes ticker-bg{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+@keyframes ticker-bg{0%{background-position:0% 50%}100%{background-position:400% 50%}}
 .ticker__msg{padding:0 10px}
 .tflag{height:.95em;width:auto;vertical-align:-0.13em;border-radius:2px;margin-right:5px;box-shadow:0 0 0 1px rgba(255,255,255,.65)}
 .ticker__sep{opacity:.45;padding:0 2px}
@@ -408,6 +411,28 @@ a{color:inherit}
      document.querySelectorAll('[data-soon]').forEach(function(b){
        b.addEventListener('click',function(){pending(b,'Bientôt disponible');});
      });
+     // Plein ecran : mettre le CONTENEUR en fullscreen (pas la video seule),
+     // pour que le ticker reste visible en grand ecran comme en petit.
+     (function(){
+       var wrap=document.querySelector('.player-wrap');
+       var video=document.getElementById('player');
+       if(!wrap||!video)return;
+       function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement;}
+       function req(el){var f=el.requestFullscreen||el.webkitRequestFullscreen;if(f)f.call(el);}
+       function exit(){var f=document.exitFullscreen||document.webkitExitFullscreen;return f?f.call(document):null;}
+       var swapping=false;
+       function onChange(){
+         if(swapping)return;
+         if(fsEl()===video){
+           swapping=true;
+           var p=exit();
+           var go=function(){swapping=false;req(wrap);};
+           if(p&&p.then){p.then(go).catch(function(){swapping=false;});}else{setTimeout(go,60);}
+         }
+       }
+       document.addEventListener('fullscreenchange',onChange);
+       document.addEventListener('webkitfullscreenchange',onChange);
+     })();
    })();
    </script>
 <script>
