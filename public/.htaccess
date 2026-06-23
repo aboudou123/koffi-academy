@@ -66,4 +66,12 @@ AddDefaultCharset UTF-8
   RewriteRule ^contact\.html$ - [F]
   RewriteRule ^free-courses/github-actions\.html$ - [F]
   RewriteRule ^paid-courses/ - [F]
+
+  # 2026-06-23: Anti-hotlink des videos. Le .mp4/.webm n'est servi que si la
+  # requete provient de lingenieur.de (lecture sur le site). Acces direct a
+  # l'URL et outils de telechargement en ligne -> 403. Compatible avec le
+  # Referrer-Policy "strict-origin-when-cross-origin" (le referer same-origin
+  # est envoye). Pour autoriser un autre domaine, l'ajouter a la RewriteCond.
+  RewriteCond %{HTTP_REFERER} !^https?://(www\.)?lingenieur\.de(/|$) [NC]
+  RewriteRule ^assets/videos/.*\.(mp4|webm|m4v|mov)$ - [F,NC]
 </IfModule>
