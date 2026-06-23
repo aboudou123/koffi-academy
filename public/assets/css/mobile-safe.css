@@ -1,0 +1,32 @@
+/*
+ * Koffi Academy — filet de sécurité anti-débordement horizontal (mobile/tablette).
+ * Empêche images, médias, blocs de code, tableaux et longs mots/URLs de dépasser
+ * la largeur de l'écran (cause la plus fréquente de "page pas responsive").
+ * Scopé à <= 1024px : n'affecte pas la mise en page desktop.
+ */
+@media (max-width: 1024px) {
+  /* Médias : jamais plus larges que leur conteneur */
+  img, svg, video, canvas, iframe, embed, object, picture {
+    max-width: 100%;
+    height: auto;
+  }
+  /* Blocs de code : défilement interne au lieu de pousser la page */
+  pre {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Tableaux : défilables horizontalement dans leur cadre */
+  table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Longs mots, URLs et tokens de code : on les coupe au lieu de déborder */
+  p, li, h1, h2, h3, h4, h5, h6, blockquote, td, th, figcaption, dd, dt, span, a, code {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}

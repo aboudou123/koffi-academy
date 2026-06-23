@@ -60,8 +60,10 @@ AddDefaultCharset UTF-8
   # RewriteRule ^payment/(checkout|bank-transfer-request|paypal-success|paypal-cancel)\.html$ - [F]
   RewriteRule ^dashboard\.html$ - [F]
   RewriteRule ^pricing\.html$ - [F]
-  RewriteRule ^login\.html$ - [F]
-  RewriteRule ^register\.html$ - [F]
+  # 2026-06-23: login/register debloques sur demande du proprietaire pour
+  # permettre l'inscription et la connexion des utilisateurs. Rebloquer = decommenter.
+  # RewriteRule ^login\.html$ - [F]
+  # RewriteRule ^register\.html$ - [F]
   RewriteRule ^article\.html$ - [F]
   RewriteRule ^contact\.html$ - [F]
   RewriteRule ^free-courses/github-actions\.html$ - [F]
