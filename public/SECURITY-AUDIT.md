@@ -26,13 +26,12 @@ Ces pages sont potentiellement dangereuses si elles sont servies depuis un hébe
 - `payment/bank-transfer-request.html` (formulaire mailto non sécurisé)
 - `payment/paypal-success.html` et `payment/paypal-cancel.html`
 - `dashboard.html` (auth Firebase côté client)
+- `pricing.html` (module PayPal + Firebase)
 - `login.html` et `register.html` (forms client-only)
 - `article.html` (auth Firebase côté client)
 - `contact.html` (Firestore direct)
 - `free-courses/github-actions.html` (Firebase auth / Firestore)
 - `paid-courses/*` (course-lock côté client + backend attendu)
-
-`pricing.html` reste servi comme contenu de la page sponsor, via `sponsor` et `sponsor.html`.
 
 ## Avis important
 Ce durcissement Apache améliore la surface statique, mais il ne transforme pas le site en application sécurisée.

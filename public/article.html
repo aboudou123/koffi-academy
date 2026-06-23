@@ -1,557 +1,885 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IDP - Schnell, sicher, compliant | Koffi Academy</title>
+  <meta name="description" content="Warum Internal Developer Platforms 2026 für schnelle, sichere und compliant Softwareentwicklung in regulierten Branchen wichtig sind.">
+  <meta name="theme-color" content="#07294d">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="IDP - Schnell, sicher, compliant">
+  <meta property="og:description" content="Internal Developer Platforms verbinden Developer Experience, DevSecOps, Kubernetes und Governance in einer produktreifen Plattform.">
+  <meta property="og:image" content="assets/images/articles/idp-hero.png">
   <link rel="shortcut icon" href="assets/images/logo.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDP – Schnell, sicher, compliant | Fachartikel</title>
-    
-    <!-- Google Translate API für automatische Übersetzung -->
-    <meta name="google" content="notranslate">
-    
-    <!-- CSS (angepasst an Ihr Design) -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/responsive.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/modern.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --navy: #061f3c;
+      --navy-2: #0b315c;
+      --gold: #ffc600;
+      --orange: #f89035;
+      --text: #1f2f44;
+      --muted: #607089;
+      --line: #dbe5f0;
+      --bg: #f5f8fb;
+      --white: #fff;
+      --shadow: 0 18px 45px rgba(7, 41, 77, .14);
+    }
 
-    <style>
-        .lang-switcher { display:inline-flex; align-items:center; gap:4px; vertical-align:middle; }
-        .lang-btn { background:rgba(7,41,77,0.08); color:#07294d; border:1px solid rgba(7,41,77,0.25); border-radius:5px; padding:3px 9px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.3s; letter-spacing:0.8px; font-family:sans-serif; line-height:1.6; }
-        .lang-btn:hover { background:rgba(255,198,0,0.2); border-color:#ffc600; color:#07294d; }
-        .lang-btn.active { background:#ffc600; border-color:#ffc600; color:#07294d; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.7;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
 
-        /* Lock-Overlay für gesperrten Inhalt */
-        .locked-content {
-            position: relative;
-            max-height: 500px;
-            overflow: hidden;
-        }
-        .locked-content::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 200px;
-            background: linear-gradient(transparent, white);
-            pointer-events: none;
-        }
-        .lock-overlay {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            z-index: 10;
-        }
-        .lock-badge {
-            background: #07294d;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            display: inline-block;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        .lock-badge i {
-            margin-right: 8px;
-            color: #ffc600;
-        }
-        
-        /* Login/Register Modal (Popup) */
-        .auth-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
-        .auth-modal.active {
-            display: flex;
-        }
-        .auth-modal-content {
-            background: white;
-            max-width: 450px;
-            width: 90%;
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            position: relative;
-            animation: modalFadeIn 0.3s ease;
-        }
-        @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-        .close-modal:hover {
-            color: #07294d;
-        }
-        .auth-modal-content h3 {
-            color: #07294d;
-            margin-bottom: 10px;
-        }
-        .auth-modal-content .input-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .auth-modal-content input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        .auth-modal-content button {
-            width: 100%;
-            padding: 12px;
-            background: #ffc600;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-        .switch-auth {
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        .switch-auth a {
-            color: #07294d;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        /* Eingeloggter Zustand - voller Artikel sichtbar */
-        .full-content {
-            display: none;
-        }
-        .full-content.visible {
-            display: block;
-        }
-        .locked-container {
-            display: block;
-        }
-        .locked-container.hidden {
-            display: none;
-        }
-        
-        /* User Badge */
-        .user-badge {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #07294d;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            z-index: 100;
-            font-size: 14px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .user-badge a {
-            color: #ffc600;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        
-        .alert-custom {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+    .top-nav__inner {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; color: var(--navy); }
+    .brand__mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      color: var(--navy);
+      box-shadow: 0 7px 18px rgba(248,144,53,.28);
+    }
+    .nav-links { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .nav-links a {
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 11px;
+      border-radius: 8px;
+    }
+    .nav-links a:hover { background: #eef3f9; }
+    .nav-links .nav-cta { background: var(--navy); color: #fff; }
+    .nav-links .nav-cta:hover { background: var(--orange); color: var(--navy); }
+
+    .user-badge {
+      display: none;
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 60;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 999px;
+      padding: 10px 16px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .user-badge button {
+      margin-left: 10px;
+      border: 0;
+      background: transparent;
+      color: var(--gold);
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .article-hero {
+      position: relative;
+      min-height: 560px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(4,17,34,.96) 0%, rgba(7,41,77,.86) 44%, rgba(7,41,77,.35) 100%),
+        url("assets/images/articles/idp-hero.png") center / cover no-repeat;
+    }
+    .article-hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 140px;
+      background: linear-gradient(transparent, var(--bg));
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      padding: 74px 0 92px;
+      color: #fff;
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid rgba(255,198,0,.42);
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(255,198,0,.12);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .9px;
+      text-transform: uppercase;
+    }
+    .hero-content h1 {
+      margin: 18px 0 18px;
+      font-size: clamp(2rem, 4.6vw, 4.35rem);
+      line-height: 1.02;
+      letter-spacing: -.055em;
+      max-width: 840px;
+    }
+    .hero-lead {
+      margin: 0;
+      max-width: 690px;
+      color: rgba(255,255,255,.82);
+      font-size: clamp(1rem, 1.6vw, 1.22rem);
+      line-height: 1.75;
+    }
+    .article-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      margin-top: 26px;
+      color: rgba(255,255,255,.68);
+      font-size: 13px;
+    }
+    .article-meta span { display: inline-flex; align-items: center; gap: 7px; }
+    .article-meta i { color: var(--gold); }
+
+    .main-band { padding: 58px 0 72px; }
+    .article-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 38px;
+      align-items: start;
+    }
+    .article-panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(7,41,77,.07);
+      overflow: hidden;
+    }
+    .article-body { padding: clamp(24px, 4vw, 46px); }
+    .article-body h2 {
+      margin: 44px 0 14px;
+      color: var(--navy);
+      font-size: clamp(1.45rem, 2.3vw, 2rem);
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 {
+      margin: 30px 0 10px;
+      color: var(--navy);
+      font-size: 1.15rem;
+      line-height: 1.35;
+    }
+    .article-body p { margin: 0 0 18px; color: #34465e; font-size: 16px; }
+    .article-body strong { color: var(--navy); }
+    .article-body ol, .article-body ul { margin: 0 0 22px; padding-left: 1.35rem; color: #34465e; }
+    .article-body li { margin: 0 0 9px; }
+    .toc {
+      margin: 0 0 34px;
+      padding: 18px 20px;
+      background: #f2f6fb;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .toc h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .toc a { color: var(--navy-2); font-weight: 700; }
+    .toc a:hover { color: var(--orange); }
+
+    .article-figure { margin: 32px 0; }
+    .article-figure img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 12px 26px rgba(7,41,77,.13);
+      object-fit: cover;
+    }
+    .article-figure figcaption {
+      margin-top: 9px;
+      color: #728299;
+      font-size: 12.5px;
+      text-align: center;
+    }
+
+    .callout {
+      display: flex;
+      gap: 16px;
+      margin: 30px 0;
+      padding: 20px 22px;
+      border-radius: 8px;
+      background: #071f3a;
+      color: rgba(255,255,255,.88);
+    }
+    .callout i { color: var(--gold); font-size: 20px; margin-top: 4px; }
+    .callout p { color: rgba(255,255,255,.86); margin: 0; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 30px 0;
+    }
+    .stat {
+      padding: 20px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f8fbff;
+      text-align: center;
+    }
+    .stat strong { display: block; color: var(--navy); font-size: 2rem; line-height: 1; }
+    .stat span { display: block; margin-top: 7px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 24px 0 30px;
+    }
+    .benefit {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #fff;
+    }
+    .benefit h3 { margin-top: 0; display: flex; align-items: center; gap: 8px; }
+    .benefit h3 i { color: var(--orange); }
+
+    .cta {
+      margin: 40px 0 0;
+      padding: 26px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-2));
+      color: #fff;
+      text-align: center;
+    }
+    .cta p { margin: 0 0 18px; color: rgba(255,255,255,.86); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 11px 20px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .btn:hover { background: var(--orange); }
+    .btn-dark { background: var(--navy); color: #fff; }
+    .btn-dark:hover { background: var(--navy-2); color: #fff; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
+    .tags a {
+      display: inline-flex;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #eef3f9;
+      color: var(--navy);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .locked-frame { position: relative; }
+    .locked-content {
+      max-height: 930px;
+      overflow: hidden;
+      position: relative;
+    }
+    .locked-content::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 260px;
+      background: linear-gradient(transparent, #fff 76%);
+      pointer-events: none;
+    }
+    .lock-overlay {
+      position: absolute;
+      left: clamp(20px, 4vw, 46px);
+      right: clamp(20px, 4vw, 46px);
+      bottom: 34px;
+      z-index: 2;
+      text-align: center;
+      padding: 26px;
+      border: 1px solid rgba(7,41,77,.12);
+      border-radius: 8px;
+      background: rgba(255,255,255,.94);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .lock-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 12px;
+      color: var(--navy);
+      font-weight: 900;
+      font-size: 1.05rem;
+    }
+    .lock-title i { color: var(--orange); }
+    .lock-overlay p { max-width: 540px; margin: 0 auto 18px; color: var(--muted); }
+    .full-content { display: none; }
+    .full-content.visible { display: block; }
+    .locked-container.hidden { display: none; }
+
+    .sidebar {
+      position: sticky;
+      top: 84px;
+      display: grid;
+      gap: 16px;
+    }
+    .side-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 10px 26px rgba(7,41,77,.06);
+    }
+    .side-box h2 {
+      margin: 0 0 14px;
+      color: var(--navy);
+      font-size: .95rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .side-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .side-list li { display: flex; gap: 10px; color: #42536a; font-size: 14px; }
+    .side-list i { color: var(--orange); width: 16px; margin-top: 5px; }
+
+    .auth-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(3, 13, 27, .78);
+    }
+    .auth-modal.active { display: flex; }
+    .auth-box {
+      width: min(460px, 100%);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 30px 90px rgba(0,0,0,.35);
+      padding: 32px;
+      position: relative;
+    }
+    .close-modal {
+      position: absolute;
+      right: 16px;
+      top: 12px;
+      border: 0;
+      background: transparent;
+      color: #8190a4;
+      cursor: pointer;
+      font-size: 28px;
+      line-height: 1;
+    }
+    .auth-box h2 { margin: 0 0 8px; color: var(--navy); font-size: 1.45rem; }
+    .auth-box p { margin: 0 0 20px; color: var(--muted); }
+    .field { margin-bottom: 13px; }
+    .field label { display: block; margin-bottom: 6px; color: var(--navy); font-size: 12px; font-weight: 800; }
+    .field input {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid #ccd7e5;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font: inherit;
+    }
+    .field input:focus {
+      outline: 3px solid rgba(255,198,0,.24);
+      border-color: var(--orange);
+    }
+    .auth-switch { margin-top: 16px; color: var(--muted); font-size: 14px; text-align: center; }
+    .auth-switch button {
+      border: 0;
+      background: transparent;
+      color: var(--navy);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      padding: 0;
+    }
+    .alert-custom {
+      margin: 0 0 14px;
+      border-radius: 8px;
+      padding: 11px 13px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .alert-success { background: #e8f7ed; color: #17613a; border: 1px solid #bfe6cd; }
+    .alert-error { background: #fff0f0; color: #8a1f1f; border: 1px solid #f1c7c7; }
+
+    .site-footer {
+      background: #061f3c;
+      color: rgba(255,255,255,.72);
+      padding: 34px 0;
+      text-align: center;
+      font-size: 13px;
+    }
+    .site-footer a { color: #fff; font-weight: 700; }
+    .site-footer a:hover { color: var(--gold); }
+
+    @media (max-width: 940px) {
+      .article-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .container { width: min(100% - 28px, 1120px); }
+      .top-nav__inner { align-items: flex-start; padding: 12px 0; flex-direction: column; }
+      .nav-links { justify-content: flex-start; }
+      .article-hero { min-height: 620px; background-position: center; }
+      .hero-content { padding: 86px 0 70px; }
+      .article-meta { gap: 9px 14px; }
+      .stats, .benefit-grid, .sidebar { grid-template-columns: 1fr; }
+      .article-body { padding: 24px; }
+      .lock-overlay { position: relative; left: auto; right: auto; bottom: auto; margin: -180px 18px 24px; }
+      .locked-content { max-height: 1050px; }
+      .auth-box { padding: 28px 22px; }
+      .user-badge { left: 14px; right: 14px; text-align: center; }
+    }
+  </style>
 </head>
 <body>
+  <div id="userBadge" class="user-badge" aria-live="polite">
+    <i class="fas fa-user-circle"></i>
+    <span id="userName">Benutzer</span>
+    <button type="button" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Abmelden</button>
+  </div>
 
-<!-- User Badge (nur sichtbar wenn eingeloggt) -->
-<div id="userBadge" class="user-badge" style="display: none;">
-    <i class="fas fa-user-circle"></i> <span id="userName">Benutzer</span>
-    <a onclick="logout()"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
-</div>
-
-<div class="page-main">
-    <!-- Language Switcher -->
-    <div class="container mt-3" style="text-align: right;">
-        <div class="lang-switcher" role="group" aria-label="Sprache / Language">
-          <button type="button" class="lang-btn active" data-lang="de" onclick="setLanguage('de')">DE</button>
-          <button type="button" class="lang-btn" data-lang="fr" onclick="setLanguage('fr')">FR</button>
-          <button type="button" class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
-        </div>
+  <nav class="top-nav" aria-label="Hauptnavigation">
+    <div class="container top-nav__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark" aria-hidden="true">K</span>
+        <span>Koffi Academy</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Startseite</a>
+        <a href="blog.html">Blog</a>
+        <a href="koffi-profile.html">Über mich</a>
+        <a class="nav-cta" href="register.html">Registrieren</a>
+      </div>
     </div>
+  </nav>
 
+  <header class="article-hero">
+    <div class="container hero-content">
+      <span class="kicker"><i class="fas fa-shield-halved"></i> Platform Engineering · DevSecOps · Compliance</span>
+      <h1>IDP - Schnell, sicher, compliant</h1>
+      <p class="hero-lead">Warum Internal Developer Platforms 2026 für regulierte Unternehmen kein Nice-to-have mehr sind, sondern die technische Grundlage für schnellere Releases, sichere Workflows und belastbare Governance.</p>
+      <div class="article-meta">
+        <span><i class="fas fa-calendar-alt"></i> 30. April 2026</span>
+        <span><i class="fas fa-clock"></i> 8 Min. Lesezeit</span>
+        <span><i class="fas fa-user"></i> Koffi Academy</span>
+        <span><i class="fas fa-tag"></i> IDP · Kubernetes · DevSecOps · KRITIS</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-band">
+    <div class="container article-layout">
+      <div class="article-panel">
+        <section id="lockedContainer" class="locked-container">
+          <div class="locked-frame">
+            <article class="article-body locked-content" aria-label="Artikelvorschau">
+              <h2>Der Entwickler-Albtraum in der regulierten Industrie</h2>
+              <p>Für Unternehmen ist es entscheidend, Software effizient und gleichzeitig sicher zu entwickeln. Das gilt besonders in sensiblen Bereichen wie IT, Gesundheitswesen, Telekommunikation oder Energieversorgung. Dort sind Sicherheits- und Compliance-Anforderungen keine späte Prüfung am Ende des Projekts, sondern Teil jedes einzelnen Entwicklungsschritts.</p>
+              <p>Stellen Sie sich ein Team bei einem deutschen Energieversorger vor. Eine neue Lösung soll Stromausfälle früher erkennen. Die Idee ist wertvoll, aber die Umsetzung stockt: Serverkapazitäten müssen beantragt werden, Netzwerkfreigaben dauern, Security-Prüfungen laufen manuell, und mehrere Teams müssen nacheinander zustimmen. Aus einer guten Produktidee wird ein langsames Infrastrukturprojekt.</p>
+
+              <figure class="article-figure">
+                <img src="assets/images/articles/idp-platform-map.png" alt="Generierte Visualisierung einer Internal Developer Platform mit Self-Service, CI/CD, Kubernetes, Observability und Policy Controls" loading="lazy">
+                <figcaption>Generiertes Bild: Eine IDP buendelt Self-Service, Golden Paths, CI/CD, Kubernetes, Observability und Policies in einer zentralen Plattform.</figcaption>
+              </figure>
+
+              <h2>Was ist eine Internal Developer Platform?</h2>
+              <p>Eine <strong>Internal Developer Platform (IDP)</strong> ist eine kuratierte Plattform für Entwicklerteams. Sie verbindet wiederverwendbare Vorlagen, automatisierte Infrastruktur, CI/CD-Pipelines, Security-Checks, Observability und Dokumentation in einem Self-Service-Erlebnis. Entwickler wählen nicht mehr aus unzähligen Einzelschritten, sondern starten über einen klaren Golden Path.</p>
+              <p>Das Ziel ist nicht, Komplexitaet unsichtbar zu machen. Das Ziel ist, sie so zu kapseln, dass Teams schneller liefern koennen, ohne Sicherheits- und Governance-Regeln zu umgehen.</p>
+
+              <h2>Warum IDP und Compliance zusammengehoeren</h2>
+              <p>Regulierte Unternehmen brauchen Nachvollziehbarkeit: Wer hat was deployed? Welche Policies wurden geprueft? Welche Schwachstellen sind offen? Welche Umgebung ist produktionsnah? Eine moderne IDP beantwortet diese Fragen nicht mit Excel-Listen, sondern mit automatisierten Kontrollen im Software-Lifecycle.</p>
+            </article>
+            <div class="lock-overlay">
+              <div class="lock-title"><i class="fas fa-lock"></i> Vollstaendiger Artikel gesperrt</div>
+              <p>Kostenlos registrieren oder anmelden, um den kompletten Artikel mit Praxisbeispielen, Nutzen für Entwickler und Management sowie der IDP-Checkliste zu lesen.</p>
+              <button type="button" class="btn" onclick="showAuthModal()">
+                <i class="fas fa-unlock-alt"></i> Jetzt registrieren und weiterlesen
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section id="fullContent" class="full-content">
+          <article class="article-body" aria-label="Vollstaendiger Artikel">
+            <nav class="toc" aria-label="Inhaltsverzeichnis">
+              <h2>Inhaltsverzeichnis</h2>
+              <ol>
+                <li><a href="#entwickler-albtraum">Der Entwickler-Albtraum</a></li>
+                <li><a href="#was-ist-idp">Was ist eine IDP?</a></li>
+                <li><a href="#herausforderungen">Die Herausforderungen</a></li>
+                <li><a href="#devsecops">DevSecOps und Compliance</a></li>
+                <li><a href="#nutzen">Nutzen für Teams und Unternehmen</a></li>
+                <li><a href="#fazit">Fazit</a></li>
+              </ol>
+            </nav>
+
+            <h2 id="entwickler-albtraum">Der Entwickler-Albtraum in der regulierten Industrie</h2>
+            <p>Für Unternehmen ist es entscheidend, Software effizient und gleichzeitig sicher zu entwickeln. Das gilt besonders in sensiblen Bereichen wie IT, Gesundheitswesen, Telekommunikation oder Energieversorgung. Dort sind Sicherheits- und Compliance-Anforderungen keine späte Prüfung am Ende des Projekts, sondern Teil jedes einzelnen Entwicklungsschritts.</p>
+            <p>Stellen Sie sich ein Team bei einem deutschen Energieversorger vor. Eine neue Lösung soll Stromausfälle früher erkennen. Die Idee ist wertvoll, aber die Umsetzung stockt: Serverkapazitäten müssen beantragt werden, Netzwerkfreigaben dauern, Security-Prüfungen laufen manuell, und mehrere Teams müssen nacheinander zustimmen. Aus einer guten Produktidee wird ein langsames Infrastrukturprojekt.</p>
+
+            <figure class="article-figure">
+              <img src="assets/images/articles/idp-platform-map.png" alt="Generierte Visualisierung einer IDP-Architektur mit Portal, Golden Paths, CI/CD, Kubernetes, Security und Cloud-Ressourcen" loading="lazy">
+              <figcaption>Generiertes Bild: Eine IDP buendelt Self-Service, Golden Paths, CI/CD, Kubernetes, Observability und Policies in einer zentralen Plattform.</figcaption>
+            </figure>
+
+            <h2 id="was-ist-idp">Was ist eine Internal Developer Platform?</h2>
+            <p>Eine <strong>Internal Developer Platform (IDP)</strong> ist eine kuratierte Plattform für Entwicklerteams. Sie verbindet wiederverwendbare Vorlagen, automatisierte Infrastruktur, CI/CD-Pipelines, Security-Checks, Observability und Dokumentation in einem Self-Service-Erlebnis. Entwickler wählen nicht mehr aus unzähligen Einzelschritten, sondern starten über einen klaren Golden Path.</p>
+            <p>Typische Bausteine sind ein Service Catalog, standardisierte Templates, Kubernetes- oder Cloud-Provisioning, Secrets-Integration, Pipeline-Automation, Monitoring, Logging, Tracing und Policy-as-Code. Die Plattform wird dabei wie ein internes Produkt betrieben: mit Roadmap, Feedback der Entwicklerteams und klaren Service-Level-Zielen.</p>
+
+            <div class="callout">
+              <i class="fas fa-code-branch"></i>
+              <p><strong>Golden Paths</strong> sind empfohlene, supportete Wege für häufige Aufgaben: neuen Service erstellen, Testumgebung provisionieren, Deployment auslösen, Security-Scan auswerten. Sie standardisieren, ohne jedes Team in starre Prozesse zu zwingen.</p>
+            </div>
+
+            <h2 id="herausforderungen">Die Herausforderungen</h2>
+            <p>Viele Unternehmen arbeiten heute mit gewachsenen Prozessen: einzelne Teams besitzen einzelne Tools, Freigaben laufen über Tickets, Infrastruktur wird manuell bereitgestellt, Dokumentation ist verteilt. In regulierten Umgebungen wird diese Fragmentierung besonders teuer.</p>
+            <ol>
+              <li><strong>Langsame IT-Prozesse:</strong> Neue Umgebungen, Releases und Netzwerkfreigaben brauchen oft mehrere manuelle Schritte.</li>
+              <li><strong>Hohe kognitive Last:</strong> Entwickler müssen neben der Fachlogik auch Infrastrukturdetails, Policies, Toolketten und Deployment-Regeln verstehen.</li>
+              <li><strong>Uneinheitliche Governance:</strong> Security- und Compliance-Regeln werden zu spät oder unterschiedlich angewendet.</li>
+              <li><strong>Schwierige Nachvollziehbarkeit:</strong> Audit-Informationen liegen in Pipelines, Tickets, Dashboards und Chatverläufen verstreut.</li>
+            </ol>
+
+            <h2 id="devsecops">DevSecOps und Compliance werden eingebaut</h2>
+            <p>Eine IDP ist besonders stark, wenn Security und Compliance nicht als externe Kontrolle, sondern als automatisierter Bestandteil der Plattform gestaltet werden. Das bedeutet: Security-Scans laufen in der Pipeline, Infrastruktur wird über genehmigte Templates erstellt, Policies werden als Code versioniert, und Deployments erzeugen nachvollziehbare Audit-Spuren.</p>
+
+            <figure class="article-figure">
+              <img src="assets/images/articles/idp-compliance-pipeline.png" alt="Generierte Szene einer DevSecOps-Pipeline mit Security Gates, Audit Trail, Cloud Deployment und Observability Dashboard" loading="lazy">
+              <figcaption>Generiertes Bild: DevSecOps wird wirksam, wenn Security Gates, Audit Trail und Observability direkt in der Delivery Pipeline verankert sind.</figcaption>
+            </figure>
+
+            <h2 id="nutzen">Nutzen für Entwickler, Management und Unternehmen</h2>
+            <div class="benefit-grid">
+              <section class="benefit">
+                <h3><i class="fas fa-laptop-code"></i> Entwicklerteams</h3>
+                <p>Weniger Kontextwechsel, schnellere Testumgebungen, klare Templates und direkte Rueckmeldung aus Pipelines und Monitoring.</p>
+              </section>
+              <section class="benefit">
+                <h3><i class="fas fa-shield-halved"></i> Security & Compliance</h3>
+                <p>Policies werden automatisch geprueft, Abweichungen sind sichtbar, und Audit-Nachweise entstehen entlang des Delivery-Prozesses.</p>
+              </section>
+              <section class="benefit">
+                <h3><i class="fas fa-chart-line"></i> Management</h3>
+                <p>Time-to-Market sinkt, Standards werden messbarer, und Plattforminvestitionen lassen sich über DORA-Metriken und Durchlaufzeiten bewerten.</p>
+              </section>
+              <section class="benefit">
+                <h3><i class="fas fa-building-columns"></i> Unternehmen</h3>
+                <p>Die Organisation wird resilienter: weniger Silos, konsistentere Infrastruktur und bessere Voraussetzungen für KI- und Cloud-Native-Projekte.</p>
+              </section>
+            </div>
+
+            <div class="stats" aria-label="IDP-Reifegrad Kennzahlen">
+              <div class="stat"><strong>55%</strong><span>der Unternehmen sind seit weniger als zwei Jahren auf ihrer IDP-Reise.</span></div>
+              <div class="stat"><strong>10%</strong><span>haben erst innerhalb der letzten sechs Monate begonnen.</span></div>
+              <div class="stat"><strong>13%</strong><span>verfügen über mehr als fünf Jahre IDP-Erfahrung.</span></div>
+            </div>
+
+            <h2 id="fazit">Fazit: IDP ist ein Muss - und jetzt ist der richtige Zeitpunkt</h2>
+            <p>In einer Zeit, in der digitale Transformation und technologische Innovationsfähigkeit über den nachhaltigen Erfolg eines Unternehmens entscheiden, ist eine Internal Developer Platform kein Nice-to-have mehr. Besonders in KRITIS- und regulierten Umgebungen werden DevSecOps, Zero Trust, Observability und Governance zu Grundanforderungen.</p>
+            <p>Eine gute IDP standardisiert nicht aus Selbstzweck. Sie reduziert Reibung, beschleunigt produktive Teams und macht Sicherheit wiederholbar. Wer jetzt startet, schafft eine belastbare Grundlage für moderne Softwareentwicklung, Cloud-Automation und künftige KI-gestützte Engineering-Prozesse.</p>
+
+            <div class="cta">
+              <p>Sie möchten eine IDP, Golden Paths oder eine DevSecOps-Plattform in Ihrer Organisation planen?</p>
+              <a class="btn" href="contact.html"><i class="fas fa-paper-plane"></i> Kontakt aufnehmen</a>
+            </div>
+
+            <div class="tags" aria-label="Schlagwoerter">
+              <a href="free-courses/platform-engineering-devops.html">Internal Developer Platform</a>
+              <a href="free-courses/devops.html">DevSecOps</a>
+              <a href="free-courses/kubernetes.html">Kubernetes</a>
+              <a href="blog.html">Compliance</a>
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <aside class="sidebar" aria-label="Artikelinformationen">
+        <section class="side-box">
+          <h2>Schwerpunkte</h2>
+          <ul class="side-list">
+            <li><i class="fas fa-layer-group"></i><span>Internal Developer Platform als Produkt für interne Kunden</span></li>
+            <li><i class="fas fa-route"></i><span>Golden Paths für schnellere, standardisierte Delivery</span></li>
+            <li><i class="fas fa-shield-halved"></i><span>Security, Governance und Auditierbarkeit im Software-Lifecycle</span></li>
+          </ul>
+        </section>
+        <section class="side-box">
+          <h2>Artikelstatus</h2>
+          <ul class="side-list">
+            <li><i class="fas fa-image"></i><span>3 generierte Bilder im lokalen Projekt</span></li>
+            <li><i class="fas fa-lock"></i><span>Volltext nach kostenloser Anmeldung sichtbar</span></li>
+            <li><i class="fas fa-clock"></i><span>8 Minuten Lesezeit</span></li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <div id="authModal" class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
+    <div class="auth-box">
+      <button type="button" class="close-modal" onclick="closeAuthModal()" aria-label="Modal schließen">&times;</button>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <h2 id="authTitle"><i class="fas fa-lock-open"></i> Zugriff auf den Volltext</h2>
+        <p>Anmelden oder kostenlos registrieren, um den kompletten Artikel zu lesen.</p>
+        <div id="modalMessage" aria-live="polite"></div>
+        <div class="field">
+          <label for="modalEmail">E-Mail-Adresse</label>
+          <input type="email" id="modalEmail" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="modalPassword">Passwort</label>
+          <input type="password" id="modalPassword" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-dark">Anmelden</button>
+        <div class="auth-switch">Neu hier? <button type="button" onclick="showRegisterInModal()">Kostenlos registrieren</button></div>
+      </form>
+
+      <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;">
+        <h2><i class="fas fa-user-plus"></i> Kostenlose Registrierung</h2>
+        <p>Erstellen Sie ein Konto und lesen Sie den vollständigen Artikel.</p>
+        <div id="registerModalMessage" aria-live="polite"></div>
+        <div class="field">
+          <label for="modalName">Name</label>
+          <input type="text" id="modalName" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="modalRegEmail">E-Mail-Adresse</label>
+          <input type="email" id="modalRegEmail" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="modalRegPassword">Passwort</label>
+          <input type="password" id="modalRegPassword" autocomplete="new-password" minlength="6" required>
+        </div>
+        <button type="submit" class="btn btn-dark">Registrieren</button>
+        <div class="auth-switch">Bereits registriert? <button type="button" onclick="showLoginInModal()">Anmelden</button></div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer">
     <div class="container">
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="blog-post">
-                    <!-- Blog Header -->
-                    <div class="blog-post-images">
-                        <img src="assets/images/blog/blog1.jpg" alt="IDP Platform" style="width: 100%; border-radius: 15px;">
-                    </div>
-                    
-                    <!-- GESPERRTER INHALT (nur Teil sichtbar) -->
-                    <div id="lockedContainer" class="locked-container">
-                        <div class="post-content-text">
-                            <div class="news-tag"><a href="/blog">Technologie</a></div>
-                            <h1>IDP – Schnell, sicher, compliant: Warum Internal Developer Platforms ein Muss in 2026 sind</h1>
-                            <p class="meta">30. April 2026 | Dokumenten-KI / OCR</p>
-                            
-                            <div class="locked-content">
-                                <h2>Der Entwickler-Albtraum in der regulierten Industrie</h2>
-                                <p>Für Unternehmen ist es entscheidend, Software effizient und gleichzeitig sicher zu entwickeln. Das gilt insbesondere in sensiblen Bereichen wie der IT, dem Gesundheitswesen oder der Energiebranche – hier haben Sicherheits- und Compliance-Anforderungen höchste Priorität.</p>
-                                
-                                <p>Stellen Sie sich vor, Sie sind Entwickler bei einem deutschen Energieversorger. Ihr Team soll eine intelligente Lösung entwickeln, die Stromausfälle vorhersagen kann. Die Idee hat großes Potenzial und könnte Ihrem Unternehmen einen klaren Wettbewerbsvorteil verschaffen. Doch die Umsetzung gestaltet sich schwierig: Sie warten wochenlang auf verfügbare Serverkapazitäten, arbeiten mit veralteten Prozessen und sind auf mehrere andere Teams angewiesen, bevor Sie überhaupt mit der eigentlichen Entwicklung beginnen können.</p>
-                                
-                                <h2>Was ist eine Internal Developer Platform?</h2>
-                                <p>Eine <strong>Internal Developer Platform (IDP)</strong> ist eine Plattform für Entwickler. Sie ist vergleichbar mit einem Selbstbedienungsbuffet, bei dem sich Entwickler die ihnen notwendigen Komponenten auswählen können.</p>
-                                
-                                <p>Vor allem für Unternehmen, die strengen Regularien unterliegen, ist eine IDP von unschätzbarem Wert. Sie stellt sicher, dass alle Entwicklungsprozesse die erforderte Sicherheit und Compliance einhalten.</p>
-                                
-                                <!-- HIER WIRD DER INHALT ABGESCHNITTEN -->
-                            </div>
-                            
-                            <div class="lock-overlay">
-                                <div class="lock-badge">
-                                    <i class="fas fa-lock"></i> Vollständiger Artikel gesperrt
-                                </div>
-                                <button class="theme-btn" onclick="showAuthModal()">
-                                    <i class="fas fa-unlock-alt"></i> Jetzt registrieren und weiterlesen
-                                </button>
-                                <p style="margin-top: 10px; font-size: 12px; color: #666;">
-                                    <i class="fas fa-check-circle"></i> Kostenlos registrieren und vollen Zugriff erhalten
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- VOLLSTÄNDIGER INHALT (nur sichtbar nach Login) -->
-                    <div id="fullContent" class="full-content">
-                        <div class="post-content-text">
-                            <div class="news-tag"><a href="/blog">Technologie</a></div>
-                            <h1>IDP – Schnell, sicher, compliant: Warum Internal Developer Platforms ein Muss in 2026 sind</h1>
-                            <p class="meta">30. April 2026 | Dokumenten-KI / OCR</p>
-                            
-                            <h2>Der Entwickler-Albtraum in der regulierten Industrie</h2>
-                            <p>Für Unternehmen ist es entscheidend, Software effizient und gleichzeitig sicher zu entwickeln. Das gilt insbesondere in sensiblen Bereichen wie der IT, dem Gesundheitswesen oder der Energiebranche – hier haben Sicherheits- und Compliance-Anforderungen höchste Priorität.</p>
-                            <p>Stellen Sie sich vor, Sie sind Entwickler bei einem deutschen Energieversorger. Ihr Team soll eine intelligente Lösung entwickeln, die Stromausfälle vorhersagen kann. Die Idee hat großes Potenzial und könnte Ihrem Unternehmen einen klaren Wettbewerbsvorteil verschaffen. Doch die Umsetzung gestaltet sich schwierig: Sie warten wochenlang auf verfügbare Serverkapazitäten, arbeiten mit veralteten Prozessen und sind auf mehrere andere Teams angewiesen, bevor Sie überhaupt mit der eigentlichen Entwicklung beginnen können. Das Projekt verzögert sich erheblich – und die Konkurrenz ist längst einen Schritt weiter, weil ihre Abläufe schneller und effizienter funktionieren.</p>
-                            
-                            <h2>Was ist eine Internal Developer Platform?</h2>
-                            <p>Eine <strong>Internal Developer Platform (IDP)</strong> ist eine Plattform für Entwickler. Sie ist vergleichbar mit einem Selbstbedienungsbuffet, bei dem sich Entwickler die ihnen notwendigen Komponenten auswählen können. Die IDP integriert eine Vielfalt von Tools und Technologien, wie zum Beispiel <strong>Kubernetes</strong> für Container-Orchestrierung oder <strong>Crossplane</strong> in Verbindung mit <strong>GitOps</strong>, wodurch Infrastrukturen automatisiert in Public oder Private Cloud Umgebungen bereitgestellt werden können.</p>
-                            <p>Vor allem für Unternehmen, die strengen Regularien unterliegen, ist eine IDP von unschätzbarem Wert. Sie stellt sicher, dass alle Entwicklungsprozesse die erforderte Sicherheit und Compliance einhalten, indem Security-Mechanismen in jeden Schritt der Applikationsentwicklung eingebunden sind. In Summe verbindet eine IDP standardisierte und effiziente Entwicklungsprozesse mit bewährten <strong>DevSecOps</strong> Prinzipien.</p>
-                            
-                            <h2>Die Herausforderungen</h2>
-                            <p>Viele Unternehmen, wie Energieversorgungsunternehmen, Krankenhäuser oder Telekommunikationsunternehmen, sind von strengen Regulierungen betroffen. Dies schließt das <strong>IT-Sicherheitsgesetz 2.0</strong> und die <strong>DSGVO</strong> ein, die hohe Anforderungen an Sicherheit und Compliance stellen.</p>
-                            <p>IT-Leiter stehen vor beträchtlichen Herausforderungen: Langsame IT-Prozesse, Exit-Strategie-Probleme, strenge Regulierungen und die Integration von Künstlicher Intelligenz (KI).</p>
-                            
-                            <h2>Fazit: IDP ist ein Muss – und jetzt ist der richtige Zeitpunkt</h2>
-                            <p>In einer Zeit, in der digitale Transformation und technologische Innovationsfähigkeit über den nachhaltigen Erfolg eines Unternehmens entscheiden, ist eine Internal Developer Platform (IDP) kein "Nice-to-have" mehr – sondern von strategischer Wichtigkeit.</p>
-                            <p>Die Zahlen sprechen für sich: Über 55% der befragten Unternehmen befinden sich derzeit erst seit weniger als zwei Jahren auf ihrer IDP-Reise. Es ist keineswegs zu spät, jetzt damit zu starten.</p>
-                            
-                            <div class="cta" style="background: #07294d; color: white; padding: 20px; border-radius: 10px; text-align: center; margin-top: 30px;">
-                                <p>Wenn Sie mehr über die Implementierung einer IDP erfahren möchten oder Unterstützung bei der Einführung suchen, <strong>sprechen Sie uns an.</strong></p>
-                            </div>
-                            
-                            <div class="blog-single-tag">
-                                <a href="/blog-detail">Internal Developer Platform</a>
-                                <a href="/free-courses/platform-engineering-devops">DevSecOps</a>
-                                <a href="/free-courses/kubernetes">Kubernetes</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <p>&copy; 2026 Koffi Academy · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
     </div>
-</div>
+  </footer>
 
-<!-- LOGIN/REGISTER MODAL -->
-<div id="authModal" class="auth-modal">
-    <div class="auth-modal-content">
-        <span class="close-modal" onclick="closeAuthModal()">&times;</span>
-        
-        <div id="loginForm">
-            <h3><i class="fas fa-lock-open"></i> Zugriff auf vollständigen Artikel</h3>
-            <p>Registrieren Sie sich kostenlos, um den gesamten Artikel zu lesen.</p>
-            
-            <div id="modalMessage"></div>
-            
-            <div class="input-group">
-                <input type="email" id="modalEmail" placeholder="E-Mail-Adresse">
-            </div>
-            <div class="input-group">
-                <input type="password" id="modalPassword" placeholder="Passwort">
-            </div>
-            <button onclick="handleLogin()">Anmelden</button>
-            
-            <div class="switch-auth">
-                Neu hier? <a onclick="showRegisterInModal()">Kostenlos registrieren</a>
-            </div>
-        </div>
-        
-        <div id="registerForm" style="display: none;">
-            <h3><i class="fas fa-user-plus"></i> Kostenlose Registrierung</h3>
-            <p>Erstellen Sie ein Konto und lesen Sie den vollständigen Artikel.</p>
-            
-            <div id="registerModalMessage"></div>
-            
-            <div class="input-group">
-                <input type="text" id="modalName" placeholder="Ihr Name">
-            </div>
-            <div class="input-group">
-                <input type="email" id="modalRegEmail" placeholder="E-Mail-Adresse">
-            </div>
-            <div class="input-group">
-                <input type="password" id="modalRegPassword" placeholder="Passwort (min. 6 Zeichen)">
-            </div>
-            <button onclick="handleRegister()">Registrieren</button>
-            
-            <div class="switch-auth">
-                Bereits Kunde? <a onclick="showLoginInModal()">Anmelden</a>
-            </div>
-        </div>
-    </div>
-</div>
+  <script>
+    function setMessage(targetId, text, type) {
+      var target = document.getElementById(targetId);
+      if (!target) return;
+      target.textContent = "";
+      if (!text) return;
+      var box = document.createElement("div");
+      box.className = "alert-custom " + (type === "success" ? "alert-success" : "alert-error");
+      box.textContent = text;
+      target.appendChild(box);
+    }
 
-<!-- Firebase SDKs -->
-<script type="module">
-    // Firebase Konfiguration (IHRE KONFIGURATION EINFÜGEN)
-    const firebaseConfig = {
-        apiKey: "AIzaSyC3fYlrW38VMCyUOmTgucVu_2xKb4u85GY",
-        authDomain: "platform-engineering-b91c6.firebaseapp.com",
-        projectId: "platform-engineering-b91c6",
-        storageBucket: "platform-engineering-b91c6.firebasestorage.app",
-        messagingSenderId: "823441785848",
-        appId: "1:823441785848:web:bcc28b946d4b58e4240c0d",
-        measurementId: "G-Q93PWNCBSV"
+    window.showAuthModal = function() {
+      var modal = document.getElementById("authModal");
+      if (!modal) return;
+      modal.classList.add("active");
+      modal.setAttribute("aria-hidden", "false");
+      var email = document.getElementById("modalEmail");
+      if (email) setTimeout(function(){ email.focus(); }, 80);
     };
-    
+
+    window.closeAuthModal = function() {
+      var modal = document.getElementById("authModal");
+      if (!modal) return;
+      modal.classList.remove("active");
+      modal.setAttribute("aria-hidden", "true");
+    };
+
+    window.showRegisterInModal = function() {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("registerForm").style.display = "block";
+      setMessage("modalMessage", "", "error");
+      setMessage("registerModalMessage", "", "error");
+    };
+
+    window.showLoginInModal = function() {
+      document.getElementById("loginForm").style.display = "block";
+      document.getElementById("registerForm").style.display = "none";
+      setMessage("modalMessage", "", "error");
+      setMessage("registerModalMessage", "", "error");
+    };
+
+    window.handleLogin = function(event) {
+      if (event) event.preventDefault();
+      setMessage("modalMessage", "Authentifizierung wird noch geladen. Bitte prüfen Sie die Internetverbindung und versuchen Sie es erneut.", "error");
+    };
+
+    window.handleRegister = function(event) {
+      if (event) event.preventDefault();
+      setMessage("registerModalMessage", "Authentifizierung wird noch geladen. Bitte prüfen Sie die Internetverbindung und versuchen Sie es erneut.", "error");
+    };
+
+    window.logout = function() {};
+
+    document.addEventListener("click", function(event) {
+      var modal = document.getElementById("authModal");
+      if (modal && event.target === modal) closeAuthModal();
+    });
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") closeAuthModal();
+    });
+  </script>
+
+  <script type="module">
+    const firebaseConfig = {
+      apiKey: "AIzaSyC3fYlrW38VMCyUOmTgucVu_2xKb4u85GY",
+      authDomain: "platform-engineering-b91c6.firebaseapp.com",
+      projectId: "platform-engineering-b91c6",
+      storageBucket: "platform-engineering-b91c6.firebasestorage.app",
+      messagingSenderId: "823441785848",
+      appId: "1:823441785848:web:bcc28b946d4b58e4240c0d",
+      measurementId: "G-Q93PWNCBSV"
+    };
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    
-    // DOM Elemente
-    const lockedContainer = document.getElementById('lockedContainer');
-    const fullContent = document.getElementById('fullContent');
-    const userBadge = document.getElementById('userBadge');
-    const userNameSpan = document.getElementById('userName');
-    const authModal = document.getElementById('authModal');
-    
-    // Benutzerstatus prüfen
+
+    const lockedContainer = document.getElementById("lockedContainer");
+    const fullContent = document.getElementById("fullContent");
+    const userBadge = document.getElementById("userBadge");
+    const userNameSpan = document.getElementById("userName");
+
     onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            // Benutzer ist eingeloggt → Vollständigen Artikel anzeigen
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            const name = userDoc.exists() ? userDoc.data().name : user.email;
-            userNameSpan.innerText = name.split(' ')[0];
-            userBadge.style.display = 'block';
-            lockedContainer.classList.add('hidden');
-            fullContent.classList.add('visible');
-            closeAuthModal();
-        } else {
-            // Benutzer nicht eingeloggt → Gesperrten Inhalt anzeigen
-            userBadge.style.display = 'none';
-            lockedContainer.classList.remove('hidden');
-            fullContent.classList.remove('visible');
+      if (user) {
+        let displayName = user.email || "Benutzer";
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists() && userDoc.data().name) {
+            displayName = userDoc.data().name;
+          }
+        } catch (error) {
+          console.warn("User profile could not be loaded", error);
         }
+        userNameSpan.textContent = String(displayName).split(" ")[0];
+        userBadge.style.display = "block";
+        lockedContainer.classList.add("hidden");
+        fullContent.classList.add("visible");
+        closeAuthModal();
+      } else {
+        userBadge.style.display = "none";
+        lockedContainer.classList.remove("hidden");
+        fullContent.classList.remove("visible");
+      }
     });
-    
-    // Modal Funktionen (global verfügbar)
-    window.showAuthModal = function() {
-        authModal.classList.add('active');
+
+    window.handleLogin = async function(event) {
+      if (event) event.preventDefault();
+      const email = document.getElementById("modalEmail").value.trim();
+      const password = document.getElementById("modalPassword").value;
+
+      if (!email || !password) {
+        setMessage("modalMessage", "Bitte E-Mail und Passwort eingeben.", "error");
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        setMessage("modalMessage", "Anmeldung erfolgreich. Artikel wird freigeschaltet.", "success");
+      } catch (error) {
+        const messages = {
+          "auth/invalid-email": "Diese E-Mail-Adresse ist ungültig.",
+          "auth/user-not-found": "Diese E-Mail-Adresse wurde nicht gefunden.",
+          "auth/wrong-password": "Das Passwort ist nicht korrekt.",
+          "auth/invalid-credential": "Anmeldung fehlgeschlagen. Bitte E-Mail und Passwort prüfen."
+        };
+        setMessage("modalMessage", messages[error.code] || "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.", "error");
+      }
     };
-    
-    window.closeAuthModal = function() {
-        authModal.classList.remove('active');
+
+    window.handleRegister = async function(event) {
+      if (event) event.preventDefault();
+      const name = document.getElementById("modalName").value.trim();
+      const email = document.getElementById("modalRegEmail").value.trim();
+      const password = document.getElementById("modalRegPassword").value;
+
+      if (!name || !email || !password) {
+        setMessage("registerModalMessage", "Bitte alle Felder ausfüllen.", "error");
+        return;
+      }
+      if (password.length < 6) {
+        setMessage("registerModalMessage", "Das Passwort muss mindestens 6 Zeichen lang sein.", "error");
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, "users", userCredential.user.uid), {
+          name: name,
+          email: email,
+          createdAt: new Date().toISOString()
+        });
+        setMessage("registerModalMessage", "Registrierung erfolgreich. Artikel wird freigeschaltet.", "success");
+      } catch (error) {
+        const messages = {
+          "auth/email-already-in-use": "Diese E-Mail-Adresse wird bereits verwendet.",
+          "auth/invalid-email": "Diese E-Mail-Adresse ist ungültig.",
+          "auth/weak-password": "Das Passwort ist zu schwach."
+        };
+        setMessage("registerModalMessage", messages[error.code] || "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.", "error");
+      }
     };
-    
-    window.handleLogin = async function() {
-        const email = document.getElementById('modalEmail').value;
-        const password = document.getElementById('modalPassword').value;
-        const messageDiv = document.getElementById('modalMessage');
-        
-        if (!email || !password) {
-            messageDiv.innerHTML = '<div class="alert-custom alert-error">❌ Bitte E-Mail und Passwort eingeben.</div>';
-            return;
-        }
-        
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            messageDiv.innerHTML = '<div class="alert-custom alert-success">✅ Anmeldung erfolgreich! Artikel wird geladen...</div>';
-            setTimeout(() => {
-                closeAuthModal();
-            }, 1500);
-        } catch (error) {
-            let message = '';
-            switch(error.code) {
-                case 'auth/user-not-found':
-                    message = '❌ E-Mail nicht gefunden. Bitte registrieren Sie sich.';
-                    break;
-                case 'auth/wrong-password':
-                    message = '❌ Falsches Passwort.';
-                    break;
-                default:
-                    message = '❌ Fehler: ' + error.message;
-            }
-            messageDiv.innerHTML = `<div class="alert-custom alert-error">${message}</div>`;
-        }
-    };
-    
-    window.handleRegister = async function() {
-        const name = document.getElementById('modalName').value;
-        const email = document.getElementById('modalRegEmail').value;
-        const password = document.getElementById('modalRegPassword').value;
-        const messageDiv = document.getElementById('registerModalMessage');
-        
-        if (!name || !email || !password) {
-            messageDiv.innerHTML = '<div class="alert-custom alert-error">❌ Bitte alle Felder ausfüllen.</div>';
-            return;
-        }
-        
-        if (password.length < 6) {
-            messageDiv.innerHTML = '<div class="alert-custom alert-error">❌ Passwort muss mindestens 6 Zeichen lang sein.</div>';
-            return;
-        }
-        
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            await setDoc(doc(db, "users", userCredential.user.uid), {
-                name: name,
-                email: email,
-                createdAt: new Date().toISOString()
-            });
-            messageDiv.innerHTML = '<div class="alert-custom alert-success">✅ Registrierung erfolgreich! Sie werden eingeloggt...</div>';
-            setTimeout(() => {
-                closeAuthModal();
-            }, 1500);
-        } catch (error) {
-            let message = '';
-            switch(error.code) {
-                case 'auth/email-already-in-use':
-                    message = '❌ Diese E-Mail wird bereits verwendet.';
-                    break;
-                default:
-                    message = '❌ Fehler: ' + error.message;
-            }
-            messageDiv.innerHTML = `<div class="alert-custom alert-error">${message}</div>`;
-        }
-    };
-    
-    window.showRegisterInModal = function() {
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('registerForm').style.display = 'block';
-        document.getElementById('modalMessage').innerHTML = '';
-        document.getElementById('registerModalMessage').innerHTML = '';
-    };
-    
-    window.showLoginInModal = function() {
-        document.getElementById('loginForm').style.display = 'block';
-        document.getElementById('registerForm').style.display = 'none';
-        document.getElementById('modalMessage').innerHTML = '';
-        document.getElementById('registerModalMessage').innerHTML = '';
-    };
-    
+
     window.logout = async function() {
+      try {
         await signOut(auth);
+      } catch (error) {
+        console.warn("Logout failed", error);
+      }
     };
-    
-    // Modal schließen wenn außerhalb geklickt wird
-    window.onclick = function(event) {
-        if (event.target === authModal) {
-            closeAuthModal();
-        }
-    };
-</script>
-
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
-<script src="assets/js/wow.min.js"></script>
-<script>
-    new WOW().init();
-</script>
-
-<!-- i18n Language Switcher -->
-<script>
-var i18n = {
-  de: {
-    'header-msg': 'Online-Bildungskurse — Millionen von Menschen lernen!',
-    'nav-home': 'Startseite', 'nav-courses': 'Kurse',
-    'nav-events': 'Veranstaltungen', 'nav-about-me': 'Über mich',
-    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Kontakt',
-    'nav-about': 'Über uns', 'nav-support': 'Support',
-    'nav-login': 'Anmelden / Registrieren'
-  },
-  fr: {
-    'header-msg': 'Cours en ligne — Des millions de personnes apprennent !',
-    'nav-home': 'Accueil', 'nav-courses': 'Cours',
-    'nav-events': 'Événements', 'nav-about-me': 'À propos de moi',
-    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
-    'nav-about': 'À propos', 'nav-support': 'Support',
-    'nav-login': 'Se connecter / S\'inscrire'
-  },
-  en: {
-    'header-msg': 'Online Courses — Millions of people are learning!',
-    'nav-home': 'Home', 'nav-courses': 'Courses',
-    'nav-events': 'Events', 'nav-about-me': 'About Me',
-    'nav-pricing': 'Sponsor', 'nav-blog': 'Blog', 'nav-contact': 'Contact',
-    'nav-about': 'About Us', 'nav-support': 'Support',
-    'nav-login': 'Login / Register'
-  }
-};
-
-function setLanguage(lang) {
-  if (!i18n[lang]) return;
-  document.querySelectorAll('[data-i18n]').forEach(function(el) {
-    var key = el.getAttribute('data-i18n');
-    if (i18n[lang][key] !== undefined) { el.textContent = i18n[lang][key]; }
-  });
-  document.querySelectorAll('.lang-btn').forEach(function(btn) {
-    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
-  });
-  document.documentElement.lang = lang;
-  localStorage.setItem('preferred-lang', lang);
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  var saved = localStorage.getItem('preferred-lang') || 'de';
-  setLanguage(saved);
-});
-</script>
-<!-- end i18n -->
-
-<script src="assets/js/kontakt-popup.js"></script>
+  </script>
 </body>
 </html>
