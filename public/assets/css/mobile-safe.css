@@ -57,20 +57,26 @@
     overflow-x: auto;
   }
 
-  /* 6) Tableaux : ne forcent jamais la largeur de la page (min-width neutralise),
-        defilent dans leur cadre */
-  table, .go-table {
-    display: block;
-    width: 100%;
+  /* 6) Tableaux : ils GARDENT leur largeur naturelle (colonnes lisibles) et
+        DEFILENT horizontalement dans leur cadre, au lieu d'etre ecrases.
+        - Les .go-table sont deja dans .go-table-wrap : on fait defiler le cadre.
+        - Les autres tables defilent elles-memes (sans ecrasement). */
+  .go-table-wrap, .table-responsive {
     max-width: 100%;
-    min-width: 0 !important;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  table:not(.go-table) {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
-  /* 7) Mots, URLs et tokens de code longs : coupes au lieu de deborder */
-  body, p, li, h1, h2, h3, h4, h5, h6, blockquote, td, th, figcaption,
-  dd, dt, span, a, code, strong, em, label {
+  /* 7) Mots, URLs et tokens longs : coupes seulement si necessaire (pas de
+        cassure agressive caractere par caractere). */
+  p, li, h1, h2, h3, h4, h5, h6, blockquote, figcaption, dd, dt, a, code, td, th {
     overflow-wrap: break-word;
-    word-break: break-word;
   }
 }
