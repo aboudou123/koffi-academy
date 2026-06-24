@@ -193,6 +193,7 @@
 .kl-opt .fi{width:24px;height:18px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0}
 .kl-opt-name{flex:1;font-size:13.5px;font-weight:600;color:#fff;text-align:left}
 .kl-opt-code{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+.lang-sect{display:none}.lang-sect.active{display:block}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
   <script src="/assets/js/lang-auto.js"></script>
@@ -225,18 +226,18 @@
             <div class="go-shell">
                <div class="go-hero-grid">
                   <div>
-                     <span class="go-kicker"><i class="fa-solid fa-code-branch"></i> GitOps auf Kubernetes</span>
-                     <h1>GitOps mit ArgoCD</h1>
-                     <p>Implementieren Sie deklarative Deployments auf Kubernetes mit Argo CD. Sie lernen, wie Git zur Quelle der Wahrheit wird, wie Sync-Strategien produktionsreif gestaltet werden und wie mehrere Cluster sauber mit ApplicationSets betrieben werden.</p>
+                     <span class="go-kicker"><i class="fa-solid fa-code-branch"></i> <span data-i18n="kicker">GitOps auf Kubernetes</span></span>
+                     <h1 data-i18n="heroTitle">GitOps mit ArgoCD</h1>
+                     <p data-i18n="heroSubtitle">Implementieren Sie deklarative Deployments auf Kubernetes mit Argo CD. Sie lernen, wie Git zur Quelle der Wahrheit wird, wie Sync-Strategien produktionsreif gestaltet werden und wie mehrere Cluster sauber mit ApplicationSets betrieben werden.</p>
                      <div class="go-actions">
-                        <a class="go-btn go-btn-primary" href="#kursbuch"><i class="fa-solid fa-play"></i> Kurs starten</a>
-                        <a class="go-btn go-btn-ghost" href="/laboratoire-gitops-patterns"><i class="fa-solid fa-flask"></i> Praktische Labs</a>
+                        <a class="go-btn go-btn-primary" href="#kursbuch"><i class="fa-solid fa-play"></i> <span data-i18n="startBtn">Kurs starten</span></a>
+                        <a class="go-btn go-btn-ghost" href="/laboratoire-gitops-patterns"><i class="fa-solid fa-flask"></i> <span data-i18n="labsBtn">Praktische Labs</span></a>
                      </div>
                      <div class="go-meta">
-                        <span><i class="fa-regular fa-clock"></i> 3 Wochen</span>
-                        <span><i class="fa-solid fa-layer-group"></i> 8 Module</span>
-                        <span><i class="fa-solid fa-terminal"></i> 6 Labs</span>
-                        <span><i class="fa-solid fa-signal"></i> Fortgeschritten</span>
+                        <span><i class="fa-regular fa-clock"></i> <span data-i18n="duration">3 Wochen</span></span>
+                        <span><i class="fa-solid fa-layer-group"></i> <span data-i18n="modules">8 Module</span></span>
+                        <span><i class="fa-solid fa-terminal"></i> <span data-i18n="labs">6 Labs</span></span>
+                        <span><i class="fa-solid fa-signal"></i> <span data-i18n="level">Fortgeschritten</span></span>
                      </div>
                   </div>
                   <div class="go-visual" aria-label="GitOps Architekturdiagramm">
@@ -248,20 +249,20 @@
                         <div class="go-flow">
                            <div class="go-flow-card">
                               <i class="fa-brands fa-git-alt"></i>
-                              <strong>Git Repository</strong>
-                              <small>Manifeste, Helm Charts, Kustomize Overlays und Review-Historie.</small>
+                              <strong data-i18n="flowGitTitle">Git Repository</strong>
+                              <small data-i18n="flowGitDesc">Manifeste, Helm Charts, Kustomize Overlays und Review-Historie.</small>
                            </div>
                            <div class="go-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                            <div class="go-flow-card">
                               <img src="https://cdn.simpleicons.org/argo/EF7B4D" alt="Argo CD Logo">
-                              <strong>Argo CD Controller</strong>
-                              <small>Vergleicht Zielzustand mit Live-Zustand und synchronisiert kontrolliert.</small>
+                              <strong data-i18n="flowArgoTitle">Argo CD Controller</strong>
+                              <small data-i18n="flowArgoDesc">Vergleicht Zielzustand mit Live-Zustand und synchronisiert kontrolliert.</small>
                            </div>
                         </div>
                         <div class="go-state">
-                           <div class="go-state-row"><small>desired</small><strong>Git: replicas=3, image=v1.4.2</strong><i class="fa-solid fa-check"></i></div>
-                           <div class="go-state-row"><small>live</small><strong>Kubernetes: replicas=2, image=v1.4.1</strong><i class="fa-solid fa-triangle-exclamation go-state-warn"></i></div>
-                           <div class="go-state-row"><small>sync</small><strong>Argo CD korrigiert Drift nach Policy</strong><i class="fa-solid fa-rotate"></i></div>
+                           <div class="go-state-row"><small>desired</small><strong data-i18n="stateDesired">Git: replicas=3, image=v1.4.2</strong><i class="fa-solid fa-check"></i></div>
+                           <div class="go-state-row"><small>live</small><strong data-i18n="stateLive">Kubernetes: replicas=2, image=v1.4.1</strong><i class="fa-solid fa-triangle-exclamation go-state-warn"></i></div>
+                           <div class="go-state-row"><small>sync</small><strong data-i18n="stateSync">Argo CD korrigiert Drift nach Policy</strong><i class="fa-solid fa-rotate"></i></div>
                         </div>
                      </div>
                   </div>
@@ -273,10 +274,10 @@
             <div class="go-shell">
                <div class="go-access-inner">
                   <div>
-                     <h2>Praxisnaher Kurs mit produktionsnahen Mustern</h2>
-                     <p>Der Kurs ist als direkt nutzbares Lernmaterial aufgebaut: erst das mentale Modell, dann lauff&auml;hige Manifeste, danach Governance, Multi-Cluster und Betrieb.</p>
+                     <h2 data-i18n="accessTitle">Praxisnaher Kurs mit produktionsnahen Mustern</h2>
+                     <p data-i18n="accessDesc">Der Kurs ist als direkt nutzbares Lernmaterial aufgebaut: erst das mentale Modell, dann lauff&auml;hige Manifeste, danach Governance, Multi-Cluster und Betrieb.</p>
                   </div>
-                  <span class="go-price-pill"><i class="fa-solid fa-certificate"></i> Abschlussprojekt inklusive</span>
+                  <span class="go-price-pill"><i class="fa-solid fa-certificate"></i> <span data-i18n="certLabel">Abschlussprojekt inklusive</span></span>
                </div>
             </div>
          </section>
@@ -284,30 +285,30 @@
          <section class="go-section white" id="ziele">
             <div class="go-shell">
                <div class="go-heading center">
-                  <span class="eyebrow"><i class="fa-solid fa-bullseye"></i> Lernziele</span>
-                  <h2>Was Sie am Ende sicher beherrschen</h2>
-                  <p>Sie bauen nicht nur eine Demo, sondern ein belastbares GitOps-Betriebsmodell: nachvollziehbare &Auml;nderungen, kontrollierte Synchronisation, klare Berechtigungen und sauberes Multi-Cluster-Deployment.</p>
+                  <span class="eyebrow"><i class="fa-solid fa-bullseye"></i> <span data-i18n="eyebrowGoals">Lernziele</span></span>
+                  <h2 data-i18n="goalsTitle">Was Sie am Ende sicher beherrschen</h2>
+                  <p data-i18n="goalsDesc">Sie bauen nicht nur eine Demo, sondern ein belastbares GitOps-Betriebsmodell: nachvollziehbare &Auml;nderungen, kontrollierte Synchronisation, klare Berechtigungen und sauberes Multi-Cluster-Deployment.</p>
                </div>
                <div class="go-outcomes">
                   <article class="go-card">
                      <span class="go-icon"><i class="fa-solid fa-diagram-project"></i></span>
-                     <h3>GitOps-Modell</h3>
-                     <p>Sie verstehen Desired State, Drift, Pull-basierte Deployments, Auditierbarkeit und die Trennung zwischen CI und CD.</p>
+                     <h3 data-i18n="goal1Title">GitOps-Modell</h3>
+                     <p data-i18n="goal1Desc">Sie verstehen Desired State, Drift, Pull-basierte Deployments, Auditierbarkeit und die Trennung zwischen CI und CD.</p>
                   </article>
                   <article class="go-card">
                      <span class="go-icon"><i class="fa-solid fa-dharmachakra"></i></span>
-                     <h3>Argo CD Kernobjekte</h3>
-                     <p>Sie arbeiten sicher mit Application, AppProject, Repository, Cluster Credentials und Namespace-Scopes.</p>
+                     <h3 data-i18n="goal2Title">Argo CD Kernobjekte</h3>
+                     <p data-i18n="goal2Desc">Sie arbeiten sicher mit Application, AppProject, Repository, Cluster Credentials und Namespace-Scopes.</p>
                   </article>
                   <article class="go-card">
                      <span class="go-icon"><i class="fa-solid fa-arrows-rotate"></i></span>
-                     <h3>Sync-Strategien</h3>
-                     <p>Sie entscheiden bewusst zwischen manuellem Sync, Auto-Sync, Prune, Self-Heal, Hooks, Waves und Sync Windows.</p>
+                     <h3 data-i18n="goal3Title">Sync-Strategien</h3>
+                     <p data-i18n="goal3Desc">Sie entscheiden bewusst zwischen manuellem Sync, Auto-Sync, Prune, Self-Heal, Hooks, Waves und Sync Windows.</p>
                   </article>
                   <article class="go-card">
                      <span class="go-icon"><i class="fa-solid fa-network-wired"></i></span>
-                     <h3>Multi-Cluster</h3>
-                     <p>Sie deployen Anwendungen per ApplicationSet in mehrere Cluster und steuern Umgebungen &uuml;ber Labels und Templates.</p>
+                     <h3 data-i18n="goal4Title">Multi-Cluster</h3>
+                     <p data-i18n="goal4Desc">Sie deployen Anwendungen per ApplicationSet in mehrere Cluster und steuern Umgebungen &uuml;ber Labels und Templates.</p>
                   </article>
                </div>
             </div>
@@ -317,22 +318,23 @@
             <div class="go-shell">
                <div class="go-layout">
                   <aside class="go-sidebar">
-                     <h3>Kursnavigation</h3>
-                     <a href="#intro"><i class="fa-solid fa-circle-info"></i> Was ist Argo CD?</a>
-                     <a href="#modell"><i class="fa-solid fa-compass"></i> GitOps-Modell</a>
-                     <a href="#setup"><i class="fa-solid fa-download"></i> Installation</a>
-                     <a href="#application"><i class="fa-solid fa-file-code"></i> Erste Application</a>
-                     <a href="#repo"><i class="fa-solid fa-folder-tree"></i> Repo-Struktur</a>
-                     <a href="#sync"><i class="fa-solid fa-arrows-rotate"></i> Sync-Strategien</a>
-                     <a href="#waves"><i class="fa-solid fa-layer-group"></i> Hooks &amp; Waves</a>
-                     <a href="#security"><i class="fa-solid fa-shield-halved"></i> Governance</a>
-                     <a href="#multicluster"><i class="fa-solid fa-globe"></i> Multi-Cluster</a>
-                     <a href="#betrieb"><i class="fa-solid fa-stethoscope"></i> Betrieb</a>
-                     <a href="#labs"><i class="fa-solid fa-flask"></i> Labs</a>
+                     <h3 data-i18n="tocTitle">Kursnavigation</h3>
+                     <a href="#intro"><i class="fa-solid fa-circle-info"></i> <span data-i18n="toc0">Was ist Argo CD?</span></a>
+                     <a href="#modell"><i class="fa-solid fa-compass"></i> <span data-i18n="toc1">GitOps-Modell</span></a>
+                     <a href="#setup"><i class="fa-solid fa-download"></i> <span data-i18n="toc2">Installation</span></a>
+                     <a href="#application"><i class="fa-solid fa-file-code"></i> <span data-i18n="toc3">Erste Application</span></a>
+                     <a href="#repo"><i class="fa-solid fa-folder-tree"></i> <span data-i18n="toc4">Repo-Struktur</span></a>
+                     <a href="#sync"><i class="fa-solid fa-arrows-rotate"></i> <span data-i18n="toc5">Sync-Strategien</span></a>
+                     <a href="#waves"><i class="fa-solid fa-layer-group"></i> <span data-i18n="toc6">Hooks &amp; Waves</span></a>
+                     <a href="#security"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="toc7">Governance</span></a>
+                     <a href="#multicluster"><i class="fa-solid fa-globe"></i> <span data-i18n="toc8">Multi-Cluster</span></a>
+                     <a href="#betrieb"><i class="fa-solid fa-stethoscope"></i> <span data-i18n="toc9">Betrieb</span></a>
+                     <a href="#labs"><i class="fa-solid fa-flask"></i> <span data-i18n="tocLabs">Labs</span></a>
                   </aside>
 
                   <article class="go-reader">
                      <section id="intro">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>Was ist Argo CD — und warum sollten Sie es kennen?</h2>
                         <p>Bevor wir Argo CD installieren oder YAML schreiben, m&uuml;ssen wir verstehen, <em>welches Problem</em> Argo CD l&ouml;st, <em>wie es architektonisch aufgebaut ist</em> und <em>warum es heute zu den wichtigsten Werkzeugen in der Cloud-Native-Welt geh&ouml;rt</em>. Diese Einf&uuml;hrung legt das konzeptionelle Fundament f&uuml;r alle folgenden Module.</p>
 
@@ -527,9 +529,253 @@
                         <div class="go-note">
                            <strong>Kursansatz:</strong> Dieser Kurs behandelt Argo CD nicht als isoliertes Werkzeug, sondern im Kontext des vollst&auml;ndigen GitOps-Betriebsmodells — von der Konzeption &uuml;ber die Implementierung bis zum Betrieb in produktionsnahen Umgebungen. Jedes Modul baut auf dem vorherigen auf und endet mit einem praktischen Lab oder einem konkreten Produktionsmuster.
                         </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>What is Argo CD — and why should you know it?</h2>
+                        <p>Before we install Argo CD or write any YAML, we need to understand <em>which problem</em> Argo CD solves, <em>how it is architecturally built</em> and <em>why it has become one of the most important tools in the cloud-native world</em>. This introduction lays the conceptual foundation for all the modules that follow.</p>
+
+                        <h3>What is Argo CD?</h3>
+                        <p>Argo CD is a <strong>declarative, GitOps-based continuous delivery controller for Kubernetes</strong>. It was created by Intuit in 2018, accepted as an Incubating project into the <strong>Cloud Native Computing Foundation (CNCF)</strong> in 2020, and reached <strong>Graduated status</strong> in 2022 — the highest maturity level within the CNCF. Today it is one of the most widely used deployment tools for Kubernetes worldwide.</p>
+                        <div class="go-rule">
+                           <strong>Core idea in one sentence:</strong> Argo CD reads the desired state of your infrastructure from a Git repository and ensures that your Kubernetes cluster reflects this state at all times — automatically, traceably and verifiably.
+                        </div>
+
+                        <h3>The problem: Kubernetes deployments without control</h3>
+                        <p>To understand Argo CD, we first have to understand the problem it solves. What did Kubernetes deployments look like <em>before</em> GitOps tools?</p>
+                        <div class="go-grid-2">
+                           <div class="go-mini">
+                              <h4><i class="fa-solid fa-triangle-exclamation go-icon-warn"></i>Traditional approach (problematic)</h4>
+                              <ul>
+                                 <li>Developers or pipelines run <span class="go-inline-code">kubectl apply</span> directly against the cluster</li>
+                                 <li>CI pipelines have direct write access to Kubernetes — a massive security risk</li>
+                                 <li>Nobody knows for certain which manifest version is <em>really</em> active</li>
+                                 <li>Manual patches (<span class="go-inline-code">kubectl edit</span>) leave no trace</li>
+                                 <li><strong>Drift</strong>: what is in Git differs from what is running in the cluster</li>
+                                 <li>Rollbacks are error-prone and manual</li>
+                              </ul>
+                           </div>
+                           <div class="go-mini">
+                              <h4><i class="fa-solid fa-check-circle go-icon-ok"></i>GitOps with Argo CD (solves the problem)</h4>
+                              <ul>
+                                 <li>Git is the single source of truth — no more direct cluster access required</li>
+                                 <li>CI pipelines write only to Git, never directly to Kubernetes</li>
+                                 <li>Argo CD pulls changes from Git and applies them in a controlled way (pull model)</li>
+                                 <li>Every change is visible, reviewable and approved as a pull request</li>
+                                 <li>Drift is detected and displayed immediately — automatic correction optional</li>
+                                 <li>Rollback = a single <span class="go-inline-code">git revert</span> that Argo CD rolls out instantly</li>
+                              </ul>
+                           </div>
+                        </div>
+
+                        <h3>What is GitOps? The four principles</h3>
+                        <p>GitOps is not a product — it is an <strong>operating model</strong> for cloud-native systems, coined by Weaveworks in 2017 and later formalized by the CNCF's OpenGitOps initiative. It rests on four core principles:</p>
+                        <div class="go-grid-2">
+                           <div class="go-mini">
+                              <h4>1. Declarative</h4>
+                              <p>The desired system state is described entirely declaratively — not as a sequence of commands, but as a target state. Kubernetes manifests, Helm charts and Kustomize overlays are examples of declarative definitions.</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>2. Versioned and immutable</h4>
+                              <p>Git stores the target state versioned and immutably. Every commit is a snapshot. The full change history is available at any time — who changed what, when and why (PR description).</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>3. Pull-based</h4>
+                              <p>Software agents (here: Argo CD) <em>pull</em> changes from Git rather than having pipelines <em>push</em> them into the cluster. This eliminates external write access to the cluster and drastically reduces the attack surface.</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>4. Continuously reconciled</h4>
+                              <p>Argo CD continuously observes the cluster state. If the live state diverges from the desired state in Git (drift), Argo CD detects it immediately and can correct it automatically or on demand.</p>
+                           </div>
+                        </div>
+
+                        <h3>How Argo CD is architecturally built</h3>
+                        <p>Argo CD consists of several components that together implement the GitOps cycle. Understanding this architecture is essential for production, troubleshooting and scaling.</p>
+                        <div class="go-table-wrap">
+                           <table class="go-table">
+                              <thead>
+                                 <tr><th>Component</th><th>Role</th><th>Technical detail</th></tr>
+                              </thead>
+                              <tbody>
+                                 <tr><td><strong>API Server</strong></td><td>Entry point for the CLI (<span class="go-inline-code">argocd</span>), web UI and CI systems. Handles authentication, RBAC and app status.</td><td>gRPC / REST; JWT auth; TLS-terminated</td></tr>
+                                 <tr><td><strong>Repository Server</strong></td><td>Clones Git repositories, renders manifests from Helm charts, Kustomize overlays and plain YAML. Delivers the final manifest set to the Application Controller.</td><td>Runs isolated; no direct cluster access; caches repo content</td></tr>
+                                 <tr><td><strong>Application Controller</strong></td><td>The heart of Argo CD. Compares the desired state (from the Repo Server) with the live state (from the Kubernetes API Server) and triggers syncs.</td><td>Kubernetes controller (reconciliation loop); writes Application status CRDs</td></tr>
+                                 <tr><td><strong>Redis</strong></td><td>Cache for cluster states, repo content and computed diffs. Reduces load on the API Server and Repo Server.</td><td>In-memory; no persistent storage required</td></tr>
+                                 <tr><td><strong>Dex</strong> (optional)</td><td>OIDC proxy for single sign-on (SSO). Connects Argo CD to external identity providers (GitHub, GitLab, LDAP, SAML).</td><td>Separately deployable; recommended for production</td></tr>
+                              </tbody>
+                           </table>
+                        </div>
+                        <div class="go-note">
+                           <strong>Scaling note:</strong> In large environments (50+ clusters) the Application Controller can be scaled horizontally with <span class="go-inline-code">ARGOCD_CONTROLLER_REPLICAS</span>. Each instance then takes over a subset of the Application objects to manage.
+                        </div>
+
+                        <h3>Argo CD compared to alternatives</h3>
+                        <p>Argo CD is not the only GitOps tool. It is important to know the differences so you can make the right choice for your team — and argue it soundly in interviews and projects.</p>
+                        <div class="go-table-wrap">
+                           <table class="go-table">
+                              <thead>
+                                 <tr><th>Criterion</th><th>Argo CD</th><th>Flux v2</th><th>Jenkins X</th><th>Spinnaker</th></tr>
+                              </thead>
+                              <tbody>
+                                 <tr><td><strong>Deployment model</strong></td><td>Pull-based</td><td>Pull-based</td><td>Push + pull (hybrid)</td><td>Push-based</td></tr>
+                                 <tr><td><strong>Web UI</strong></td><td>Full, native UI with live diff and application graph</td><td>No native UI (third party: Weave GitOps)</td><td>Limited UI</td><td>Extensive, complex UI</td></tr>
+                                 <tr><td><strong>CNCF status</strong></td><td>Graduated (2022)</td><td>Graduated (2022)</td><td>Archived (2023)</td><td>Not CNCF</td></tr>
+                                 <tr><td><strong>Multi-cluster</strong></td><td>Native via ApplicationSets</td><td>Native via fleet sharding</td><td>Limited</td><td>Multi-cloud, very complex</td></tr>
+                                 <tr><td><strong>Learning curve</strong></td><td>Moderate — good docs, active community</td><td>Moderate — more CLI-centric</td><td>Steep — highly opinionated</td><td>Very steep — enterprise overhead</td></tr>
+                                 <tr><td><strong>Target audience</strong></td><td>Platform teams, DevOps, K8s ops</td><td>Platform teams, GitOps purists</td><td>Opinionated CI+CD pipelines</td><td>Enterprise multi-cloud</td></tr>
+                              </tbody>
+                           </table>
+                        </div>
+                        <div class="go-rule">
+                           <strong>Recommendation:</strong> For most Kubernetes teams, Argo CD is the more pragmatic choice — especially when a native UI, multi-cluster support and an active community matter. Flux v2 is an equivalent alternative for teams that prefer a purely CLI-based way of working.
+                        </div>
+
+                        <h3>Who uses Argo CD?</h3>
+                        <p>Argo CD is used in production-critical environments by companies worldwide. The list below shows that this is not an academic tool, but one proven under extreme requirements:</p>
+                        <div class="go-grid-3">
+                           <div class="go-mini"><h4>Tech &amp; Media</h4><p>Netflix, Spotify, Adobe, Autodesk, IBM, Intuit (creator), Cohere, Snyk</p></div>
+                           <div class="go-mini"><h4>E-commerce &amp; Mobility</h4><p>Tesla, Zalando, Mercari, Ticketmaster, Samsara</p></div>
+                           <div class="go-mini"><h4>Platform &amp; Cloud</h4><p>Red Hat (OpenShift GitOps), AWS (EKS Blueprints), Akuity (SaaS for Argo CD)</p></div>
+                        </div>
+                        <p>According to the 2023 CNCF survey, <strong>over 47% of all Kubernetes users</strong> run a GitOps tool in production — and Argo CD leads this segment.</p>
+
+                        <h3>Why you should master Argo CD</h3>
+                        <p>Knowing Argo CD is no longer an optional specialty — it is a baseline expectation for platform engineers, DevOps engineers and Kubernetes administrators:</p>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Market relevance:</strong> Argo CD appears in over 60% of DevOps/platform-engineering job postings that require Kubernetes (as of 2024, based on LinkedIn/Indeed analysis).</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Certifications:</strong> GitOps skills with Argo CD or Flux are part of the GitOps Fundamentals and GitOps at Scale certifications (Linux Foundation / Codefresh). They complement CKA, CKAD and CKS nicely.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Security &amp; compliance:</strong> An audit trail through Git, RBAC through AppProjects and the elimination of direct cluster write access from CI make Argo CD a compliance enabler (SOC&nbsp;2, ISO&nbsp;27001, DORA).</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Scalability:</strong> From a single cluster to hundreds of clusters (via ApplicationSets), Argo CD scales without an architecture change.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Open source &amp; enterprise-ready:</strong> As a CNCF Graduated project, Argo CD is free, actively maintained (2000+ contributors) and has a commercial SaaS provider in Akuity, which secures enterprise adoption.</span></div>
+                        </div>
+                        <div class="go-note">
+                           <strong>Course approach:</strong> This course treats Argo CD not as an isolated tool, but in the context of the full GitOps operating model — from design through implementation to operating it in production-like environments. Each module builds on the previous one and ends with a practical lab or a concrete production pattern.
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>Qu'est-ce qu'Argo CD — et pourquoi devriez-vous le connaitre ?</h2>
+                        <p>Avant d'installer Argo CD ou d'ecrire le moindre YAML, nous devons comprendre <em>quel probleme</em> Argo CD resout, <em>comment il est construit sur le plan architectural</em> et <em>pourquoi il est devenu l'un des outils les plus importants du monde cloud-native</em>. Cette introduction pose les fondations conceptuelles de tous les modules qui suivent.</p>
+
+                        <h3>Qu'est-ce qu'Argo CD ?</h3>
+                        <p>Argo CD est un <strong>controleur de livraison continue declaratif, base sur GitOps, pour Kubernetes</strong>. Il a ete cree par Intuit en 2018, accepte comme projet Incubating au sein de la <strong>Cloud Native Computing Foundation (CNCF)</strong> en 2020, et a atteint le statut <strong>Graduated</strong> en 2022 — le plus haut niveau de maturite de la CNCF. Il fait aujourd'hui partie des outils de deploiement Kubernetes les plus utilises au monde.</p>
+                        <div class="go-rule">
+                           <strong>L'idee cle en une phrase :</strong> Argo CD lit l'etat souhaite de votre infrastructure depuis un depot Git et garantit que votre cluster Kubernetes reflete cet etat a tout moment — de maniere automatique, tracable et verifiable.
+                        </div>
+
+                        <h3>Le probleme : des deploiements Kubernetes sans controle</h3>
+                        <p>Pour comprendre Argo CD, il faut d'abord comprendre le probleme qu'il resout. A quoi ressemblaient les deploiements Kubernetes <em>avant</em> les outils GitOps ?</p>
+                        <div class="go-grid-2">
+                           <div class="go-mini">
+                              <h4><i class="fa-solid fa-triangle-exclamation go-icon-warn"></i>Approche traditionnelle (problematique)</h4>
+                              <ul>
+                                 <li>Les developpeurs ou les pipelines lancent <span class="go-inline-code">kubectl apply</span> directement sur le cluster</li>
+                                 <li>Les pipelines CI ont un acces en ecriture direct a Kubernetes — un risque de securite majeur</li>
+                                 <li>Personne ne sait avec certitude quelle version du manifeste est <em>vraiment</em> active</li>
+                                 <li>Les correctifs manuels (<span class="go-inline-code">kubectl edit</span>) ne laissent aucune trace</li>
+                                 <li><strong>Drift</strong> : ce qui est dans Git differe de ce qui tourne dans le cluster</li>
+                                 <li>Les rollbacks sont manuels et sujets aux erreurs</li>
+                              </ul>
+                           </div>
+                           <div class="go-mini">
+                              <h4><i class="fa-solid fa-check-circle go-icon-ok"></i>GitOps avec Argo CD (resout le probleme)</h4>
+                              <ul>
+                                 <li>Git est la seule source de verite — plus besoin d'acces direct au cluster</li>
+                                 <li>Les pipelines CI ecrivent uniquement dans Git, jamais directement dans Kubernetes</li>
+                                 <li>Argo CD tire les changements depuis Git et les applique de maniere controlee (modele pull)</li>
+                                 <li>Chaque changement est visible, revisable et approuve sous forme de pull request</li>
+                                 <li>Le drift est detecte et affiche immediatement — correction automatique en option</li>
+                                 <li>Rollback = un simple <span class="go-inline-code">git revert</span> qu'Argo CD deploie instantanement</li>
+                              </ul>
+                           </div>
+                        </div>
+
+                        <h3>Qu'est-ce que GitOps ? Les quatre principes</h3>
+                        <p>GitOps n'est pas un produit — c'est un <strong>modele operationnel</strong> pour les systemes cloud-native, forge par Weaveworks en 2017 puis formalise par l'initiative OpenGitOps de la CNCF. Il repose sur quatre principes fondamentaux :</p>
+                        <div class="go-grid-2">
+                           <div class="go-mini">
+                              <h4>1. Declaratif</h4>
+                              <p>L'etat souhaite du systeme est decrit de maniere entierement declarative — non pas comme une suite de commandes, mais comme un etat cible. Les manifestes Kubernetes, les charts Helm et les overlays Kustomize sont des exemples de definitions declaratives.</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>2. Versionne et immuable</h4>
+                              <p>Git stocke l'etat cible de maniere versionnee et immuable. Chaque commit est un instantane. L'historique complet des changements est consultable a tout moment — qui a modifie quoi, quand et pourquoi (description de la PR).</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>3. Base sur le pull</h4>
+                              <p>Des agents logiciels (ici : Argo CD) <em>tirent</em> les changements depuis Git, au lieu que des pipelines les <em>poussent</em> dans le cluster. Cela elimine les acces en ecriture externes au cluster et reduit drastiquement la surface d'attaque.</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>4. Reconcilie en continu</h4>
+                              <p>Argo CD observe l'etat du cluster en continu. Si l'etat live diverge de l'etat souhaite dans Git (drift), Argo CD le detecte immediatement et peut corriger automatiquement ou a la demande.</p>
+                           </div>
+                        </div>
+
+                        <h3>Comment Argo CD est construit sur le plan architectural</h3>
+                        <p>Argo CD se compose de plusieurs composants qui, ensemble, implementent le cycle GitOps. Comprendre cette architecture est essentiel pour la production, le depannage et la mise a l'echelle.</p>
+                        <div class="go-table-wrap">
+                           <table class="go-table">
+                              <thead>
+                                 <tr><th>Composant</th><th>Role</th><th>Detail technique</th></tr>
+                              </thead>
+                              <tbody>
+                                 <tr><td><strong>API Server</strong></td><td>Point d'entree pour la CLI (<span class="go-inline-code">argocd</span>), l'interface web et les systemes CI. Gere l'authentification, le RBAC et le statut des applications.</td><td>gRPC / REST ; auth JWT ; terminaison TLS</td></tr>
+                                 <tr><td><strong>Repository Server</strong></td><td>Clone les depots Git, genere les manifestes a partir des charts Helm, des overlays Kustomize et du YAML brut. Fournit l'ensemble de manifestes final a l'Application Controller.</td><td>S'execute isole ; aucun acces direct au cluster ; met en cache le contenu du depot</td></tr>
+                                 <tr><td><strong>Application Controller</strong></td><td>Le coeur d'Argo CD. Compare l'etat souhaite (depuis le Repo Server) avec l'etat live (depuis l'API Server Kubernetes) et declenche les synchronisations.</td><td>Controleur Kubernetes (boucle de reconciliation) ; ecrit les CRD de statut Application</td></tr>
+                                 <tr><td><strong>Redis</strong></td><td>Cache pour les etats de cluster, le contenu des depots et les diffs calcules. Reduit la charge sur l'API Server et le Repo Server.</td><td>En memoire ; aucun stockage persistant requis</td></tr>
+                                 <tr><td><strong>Dex</strong> (optionnel)</td><td>Proxy OIDC pour le single sign-on (SSO). Connecte Argo CD a des fournisseurs d'identite externes (GitHub, GitLab, LDAP, SAML).</td><td>Deployable separement ; recommande en production</td></tr>
+                              </tbody>
+                           </table>
+                        </div>
+                        <div class="go-note">
+                           <strong>Note sur la mise a l'echelle :</strong> Dans les grands environnements (50+ clusters), l'Application Controller peut etre mis a l'echelle horizontalement avec <span class="go-inline-code">ARGOCD_CONTROLLER_REPLICAS</span>. Chaque instance prend alors en charge un sous-ensemble des objets Application a gerer.
+                        </div>
+
+                        <h3>Argo CD compare aux alternatives</h3>
+                        <p>Argo CD n'est pas le seul outil GitOps. Il est important de connaitre les differences pour faire le bon choix pour votre equipe — ou pour argumenter solidement en entretien et en projet.</p>
+                        <div class="go-table-wrap">
+                           <table class="go-table">
+                              <thead>
+                                 <tr><th>Critere</th><th>Argo CD</th><th>Flux v2</th><th>Jenkins X</th><th>Spinnaker</th></tr>
+                              </thead>
+                              <tbody>
+                                 <tr><td><strong>Modele de deploiement</strong></td><td>Base sur le pull</td><td>Base sur le pull</td><td>Push + pull (hybride)</td><td>Base sur le push</td></tr>
+                                 <tr><td><strong>Interface web</strong></td><td>UI native complete avec diff en direct et graphe d'application</td><td>Pas d'UI native (tiers : Weave GitOps)</td><td>UI limitee</td><td>UI etendue et complexe</td></tr>
+                                 <tr><td><strong>Statut CNCF</strong></td><td>Graduated (2022)</td><td>Graduated (2022)</td><td>Archive (2023)</td><td>Hors CNCF</td></tr>
+                                 <tr><td><strong>Multi-cluster</strong></td><td>Natif via ApplicationSets</td><td>Natif via fleet sharding</td><td>Limite</td><td>Multi-cloud, tres complexe</td></tr>
+                                 <tr><td><strong>Courbe d'apprentissage</strong></td><td>Moderee — bonne doc, communaute active</td><td>Moderee — plutot centree CLI</td><td>Raide — tres opinionated</td><td>Tres raide — overhead entreprise</td></tr>
+                                 <tr><td><strong>Public cible</strong></td><td>Equipes plateforme, DevOps, ops K8s</td><td>Equipes plateforme, puristes GitOps</td><td>Pipelines CI+CD opinionated</td><td>Multi-cloud d'entreprise</td></tr>
+                              </tbody>
+                           </table>
+                        </div>
+                        <div class="go-rule">
+                           <strong>Recommandation :</strong> Pour la plupart des equipes Kubernetes, Argo CD est le choix le plus pragmatique — surtout si une UI native, le support multi-cluster et une communaute active comptent. Flux v2 est une alternative equivalente pour les equipes qui preferent une approche purement CLI.
+                        </div>
+
+                        <h3>Qui utilise Argo CD ?</h3>
+                        <p>Argo CD est utilise dans des environnements critiques de production par des entreprises du monde entier. La liste ci-dessous montre qu'il ne s'agit pas d'un outil academique, mais d'un outil eprouve sous des exigences extremes :</p>
+                        <div class="go-grid-3">
+                           <div class="go-mini"><h4>Tech &amp; Media</h4><p>Netflix, Spotify, Adobe, Autodesk, IBM, Intuit (createur), Cohere, Snyk</p></div>
+                           <div class="go-mini"><h4>E-commerce &amp; Mobilite</h4><p>Tesla, Zalando, Mercari, Ticketmaster, Samsara</p></div>
+                           <div class="go-mini"><h4>Plateforme &amp; Cloud</h4><p>Red Hat (OpenShift GitOps), AWS (EKS Blueprints), Akuity (SaaS pour Argo CD)</p></div>
+                        </div>
+                        <p>Selon l'enquete CNCF 2023, <strong>plus de 47 % de tous les utilisateurs Kubernetes</strong> exploitent un outil GitOps en production — et Argo CD est en tete de ce segment.</p>
+
+                        <h3>Pourquoi vous devriez maitriser Argo CD</h3>
+                        <p>Connaitre Argo CD n'est plus une competence optionnelle — c'est une attente de base pour les platform engineers, les ingenieurs DevOps et les administrateurs Kubernetes :</p>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Pertinence sur le marche :</strong> Argo CD apparait dans plus de 60 % des offres d'emploi DevOps/platform engineering qui exigent Kubernetes (en 2024, d'apres une analyse LinkedIn/Indeed).</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Certifications :</strong> Les competences GitOps avec Argo CD ou Flux font partie des certifications GitOps Fundamentals et GitOps at Scale (Linux Foundation / Codefresh). Elles completent utilement CKA, CKAD et CKS.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Securite &amp; conformite :</strong> Un audit trail via Git, le RBAC via les AppProjects et l'elimination des acces en ecriture directs au cluster depuis la CI font d'Argo CD un facilitateur de conformite (SOC&nbsp;2, ISO&nbsp;27001, DORA).</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Scalabilite :</strong> D'un cluster unique a des centaines de clusters (via les ApplicationSets), Argo CD passe a l'echelle sans changement d'architecture.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Open source &amp; pret pour l'entreprise :</strong> En tant que projet CNCF Graduated, Argo CD est gratuit, activement maintenu (2000+ contributeurs) et dispose d'un fournisseur SaaS commercial, Akuity, ce qui assure son adoption en entreprise.</span></div>
+                        </div>
+                        <div class="go-note">
+                           <strong>Approche du cours :</strong> Ce cours traite Argo CD non pas comme un outil isole, mais dans le contexte du modele operationnel GitOps complet — de la conception a l'implementation jusqu'a l'exploitation dans des environnements proches de la production. Chaque module s'appuie sur le precedent et se termine par un lab pratique ou un pattern de production concret.
+                        </div>
+                        </div>
                      </section>
 
                      <section id="modell">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>1. GitOps sauber verstehen</h2>
                         <p>GitOps bedeutet: Der gew&uuml;nschte Zustand Ihrer Plattform liegt deklarativ in Git. Kubernetes ist nicht mehr der Ort, an dem Sie manuell &Auml;nderungen "hineinklicken", sondern der Ort, an dem ein Controller den in Git beschriebenen Zustand kontinuierlich durchsetzt.</p>
                         <div class="go-rule">
@@ -547,9 +793,49 @@
                            </div>
                         </div>
                         <p>Damit wird der Deployment-Prozess nachvollziehbar: Wer eine &Auml;nderung genehmigt hat, welche Manifestversion aktiv ist und warum ein Rollout ausgel&ouml;st wurde, ist in Git und Argo CD sichtbar.</p>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>1. Understanding GitOps properly</h2>
+                        <p>GitOps means: the desired state of your platform lives declaratively in Git. Kubernetes is no longer the place where you manually "click in" changes, but the place where a controller continuously enforces the state described in Git.</p>
+                        <div class="go-rule">
+                           <strong>The working rule:</strong> Every functionally relevant change becomes visible as a pull request, is reviewed, merged and then rolled out by the GitOps controller.
+                        </div>
+                        <h3>CI and GitOps CD are separate responsibilities</h3>
+                        <div class="go-grid-2">
+                           <div class="go-mini">
+                              <h4>CI pipeline</h4>
+                              <p>Builds artifacts, tests code, scans images and publishes versioned container images. CI must not change Kubernetes directly.</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>Argo CD</h4>
+                              <p>Reads Git, compares desired state with live state and synchronizes Kubernetes according to defined policies.</p>
+                           </div>
+                        </div>
+                        <p>This makes the deployment process traceable: who approved a change, which manifest version is active and why a rollout was triggered is all visible in Git and Argo CD.</p>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>1. Bien comprendre GitOps</h2>
+                        <p>GitOps signifie : l'etat souhaite de votre plateforme reside de maniere declarative dans Git. Kubernetes n'est plus l'endroit ou vous "cliquez" manuellement vos changements, mais l'endroit ou un controleur applique en continu l'etat decrit dans Git.</p>
+                        <div class="go-rule">
+                           <strong>La regle de travail :</strong> Chaque changement metier pertinent devient visible sous forme de pull request, est revise, fusionne, puis deploye par le controleur GitOps.
+                        </div>
+                        <h3>CI et CD GitOps sont des responsabilites distinctes</h3>
+                        <div class="go-grid-2">
+                           <div class="go-mini">
+                              <h4>Pipeline CI</h4>
+                              <p>Construit les artefacts, teste le code, scanne les images et publie des images de conteneur versionnees. La CI ne doit pas modifier Kubernetes directement.</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>Argo CD</h4>
+                              <p>Lit Git, compare l'etat souhaite a l'etat live et synchronise Kubernetes selon des policies definies.</p>
+                           </div>
+                        </div>
+                        <p>Le processus de deploiement devient ainsi tracable : qui a approuve un changement, quelle version de manifeste est active et pourquoi un deploiement a ete declenche, tout cela est visible dans Git et Argo CD.</p>
+                        </div>
                      </section>
 
                      <section id="setup">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>2. Installation und erster Zugriff</h2>
                         <p>F&uuml;r die Labs ben&ouml;tigen Sie einen Kubernetes-Cluster, eine funktionierende <span class="go-inline-code">kubectl</span>-Konfiguration und die Argo CD CLI. Lokal reicht ein Kind-, Minikube- oder Docker-Desktop-Cluster. In produktionsnahen Umgebungen pinnen Sie die Argo-CD-Version statt immer <span class="go-inline-code">stable</span> zu installieren.</p>
                         <div class="code-card">
@@ -572,9 +858,59 @@ argocd login localhost:8080 --insecure</code></pre>
                         <div class="go-warning">
                            <strong>Sicherheitsnotiz:</strong> Das initiale Admin-Passwort ist nur f&uuml;r das Bootstrap geeignet. Danach: Admin-Passwort rotieren, SSO aktivieren, lokale Admin-Nutzung einschr&auml;nken und Rollen sauber definieren.
                         </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>2. Installation and first access</h2>
+                        <p>For the labs you need a Kubernetes cluster, a working <span class="go-inline-code">kubectl</span> configuration and the Argo CD CLI. Locally, a kind, Minikube or Docker Desktop cluster is enough. In production-like environments, pin the Argo CD version instead of always installing <span class="go-inline-code">stable</span>.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Install Argo CD</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>kubectl create namespace argocd
+kubectl apply -n argocd --server-side --force-conflicts \
+  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+kubectl -n argocd get pods
+kubectl -n argocd get svc</code></pre>
+                        </div>
+                        <p>For a local learning environment, port-forwarding is enough. In real environments, set up Ingress, TLS, SSO and RBAC in a controlled way.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>UI and CLI access</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>kubectl port-forward svc/argocd-server -n argocd 8080:443
+
+argocd admin initial-password -n argocd
+argocd login localhost:8080 --insecure</code></pre>
+                        </div>
+                        <div class="go-warning">
+                           <strong>Security note:</strong> The initial admin password is only suitable for bootstrapping. Afterwards: rotate the admin password, enable SSO, restrict local admin usage and define roles cleanly.
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>2. Installation et premier acces</h2>
+                        <p>Pour les labs, il vous faut un cluster Kubernetes, une configuration <span class="go-inline-code">kubectl</span> fonctionnelle et la CLI Argo CD. En local, un cluster kind, Minikube ou Docker Desktop suffit. Dans des environnements proches de la production, epinglez la version d'Argo CD plutot que d'installer systematiquement <span class="go-inline-code">stable</span>.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Installer Argo CD</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>kubectl create namespace argocd
+kubectl apply -n argocd --server-side --force-conflicts \
+  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+kubectl -n argocd get pods
+kubectl -n argocd get svc</code></pre>
+                        </div>
+                        <p>Pour un environnement d'apprentissage local, le port-forwarding suffit. Dans des environnements reels, mettez en place Ingress, TLS, SSO et RBAC de maniere controlee.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Acces UI et CLI</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>kubectl port-forward svc/argocd-server -n argocd 8080:443
+
+argocd admin initial-password -n argocd
+argocd login localhost:8080 --insecure</code></pre>
+                        </div>
+                        <div class="go-warning">
+                           <strong>Note de securite :</strong> Le mot de passe admin initial ne convient qu'au bootstrap. Ensuite : faites tourner le mot de passe admin, activez le SSO, restreignez l'usage de l'admin local et definissez proprement les roles.
+                        </div>
+                        </div>
                      </section>
 
                      <section id="application">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>3. Die erste deklarative Application</h2>
                         <p>Das zentrale Objekt in Argo CD ist die <span class="go-inline-code">Application</span>. Sie beschreibt, aus welchem Git-Repository Argo CD liest, welcher Pfad relevant ist, in welchen Cluster deployt wird und welche Sync-Regeln gelten.</p>
                         <div class="code-card">
@@ -612,9 +948,89 @@ kubectl -n guestbook-dev get all</code></pre>
                            <li><strong>Synced:</strong> Live-Zustand und Git-Zustand stimmen nach Argo-CD-Sicht &uuml;berein.</li>
                            <li><strong>Healthy:</strong> Kubernetes meldet die Ressourcen als funktionsf&auml;hig, zum Beispiel verf&uuml;gbare Pods bei einem Deployment.</li>
                         </ul>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>3. The first declarative Application</h2>
+                        <p>The central object in Argo CD is the <span class="go-inline-code">Application</span>. It describes which Git repository Argo CD reads from, which path is relevant, which cluster it deploys to and which sync rules apply.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>application-guestbook.yaml</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/argoproj/argocd-example-apps.git
+    targetRevision: HEAD
+    path: guestbook
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: guestbook-dev
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true</code></pre>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>Apply and synchronize the Application</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>kubectl apply -f application-guestbook.yaml
+
+argocd app get guestbook-dev
+argocd app diff guestbook-dev
+argocd app sync guestbook-dev
+kubectl -n guestbook-dev get all</code></pre>
+                        </div>
+                        <h3>What to observe</h3>
+                        <ul>
+                           <li><strong>OutOfSync:</strong> Git contains resources that do not yet exist in the cluster or that diverge.</li>
+                           <li><strong>Synced:</strong> from Argo CD's perspective, the live state and the Git state match.</li>
+                           <li><strong>Healthy:</strong> Kubernetes reports the resources as functional, for example available pods for a deployment.</li>
+                        </ul>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>3. La premiere Application declarative</h2>
+                        <p>L'objet central dans Argo CD est l'<span class="go-inline-code">Application</span>. Elle decrit depuis quel depot Git Argo CD lit, quel chemin est pertinent, vers quel cluster le deploiement a lieu et quelles regles de synchronisation s'appliquent.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>application-guestbook.yaml</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/argoproj/argocd-example-apps.git
+    targetRevision: HEAD
+    path: guestbook
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: guestbook-dev
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true</code></pre>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>Appliquer et synchroniser l'Application</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>kubectl apply -f application-guestbook.yaml
+
+argocd app get guestbook-dev
+argocd app diff guestbook-dev
+argocd app sync guestbook-dev
+kubectl -n guestbook-dev get all</code></pre>
+                        </div>
+                        <h3>Ce que vous devez observer</h3>
+                        <ul>
+                           <li><strong>OutOfSync :</strong> Git contient des ressources qui n'existent pas encore dans le cluster ou qui different.</li>
+                           <li><strong>Synced :</strong> du point de vue d'Argo CD, l'etat live et l'etat Git concordent.</li>
+                           <li><strong>Healthy :</strong> Kubernetes signale les ressources comme fonctionnelles, par exemple des pods disponibles pour un deploiement.</li>
+                        </ul>
+                        </div>
                      </section>
 
                      <section id="repo">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>4. Repository-Struktur f&uuml;r echte Teams</h2>
                         <p>Eine gute GitOps-Struktur trennt Basisdefinitionen von Umgebungskonfiguration. Das verhindert Kopieren ganzer Deployments und macht Unterschiede zwischen Dev, Staging und Prod sichtbar.</p>
                         <div class="code-card">
@@ -690,9 +1106,165 @@ patches:
                         <div class="go-note">
                            <strong>Pragmatische Regel:</strong> F&uuml;r kleine Teams reicht ein GitOps-Repository. Bei gro&szlig;en Plattformen trennen Sie Plattform-Bootstrap, Team-Anwendungen und Shared-Addons, damit Berechtigungen und Reviews nicht vermischt werden.
                         </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>4. Repository structure for real teams</h2>
+                        <p>A good GitOps structure separates base definitions from environment configuration. This avoids copying entire deployments and makes the differences between dev, staging and prod visible.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Recommended structure</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>platform-gitops/
+  apps/
+    payments/
+      base/
+        deployment.yaml
+        service.yaml
+        kustomization.yaml
+      overlays/
+        dev/
+          kustomization.yaml
+          patch-replicas.yaml
+        prod/
+          kustomization.yaml
+          patch-replicas.yaml
+  projects/
+    platform-dev.yaml
+    platform-prod.yaml
+  applications/
+    payments-dev.yaml
+    payments-prod.yaml
+  applicationsets/
+    payments-prod-clusters.yaml</code></pre>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>apps/payments/base/deployment.yaml</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments-api
+  labels:
+    app.kubernetes.io/name: payments-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: payments-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: payments-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/koffi-academy/payments-api:1.4.2
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi</code></pre>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>apps/payments/overlays/dev/kustomization.yaml</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: payments-dev
+resources:
+  - ../../base
+patches:
+  - path: patch-replicas.yaml</code></pre>
+                        </div>
+                        <div class="go-note">
+                           <strong>Pragmatic rule:</strong> For small teams, a single GitOps repository is enough. For large platforms, separate platform bootstrap, team applications and shared addons so that permissions and reviews do not get mixed up.
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>4. Structure de depot pour de vraies equipes</h2>
+                        <p>Une bonne structure GitOps separe les definitions de base de la configuration d'environnement. Cela evite de copier des deploiements entiers et rend visibles les differences entre dev, staging et prod.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Structure recommandee</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>platform-gitops/
+  apps/
+    payments/
+      base/
+        deployment.yaml
+        service.yaml
+        kustomization.yaml
+      overlays/
+        dev/
+          kustomization.yaml
+          patch-replicas.yaml
+        prod/
+          kustomization.yaml
+          patch-replicas.yaml
+  projects/
+    platform-dev.yaml
+    platform-prod.yaml
+  applications/
+    payments-dev.yaml
+    payments-prod.yaml
+  applicationsets/
+    payments-prod-clusters.yaml</code></pre>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>apps/payments/base/deployment.yaml</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments-api
+  labels:
+    app.kubernetes.io/name: payments-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: payments-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: payments-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/koffi-academy/payments-api:1.4.2
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi</code></pre>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>apps/payments/overlays/dev/kustomization.yaml</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: payments-dev
+resources:
+  - ../../base
+patches:
+  - path: patch-replicas.yaml</code></pre>
+                        </div>
+                        <div class="go-note">
+                           <strong>Regle pragmatique :</strong> Pour les petites equipes, un seul depot GitOps suffit. Pour les grandes plateformes, separez le bootstrap de la plateforme, les applications d'equipe et les addons partages afin que les permissions et les revues ne soient pas melangees.
+                        </div>
+                        </div>
                      </section>
 
                      <section id="sync">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>5. Sync-Strategien bewusst ausw&auml;hlen</h2>
                         <p>Argo CD synchronisiert nicht blind. Sie definieren, ob Sync manuell ausgel&ouml;st wird, ob Drift automatisch korrigiert wird und ob Ressourcen, die aus Git entfernt wurden, auch aus Kubernetes gel&ouml;scht werden sollen.</p>
                         <div class="go-table-wrap">
@@ -729,9 +1301,87 @@ patches:
                         <div class="go-warning">
                            <strong>Rollback-Falle:</strong> Wenn Auto-Sync aktiv ist, m&uuml;ssen Sie vor einem manuellen Rollback die automatische Synchronisierung kontrolliert deaktivieren oder die gew&uuml;nschte Version in Git wiederherstellen. Sonst setzt Argo CD den neuesten Git-Zustand erneut durch.
                         </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>5. Choosing sync strategies deliberately</h2>
+                        <p>Argo CD does not synchronize blindly. You define whether sync is triggered manually, whether drift is corrected automatically and whether resources removed from Git should also be deleted from Kubernetes.</p>
+                        <div class="go-table-wrap">
+                           <table class="go-table">
+                              <thead>
+                                 <tr><th>Strategy</th><th>When it makes sense</th><th>Risk</th><th>Control</th></tr>
+                              </thead>
+                              <tbody>
+                                 <tr><td>Manual Sync</td><td>New teams, critical migrations, learning environments</td><td>Drift persists until someone synchronizes</td><td>PR review plus manual approval in Argo CD</td></tr>
+                                 <tr><td>Auto-Sync</td><td>Stable services with a good test pipeline</td><td>Faulty Git changes roll out faster</td><td>Branch protection, reviews, CI gates</td></tr>
+                                 <tr><td>Prune</td><td>Git should truly be the source of truth</td><td>Deleted manifests remove live resources</td><td>Enable only with review and clear ownership</td></tr>
+                                 <tr><td>Self-Heal</td><td>Manual cluster changes should be corrected</td><td>Emergency changes get reverted</td><td>Document a break-glass process</td></tr>
+                              </tbody>
+                           </table>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>Production-grade sync policy</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>syncPolicy:
+  automated:
+    enabled: true
+    prune: true
+    selfHeal: true
+    allowEmpty: false
+  syncOptions:
+    - CreateNamespace=true</code></pre>
+                        </div>
+                        <h3>Interpreting the fields</h3>
+                        <ul>
+                           <li><strong>enabled:</strong> Explicitly enables automatic synchronization.</li>
+                           <li><strong>prune:</strong> Removes live resources that are no longer defined in Git.</li>
+                           <li><strong>selfHeal:</strong> Corrects manual drift in the cluster back to Git.</li>
+                           <li><strong>allowEmpty:</strong> Should only be set to <span class="go-inline-code">true</span> deliberately, when an empty target set is intended.</li>
+                        </ul>
+                        <div class="go-warning">
+                           <strong>Rollback trap:</strong> When auto-sync is active, you must disable automatic synchronization in a controlled way before a manual rollback, or restore the desired version in Git. Otherwise Argo CD re-applies the latest Git state.
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>5. Choisir les strategies de synchronisation en connaissance de cause</h2>
+                        <p>Argo CD ne synchronise pas aveuglement. Vous definissez si la synchronisation est declenchee manuellement, si le drift est corrige automatiquement et si les ressources retirees de Git doivent aussi etre supprimees de Kubernetes.</p>
+                        <div class="go-table-wrap">
+                           <table class="go-table">
+                              <thead>
+                                 <tr><th>Strategie</th><th>Quand c'est pertinent</th><th>Risque</th><th>Controle</th></tr>
+                              </thead>
+                              <tbody>
+                                 <tr><td>Manual Sync</td><td>Nouvelles equipes, migrations critiques, environnements d'apprentissage</td><td>Le drift persiste jusqu'a ce que quelqu'un synchronise</td><td>Revue de PR plus validation manuelle dans Argo CD</td></tr>
+                                 <tr><td>Auto-Sync</td><td>Services stables avec une bonne pipeline de tests</td><td>Les changements Git defectueux se deploient plus vite</td><td>Protection de branche, revues, CI gates</td></tr>
+                                 <tr><td>Prune</td><td>Git doit vraiment etre la source de verite</td><td>Les manifestes supprimes retirent des ressources live</td><td>N'activer qu'avec revue et ownership clair</td></tr>
+                                 <tr><td>Self-Heal</td><td>Les changements manuels du cluster doivent etre corriges</td><td>Les changements d'urgence sont annules</td><td>Documenter un processus break-glass</td></tr>
+                              </tbody>
+                           </table>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>Sync policy proche de la production</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>syncPolicy:
+  automated:
+    enabled: true
+    prune: true
+    selfHeal: true
+    allowEmpty: false
+  syncOptions:
+    - CreateNamespace=true</code></pre>
+                        </div>
+                        <h3>Interpretation des champs</h3>
+                        <ul>
+                           <li><strong>enabled :</strong> Active explicitement la synchronisation automatique.</li>
+                           <li><strong>prune :</strong> Supprime les ressources live qui ne sont plus definies dans Git.</li>
+                           <li><strong>selfHeal :</strong> Corrige le drift manuel du cluster pour revenir a l'etat Git.</li>
+                           <li><strong>allowEmpty :</strong> Ne doit etre mis a <span class="go-inline-code">true</span> que de maniere deliberee, lorsqu'un ensemble cible vide est voulu.</li>
+                        </ul>
+                        <div class="go-warning">
+                           <strong>Piege du rollback :</strong> Lorsque l'auto-sync est actif, vous devez desactiver la synchronisation automatique de maniere controlee avant un rollback manuel, ou restaurer la version souhaitee dans Git. Sinon, Argo CD reapplique le dernier etat Git.
+                        </div>
+                        </div>
                      </section>
 
                      <section id="waves">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>6. Sync Waves und Hooks</h2>
                         <p>Nicht jede Ressource darf gleichzeitig angewendet werden. CRDs m&uuml;ssen vor Custom Resources existieren, Namespaces vor Workloads, Migrationen vor neuen Pods. Argo CD l&ouml;st das mit Hooks und Sync Waves.</p>
                         <div class="code-card">
@@ -775,9 +1425,101 @@ spec:
                         <div class="go-note">
                            <strong>Reihenfolge:</strong> Argo CD sortiert Synchronisationen unter anderem nach Phase, Wave, Kubernetes-Kind und Namen. Niedrigere Waves laufen vor h&ouml;heren Waves; negative Werte sind f&uuml;r fr&uuml;he Schritte wie Namespaces oder CRDs n&uuml;tzlich.
                         </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>6. Sync Waves and Hooks</h2>
+                        <p>Not every resource may be applied at the same time. CRDs must exist before custom resources, namespaces before workloads, migrations before new pods. Argo CD solves this with hooks and sync waves.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Namespace first, workload after</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>apiVersion: v1
+kind: Namespace
+metadata:
+  name: payments-prod
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments-api
+  namespace: payments-prod
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  replicas: 3</code></pre>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>PreSync hook for database migration</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>apiVersion: batch/v1
+kind: Job
+metadata:
+  name: payments-db-migrate
+  namespace: payments-prod
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: ghcr.io/koffi-academy/payments-migrator:1.4.2
+          command: ["./migrate", "up"]</code></pre>
+                        </div>
+                        <div class="go-note">
+                           <strong>Ordering:</strong> Argo CD orders synchronizations by phase, wave, Kubernetes kind and name, among other things. Lower waves run before higher waves; negative values are useful for early steps such as namespaces or CRDs.
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>6. Sync Waves et Hooks</h2>
+                        <p>Toutes les ressources ne peuvent pas etre appliquees en meme temps. Les CRD doivent exister avant les custom resources, les namespaces avant les workloads, les migrations avant les nouveaux pods. Argo CD resout cela avec les hooks et les sync waves.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Le namespace d'abord, le workload ensuite</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>apiVersion: v1
+kind: Namespace
+metadata:
+  name: payments-prod
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments-api
+  namespace: payments-prod
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  replicas: 3</code></pre>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>Hook PreSync pour la migration de base de donnees</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>apiVersion: batch/v1
+kind: Job
+metadata:
+  name: payments-db-migrate
+  namespace: payments-prod
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: ghcr.io/koffi-academy/payments-migrator:1.4.2
+          command: ["./migrate", "up"]</code></pre>
+                        </div>
+                        <div class="go-note">
+                           <strong>Ordre :</strong> Argo CD trie les synchronisations notamment par phase, wave, kind Kubernetes et nom. Les waves inferieures s'executent avant les waves superieures ; les valeurs negatives sont utiles pour les etapes precoces comme les namespaces ou les CRD.
+                        </div>
+                        </div>
                      </section>
 
                      <section id="security">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>7. Governance, Projekte und Secrets</h2>
                         <p>Ein produktives GitOps-System braucht Grenzen. Nicht jedes Team darf in jedes Cluster deployen, nicht jedes Repository darf jede Ressource erzeugen, und Secrets d&uuml;rfen nicht im Klartext in Git liegen.</p>
                         <h3>AppProject als Sicherheitsgrenze</h3>
@@ -816,9 +1558,91 @@ spec:
                         <div class="go-warning">
                            <strong>App-of-Apps-Hinweis:</strong> Das App-of-Apps-Muster ist m&auml;chtig f&uuml;r Bootstrap, geh&ouml;rt aber unter Admin-Kontrolle. Wer den Parent steuert, kann viele Child Applications beeinflussen.
                         </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>7. Governance, projects and secrets</h2>
+                        <p>A productive GitOps system needs boundaries. Not every team may deploy to every cluster, not every repository may create every resource, and secrets must not sit in Git in plain text.</p>
+                        <h3>AppProject as a security boundary</h3>
+                        <div class="code-card">
+                           <div class="code-title"><span>projects/platform-prod.yaml</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-prod
+  namespace: argocd
+spec:
+  description: Production applications owned by the platform team
+  sourceRepos:
+    - https://github.com/koffi-academy/platform-gitops.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: payments-prod
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: apps
+      kind: Deployment
+    - group: ""
+      kind: Service
+    - group: networking.k8s.io
+      kind: Ingress</code></pre>
+                        </div>
+                        <h3>Handling secrets correctly</h3>
+                        <ul>
+                           <li>Never commit plain-text secrets to Git, not even in private repositories.</li>
+                           <li>Use the External Secrets Operator, Sealed Secrets or SOPS with clear key rotation.</li>
+                           <li>Separate the secret definition, the secret value and the access policy.</li>
+                           <li>Check pull requests with secret scanning and policy-as-code.</li>
+                        </ul>
+                        <div class="go-warning">
+                           <strong>App-of-Apps note:</strong> The app-of-apps pattern is powerful for bootstrapping, but belongs under admin control. Whoever controls the parent can influence many child applications.
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>7. Gouvernance, projets et secrets</h2>
+                        <p>Un systeme GitOps en production a besoin de limites. Toutes les equipes ne peuvent pas deployer dans tous les clusters, tous les depots ne peuvent pas creer toutes les ressources, et les secrets ne doivent pas se trouver en clair dans Git.</p>
+                        <h3>L'AppProject comme frontiere de securite</h3>
+                        <div class="code-card">
+                           <div class="code-title"><span>projects/platform-prod.yaml</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-prod
+  namespace: argocd
+spec:
+  description: Production applications owned by the platform team
+  sourceRepos:
+    - https://github.com/koffi-academy/platform-gitops.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: payments-prod
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: apps
+      kind: Deployment
+    - group: ""
+      kind: Service
+    - group: networking.k8s.io
+      kind: Ingress</code></pre>
+                        </div>
+                        <h3>Bien gerer les secrets</h3>
+                        <ul>
+                           <li>Ne committez jamais de secrets en clair dans Git, meme dans des depots prives.</li>
+                           <li>Utilisez l'External Secrets Operator, Sealed Secrets ou SOPS avec une rotation de cles claire.</li>
+                           <li>Separez la definition du secret, la valeur du secret et la politique d'acces.</li>
+                           <li>Verifiez les pull requests avec du secret scanning et du policy-as-code.</li>
+                        </ul>
+                        <div class="go-warning">
+                           <strong>Note sur l'App-of-Apps :</strong> Le pattern app-of-apps est puissant pour le bootstrap, mais doit rester sous controle des admins. Celui qui controle le parent peut influencer de nombreuses applications enfants.
+                        </div>
+                        </div>
                      </section>
 
                      <section id="multicluster">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>8. Multi-Cluster mit ApplicationSet</h2>
                         <p>Multi-Cluster-GitOps skaliert nicht, wenn jede Application manuell kopiert wird. ApplicationSets erzeugen Applications aus Generatoren, zum Beispiel aus registrierten Clustern mit passenden Labels.</p>
                         <div class="code-card">
@@ -878,9 +1702,133 @@ spec:
                               <p>Zentrale Plattform-Addons plus lokale Team-Instanzen. Sinnvoll bei gro&szlig;en Organisationen mit klaren Dom&auml;nen.</p>
                            </div>
                         </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>8. Multi-cluster with ApplicationSet</h2>
+                        <p>Multi-cluster GitOps does not scale if every Application is copied manually. ApplicationSets generate Applications from generators, for example from registered clusters with matching labels.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Register a cluster</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>kubectl config get-contexts
+argocd cluster add prod-eu-context --name prod-eu
+argocd cluster list
+
+kubectl -n argocd get secrets -l argocd.argoproj.io/secret-type=cluster
+kubectl -n argocd label secret &lt;cluster-secret-name&gt; environment=prod region=eu-central-1</code></pre>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>applicationsets/payments-prod-clusters.yaml</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: payments-prod-clusters
+  namespace: argocd
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            environment: prod
+  template:
+    metadata:
+      name: "{{name}}-payments"
+    spec:
+      project: platform-prod
+      source:
+        repoURL: https://github.com/koffi-academy/platform-gitops.git
+        targetRevision: main
+        path: apps/payments/overlays/prod
+      destination:
+        server: "{{server}}"
+        namespace: payments-prod
+      syncPolicy:
+        automated:
+          enabled: true
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true</code></pre>
+                        </div>
+                        <h3>Design decision for multi-cluster</h3>
+                        <div class="go-grid-3">
+                           <div class="go-mini">
+                              <h4>One control plane cluster</h4>
+                              <p>One Argo CD manages several target clusters. Simple overview, but the availability of Argo CD becomes more important.</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>Argo CD per cluster</h4>
+                              <p>Strong isolation and local ownership. More bootstrap effort and more controller instances.</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>Hybrid</h4>
+                              <p>Central platform addons plus local team instances. Useful in large organizations with clear domains.</p>
+                           </div>
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>8. Multi-cluster avec ApplicationSet</h2>
+                        <p>Le GitOps multi-cluster ne passe pas a l'echelle si chaque Application est copiee manuellement. Les ApplicationSets generent des Applications a partir de generateurs, par exemple a partir de clusters enregistres portant les bons labels.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Enregistrer un cluster</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>kubectl config get-contexts
+argocd cluster add prod-eu-context --name prod-eu
+argocd cluster list
+
+kubectl -n argocd get secrets -l argocd.argoproj.io/secret-type=cluster
+kubectl -n argocd label secret &lt;cluster-secret-name&gt; environment=prod region=eu-central-1</code></pre>
+                        </div>
+                        <div class="code-card">
+                           <div class="code-title"><span>applicationsets/payments-prod-clusters.yaml</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: payments-prod-clusters
+  namespace: argocd
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            environment: prod
+  template:
+    metadata:
+      name: "{{name}}-payments"
+    spec:
+      project: platform-prod
+      source:
+        repoURL: https://github.com/koffi-academy/platform-gitops.git
+        targetRevision: main
+        path: apps/payments/overlays/prod
+      destination:
+        server: "{{server}}"
+        namespace: payments-prod
+      syncPolicy:
+        automated:
+          enabled: true
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true</code></pre>
+                        </div>
+                        <h3>Decision de conception pour le multi-cluster</h3>
+                        <div class="go-grid-3">
+                           <div class="go-mini">
+                              <h4>Un cluster control plane</h4>
+                              <p>Un seul Argo CD pilote plusieurs clusters cibles. Vue d'ensemble simple, mais la disponibilite d'Argo CD devient plus critique.</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>Un Argo CD par cluster</h4>
+                              <p>Forte isolation et responsabilite locale. Plus d'effort de bootstrap et davantage d'instances de controleur.</p>
+                           </div>
+                           <div class="go-mini">
+                              <h4>Hybride</h4>
+                              <p>Addons de plateforme centralises plus instances d'equipe locales. Pertinent pour les grandes organisations avec des domaines clairs.</p>
+                           </div>
+                        </div>
+                        </div>
                      </section>
 
                      <section id="betrieb">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>9. Betrieb und Troubleshooting</h2>
                         <p>GitOps reduziert manuelle Eingriffe, ersetzt aber keine Betriebsdisziplin. Sie brauchen klare Signale f&uuml;r Sync-Status, Health, Controller-Logs, Kubernetes Events und fehlerhafte Manifeste.</p>
                         <div class="code-card">
@@ -907,9 +1855,67 @@ kubectl -n payments-prod describe deploy payments-api</code></pre>
                               </tbody>
                            </table>
                         </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>9. Operations and troubleshooting</h2>
+                        <p>GitOps reduces manual intervention, but it does not replace operational discipline. You need clear signals for sync status, health, controller logs, Kubernetes events and faulty manifests.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Diagnostic commands</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>argocd app get payments-prod
+argocd app diff payments-prod
+argocd app history payments-prod
+argocd app manifests payments-prod
+
+kubectl -n argocd logs deploy/argocd-application-controller --tail=120
+kubectl -n payments-prod get events --sort-by=.lastTimestamp
+kubectl -n payments-prod describe deploy payments-api</code></pre>
+                        </div>
+                        <div class="go-table-wrap">
+                           <table class="go-table">
+                              <thead>
+                                 <tr><th>Symptom</th><th>Likely cause</th><th>Check</th></tr>
+                              </thead>
+                              <tbody>
+                                 <tr><td>OutOfSync persists</td><td>The manifest is mutated by another controller or the sync fails</td><td>Check <span class="go-inline-code">argocd app diff</span> and the controller logs</td></tr>
+                                 <tr><td>Degraded</td><td>Pods not ready, wrong probe, ImagePullBackOff, missing config</td><td><span class="go-inline-code">kubectl describe</span>, events, pod logs</td></tr>
+                                 <tr><td>Permission denied</td><td>The AppProject blocks the repository, namespace or resource type</td><td>Check AppProject destinations and the whitelist</td></tr>
+                                 <tr><td>ApplicationSet generates nothing</td><td>The generator finds no clusters or the labels do not match</td><td>Check cluster secrets and the label selector</td></tr>
+                              </tbody>
+                           </table>
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>9. Exploitation et depannage</h2>
+                        <p>GitOps reduit les interventions manuelles, mais ne remplace pas la discipline operationnelle. Il vous faut des signaux clairs pour le statut de synchronisation, la sante, les logs du controleur, les events Kubernetes et les manifestes defectueux.</p>
+                        <div class="code-card">
+                           <div class="code-title"><span>Commandes de diagnostic</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>argocd app get payments-prod
+argocd app diff payments-prod
+argocd app history payments-prod
+argocd app manifests payments-prod
+
+kubectl -n argocd logs deploy/argocd-application-controller --tail=120
+kubectl -n payments-prod get events --sort-by=.lastTimestamp
+kubectl -n payments-prod describe deploy payments-api</code></pre>
+                        </div>
+                        <div class="go-table-wrap">
+                           <table class="go-table">
+                              <thead>
+                                 <tr><th>Symptome</th><th>Cause probable</th><th>Verification</th></tr>
+                              </thead>
+                              <tbody>
+                                 <tr><td>OutOfSync persiste</td><td>Le manifeste est mute par un autre controleur ou la synchronisation echoue</td><td>Verifier <span class="go-inline-code">argocd app diff</span> et les logs du controleur</td></tr>
+                                 <tr><td>Degraded</td><td>Pods non ready, probe incorrecte, ImagePullBackOff, config manquante</td><td><span class="go-inline-code">kubectl describe</span>, events, logs des pods</td></tr>
+                                 <tr><td>Permission denied</td><td>L'AppProject bloque le depot, le namespace ou le type de ressource</td><td>Verifier les destinations de l'AppProject et la whitelist</td></tr>
+                                 <tr><td>L'ApplicationSet ne genere rien</td><td>Le generateur ne trouve aucun cluster ou les labels ne correspondent pas</td><td>Verifier les secrets de cluster et le selecteur de labels</td></tr>
+                              </tbody>
+                           </table>
+                        </div>
+                        </div>
                      </section>
 
                      <section id="labs">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>10. Praktische Labs</h2>
                         <p>Die Labs sind so aufgebaut, dass Sie Schritt f&uuml;r Schritt von einer lokalen Demo zu einem produktionsnahen Multi-Cluster-Design kommen. Jedes Lab hat ein klares Erfolgskriterium.</p>
 
@@ -984,9 +1990,163 @@ argocd app get guestbook-dev</code></pre>
                               <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Erfolg:</strong> Neue Cluster mit Label <span class="go-inline-code">environment=prod</span> erhalten automatisch die passende Application.</span></div>
                            </div>
                         </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>10. Hands-on labs</h2>
+                        <p>The labs are designed so that you progress step by step from a local demo to a production-like multi-cluster design. Every lab has a clear success criterion.</p>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 1: Install Argo CD locally</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 45 minutes</span>
+                           </div>
+                           <p>Install Argo CD in a local Kubernetes cluster, access the UI via port-forwarding and log in with the CLI.</p>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Success:</strong> <span class="go-inline-code">argocd version</span> and <span class="go-inline-code">argocd app list</span> work.</span></div>
+                           </div>
+                        </div>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 2: Deploy the first Application</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 60 minutes</span>
+                           </div>
+                           <p>Deploy the Guestbook application from the official example repository. Compare the Argo CD status before and after the sync.</p>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Success:</strong> The Application is <span class="go-inline-code">Synced</span> and <span class="go-inline-code">Healthy</span>.</span></div>
+                           </div>
+                        </div>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 3: Create and fix drift</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 45 minutes</span>
+                           </div>
+                           <p>Change the replica count directly in the cluster, observe the drift in Argo CD and then enable self-heal.</p>
+                           <div class="code-card">
+                              <div class="code-title"><span>Create drift on purpose</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copy</button></div>
+<pre><code>kubectl -n guestbook-dev scale deploy guestbook-ui --replicas=5
+argocd app diff guestbook-dev
+argocd app get guestbook-dev</code></pre>
+                           </div>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Success:</strong> You can explain why Argo CD reports OutOfSync and how self-heal restores the Git state.</span></div>
+                           </div>
+                        </div>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 4: Build Kustomize overlays</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 90 minutes</span>
+                           </div>
+                           <p>Create a base and two overlays for dev and prod. Deploy both environments as separate Applications.</p>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Success:</strong> Dev and prod use the same base code but differ in a controlled way in namespace, replicas and image tag.</span></div>
+                           </div>
+                        </div>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 5: Sync waves and migration hook</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 75 minutes</span>
+                           </div>
+                           <p>Order the namespace, ConfigMap, migration job and deployment with waves. The migration job runs as a PreSync hook.</p>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Success:</strong> The hook runs before the deployment and is cleaned up according to the defined hook policy.</span></div>
+                           </div>
+                        </div>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 6: ApplicationSet for multi-cluster</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 120 minutes</span>
+                           </div>
+                           <p>Register at least two clusters or simulate cluster secrets in a learning environment. Generate Applications via a cluster generator.</p>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Success:</strong> New clusters with the label <span class="go-inline-code">environment=prod</span> automatically receive the matching Application.</span></div>
+                           </div>
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>10. Labs pratiques</h2>
+                        <p>Les labs sont concus pour que vous progressiez pas a pas d'une demo locale vers un design multi-cluster proche de la production. Chaque lab a un critere de reussite clair.</p>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 1 : Installer Argo CD en local</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 45 minutes</span>
+                           </div>
+                           <p>Installez Argo CD dans un cluster Kubernetes local, accedez a l'UI via port-forwarding et connectez-vous avec la CLI.</p>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Reussite :</strong> <span class="go-inline-code">argocd version</span> et <span class="go-inline-code">argocd app list</span> fonctionnent.</span></div>
+                           </div>
+                        </div>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 2 : Deployer la premiere Application</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 60 minutes</span>
+                           </div>
+                           <p>Deployez l'application Guestbook depuis le depot d'exemples officiel. Comparez le statut Argo CD avant et apres la synchronisation.</p>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Reussite :</strong> L'Application est <span class="go-inline-code">Synced</span> et <span class="go-inline-code">Healthy</span>.</span></div>
+                           </div>
+                        </div>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 3 : Creer et corriger un drift</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 45 minutes</span>
+                           </div>
+                           <p>Modifiez le nombre de replicas directement dans le cluster, observez le drift dans Argo CD puis activez le self-heal.</p>
+                           <div class="code-card">
+                              <div class="code-title"><span>Creer un drift volontairement</span><button class="copy-code" type="button"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code>kubectl -n guestbook-dev scale deploy guestbook-ui --replicas=5
+argocd app diff guestbook-dev
+argocd app get guestbook-dev</code></pre>
+                           </div>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Reussite :</strong> Vous pouvez expliquer pourquoi Argo CD signale OutOfSync et comment le self-heal restaure l'etat Git.</span></div>
+                           </div>
+                        </div>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 4 : Construire des overlays Kustomize</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 90 minutes</span>
+                           </div>
+                           <p>Creez une base et deux overlays pour dev et prod. Deployez les deux environnements comme des Applications distinctes.</p>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Reussite :</strong> Dev et prod utilisent le meme code de base, mais different de maniere controlee sur le namespace, les replicas et le tag d'image.</span></div>
+                           </div>
+                        </div>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 5 : Sync waves et hook de migration</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 75 minutes</span>
+                           </div>
+                           <p>Ordonnez le namespace, la ConfigMap, le job de migration et le deploiement avec des waves. Le job de migration s'execute en tant que hook PreSync.</p>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Reussite :</strong> Le hook s'execute avant le deploiement et est nettoye selon la hook policy definie.</span></div>
+                           </div>
+                        </div>
+
+                        <div class="go-lab">
+                           <div class="go-lab-head">
+                              <h3>Lab 6 : ApplicationSet pour le multi-cluster</h3>
+                              <span class="go-badge"><i class="fa-solid fa-clock"></i> 120 minutes</span>
+                           </div>
+                           <p>Enregistrez au moins deux clusters ou simulez des secrets de cluster dans un environnement d'apprentissage. Generez des Applications via un cluster generator.</p>
+                           <div class="go-checklist">
+                              <div class="go-check"><i class="fa-solid fa-check"></i><span><strong>Reussite :</strong> Les nouveaux clusters portant le label <span class="go-inline-code">environment=prod</span> recoivent automatiquement l'Application correspondante.</span></div>
+                           </div>
+                        </div>
+                        </div>
                      </section>
 
                      <section id="abschluss">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>11. Abschlussprojekt</h2>
                         <div class="go-project">
                            <h3>Projekt: Produktionsnaher GitOps-Stack</h3>
@@ -1006,9 +2166,53 @@ argocd app get guestbook-dev</code></pre>
                            <div class="go-check"><i class="fa-solid fa-check"></i><span>AppProjects begrenzen Repositories, Ziel-Namespaces und Ressourcentypen.</span></div>
                            <div class="go-check"><i class="fa-solid fa-check"></i><span>ApplicationSet-Templates sind labelbasiert und nicht clusterhart codiert.</span></div>
                         </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>11. Final project</h2>
+                        <div class="go-project">
+                           <h3>Project: Production-like GitOps stack</h3>
+                           <p>Build a GitOps repository that rolls out a sample application to dev and prod, uses governance through AppProjects and distributes prod across multiple clusters via an ApplicationSet.</p>
+                           <ul>
+                              <li>One repository with base, overlays, AppProjects, Applications and ApplicationSet.</li>
+                              <li>Manual sync for dev, auto-sync with prune and self-heal for prod.</li>
+                              <li>At least one sync wave and one PreSync hook.</li>
+                              <li>A documented rollback process and a troubleshooting runbook.</li>
+                              <li>No plain-text secrets in Git.</li>
+                           </ul>
+                        </div>
+                        <h3>Assessment criteria</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span>The repo structure is understandable and repeatable for a team.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span>Sync policies are justified and not enabled blanket-style.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span>AppProjects limit repositories, target namespaces and resource types.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span>ApplicationSet templates are label-based and not hard-coded per cluster.</span></div>
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>11. Projet final</h2>
+                        <div class="go-project">
+                           <h3>Projet : stack GitOps proche de la production</h3>
+                           <p>Construisez un depot GitOps qui deploie une application d'exemple en dev et en prod, utilise la gouvernance via les AppProjects et distribue la prod sur plusieurs clusters via un ApplicationSet.</p>
+                           <ul>
+                              <li>Un depot avec base, overlays, AppProjects, Applications et ApplicationSet.</li>
+                              <li>Sync manuel pour dev, auto-sync avec prune et self-heal pour prod.</li>
+                              <li>Au moins une sync wave et un hook PreSync.</li>
+                              <li>Un processus de rollback documente et un runbook de depannage.</li>
+                              <li>Aucun secret en clair dans Git.</li>
+                           </ul>
+                        </div>
+                        <h3>Criteres d'evaluation</h3>
+                        <div class="go-checklist">
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span>La structure du depot est comprehensible et reproductible pour une equipe.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span>Les sync policies sont justifiees et non activees de maniere systematique.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span>Les AppProjects limitent les depots, les namespaces cibles et les types de ressources.</span></div>
+                           <div class="go-check"><i class="fa-solid fa-check"></i><span>Les templates d'ApplicationSet sont bases sur des labels et non codes en dur par cluster.</span></div>
+                        </div>
+                        </div>
                      </section>
 
                      <section id="quellen">
+                        <div class="lang-sect active" data-lang="de">
                         <h2>Offizielle Quellen</h2>
                         <p>Die technischen Beispiele orientieren sich an der offiziellen Argo-CD-Dokumentation. F&uuml;r Produktion sollten Sie immer die konkrete Version Ihrer Argo-CD-Installation gegen die passende Dokumentationsversion pr&uuml;fen.</p>
                         <div class="source-list">
@@ -1016,6 +2220,27 @@ argocd app get guestbook-dev</code></pre>
                            <a href="https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Automated Sync Policy</a>
                            <a href="https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Sync Phases and Waves</a>
                            <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Cluster Bootstrapping</a>
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="en">
+                        <h2>Official sources</h2>
+                        <p>The technical examples follow the official Argo CD documentation. For production, you should always check the specific version of your Argo CD installation against the matching documentation version.</p>
+                        <div class="source-list">
+                           <a href="https://argo-cd.readthedocs.io/en/stable/getting_started/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Argo CD Getting Started</a>
+                           <a href="https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Automated Sync Policy</a>
+                           <a href="https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Sync Phases and Waves</a>
+                           <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Cluster Bootstrapping</a>
+                        </div>
+                        </div>
+                        <div class="lang-sect" data-lang="fr">
+                        <h2>Sources officielles</h2>
+                        <p>Les exemples techniques s'appuient sur la documentation officielle d'Argo CD. En production, vous devez toujours verifier la version precise de votre installation Argo CD par rapport a la version de documentation correspondante.</p>
+                        <div class="source-list">
+                           <a href="https://argo-cd.readthedocs.io/en/stable/getting_started/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Argo CD Getting Started</a>
+                           <a href="https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Automated Sync Policy</a>
+                           <a href="https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Sync Phases and Waves</a>
+                           <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Cluster Bootstrapping</a>
+                        </div>
                         </div>
                      </section>
                   </article>
@@ -1073,13 +2298,26 @@ argocd app get guestbook-dev</code></pre>
    <script src="/assets/js/mobile-nav.js"></script>
    <script src="/assets/js/gitops-course.js"></script>
 <script>
+var i18n={
+  de:{kicker:"GitOps auf Kubernetes",heroTitle:"GitOps mit ArgoCD",heroSubtitle:"Implementieren Sie deklarative Deployments auf Kubernetes mit Argo CD. Sie lernen, wie Git zur Quelle der Wahrheit wird, wie Sync-Strategien produktionsreif gestaltet werden und wie mehrere Cluster sauber mit ApplicationSets betrieben werden.",startBtn:"Kurs starten",labsBtn:"Praktische Labs",duration:"3 Wochen",modules:"8 Module",labs:"6 Labs",level:"Fortgeschritten",flowGitTitle:"Git Repository",flowGitDesc:"Manifeste, Helm Charts, Kustomize Overlays und Review-Historie.",flowArgoTitle:"Argo CD Controller",flowArgoDesc:"Vergleicht Zielzustand mit Live-Zustand und synchronisiert kontrolliert.",stateDesired:"Git: replicas=3, image=v1.4.2",stateLive:"Kubernetes: replicas=2, image=v1.4.1",stateSync:"Argo CD korrigiert Drift nach Policy",accessTitle:"Praxisnaher Kurs mit produktionsnahen Mustern",accessDesc:"Der Kurs ist als direkt nutzbares Lernmaterial aufgebaut: erst das mentale Modell, dann lauffähige Manifeste, danach Governance, Multi-Cluster und Betrieb.",certLabel:"Abschlussprojekt inklusive",eyebrowGoals:"Lernziele",goalsTitle:"Was Sie am Ende sicher beherrschen",goalsDesc:"Sie bauen nicht nur eine Demo, sondern ein belastbares GitOps-Betriebsmodell: nachvollziehbare Änderungen, kontrollierte Synchronisation, klare Berechtigungen und sauberes Multi-Cluster-Deployment.",goal1Title:"GitOps-Modell",goal1Desc:"Sie verstehen Desired State, Drift, Pull-basierte Deployments, Auditierbarkeit und die Trennung zwischen CI und CD.",goal2Title:"Argo CD Kernobjekte",goal2Desc:"Sie arbeiten sicher mit Application, AppProject, Repository, Cluster Credentials und Namespace-Scopes.",goal3Title:"Sync-Strategien",goal3Desc:"Sie entscheiden bewusst zwischen manuellem Sync, Auto-Sync, Prune, Self-Heal, Hooks, Waves und Sync Windows.",goal4Title:"Multi-Cluster",goal4Desc:"Sie deployen Anwendungen per ApplicationSet in mehrere Cluster und steuern Umgebungen über Labels und Templates.",tocTitle:"Kursnavigation",toc0:"Was ist Argo CD?",toc1:"GitOps-Modell",toc2:"Installation",toc3:"Erste Application",toc4:"Repo-Struktur",toc5:"Sync-Strategien",toc6:"Hooks & Waves",toc7:"Governance",toc8:"Multi-Cluster",toc9:"Betrieb",tocLabs:"Labs"},
+  en:{kicker:"GitOps on Kubernetes",heroTitle:"GitOps with Argo CD",heroSubtitle:"Implement declarative deployments on Kubernetes with Argo CD. You learn how Git becomes the source of truth, how to design production-ready sync strategies and how to run multiple clusters cleanly with ApplicationSets.",startBtn:"Start course",labsBtn:"Hands-on labs",duration:"3 weeks",modules:"8 modules",labs:"6 labs",level:"Advanced",flowGitTitle:"Git repository",flowGitDesc:"Manifests, Helm charts, Kustomize overlays and review history.",flowArgoTitle:"Argo CD controller",flowArgoDesc:"Compares the desired state with the live state and synchronizes in a controlled way.",stateDesired:"Git: replicas=3, image=v1.4.2",stateLive:"Kubernetes: replicas=2, image=v1.4.1",stateSync:"Argo CD corrects drift per policy",accessTitle:"A practical course with production-grade patterns",accessDesc:"The course is built as directly usable learning material: first the mental model, then working manifests, then governance, multi-cluster and operations.",certLabel:"Final project included",eyebrowGoals:"Learning objectives",goalsTitle:"What you will confidently master in the end",goalsDesc:"You build not just a demo, but a resilient GitOps operating model: traceable changes, controlled synchronization, clear permissions and clean multi-cluster deployment.",goal1Title:"GitOps model",goal1Desc:"You understand desired state, drift, pull-based deployments, auditability and the separation between CI and CD.",goal2Title:"Argo CD core objects",goal2Desc:"You work confidently with Application, AppProject, Repository, cluster credentials and namespace scopes.",goal3Title:"Sync strategies",goal3Desc:"You deliberately choose between manual sync, auto-sync, prune, self-heal, hooks, waves and sync windows.",goal4Title:"Multi-cluster",goal4Desc:"You deploy applications to multiple clusters via ApplicationSet and steer environments through labels and templates.",tocTitle:"Course navigation",toc0:"What is Argo CD?",toc1:"GitOps model",toc2:"Installation",toc3:"First Application",toc4:"Repo structure",toc5:"Sync strategies",toc6:"Hooks & waves",toc7:"Governance",toc8:"Multi-cluster",toc9:"Operations",tocLabs:"Labs"},
+  fr:{kicker:"GitOps sur Kubernetes",heroTitle:"GitOps avec Argo CD",heroSubtitle:"Mettez en oeuvre des deploiements declaratifs sur Kubernetes avec Argo CD. Vous apprendrez comment Git devient la source de verite, comment concevoir des strategies de synchronisation pretes pour la production et comment exploiter proprement plusieurs clusters avec les ApplicationSets.",startBtn:"Demarrer le cours",labsBtn:"Labs pratiques",duration:"3 semaines",modules:"8 modules",labs:"6 labs",level:"Avance",flowGitTitle:"Depot Git",flowGitDesc:"Manifestes, charts Helm, overlays Kustomize et historique des revues.",flowArgoTitle:"Controleur Argo CD",flowArgoDesc:"Compare l'etat souhaite a l'etat live et synchronise de maniere controlee.",stateDesired:"Git : replicas=3, image=v1.4.2",stateLive:"Kubernetes : replicas=2, image=v1.4.1",stateSync:"Argo CD corrige le drift selon la policy",accessTitle:"Un cours pratique avec des patterns proches de la production",accessDesc:"Le cours est concu comme un materiel d'apprentissage directement utilisable : d'abord le modele mental, puis des manifestes fonctionnels, ensuite la gouvernance, le multi-cluster et l'exploitation.",certLabel:"Projet final inclus",eyebrowGoals:"Objectifs",goalsTitle:"Ce que vous maitriserez vraiment au final",goalsDesc:"Vous ne construisez pas seulement une demo, mais un modele operationnel GitOps robuste : des changements tracables, une synchronisation controlee, des permissions claires et un deploiement multi-cluster propre.",goal1Title:"Modele GitOps",goal1Desc:"Vous comprenez le desired state, le drift, les deploiements bases sur le pull, l'auditabilite et la separation entre CI et CD.",goal2Title:"Objets cles d'Argo CD",goal2Desc:"Vous manipulez avec assurance Application, AppProject, Repository, les credentials de cluster et les scopes de namespace.",goal3Title:"Strategies de synchronisation",goal3Desc:"Vous choisissez deliberement entre sync manuel, auto-sync, prune, self-heal, hooks, waves et sync windows.",goal4Title:"Multi-cluster",goal4Desc:"Vous deployez des applications sur plusieurs clusters via ApplicationSet et pilotez les environnements via des labels et des templates.",tocTitle:"Navigation du cours",toc0:"Qu'est-ce qu'Argo CD ?",toc1:"Modele GitOps",toc2:"Installation",toc3:"Premiere Application",toc4:"Structure du depot",toc5:"Strategies de sync",toc6:"Hooks & waves",toc7:"Gouvernance",toc8:"Multi-cluster",toc9:"Exploitation",tocLabs:"Labs"}
+};
 var klMeta={de:{code:'DE',flag:'fi-de'},en:{code:'EN',flag:'fi-gb'},fr:{code:'FR',flag:'fi-fr'}};
+function setLanguage(lang){
+  if(!i18n[lang])lang='de';
+  document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(i18n[lang]&&i18n[lang][k]!=null)el.textContent=i18n[lang][k];});
+  document.querySelectorAll('.lang-sect').forEach(function(s){s.classList.toggle('active',s.getAttribute('data-lang')===lang);});
+  document.documentElement.lang=lang;
+  localStorage.setItem('preferred-lang',lang);
+  klSync(lang);
+}
 function klToggle(){var d=document.getElementById('klDrop');var o=d.classList.toggle('open');document.getElementById('klBtn').setAttribute('aria-expanded',String(o));}
 function klClose(){var d=document.getElementById('klDrop');if(d){d.classList.remove('open');document.getElementById('klBtn').setAttribute('aria-expanded','false');}}
-function klPick(lang){if(window.setLabDetailLang)window.setLabDetailLang(lang);else if(window.setLabsLang)window.setLabsLang(lang);else if(typeof setLanguage==='function')setLanguage(lang);else if(typeof setLang==='function')setLang(lang);klSync(lang);klClose();}
+function klPick(lang){setLanguage(lang);klClose();}
 function klSync(l){var m=klMeta[l];if(!m)return;var f=document.getElementById('klFlag');var c=document.getElementById('klCode');if(f)f.className='fi '+m.flag;if(c)c.textContent=m.code;document.querySelectorAll('.kl-opt').forEach(function(o){o.classList.toggle('kl-on',o.dataset.kl===l);});}
 document.addEventListener('click',function(e){var d=document.getElementById('klDrop');if(d&&d.classList.contains('open')&&!d.contains(e.target))klClose();});
-document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';klSync(l);});
+document.addEventListener('DOMContentLoaded',function(){var l=localStorage.getItem('preferred-lang')||'de';setLanguage(l);});
 </script>
 </body>
 </html>
