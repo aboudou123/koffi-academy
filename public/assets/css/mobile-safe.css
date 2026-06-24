@@ -1,40 +1,75 @@
 /*
- * Koffi Academy — filet de sécurité anti-débordement horizontal (mobile/tablette).
- * Empêche images, médias, blocs de code, tableaux et longs mots/URLs de dépasser
- * la largeur de l'écran (cause la plus fréquente de "page pas responsive").
- * Scopé à <= 1024px : n'affecte pas la mise en page desktop.
+ * Koffi Academy — correctif responsive global des pages de cours.
+ * Charge sur toutes les pages de cours -> source unique de verite.
+ *
+ * CAUSE RACINE du debordement horizontal sur mobile :
+ *   Les items de grille/flex ont par defaut min-width:auto et refusent de
+ *   devenir plus etroits que leur contenu (min-content). Un seul element large
+ *   (tableau, ligne de code, mot insecable, piste de grille en px) elargit
+ *   alors toute la piste au-dela de l'ecran. Comme la carte de contenu est un
+ *   seul item de grille, TOUT son texte deborde.
+ *
+ * STRATEGIE (<= 1024px) : neutraliser min-width:auto, forcer 1 colonne,
+ *   contenir code/tableaux, couper les mots longs, interdire le scroll page.
  */
 @media (max-width: 1024px) {
-  /* Garde-fou : aucun defilement horizontal de la page entiere.
-     overflow-x:clip clippe sans casser position:sticky (contrairement a hidden);
-     hidden sert de repli pour les navigateurs plus anciens. */
-  html, body { max-width: 100%; overflow-x: hidden; overflow-x: clip; }
-  /* Conteneurs larges courants : ne jamais depasser l'ecran */
-  .container, .wrap, .go-shell, .content-shell, section, header, footer { max-width: 100%; }
-  /* Médias : jamais plus larges que leur conteneur */
+
+  /* 1) Jamais de defilement / debordement horizontal de la page */
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* 2) CAUSE RACINE : autoriser conteneurs ET items de grille/flex a retrecir
+        sous leur contenu (sinon ils gardent la largeur de l'element le plus
+        large et poussent tout hors de l'ecran). */
+  .go-shell, .go-layout, .go-main, .go-sidebar, .go-reader, .go-card,
+  .go-hero, .go-hero-grid, .go-access, .go-access-inner, .go-section,
+  .go-meta, .go-outcomes, .go-grid-2, .go-grid-3, .go-flow, .go-state-row,
+  .source-list, .sfooter-cols,
+  .article-content, .post-content-text, .lesson-card, .lesson-content,
+  .pe-course-brief, .pe-split-visual, .pe-practice-grid, .pe-flow,
+  .pe-hero-figure, .pe-visual, .pe-compare-card, .pe-brief-card, .pe-practice-card,
+  main, article, section,
+  .go-layout > *, .go-hero-grid > *, .go-access-inner > *, .go-flow > *,
+  .go-state-row > *, .go-meta > *, .go-outcomes > *, .go-grid-2 > *, .go-grid-3 > *,
+  .source-list > *, .sfooter-cols > *,
+  .pe-course-brief > *, .pe-split-visual > *, .pe-practice-grid > *, .pe-flow > * {
+    min-width: 0 !important;
+  }
+
+  /* 3) Toutes les grilles multi-colonnes connues -> une seule colonne */
+  .go-hero-grid, .go-layout, .go-access-inner, .go-meta, .go-outcomes,
+  .go-grid-2, .go-grid-3, .go-flow, .go-state-row, .source-list, .sfooter-cols,
+  .pe-course-brief, .pe-split-visual, .pe-practice-grid, .pe-flow {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 4) Medias : jamais plus larges que leur conteneur */
   img, svg, video, canvas, iframe, embed, object, picture {
     max-width: 100%;
     height: auto;
   }
-  /* Blocs de code : défilement interne au lieu de pousser la page */
+
+  /* 5) Blocs de code : defilent dans leur propre cadre, ne poussent pas la page */
   pre {
     max-width: 100%;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
   }
-  /* Tableaux : ne forcent JAMAIS la largeur de la page.
-     On neutralise les min-width (ex. .go-table{min-width:720px}) qui poussaient
-     toute la page hors de l'ecran, et la table defile dans son propre cadre. */
+
+  /* 6) Tableaux : ne forcent jamais la largeur de la page (min-width neutralise),
+        defilent dans leur cadre */
   table, .go-table {
     display: block;
     width: 100%;
     max-width: 100%;
     min-width: 0 !important;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
   }
-  /* Longs mots, URLs et tokens de code : on les coupe au lieu de déborder */
-  p, li, h1, h2, h3, h4, h5, h6, blockquote, td, th, figcaption, dd, dt, span, a, code {
+
+  /* 7) Mots, URLs et tokens de code longs : coupes au lieu de deborder */
+  body, p, li, h1, h2, h3, h4, h5, h6, blockquote, td, th, figcaption,
+  dd, dt, span, a, code, strong, em, label {
     overflow-wrap: break-word;
     word-break: break-word;
   }
