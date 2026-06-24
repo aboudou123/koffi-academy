@@ -5,6 +5,12 @@
  * Scopé à <= 1024px : n'affecte pas la mise en page desktop.
  */
 @media (max-width: 1024px) {
+  /* Garde-fou : aucun defilement horizontal de la page entiere.
+     overflow-x:clip clippe sans casser position:sticky (contrairement a hidden);
+     hidden sert de repli pour les navigateurs plus anciens. */
+  html, body { max-width: 100%; overflow-x: hidden; overflow-x: clip; }
+  /* Conteneurs larges courants : ne jamais depasser l'ecran */
+  .container, .wrap, .go-shell, .content-shell, section, header, footer { max-width: 100%; }
   /* Médias : jamais plus larges que leur conteneur */
   img, svg, video, canvas, iframe, embed, object, picture {
     max-width: 100%;
