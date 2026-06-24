@@ -22,11 +22,14 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-  /* Tableaux : défilables horizontalement dans leur cadre */
-  table {
+  /* Tableaux : ne forcent JAMAIS la largeur de la page.
+     On neutralise les min-width (ex. .go-table{min-width:720px}) qui poussaient
+     toute la page hors de l'ecran, et la table defile dans son propre cadre. */
+  table, .go-table {
     display: block;
     width: 100%;
     max-width: 100%;
+    min-width: 0 !important;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
