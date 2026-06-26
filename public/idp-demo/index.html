@@ -178,8 +178,20 @@ button{cursor:pointer;border:none;background:none;font:inherit}
   background:linear-gradient(135deg,#6366f1,#8b5cf6);
   display:flex;align-items:center;justify-content:center;
   color:#fff;font-size:12px;font-weight:700;cursor:pointer;
-  margin-left:4px;
+  margin-left:4px;border:none;
 }
+.tb-usermenu{position:relative;margin-left:4px}
+.tb-usermenu .topbar-avatar{margin-left:0}
+.tb-userdropdown{position:absolute;right:0;top:42px;width:242px;background:#fff;border:1px solid #e2e8f0;border-radius:11px;box-shadow:0 18px 42px rgba(15,23,42,.18);padding:6px;display:none;z-index:210}
+.tb-userdropdown.open{display:block}
+.tb-uhead{padding:11px 12px;border-bottom:1px solid #eef2f7;margin-bottom:6px}
+.tb-uname{font-size:13px;font-weight:750;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-uemail{font-size:11.5px;color:#94a3b8;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-uitem{width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:650;color:#334155;text-align:left;background:none;border:none;cursor:pointer}
+.tb-uitem:hover{background:#f1f5f9}
+.tb-uitem i{width:15px;text-align:center;color:#64748b}
+.tb-uitem.logout{color:#b91c1c}.tb-uitem.logout:hover{background:#fef2f2}.tb-uitem.logout i{color:#dc2626}
+.tb-uitem.login{color:#2563eb}.tb-uitem.login i{color:#3b82f6}
 
 /* Lang switcher (topbar) */
 .kl-topbar{position:relative}
@@ -893,7 +905,17 @@ button{cursor:pointer;border:none;background:none;font:inherit}
           </div>
         </div>
 
-        <div class="topbar-avatar">KA</div>
+        <div class="tb-usermenu" id="tbUserMenu">
+          <button type="button" class="topbar-avatar" id="tbAvatarBtn" onclick="tbUserToggle(event)" aria-haspopup="true" aria-expanded="false">KA</button>
+          <div class="tb-userdropdown" id="tbUserDropdown" role="menu">
+            <div class="tb-uhead">
+              <div class="tb-uname" id="tbUserName">Koffi Academy</div>
+              <div class="tb-uemail" id="tbUserEmail">—</div>
+            </div>
+            <button class="tb-uitem login" id="tbLogin" type="button" onclick="idpLoginRedirect()"><i class="fa-solid fa-right-to-bracket"></i> <span data-i18n="auth.login">Anmelden</span></button>
+            <button class="tb-uitem logout" id="tbLogout" type="button" onclick="idpLogout()" style="display:none"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="user.logout">Abmelden</span></button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -1076,7 +1098,7 @@ var I18N = {
     'toast.success': 'Aktion erfolgreich gestartet',
     'auth.title': 'Anmeldung erforderlich',
     'auth.desc': 'Diese Funktion ist angemeldeten Nutzern vorbehalten. Melde dich an oder erstelle ein Konto, um fortzufahren.',
-    'auth.login': 'Anmelden', 'auth.register': 'Konto erstellen',
+    'auth.login': 'Anmelden', 'auth.register': 'Konto erstellen', 'user.logout': 'Abmelden',
     'auth.cancel': 'Abbrechen — öffentlich weiterlesen',
     'auth.unavailable': 'Anmeldedienst aktuell nicht erreichbar. Bitte später erneut versuchen.',
     'modal.offline': 'Server nicht erreichbar',
@@ -1193,7 +1215,7 @@ var I18N = {
     'toast.success': 'Action successfully started',
     'auth.title': 'Sign-in required',
     'auth.desc': 'This feature is reserved for signed-in users. Sign in or create an account to continue.',
-    'auth.login': 'Sign in', 'auth.register': 'Create account',
+    'auth.login': 'Sign in', 'auth.register': 'Create account', 'user.logout': 'Log out',
     'auth.cancel': 'Cancel — keep browsing publicly',
     'auth.unavailable': 'Sign-in service is currently unavailable. Please try again later.',
     'modal.offline': 'Server unreachable',
@@ -1310,7 +1332,7 @@ var I18N = {
     'toast.success': 'Action démarrée avec succès',
     'auth.title': 'Connexion requise',
     'auth.desc': 'Cette fonctionnalité est réservée aux utilisateurs connectés. Connecte-toi ou crée un compte pour continuer.',
-    'auth.login': 'Se connecter', 'auth.register': 'Créer un compte',
+    'auth.login': 'Se connecter', 'auth.register': 'Créer un compte', 'user.logout': 'Se déconnecter',
     'auth.cancel': 'Annuler — continuer la lecture publique',
     'auth.unavailable': 'Service de connexion momentanément indisponible. Réessaie plus tard.',
     'modal.offline': 'Serveur inaccessible',
@@ -1537,6 +1559,7 @@ var lang = safeGet('localStorage', 'preferred-lang') || 'de';
 if (!I18N[lang]) lang = 'de';
 var activeFilter = 'all';
 var activeCard = null;
+var _fbSignOut = null;                // Firebase signOut fn once auth module loads
 var IDP_API_BASE = window.location.protocol === 'file:' ? 'http://127.0.0.1:4173' : '';
 
 /* ─── Auth state machine ─────────────────────────────────────────────────────
@@ -1616,6 +1639,8 @@ document.addEventListener('click', function(e) {
     document.getElementById('klPanel').classList.remove('open');
     document.getElementById('klBtn').setAttribute('aria-expanded','false');
   }
+  var um = document.getElementById('tbUserMenu');
+  if (um && !um.contains(e.target)) tbUserClose();
 });
 
 /* ─── Sidebar toggle ───────────────────────────────────────────────────────── */
@@ -1758,15 +1783,66 @@ function pairRow(a, b) {
 
 /* ─── Auth guard ─────────────────────────────────────────────────────────────── */
 function updateUserUI(user) {
-  if (!user) return;
+  if (!user) { updateUserMenu(null); return; }
   var name = user.displayName || user.email || 'User';
-  var initials = name.split(' ').map(function(n){ return n[0] || ''; }).slice(0,2).join('').toUpperCase();
+  var initials = name.split(/[ @._-]/).filter(Boolean).map(function(n){ return n[0] || ''; }).slice(0,2).join('').toUpperCase();
   var sbAvatar = document.querySelector('.sb-avatar');
   if (sbAvatar) sbAvatar.textContent = initials;
   var sbName = document.querySelector('.sb-user-name');
   if (sbName) sbName.textContent = name;
   var tAvatar = document.querySelector('.topbar-avatar');
   if (tAvatar) tAvatar.textContent = initials;
+  updateUserMenu(user);
+}
+
+/* Populates the topbar user dropdown and toggles Log in / Log out by state. */
+function updateUserMenu(user) {
+  var dn = document.getElementById('tbUserName');
+  var de = document.getElementById('tbUserEmail');
+  var login = document.getElementById('tbLogin');
+  var logout = document.getElementById('tbLogout');
+  if (user) {
+    if (dn) dn.textContent = user.displayName || user.email || 'User';
+    if (de) de.textContent = user.email || '';
+    if (login) login.style.display = 'none';
+    if (logout) logout.style.display = '';
+  } else {
+    if (dn) dn.textContent = (lang==='fr'?'Invité':lang==='en'?'Guest':'Gast');
+    if (de) de.textContent = (lang==='fr'?'Non connecté':lang==='en'?'Not signed in':'Nicht angemeldet');
+    if (login) login.style.display = '';
+    if (logout) logout.style.display = 'none';
+  }
+}
+
+/* ─── Topbar user menu controls ─────────────────────────────────────────────── */
+function tbUserToggle(ev) {
+  if (ev) ev.stopPropagation();
+  var dd = document.getElementById('tbUserDropdown');
+  var btn = document.getElementById('tbAvatarBtn');
+  if (!dd) return;
+  var open = dd.classList.toggle('open');
+  if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+function tbUserClose() {
+  var dd = document.getElementById('tbUserDropdown');
+  if (dd) dd.classList.remove('open');
+}
+function idpLoginRedirect() {
+  tbUserClose();
+  location.href = '/login/?redirect=' + encodeURIComponent('/idp-demo/');
+}
+function idpLogout() {
+  tbUserClose();
+  var done = function() {
+    showToast(lang==='fr'?'Vous êtes déconnecté.':lang==='en'?'You are signed out.':'Du bist abgemeldet.');
+  };
+  if (_fbSignOut && _fbAuth) {
+    Promise.resolve(_fbSignOut(_fbAuth)).then(done).catch(function(e){ console.warn('[auth] signOut failed', e); done(); });
+  } else {
+    // Auth provider never loaded — clear local state and reflect guest UI.
+    setAuthState('unauthenticated');
+    done();
+  }
 }
 
 /* ─── Auth state transitions ─────────────────────────────────────────────────
@@ -1780,6 +1856,8 @@ function setAuthState(state, user) {
   if (state === 'authenticated') {
     updateUserUI(user);
     resumeAfterLogin();
+  } else {
+    updateUserMenu(null);
   }
 }
 
@@ -1803,6 +1881,7 @@ function initFirebaseAuth() {
     var appMod = mods[0]; var authMod = mods[1]; var cfg = mods[2];
     var fbApp = appMod.getApps().length ? appMod.getApp() : appMod.initializeApp(cfg.firebaseConfig);
     _fbAuth = authMod.getAuth(fbApp);
+    _fbSignOut = authMod.signOut;
     // Fires once on init, then again on every login/logout — keeps state live.
     authMod.onAuthStateChanged(_fbAuth, function(user) {
       if (!settled) { settled = true; clearTimeout(timer); }
@@ -2268,7 +2347,7 @@ function showToast(msg) {
 
 /* ─── Keyboard ──────────────────────────────────────────────────────────────── */
 document.addEventListener('keydown', function(e){
-  if (e.key === 'Escape') document.getElementById('modalBackdrop').classList.remove('open');
+  if (e.key === 'Escape') { document.getElementById('modalBackdrop').classList.remove('open'); tbUserClose(); }
   if ((e.ctrlKey||e.metaKey) && e.key === 'k') {
     e.preventDefault();
     document.getElementById('globalSearch').focus();
@@ -3074,6 +3153,6 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v4</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v5</div>
 </body>
 </html>
