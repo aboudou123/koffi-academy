@@ -629,6 +629,67 @@ button{cursor:pointer;border:none;background:none;font:inherit}
 .ds-status-txt.healthy{color:#059669}.ds-status-txt.syncing{color:#2563eb}.ds-status-txt.warning{color:#d97706}
 .ds-kind-badge{font-size:10px;font-weight:700;color:#64748b;background:#f1f5f9;border-radius:9px;padding:1px 7px;flex-shrink:0}
 .build-stamp{position:fixed;right:10px;bottom:8px;z-index:50;pointer-events:none;font:600 10px/1 monospace;color:#94a3b8;background:rgba(15,23,42,.06);border:1px solid rgba(148,163,184,.3);border-radius:6px;padding:3px 7px;opacity:.8}
+/* ─── Automations (Port-style) ────────────────────────────────────────────────── */
+.auto-banner{display:flex;align-items:center;gap:11px;background:linear-gradient(90deg,#eef2ff,#f5f3ff);border:1px solid #e0e7ff;border-radius:10px;padding:12px 16px;margin-bottom:18px}
+.auto-banner i{color:#6366f1;font-size:15px}
+.auto-banner span{font-size:13px;color:#3730a3}
+.auto-banner a{color:#4f46e5;font-weight:700;text-decoration:underline;cursor:pointer}
+.auto-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.auto-search{flex:1;max-width:340px;height:38px;display:flex;align-items:center;gap:9px;border:1px solid #e2e8f0;border-radius:9px;background:#fff;padding:0 12px;color:#94a3b8}
+.auto-search input{flex:1;border:0;background:transparent;font-size:13px;color:#1e293b}
+.auto-search input:focus{outline:0}
+.auto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.auto-card{background:#fff;border:1px solid #e2e8f0;border-radius:13px;overflow:hidden;cursor:pointer;transition:all .16s;display:flex;flex-direction:column;position:relative}
+.auto-card:hover{border-color:#c7d2fe;box-shadow:0 10px 28px rgba(67,56,202,.1);transform:translateY(-2px)}
+.auto-card.disabled{opacity:.62}
+.auto-card.disabled .auto-flow{filter:grayscale(.6)}
+.auto-flow{display:flex;align-items:center;justify-content:center;gap:14px;background:#f8fafc;border-bottom:1px solid #eef2f7;padding:26px 16px;position:relative}
+.auto-tile{width:50px;height:50px;border-radius:13px;background:#fff;border:1px solid #e8edf3;box-shadow:0 3px 8px rgba(15,23,42,.06);display:flex;align-items:center;justify-content:center;font-size:21px}
+.auto-arrow{color:#cbd5e1;font-size:15px}
+.auto-state-dot{position:absolute;top:11px;right:12px;display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:999px}
+.auto-state-dot.on{background:#dcfce7;color:#15803d}
+.auto-state-dot.off{background:#f1f5f9;color:#94a3b8}
+.auto-state-dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.auto-body{padding:15px 16px 0;flex:1}
+.auto-title{font-size:14px;font-weight:750;color:#0f172a;line-height:1.32;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.auto-desc{font-size:12px;color:#64748b;line-height:1.5;margin-top:7px;display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.auto-foot{display:flex;align-items:center;gap:8px;padding:13px 16px}
+.auto-bp{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#475569;background:#f1f5f9;border:1px solid #e9eef4;border-radius:7px;padding:4px 9px;max-width:55%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.auto-bp i{font-size:11px}
+.auto-manage{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:6px 11px}
+.auto-manage:hover{background:#f8fafc;border-color:#cbd5e1}
+.auto-kebab{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8;flex-shrink:0}
+.auto-kebab:hover{background:#f1f5f9;color:#475569}
+/* kebab menu */
+.auto-menu{position:fixed;width:190px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 18px 42px rgba(15,23,42,.18);padding:6px;z-index:245;display:none}
+.auto-menu.open{display:block}
+.auto-menu button{width:100%;display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:7px;font-size:12.5px;font-weight:650;color:#334155;text-align:left}
+.auto-menu button:hover{background:#f1f5f9}
+.auto-menu button i{width:14px;text-align:center;color:#64748b}
+.auto-menu button.danger{color:#b91c1c}
+.auto-menu button.danger:hover{background:#fef2f2}
+.auto-menu button.danger i{color:#dc2626}
+.auto-menu hr{border:0;border-top:1px solid #eef2f7;margin:5px 4px}
+/* toggle switch */
+.tgl{position:relative;width:38px;height:22px;border-radius:999px;background:#cbd5e1;cursor:pointer;transition:background .18s;flex-shrink:0;border:none;padding:0}
+.tgl.on{background:#10b981}
+.tgl::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .18s}
+.tgl.on::after{transform:translateX(16px)}
+/* detail drawer extras */
+.adw-flow{display:flex;align-items:center;gap:12px;background:#f8fafc;border:1px solid #eef2f7;border-radius:12px;padding:16px}
+.adw-flow .auto-tile{width:44px;height:44px;font-size:18px}
+.adw-flow-step{flex:1;min-width:0}
+.adw-flow-step label{font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#94a3b8;display:block}
+.adw-flow-step span{font-size:12.5px;font-weight:650;color:#0f172a}
+.adw-run{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12px}
+.adw-run:last-child{border-bottom:0}
+.adw-run-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.adw-run-dot.ok{background:#10b981}.adw-run-dot.err{background:#ef4444}.adw-run-dot.run{background:#3b82f6}
+.adw-run time{margin-left:auto;color:#94a3b8;font-size:11px;font-family:monospace}
+.adw-form-field{display:flex;flex-direction:column;gap:5px}
+.adw-form-field label{font-size:11px;font-weight:700;color:#475569}
+.adw-form-field input,.adw-form-field select{height:38px;border:1px solid #e2e8f0;border-radius:8px;padding:0 11px;font-size:13px;color:#1e293b;background:#fff}
+.adw-form-field input:focus,.adw-form-field select:focus{outline:0;border-color:#c7d2fe}
 .team-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:20px}
 .team-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px}
 .team-card-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -763,6 +824,11 @@ button{cursor:pointer;border:none;background:none;font:inherit}
         <i class="fa-solid fa-plug-circle-bolt"></i>
         <span class="sb-label" data-i18n="nav.datasources">Data Sources</span>
         <span class="sb-badge">14</span>
+      </a>
+      <a class="sb-item" href="#" data-view="automations">
+        <i class="fa-solid fa-bolt-lightning"></i>
+        <span class="sb-label" data-i18n="nav.automations">Automations</span>
+        <span class="sb-badge" id="autoBadge">8</span>
       </a>
       <a class="sb-item" href="#" data-view="teams">
         <i class="fa-solid fa-users"></i>
@@ -926,6 +992,7 @@ button{cursor:pointer;border:none;background:none;font:inherit}
       <div id="view-secrets" class="idp-view"></div>
       <div id="view-auditlog" class="idp-view"></div>
       <div id="view-datasources" class="idp-view"></div>
+      <div id="view-automations" class="idp-view"></div>
       <div id="view-teams" class="idp-view"></div>
       <div id="view-settings" class="idp-view"></div>
     </main>
@@ -1062,6 +1129,20 @@ var I18N = {
     'ds.pf.workflows':'Workflows','ds.pf.automations':'Automations','ds.pf.teams':'Benutzer & Teams','ds.pf.audit':'Audit Log','ds.pf.credentials':'Credentials','ds.pf.org':'Organisation','ds.pf.plugins':'Plugins Manager','ds.pf.platform':'Plattform-Einstellung','ds.pf.open':'\xd6ffnen',
     'ds.pf.workflows.d':'Definiere mehrstufige Self-Service-Workflows mit Genehmigungen, Bedingungen und automatischen Schritten.','ds.pf.automations.d':'Ereignisgesteuerte Automatisierungen — reagiere auf Katalog-\xc4nderungen, TTLs und Vorf\xe4lle ohne manuelles Zutun.','ds.pf.credentials.d':'Verwalte API-Schl\xfcssel, Tokens und Verbindungs-Credentials f\xfcr alle Integrationen zentral und sicher.','ds.pf.org.d':'Organisationsweite Einstellungen: Name, Region, SSO, Standardrollen und Datenaufbewahrung.','ds.pf.plugins.d':'Installiere und verwalte Plugins, die das Portal um zus\xe4tzliche Datenquellen und Aktionen erweitern.',
     'ds.dw.status':'Status','ds.dw.method':'Methode','ds.dw.entities':'Entities','ds.dw.lastsync':'Letzte Sync','ds.dw.kinds':'Ingestierte Kinds','ds.dw.mapping':'Mapping-Konfiguration','ds.dw.resync':'Neu synchronisieren','ds.dw.configure':'Konfigurieren',
+    'nav.automations':'Automations',
+    'auto.sub':'Ereignisgesteuerte Automatisierungen — reagiere auf Katalog-\xc4nderungen ohne manuelles Zutun.',
+    'auto.new':'Automation','auto.new.sub':'Neue Automation erstellen','auto.history':'Ausf\xfchrungsverlauf','auto.docs':'Dokumentation',
+    'auto.banner':'Workflows ist live. Baue komplexe Automatisierungen mit intuitiven Steuerelementen.','auto.banner.cta':'Jetzt ausprobieren',
+    'auto.stat.total':'Automatisierungen','auto.stat.active':'Aktiv','auto.stat.disabled':'Deaktiviert','auto.stat.runs':'Runs (7T)',
+    'auto.search':'Automatisierungen durchsuchen…','auto.empty':'Keine Automatisierung gefunden.',
+    'auto.on':'Aktiv','auto.off':'Deaktiviert',
+    'auto.manage':'Verwalten','auto.runnow':'Jetzt ausf\xfchren','auto.enable':'Aktivieren','auto.disable':'Deaktivieren','auto.duplicate':'Duplizieren','auto.delete':'L\xf6schen',
+    'auto.toggle.hint':'Automation aktivieren oder pausieren','auto.trigger':'Trigger','auto.action':'Aktion','auto.event':'Event','auto.blueprint':'Blueprint','auto.condition':'Bedingung','auto.payload':'Aktions-Payload','auto.runs':'Letzte Ausf\xfchrungen',
+    'auto.run.ok':'Erfolgreich','auto.run.err':'Fehlgeschlagen','auto.run.running':'L\xe4uft','auto.run.none':'Noch keine Ausf\xfchrungen.',
+    'auto.f.name':'Name','auto.f.trigger':'Trigger-Blueprint','auto.f.event':'Event','auto.f.action':'Aktion','auto.f.create':'Automation erstellen','auto.f.cancel':'Abbrechen','auto.f.needname':'Bitte einen Namen angeben.',
+    'auto.custom.desc':'Benutzerdefinierte Automation. \xd6ffne „Verwalten“, um Bedingung und Payload zu konfigurieren.',
+    'auto.toast.enabled':'Automation aktiviert.','auto.toast.disabled':'Automation deaktiviert.','auto.toast.run':'Automation manuell ausgel\xf6st','auto.toast.dup':'Automation dupliziert.','auto.toast.deleted':'Automation gel\xf6scht.','auto.toast.created':'Automation erstellt.',
+    'auto.confirm.delete':'Diese Automation wirklich l\xf6schen?',
     'tms.sub':'Teams, Mitglieder und Service-Ownership verwalten.',
     'tms.btn.create':'Team erstellen','tms.stat.members':'Mitglieder',
     'tms.stat.vsmonth':'↑ 2 diesen Monat','tms.stat.incidents':'Offene Incidents',
@@ -1165,6 +1246,20 @@ var I18N = {
     'ds.pf.workflows':'Workflows','ds.pf.automations':'Automations','ds.pf.teams':'Users & teams','ds.pf.audit':'Audit log','ds.pf.credentials':'Credentials','ds.pf.org':'Organization','ds.pf.plugins':'Plugins Manager','ds.pf.platform':'Platform setting','ds.pf.open':'Open',
     'ds.pf.workflows.d':'Define multi-step self-service workflows with approvals, conditions and automated steps.','ds.pf.automations.d':'Event-driven automations — react to catalog changes, TTLs and incidents with no manual work.','ds.pf.credentials.d':'Centrally and securely manage API keys, tokens and connection credentials for all integrations.','ds.pf.org.d':'Organization-wide settings: name, region, SSO, default roles and data retention.','ds.pf.plugins.d':'Install and manage plugins that extend the portal with extra data sources and actions.',
     'ds.dw.status':'Status','ds.dw.method':'Method','ds.dw.entities':'Entities','ds.dw.lastsync':'Last sync','ds.dw.kinds':'Ingested kinds','ds.dw.mapping':'Mapping configuration','ds.dw.resync':'Resync','ds.dw.configure':'Configure',
+    'nav.automations':'Automations',
+    'auto.sub':'Event-driven automations — react to catalog changes with no manual work.',
+    'auto.new':'Automation','auto.new.sub':'Create a new automation','auto.history':'Run history','auto.docs':'Documentation',
+    'auto.banner':'Workflows is live. Build complex automations with intuitive controls.','auto.banner.cta':'Try it now',
+    'auto.stat.total':'Automations','auto.stat.active':'Active','auto.stat.disabled':'Disabled','auto.stat.runs':'Runs (7d)',
+    'auto.search':'Search automations…','auto.empty':'No automation found.',
+    'auto.on':'Active','auto.off':'Disabled',
+    'auto.manage':'Manage','auto.runnow':'Run now','auto.enable':'Enable','auto.disable':'Disable','auto.duplicate':'Duplicate','auto.delete':'Delete',
+    'auto.toggle.hint':'Enable or pause this automation','auto.trigger':'Trigger','auto.action':'Action','auto.event':'Event','auto.blueprint':'Blueprint','auto.condition':'Condition','auto.payload':'Action payload','auto.runs':'Recent runs',
+    'auto.run.ok':'Succeeded','auto.run.err':'Failed','auto.run.running':'Running','auto.run.none':'No runs yet.',
+    'auto.f.name':'Name','auto.f.trigger':'Trigger blueprint','auto.f.event':'Event','auto.f.action':'Action','auto.f.create':'Create automation','auto.f.cancel':'Cancel','auto.f.needname':'Please enter a name.',
+    'auto.custom.desc':'Custom automation. Open “Manage” to configure its condition and payload.',
+    'auto.toast.enabled':'Automation enabled.','auto.toast.disabled':'Automation disabled.','auto.toast.run':'Automation triggered manually','auto.toast.dup':'Automation duplicated.','auto.toast.deleted':'Automation deleted.','auto.toast.created':'Automation created.',
+    'auto.confirm.delete':'Really delete this automation?',
     'tms.sub':'Manage teams, members and service ownership.',
     'tms.btn.create':'Create Team','tms.stat.members':'Members',
     'tms.stat.vsmonth':'↑ 2 this month','tms.stat.incidents':'Open Incidents',
@@ -1268,6 +1363,20 @@ var I18N = {
     'ds.pf.workflows':'Workflows','ds.pf.automations':'Automatisations','ds.pf.teams':'Utilisateurs & \xe9quipes','ds.pf.audit':'Journal d\'audit','ds.pf.credentials':'Identifiants','ds.pf.org':'Organisation','ds.pf.plugins':'Gestionnaire de plugins','ds.pf.platform':'Param\xe8tre plateforme','ds.pf.open':'Ouvrir',
     'ds.pf.workflows.d':'D\xe9finissez des workflows self-service multi-\xe9tapes avec approbations, conditions et \xe9tapes automatis\xe9es.','ds.pf.automations.d':'Automatisations pilot\xe9es par \xe9v\xe9nements — r\xe9agissez aux changements du catalogue, aux TTL et aux incidents sans intervention manuelle.','ds.pf.credentials.d':'G\xe9rez de fa\xe7on centralis\xe9e et s\xe9curis\xe9e les cl\xe9s API, jetons et identifiants de connexion de toutes les int\xe9grations.','ds.pf.org.d':'Param\xe8tres \xe0 l\'\xe9chelle de l\'organisation : nom, r\xe9gion, SSO, r\xf4les par d\xe9faut et r\xe9tention des donn\xe9es.','ds.pf.plugins.d':'Installez et g\xe9rez des plugins qui \xe9tendent le portail avec des sources de donn\xe9es et actions suppl\xe9mentaires.',
     'ds.dw.status':'Statut','ds.dw.method':'M\xe9thode','ds.dw.entities':'Entit\xe9s','ds.dw.lastsync':'Derni\xe8re sync','ds.dw.kinds':'Kinds ingest\xe9s','ds.dw.mapping':'Configuration du mapping','ds.dw.resync':'Resynchroniser','ds.dw.configure':'Configurer',
+    'nav.automations':'Automatisations',
+    'auto.sub':'Automatisations pilot\xe9es par \xe9v\xe9nements — r\xe9agissez aux changements du catalogue sans intervention manuelle.',
+    'auto.new':'Automatisation','auto.new.sub':'Cr\xe9er une nouvelle automatisation','auto.history':'Historique d\'ex\xe9cution','auto.docs':'Documentation',
+    'auto.banner':'Workflows est disponible. Cr\xe9ez des automatisations complexes avec des contr\xf4les intuitifs.','auto.banner.cta':'Essayer maintenant',
+    'auto.stat.total':'Automatisations','auto.stat.active':'Actives','auto.stat.disabled':'D\xe9sactiv\xe9es','auto.stat.runs':'Ex\xe9cutions (7j)',
+    'auto.search':'Rechercher des automatisations…','auto.empty':'Aucune automatisation trouv\xe9e.',
+    'auto.on':'Active','auto.off':'D\xe9sactiv\xe9e',
+    'auto.manage':'G\xe9rer','auto.runnow':'Ex\xe9cuter','auto.enable':'Activer','auto.disable':'D\xe9sactiver','auto.duplicate':'Dupliquer','auto.delete':'Supprimer',
+    'auto.toggle.hint':'Activer ou suspendre cette automatisation','auto.trigger':'D\xe9clencheur','auto.action':'Action','auto.event':'\xc9v\xe9nement','auto.blueprint':'Blueprint','auto.condition':'Condition','auto.payload':'Payload de l\'action','auto.runs':'Ex\xe9cutions r\xe9centes',
+    'auto.run.ok':'R\xe9ussie','auto.run.err':'\xc9chou\xe9e','auto.run.running':'En cours','auto.run.none':'Aucune ex\xe9cution pour le moment.',
+    'auto.f.name':'Nom','auto.f.trigger':'Blueprint d\xe9clencheur','auto.f.event':'\xc9v\xe9nement','auto.f.action':'Action','auto.f.create':'Cr\xe9er l\'automatisation','auto.f.cancel':'Annuler','auto.f.needname':'Veuillez saisir un nom.',
+    'auto.custom.desc':'Automatisation personnalis\xe9e. Ouvrez \xab G\xe9rer \xbb pour configurer sa condition et son payload.',
+    'auto.toast.enabled':'Automatisation activ\xe9e.','auto.toast.disabled':'Automatisation d\xe9sactiv\xe9e.','auto.toast.run':'Automatisation d\xe9clench\xe9e manuellement','auto.toast.dup':'Automatisation dupliqu\xe9e.','auto.toast.deleted':'Automatisation supprim\xe9e.','auto.toast.created':'Automatisation cr\xe9\xe9e.',
+    'auto.confirm.delete':'Supprimer vraiment cette automatisation ?',
     'tms.sub':'Gérer les équipes, les membres et la propriété des services.',
     'tms.btn.create':'Créer une équipe','tms.stat.members':'Membres',
     'tms.stat.vsmonth':'↑ 2 ce mois','tms.stat.incidents':'Incidents ouverts',
@@ -1472,8 +1581,8 @@ function applyLang(l) {
       vEl.innerHTML = viewRegistry[activeView]();
       viewRendered[activeView] = true;
     }
-    var bcI = {environments:'fa-brands fa-docker',secrets:'fa-solid fa-shield-halved',auditlog:'fa-solid fa-clock-rotate-left',datasources:'fa-solid fa-plug-circle-bolt',teams:'fa-solid fa-users',settings:'fa-solid fa-gear'};
-    var bcNavKey = {environments:'environments',secrets:'secrets',auditlog:'audit',datasources:'datasources',teams:'teams',settings:'settings'};
+    var bcI = {environments:'fa-brands fa-docker',secrets:'fa-solid fa-shield-halved',auditlog:'fa-solid fa-clock-rotate-left',datasources:'fa-solid fa-plug-circle-bolt',automations:'fa-solid fa-bolt-lightning',teams:'fa-solid fa-users',settings:'fa-solid fa-gear'};
+    var bcNavKey = {environments:'environments',secrets:'secrets',auditlog:'audit',datasources:'datasources',automations:'automations',teams:'teams',settings:'settings'};
     var bc2 = document.querySelector('.topbar-breadcrumb');
     if (bc2) bc2.innerHTML = '<i class="' + (bcI[activeView]||'fa-solid fa-circle') + '"></i><span>' + t('nav.' + (bcNavKey[activeView]||activeView)) + '</span>';
   }
@@ -2186,8 +2295,8 @@ function showView(viewId) {
       viewRendered[viewId] = true;
     }
   }
-  var bcIcons = {selfservice:'fa-solid fa-bolt',environments:'fa-brands fa-docker',secrets:'fa-solid fa-shield-halved',auditlog:'fa-solid fa-clock-rotate-left',datasources:'fa-solid fa-plug-circle-bolt',teams:'fa-solid fa-users',settings:'fa-solid fa-gear'};
-  var bcLabels = {selfservice:'Self-Service',environments:t('nav.environments'),secrets:t('nav.secrets'),auditlog:t('nav.audit'),datasources:t('nav.datasources'),teams:t('nav.teams'),settings:t('nav.settings')};
+  var bcIcons = {selfservice:'fa-solid fa-bolt',environments:'fa-brands fa-docker',secrets:'fa-solid fa-shield-halved',auditlog:'fa-solid fa-clock-rotate-left',datasources:'fa-solid fa-plug-circle-bolt',automations:'fa-solid fa-bolt-lightning',teams:'fa-solid fa-users',settings:'fa-solid fa-gear'};
+  var bcLabels = {selfservice:'Self-Service',environments:t('nav.environments'),secrets:t('nav.secrets'),auditlog:t('nav.audit'),datasources:t('nav.datasources'),automations:t('nav.automations'),teams:t('nav.teams'),settings:t('nav.settings')};
   var bc = document.querySelector('.topbar-breadcrumb');
   if (bc) bc.innerHTML = '<i class="' + (bcIcons[viewId]||'fa-solid fa-circle') + '"></i><span>' + (bcLabels[viewId]||viewId) + '</span>';
   activeView = viewId;
@@ -2563,6 +2672,262 @@ function openPlatformItem(key) {
   document.getElementById('auditDrawer').classList.add('open');
 }
 
+/* ─── Automations (Port-style, fully interactive) ─────────────────────────────── */
+var AUTO_TRIG = {
+  devenv:{ic:'fa-solid fa-laptop-code',color:'#fff',bg:'#fb923c',label:'Developer Env'},
+  pagerduty:{ic:'fa-solid fa-bell',color:'#fff',bg:'#06ac38',label:'PagerDuty'},
+  service:{ic:'fa-solid fa-cube',color:'#fff',bg:'#ec4899',label:'Service'},
+  workitem:{ic:'fa-solid fa-briefcase',color:'#fff',bg:'#1e293b',label:'Work item'}
+};
+var AUTO_ACT = {
+  webhook:{ic:'fa-solid fa-diagram-project',color:'#fff',bg:'#ef4444',label:'Webhook'},
+  ai:{ic:'fa-solid fa-wand-magic-sparkles',color:'#fff',bg:'linear-gradient(135deg,#8b5cf6,#ec4899)',label:'AI Agent'},
+  slack:{ic:'fa-brands fa-slack',color:'#4A154B',bg:'#fff',label:'Slack'},
+  teams:{ic:'fa-brands fa-microsoft',color:'#5b5fc7',bg:'#fff',label:'MS Teams'},
+  github:{ic:'fa-brands fa-github',color:'#0f172a',bg:'#fff',label:'GitHub'},
+  gitpr:{ic:'fa-solid fa-code-pull-request',color:'#1d4ed8',bg:'#fff',label:'Git PR'}
+};
+var AUTO_DEFAULTS = [
+  {id:'ttl-msg',title:'Send a message when TTL expires',desc:'When the timer property of a developer environment expires, send a Slack message to notify the owning team before teardown.',trig:'devenv',bp:'Developer Env',act:'slack',event:'TIMER_PROPERTY_EXPIRED',cond:'.properties.ttl != null',payload:{channel:'#platform-notifications',text:'TTL expired for {{ .entity.identifier }} — cleanup scheduled.'},runs:[['ok','dev-payments-v2','16.06 10:42'],['ok','pr-1287-preview','15.06 21:50'],['ok','sandbox-mobile','14.06 18:03']]},
+  {id:'incident-ai',title:'Trigger Incident Manager AI Agent',desc:'When a new PagerDuty incident is created, invoke the Incident Manager AI Agent to triage, create a Slack channel and open a GitHub issue.',trig:'pagerduty',bp:'PagerDuty Incident',act:'ai',event:'ENTITY_CREATED',cond:'.properties.urgency == "high"',payload:{agent:'incident-manager',input:{incidentId:'{{ .entity.identifier }}',autoRemediate:true}},runs:[['ok','INC-0042','15.06 14:33'],['run','INC-0051','16.06 09:05'],['ok','INC-0039','13.06 22:10']]},
+  {id:'svc-health',title:'Service Health Changed',desc:'Send a Slack message when a Service becomes Unhealthy so the on-call engineer is notified immediately.',trig:'service',bp:'Service',act:'slack',event:'ENTITY_UPDATED',cond:'.diff.after.health != .diff.before.health',payload:{channel:'#sre-alerts',text:'{{ .entity.title }} health → {{ .diff.after.health }}'},runs:[['ok','checkout-api','16.06 09:18'],['err','payment-service','15.06 02:41'],['ok','auth-gateway','14.06 11:55']]},
+  {id:'terminate-env',title:'Terminate ephemeral environment',desc:'Terminate an ephemeral environment when its TTL expires, calling the platform webhook to free up cluster resources.',trig:'devenv',bp:'Developer Env',act:'webhook',event:'TIMER_PROPERTY_EXPIRED',cond:'.properties.ttl < now',payload:{url:'https://idp.koffi.dev/hooks/env-teardown',method:'POST',body:{env:'{{ .entity.identifier }}'}},runs:[['ok','pr-1287-preview','13.06 21:50'],['ok','load-test-tmp','12.06 03:00']]},
+  {id:'mttr-alert',title:'Alert when MTTR goes above a certain level',desc:'Automatically trigger an MS Teams alert when the Mean Time To Restore (MTTR) exceeds the set threshold, ensuring prompt incident response.',trig:'service',bp:'Service',act:'teams',event:'ENTITY_UPDATED',cond:'.properties.mttr > 30',payload:{webhook:'https://outlook.office.com/webhook/…',title:'MTTR breach: {{ .entity.title }}'},runs:[['ok','payment-service','15.06 03:20'],['ok','data-ingest','11.06 16:44']]},
+  {id:'rollback-incident',title:'Rollback on incident',desc:'A fail-safe mechanism that reverts the latest deployment via a GitHub Action when a P1 incident is detected on a service.',trig:'pagerduty',bp:'PagerDuty Service',act:'github',event:'ENTITY_CREATED',cond:'.properties.status == "triggered"',payload:{workflow:'rollback.yml',ref:'main',inputs:{service:'{{ .entity.title }}'}},runs:[['ok','checkout-api','14.06 09:22'],['ok','billing-worker','10.06 19:31']]},
+  {id:'init-pr',title:'Initialize a PR for a work item ready for development',desc:'Automatically create a new branch & pull request when a work item transitions to the Develop stage (plan approved).',trig:'workitem',bp:'Work item',act:'gitpr',event:'ENTITY_UPDATED',cond:'.diff.after.stage == "Develop"',payload:{repo:'koffi/{{ .entity.properties.repo }}',branch:'feat/{{ .entity.identifier }}',base:'main'},runs:[['ok','FEAT-847','16.06 08:10'],['run','FEAT-839','16.06 11:02']]},
+  {id:'generate-rca',title:'Generate RCA',desc:'AI Agent automatically generates a Root Cause Analysis when an incident status moves to closed, attaching it to the postmortem.',trig:'pagerduty',bp:'PagerDuty Incident',act:'ai',event:'ENTITY_UPDATED',cond:'.diff.after.status == "resolved"',payload:{agent:'rca-generator',input:{incidentId:'{{ .entity.identifier }}'}},runs:[['ok','INC-0042','15.06 14:40'],['ok','INC-0033','12.06 08:15']]}
+];
+var AUTO_STORE_DISABLED = 'koffi-auto-disabled';
+var AUTO_STORE_CUSTOM = 'koffi-auto-custom';
+var AUTO_STORE_DELETED = 'koffi-auto-deleted';
+function autoJSON(key){ try { return JSON.parse(safeGet('localStorage', key) || '[]'); } catch(e){ return []; } }
+function autoSave(key, arr){ safeSet('localStorage', key, JSON.stringify(arr)); }
+function getAutos() {
+  var deleted = autoJSON(AUTO_STORE_DELETED);
+  var disabled = autoJSON(AUTO_STORE_DISABLED);
+  var custom = autoJSON(AUTO_STORE_CUSTOM);
+  var list = AUTO_DEFAULTS.concat(custom).filter(function(a){ return deleted.indexOf(a.id) < 0; });
+  list.forEach(function(a){ a.enabled = disabled.indexOf(a.id) < 0; });
+  return list;
+}
+function autoTileHTML(def, big) {
+  return '<div class="auto-tile"' + (big?' style="width:44px;height:44px;font-size:18px;background:'+def.bg+';color:'+def.color+'"':' style="background:'+def.bg+';color:'+def.color+'"') + '><i class="' + def.ic + '"></i></div>';
+}
+function autoCardHTML(a) {
+  var trig = AUTO_TRIG[a.trig] || AUTO_TRIG.service;
+  var act = AUTO_ACT[a.act] || AUTO_ACT.webhook;
+  return '<div class="auto-card' + (a.enabled?'':' disabled') + '" data-id="' + a.id + '" data-title="' + a.title.toLowerCase() + ' ' + a.bp.toLowerCase() + '" onclick="openAutomation(\'' + a.id + '\')">' +
+    '<div class="auto-flow">' +
+      '<span class="auto-state-dot ' + (a.enabled?'on':'off') + '">' + (a.enabled?t('auto.on'):t('auto.off')) + '</span>' +
+      autoTileHTML(trig) + '<i class="fa-solid fa-arrow-right-long auto-arrow"></i>' + autoTileHTML(act) +
+    '</div>' +
+    '<div class="auto-body"><div class="auto-title">' + a.title + '</div><div class="auto-desc">' + a.desc + '</div></div>' +
+    '<div class="auto-foot">' +
+      '<span class="auto-bp"><i class="' + trig.ic + '" style="color:' + trig.bg + '"></i>' + a.bp + '</span>' +
+      '<button class="auto-manage" onclick="event.stopPropagation();openAutomation(\'' + a.id + '\')"><i class="fa-solid fa-gear"></i> ' + t('auto.manage') + '</button>' +
+      '<button class="auto-kebab" onclick="openAutoMenu(event,\'' + a.id + '\')" aria-label="Menu"><i class="fa-solid fa-ellipsis"></i></button>' +
+    '</div>' +
+  '</div>';
+}
+function renderAutoCards(filter) {
+  var f = (filter||'').toLowerCase().trim();
+  var list = getAutos().filter(function(a){ return !f || (a.title+' '+a.bp+' '+a.desc).toLowerCase().indexOf(f) >= 0; });
+  if (!list.length) return '<div style="grid-column:1/-1;text-align:center;padding:48px;color:#94a3b8;font-size:13px"><i class="fa-solid fa-magnifying-glass" style="font-size:22px;display:block;margin-bottom:10px;opacity:.5"></i>' + t('auto.empty') + '</div>';
+  return list.map(autoCardHTML).join('');
+}
+function refreshAutoGrid() {
+  var grid = document.getElementById('autoGrid');
+  var search = document.getElementById('autoSearch');
+  if (grid) grid.innerHTML = renderAutoCards(search ? search.value : '');
+  updateAutoBadge();
+}
+function updateAutoBadge() {
+  var on = getAutos().filter(function(a){return a.enabled;}).length;
+  var badge = document.getElementById('autoBadge');
+  if (badge) badge.textContent = getAutos().length;
+  var s = document.getElementById('autoActiveStat'); if (s) s.textContent = on;
+  var tt = document.getElementById('autoTotalStat'); if (tt) tt.textContent = getAutos().length;
+  var off = document.getElementById('autoOffStat'); if (off) off.textContent = getAutos().length - on;
+}
+viewRegistry['automations'] = function() {
+  setTimeout(updateAutoBadge, 0);
+  var total = getAutos().length;
+  return '<div class="vp">' +
+    '<div class="page-header"><div class="page-header-row">' +
+      '<div><h1 class="page-title">Automations</h1><p class="page-sub">' + t('auto.sub') + '</p></div>' +
+      '<div style="display:flex;gap:8px;align-items:center">' +
+        '<button class="auto-kebab" title="' + t('auto.history') + '" onclick="showToast(t(\'auto.history\'))"><i class="fa-solid fa-clock-rotate-left"></i></button>' +
+        '<button class="auto-kebab" title="' + t('auto.docs') + '" onclick="showToast(t(\'auto.docs\'))"><i class="fa-solid fa-book"></i></button>' +
+        '<button class="new-action-btn" onclick="openAutomationCreate()"><i class="fa-solid fa-plus"></i> ' + t('auto.new') + '</button>' +
+      '</div>' +
+    '</div></div>' +
+    '<div class="auto-banner"><i class="fa-solid fa-circle-info"></i><span>' + t('auto.banner') + ' <a onclick="openAutomationCreate()">' + t('auto.banner.cta') + '</a></span></div>' +
+    '<div class="stats-row">' +
+      '<div class="stat-card"><span class="stat-num" id="autoTotalStat">' + total + '</span><span class="stat-label">' + t('auto.stat.total') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#10b981" id="autoActiveStat">0</span><span class="stat-label">' + t('auto.stat.active') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#94a3b8" id="autoOffStat">0</span><span class="stat-label">' + t('auto.stat.disabled') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#6366f1">312</span><span class="stat-label">' + t('auto.stat.runs') + '</span><span class="stat-delta" style="color:#10b981">↑ 18% · 7d</span></div>' +
+    '</div>' +
+    '<div class="auto-toolbar"><div class="auto-search"><i class="fa-solid fa-magnifying-glass"></i><input id="autoSearch" type="text" placeholder="' + t('auto.search') + '" oninput="refreshAutoGrid()"></div></div>' +
+    '<div class="auto-grid" id="autoGrid">' + renderAutoCards('') + '</div>' +
+  '</div>';
+};
+/* ── kebab menu ── */
+function openAutoMenu(ev, id) {
+  ev.stopPropagation();
+  closeAutoMenu();
+  var a = getAutos().filter(function(x){return x.id===id;})[0];
+  if (!a) return;
+  var menu = document.createElement('div');
+  menu.className = 'auto-menu open';
+  menu.id = 'autoMenu';
+  menu.innerHTML =
+    '<button onclick="openAutomation(\'' + id + '\')"><i class="fa-solid fa-gear"></i> ' + t('auto.manage') + '</button>' +
+    '<button onclick="runAutomationNow(\'' + id + '\')"><i class="fa-solid fa-play"></i> ' + t('auto.runnow') + '</button>' +
+    '<button onclick="toggleAutomation(\'' + id + '\')"><i class="fa-solid fa-' + (a.enabled?'pause':'play') + '"></i> ' + (a.enabled?t('auto.disable'):t('auto.enable')) + '</button>' +
+    '<button onclick="duplicateAutomation(\'' + id + '\')"><i class="fa-solid fa-copy"></i> ' + t('auto.duplicate') + '</button>' +
+    '<hr>' +
+    '<button class="danger" onclick="deleteAutomation(\'' + id + '\')"><i class="fa-solid fa-trash"></i> ' + t('auto.delete') + '</button>';
+  document.body.appendChild(menu);
+  var r = ev.currentTarget.getBoundingClientRect();
+  var top = Math.min(r.bottom + 4, window.innerHeight - 230);
+  var left = Math.min(r.left - 160, window.innerWidth - 200);
+  menu.style.top = top + 'px';
+  menu.style.left = Math.max(8, left) + 'px';
+  setTimeout(function(){ document.addEventListener('click', closeAutoMenu, { once:true }); }, 0);
+}
+function closeAutoMenu() { var m = document.getElementById('autoMenu'); if (m) m.remove(); }
+/* ── toggle / run / duplicate / delete ── */
+function toggleAutomation(id) {
+  closeAutoMenu();
+  var disabled = autoJSON(AUTO_STORE_DISABLED);
+  var i = disabled.indexOf(id);
+  var nowEnabled;
+  if (i >= 0) { disabled.splice(i,1); nowEnabled = true; } else { disabled.push(id); nowEnabled = false; }
+  autoSave(AUTO_STORE_DISABLED, disabled);
+  refreshAutoGrid();
+  if (document.getElementById('auditDrawer').classList.contains('open')) openAutomation(id);
+  showToast((nowEnabled?t('auto.toast.enabled'):t('auto.toast.disabled')));
+}
+function runAutomationNow(id) {
+  closeAutoMenu();
+  var a = getAutos().filter(function(x){return x.id===id;})[0];
+  showToast(t('auto.toast.run') + (a?(' — '+a.title):''));
+}
+function duplicateAutomation(id) {
+  closeAutoMenu();
+  var a = getAutos().filter(function(x){return x.id===id;})[0];
+  if (!a) return;
+  var custom = autoJSON(AUTO_STORE_CUSTOM);
+  var copy = JSON.parse(JSON.stringify(a));
+  copy.id = id + '-copy-' + Date.now().toString(36);
+  copy.title = a.title + ' (copy)';
+  copy.runs = [];
+  delete copy.enabled;
+  custom.push(copy);
+  autoSave(AUTO_STORE_CUSTOM, custom);
+  refreshAutoGrid();
+  showToast(t('auto.toast.dup'));
+}
+function deleteAutomation(id) {
+  closeAutoMenu();
+  if (!window.confirm(t('auto.confirm.delete'))) return;
+  var custom = autoJSON(AUTO_STORE_CUSTOM);
+  var ci = custom.map(function(c){return c.id;}).indexOf(id);
+  if (ci >= 0) { custom.splice(ci,1); autoSave(AUTO_STORE_CUSTOM, custom); }
+  else { var del = autoJSON(AUTO_STORE_DELETED); del.push(id); autoSave(AUTO_STORE_DELETED, del); }
+  if (document.getElementById('auditDrawer').classList.contains('open')) closeAuditDetail();
+  refreshAutoGrid();
+  showToast(t('auto.toast.deleted'));
+}
+/* ── detail drawer ── */
+function openAutomation(id) {
+  closeAutoMenu();
+  var a = getAutos().filter(function(x){return x.id===id;})[0];
+  if (!a) return;
+  var trig = AUTO_TRIG[a.trig] || AUTO_TRIG.service;
+  var act = AUTO_ACT[a.act] || AUTO_ACT.webhook;
+  var runs = (a.runs||[]).map(function(r){
+    return '<div class="adw-run"><span class="adw-run-dot ' + r[0] + '"></span><code style="font-size:11px;color:#7c3aed">' + r[1] + '</code><span style="color:#64748b">' + (r[0]==='ok'?t('auto.run.ok'):r[0]==='err'?t('auto.run.err'):t('auto.run.running')) + '</span><time>' + r[2] + '</time></div>';
+  }).join('') || '<div style="font-size:12px;color:#94a3b8">' + t('auto.run.none') + '</div>';
+  var payload = JSON.stringify(a.payload, null, 2);
+  var head = document.getElementById('adwHead');
+  var body = document.getElementById('adwBody');
+  head.innerHTML =
+    '<div class="adw-head-icon" style="background:' + trig.bg + ';color:' + trig.color + '"><i class="' + trig.ic + '"></i></div>' +
+    '<div class="adw-head-tt"><h3>' + a.title + '</h3><p>' + a.bp + ' · ' + a.event + '</p></div>' +
+    '<button class="adw-close" onclick="closeAuditDetail()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>';
+  body.innerHTML =
+    '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;border:1px solid ' + (a.enabled?'#bbf7d0':'#e2e8f0') + ';background:' + (a.enabled?'#f0fdf4':'#f8fafc') + ';border-radius:10px">' +
+      '<div><div style="font-size:13px;font-weight:750;color:#0f172a">' + (a.enabled?t('auto.on'):t('auto.off')) + '</div><div style="font-size:11.5px;color:#64748b">' + t('auto.toggle.hint') + '</div></div>' +
+      '<button class="tgl ' + (a.enabled?'on':'') + '" onclick="toggleAutomation(\'' + a.id + '\')" aria-label="Toggle"></button>' +
+    '</div>' +
+    '<div class="adw-flow">' + autoTileHTML(trig,true) +
+      '<div class="adw-flow-step"><label>' + t('auto.trigger') + '</label><span>' + a.bp + '</span></div>' +
+      '<i class="fa-solid fa-arrow-right-long" style="color:#cbd5e1"></i>' +
+      '<div class="adw-flow-step" style="text-align:right"><label>' + t('auto.action') + '</label><span>' + act.label + '</span></div>' +
+      autoTileHTML(act,true) +
+    '</div>' +
+    '<div class="adw-grid"><div class="adw-field"><label>' + t('auto.event') + '</label><code>' + a.event + '</code></div>' +
+      '<div class="adw-field"><label>' + t('auto.blueprint') + '</label><code>' + a.bp + '</code></div></div>' +
+    '<div class="adw-field"><label>' + t('auto.condition') + ' (JQ)</label><div class="adw-payload" style="background:#0f172a">' + a.cond + '</div></div>' +
+    '<div class="adw-sec-title"><i class="' + act.ic + '" style="color:#7c3aed"></i> ' + t('auto.payload') + ' — ' + act.label + '</div>' +
+    '<div class="adw-payload">' + payload + '</div>' +
+    '<div class="adw-sec-title"><i class="fa-solid fa-list-check" style="color:#7c3aed"></i> ' + t('auto.runs') + '</div>' + runs +
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">' +
+      '<button class="new-action-btn" onclick="runAutomationNow(\'' + a.id + '\')"><i class="fa-solid fa-play"></i> ' + t('auto.runnow') + '</button>' +
+      '<button class="new-action-btn" style="background:#f1f5f9;color:#475569;border:1px solid #e2e8f0" onclick="toggleAutomation(\'' + a.id + '\')"><i class="fa-solid fa-' + (a.enabled?'pause':'play') + '"></i> ' + (a.enabled?t('auto.disable'):t('auto.enable')) + '</button>' +
+      '<button class="new-action-btn" style="background:#fef2f2;color:#b91c1c;border:1px solid #fecaca" onclick="deleteAutomation(\'' + a.id + '\')"><i class="fa-solid fa-trash"></i> ' + t('auto.delete') + '</button>' +
+    '</div>';
+  document.getElementById('adwBackdrop').classList.add('open');
+  document.getElementById('auditDrawer').classList.add('open');
+}
+/* ── create flow ── */
+function openAutomationCreate() {
+  closeAutoMenu();
+  var head = document.getElementById('adwHead');
+  var body = document.getElementById('adwBody');
+  function opts(map){ return Object.keys(map).map(function(k){ return '<option value="' + k + '">' + map[k].label + '</option>'; }).join(''); }
+  var events = ['ENTITY_CREATED','ENTITY_UPDATED','ENTITY_DELETED','TIMER_PROPERTY_EXPIRED','RUN_COMPLETED'];
+  head.innerHTML =
+    '<div class="adw-head-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff"><i class="fa-solid fa-bolt-lightning"></i></div>' +
+    '<div class="adw-head-tt"><h3>' + t('auto.new') + '</h3><p>' + t('auto.new.sub') + '</p></div>' +
+    '<button class="adw-close" onclick="closeAuditDetail()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>';
+  body.innerHTML =
+    '<div class="adw-form-field"><label>' + t('auto.f.name') + '</label><input id="afName" type="text" placeholder="Send a message when…"></div>' +
+    '<div class="adw-grid">' +
+      '<div class="adw-form-field"><label>' + t('auto.f.trigger') + '</label><select id="afTrig">' + opts(AUTO_TRIG) + '</select></div>' +
+      '<div class="adw-form-field"><label>' + t('auto.f.event') + '</label><select id="afEvent">' + events.map(function(e){return '<option>'+e+'</option>';}).join('') + '</select></div>' +
+    '</div>' +
+    '<div class="adw-form-field"><label>' + t('auto.f.action') + '</label><select id="afAct">' + opts(AUTO_ACT) + '</select></div>' +
+    '<div class="adw-form-field"><label>' + t('auto.condition') + ' (JQ)</label><input id="afCond" type="text" value=".properties != null"></div>' +
+    '<div style="display:flex;gap:8px;margin-top:4px">' +
+      '<button class="new-action-btn" onclick="addAutomationFromForm()"><i class="fa-solid fa-check"></i> ' + t('auto.f.create') + '</button>' +
+      '<button class="new-action-btn" style="background:#f1f5f9;color:#475569;border:1px solid #e2e8f0" onclick="closeAuditDetail()">' + t('auto.f.cancel') + '</button>' +
+    '</div>';
+  document.getElementById('adwBackdrop').classList.add('open');
+  document.getElementById('auditDrawer').classList.add('open');
+}
+function addAutomationFromForm() {
+  var name = (document.getElementById('afName').value || '').trim();
+  if (!name) { showToast(t('auto.f.needname')); return; }
+  var trig = document.getElementById('afTrig').value;
+  var act = document.getElementById('afAct').value;
+  var custom = autoJSON(AUTO_STORE_CUSTOM);
+  custom.push({
+    id:'custom-' + Date.now().toString(36),
+    title:name, desc:t('auto.custom.desc'),
+    trig:trig, bp:(AUTO_TRIG[trig]||{}).label || 'Service', act:act,
+    event:document.getElementById('afEvent').value,
+    cond:(document.getElementById('afCond').value || '.properties != null'),
+    payload:{ note:'Configure the ' + (AUTO_ACT[act]||{}).label + ' action payload here.' }, runs:[]
+  });
+  autoSave(AUTO_STORE_CUSTOM, custom);
+  closeAuditDetail();
+  if (activeView !== 'automations') showView('automations'); else refreshAutoGrid();
+  showToast(t('auto.toast.created'));
+}
+
 viewRegistry['teams'] = function() {
   var teams = [
     {name:'Platform Team',abbr:'PT',color:'#3b82f6',members:5,services:12,oncall:'K. Aboudou',incidents:0,slo:'99.8%'},
@@ -2709,6 +3074,6 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v3</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v4</div>
 </body>
 </html>
