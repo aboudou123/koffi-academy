@@ -289,17 +289,17 @@ a{text-decoration:none;color:inherit} button{cursor:pointer;border:none;backgrou
     <a class="sb-item" href="/idp-platform"><i class="fa-solid fa-gauge-high"></i><span>Platform Overview</span></a>
     <a class="sb-item" href="/catalog-demo"><i class="fa-solid fa-cubes"></i><span>Katalog</span><span class="sb-badge">12</span></a>
     <a class="sb-item" href="/idp-demo"><i class="fa-solid fa-bolt"></i><span>Self-Service</span></a>
-    <a class="sb-item" href="#"><i class="fa-solid fa-chart-bar"></i><span>Scorecards</span></a>
-    <a class="sb-item" href="#"><i class="fa-solid fa-gauge-high"></i><span>Dashboards</span></a>
+    <a class="sb-item" href="/catalog-demo#scorecards"><i class="fa-solid fa-chart-bar"></i><span>Scorecards</span></a>
+    <a class="sb-item" href="/catalog-demo#dashboards"><i class="fa-solid fa-gauge-high"></i><span>Dashboards</span></a>
     <div class="sb-sec">Platform</div>
-    <a class="sb-item" href="#"><i class="fa-solid fa-server"></i><span>Services</span></a>
-    <a class="sb-item" href="#"><i class="fa-brands fa-docker"></i><span>Environments</span></a>
+    <a class="sb-item" href="/catalog-demo"><i class="fa-solid fa-server"></i><span>Services</span></a>
+    <a class="sb-item" href="/catalog-demo#environments"><i class="fa-brands fa-docker"></i><span>Environments</span></a>
     <a class="sb-item active" href="/cicd-pipeline-demo"><i class="fa-solid fa-code-branch"></i><span>CI/CD</span><span class="sb-badge">5</span></a>
-    <a class="sb-item" href="#"><i class="fa-solid fa-shield-halved"></i><span>Secrets</span></a>
-    <a class="sb-item" href="#"><i class="fa-solid fa-clock-rotate-left"></i><span>Audit Log</span></a>
+    <a class="sb-item" href="/catalog-demo#secrets"><i class="fa-solid fa-shield-halved"></i><span>Secrets</span></a>
+    <a class="sb-item" href="/catalog-demo#auditlog"><i class="fa-solid fa-clock-rotate-left"></i><span>Audit Log</span></a>
     <div class="sb-sec">Admin</div>
-    <a class="sb-item" href="#"><i class="fa-solid fa-users"></i><span>Teams</span></a>
-    <a class="sb-item" href="#"><i class="fa-solid fa-gear"></i><span>Einstellungen</span></a>
+    <a class="sb-item" href="/catalog-demo#teams"><i class="fa-solid fa-users"></i><span>Teams</span></a>
+    <a class="sb-item" href="/catalog-demo#settings"><i class="fa-solid fa-gear"></i><span>Einstellungen</span></a>
   </nav>
   <div class="sb-bottom">
     <div class="sb-user">
@@ -1509,6 +1509,6 @@ document.addEventListener('DOMContentLoaded',function(){
     onAuthStateChanged(_auth, function(u){ umRender(u); }, function(){ umRender(null); });
   }catch(err){ console.warn('[auth] unavailable', err&&err.message); umRender(null); }
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v2 (real push + logout)</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v3 (real push + logout + nav)</div>
 </body>
 </html>

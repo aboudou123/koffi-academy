@@ -1383,7 +1383,15 @@ document.addEventListener('DOMContentLoaded',function(){
   if(['de','en','fr'].includes(l)){lang=l;document.getElementById('klF').textContent=LF[l];document.getElementById('klC').textContent=LC[l];document.querySelectorAll('.kl-item').forEach(function(i){i.classList.toggle('active',i.dataset.kl===l)});}
   renderSparklines();
   applyFilters();
+  cdApplyHash();
 });
+/* Deep-linking: /catalog-demo#scorecards opens that view (used by the other demos). */
+function cdApplyHash(){
+  var h=(location.hash||'').replace('#','').toLowerCase();
+  var map={scorecards:1,dashboards:1,incidents:1,environments:1,secrets:1,auditlog:1,teams:1,settings:1,catalog:1};
+  if(map[h]) cdShowView(h);
+}
+window.addEventListener('hashchange', cdApplyHash);
 </script>
 <script type="module">
   /* User menu with login/logout — Firebase, same standard across all demos */
@@ -1429,6 +1437,6 @@ document.addEventListener('DOMContentLoaded',function(){
     onAuthStateChanged(_auth, function(u){ umRender(u); }, function(){ umRender(null); });
   }catch(err){ console.warn('[auth] unavailable', err&&err.message); umRender(null); }
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v3</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v4</div>
 </body>
 </html>
