@@ -173,6 +173,18 @@ function applyAdminHash(){var h=(location.hash||"").replace("#","");if(!h)return
 function exportStore(){var blob=new Blob([JSON.stringify(state.store||{},null,2)],{type:"application/json"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="idp-store-export.json";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
 document.addEventListener("DOMContentLoaded",function(){["mainNav","content","globalSearch","secretInput","statusDot","statusText","viewTitle","viewSubtitle","toast","toastText"].forEach(function(id){els[id]=$(id)});els.secretInput.value=state.secret;els.secretInput.addEventListener("input",function(){state.secret=els.secretInput.value;localStorage.setItem("idpAdminSecret",state.secret)});$("refreshTop").addEventListener("click",load);$("refreshSide").addEventListener("click",load);$("exportStore").addEventListener("click",exportStore);els.globalSearch.addEventListener("input",function(e){state.query=e.target.value;render()});document.addEventListener("click",function(e){var view=e.target.closest("[data-view]");var res=e.target.closest("[data-resource]");var jump=e.target.closest("[data-view-jump]");var create=e.target.closest("[data-new]");var edit=e.target.closest("[data-edit]");var del=e.target.closest("[data-delete]");var cancel=e.target.closest("[data-cancel-editor]");if(view){state.view=view.dataset.view;state.query="";els.globalSearch.value="";state.editing=null;renderNav();render()}if(res){state.view="resource";state.resource=res.dataset.resource;state.query="";els.globalSearch.value="";state.editing=null;renderNav();renderResource(state.resource)}if(jump){state.view=jump.dataset.viewJump;renderNav();render()}if(create)startNew(create.dataset.new);if(edit)startEdit(edit.dataset.edit,edit.dataset.id);if(del)deleteResource(del.dataset.delete,del.dataset.id).catch(function(error){toast(error.message)});if(cancel){state.editing=null;renderResource(state.resource)}if(e.target.id==="exportStoreInline")exportStore()});document.addEventListener("submit",function(e){var form=e.target.closest("[data-form]");if(form){e.preventDefault();saveResource(form.dataset.form,form).catch(function(error){toast(error.message)})}if(e.target.id==="runForm"){e.preventDefault();submitRun(e.target).catch(function(error){toast(error.message)})}});applyAdminHash();renderNav();load();window.addEventListener("hashchange",function(){applyAdminHash();renderNav();if(state.store)render();})});
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v2 (local store + deep-link)</div>
+<script type="module" src="/assets/js/idp-store-sync.js"></script>
+<script>
+  /* Re-render the admin when the cloud store syncs in (Firestore -> local). */
+  window.addEventListener("koffi-store-synced", function(){ try { if (typeof load === "function") load(); } catch (e) {} });
+  window.addEventListener("koffi-store-status", function(e){
+    var el = document.getElementById("statusText"); if (!el) return;
+    var s = e.detail;
+    if (s === "synced") el.textContent = "Cloud synced";
+    else if (s === "connecting") el.textContent = "Connecting…";
+    else if (s === "error") el.textContent = "Local store";
+  });
+</script>
+<div id="buildStamp" class="build-stamp">build 2026-06-27 · v3 (cloud store)</div>
 </body>
 </html>
