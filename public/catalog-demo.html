@@ -884,6 +884,7 @@ function setView(v,btn){
 function openDrawer(id){
   activeService=SERVICES.find(function(s){return s.id===id;});
   if(!activeService)return;
+  var _tabs=document.querySelector('.drawer-tabs'); if(_tabs) _tabs.style.display='';
   var s=activeService;
   document.getElementById('dName').textContent=s.name;
   document.getElementById('dIcon').innerHTML='<div style="width:44px;height:44px;border-radius:11px;background:'+s.iconBg+';color:'+s.iconColor+';display:flex;align-items:center;justify-content:center;font-size:20px"><i class="'+s.icon+' fa-fw"></i></div>';
@@ -1023,7 +1024,61 @@ function exportCsv(){
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='service-catalog.csv';a.click();
   showToast('CSV exportiert ('+filteredServices.length+' Services)');
 }
-function openRegister(){showToast((lang==='fr'?'Formulaire d\'enregistrement ouvert':lang==='en'?'Registration form opened':'Service-Registrierung geöffnet'));}
+function openRegister(){
+  var tabs=document.querySelector('.drawer-tabs'); if(tabs) tabs.style.display='none';
+  document.getElementById('dIcon').innerHTML='<div style="width:44px;height:44px;border-radius:11px;background:#EEF2FF;color:#6366F1;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-solid fa-plus fa-fw"></i></div>';
+  document.getElementById('dName').textContent=(lang==='fr'?'Enregistrer un service':lang==='en'?'Register a service':'Service registrieren');
+  document.getElementById('dSub').innerHTML='<span style="font-size:12px;color:var(--text-muted)">'+(lang==='fr'?'Ajoute un service au catalogue':lang==='en'?'Add a service to the catalog':'Service zum Katalog hinzufügen')+'</span>';
+  function L(de,en,fr){return lang==='fr'?fr:lang==='en'?en:de;}
+  function fld(id,label,ph){return '<div class="field" style="margin-bottom:13px"><label style="display:block;font-size:12px;font-weight:700;color:#334155;margin-bottom:5px">'+label+'</label><input id="'+id+'" type="text" placeholder="'+ph+'" style="width:100%;height:38px;border:1px solid var(--border);border-radius:8px;padding:0 11px;font-size:13px;color:#0f172a"></div>';}
+  function sel(id,label,opts){return '<div class="field" style="margin-bottom:13px"><label style="display:block;font-size:12px;font-weight:700;color:#334155;margin-bottom:5px">'+label+'</label><select id="'+id+'" style="width:100%;height:38px;border:1px solid var(--border);border-radius:8px;padding:0 9px;font-size:13px;color:#0f172a;background:#fff">'+opts.map(function(o){return '<option>'+o+'</option>';}).join('')+'</select></div>';}
+  document.getElementById('drawerBody').innerHTML=
+    fld('reg-name',L('Name','Name','Nom'),'my-new-service')+
+    sel('reg-type',L('Typ','Type','Type'),['Backend API','Frontend','Worker','API Gateway','BFF','ML Model','Data'])+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
+      sel('reg-team',L('Team','Team','Équipe'),['Payments','Platform','Security','Core','Commerce','Data','Web','Mobile'])+
+      sel('reg-tier','Tier',['1','2','3'])+
+    '</div>'+
+    fld('reg-repo',L('Repository','Repository','Dépôt'),'org/my-new-service')+
+    '<div class="field" style="margin-bottom:14px"><label style="display:block;font-size:12px;font-weight:700;color:#334155;margin-bottom:5px">'+L('Beschreibung','Description','Description')+'</label><textarea id="reg-desc" rows="3" placeholder="'+L('Kurzbeschreibung des Service','Short description','Brève description')+'" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:13px;color:#0f172a;resize:vertical"></textarea></div>'+
+    '<div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="registerService()" style="flex:1"><i class="fa-solid fa-check"></i> '+L('Service registrieren','Register service','Enregistrer le service')+'</button><button class="btn btn-outline" onclick="closeDrawer()">'+L('Abbrechen','Cancel','Annuler')+'</button></div>';
+  document.getElementById('drawerBack').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+function registerService(){
+  var name=(document.getElementById('reg-name').value||'').trim();
+  if(!name){ showToast(lang==='fr'?'Le nom est requis':lang==='en'?'Name is required':'Name erforderlich'); return; }
+  var type=document.getElementById('reg-type').value;
+  var team=document.getElementById('reg-team').value;
+  var tier=parseInt(document.getElementById('reg-tier').value,10)||2;
+  var repo=(document.getElementById('reg-repo').value||('org/'+name)).trim();
+  var desc=(document.getElementById('reg-desc').value||'').trim();
+  var tcolors={Payments:'#6366F1',Platform:'#F97316',Security:'#10B981',Core:'#8B5CF6',Commerce:'#E11D48',Data:'#10B981',Web:'#3B82F6',Mobile:'#0EA5E9'};
+  var svc={id:'s-'+Date.now().toString(36),name:name,icon:'fa-solid fa-cube',iconBg:'#EEF2FF',iconColor:'#6366F1',
+    type:type,team:team,teamColor:tcolors[team]||'#6366F1',stack:['—'],tier:tier,health:'healthy',healthPct:100,
+    score:80,grade:'B',deploy:lang==='fr'?'à l\'instant':lang==='en'?'just now':'gerade eben',deployBy:'you',
+    desc:desc||(lang==='fr'?'Service enregistré via le catalogue':'Service registered via the catalog'),
+    oncall:'—',repo:repo,incidents:0,uptime:'100%',
+    scorecard:{readiness:80,security:78,docs:70,observability:75,perf:80},
+    deps:[],deploys:[{action:'Registered',env:'catalog',time:lang==='fr'?'à l\'instant':'just now',status:'success'}]};
+  SERVICES.unshift(svc);
+  registerServiceToStore(svc);
+  closeDrawer();
+  applyFilters();
+  showToast((lang==='fr'?'Service enregistré : ':lang==='en'?'Service registered: ':'Service registriert: ')+name);
+}
+function registerServiceToStore(svc){
+  try{
+    var s; try{ s=JSON.parse(localStorage.getItem('koffi-idp-store')||'null'); }catch(e){ s=null; }
+    if(!s||typeof s!=='object') s={services:[],workflowRuns:[],auditLogs:[]};
+    s.services=s.services||[];
+    s.services.unshift({id:svc.id,name:svc.name,owner:svc.team,tier:'Tier '+svc.tier,runtime:svc.type,score:svc.score,status:'ok',repo:'github.com/'+svc.repo,description:svc.desc});
+    s.auditLogs=s.auditLogs||[];
+    s.auditLogs.unshift({id:'a-'+Date.now().toString(36),action:'create',entity:'services',details:'Service '+svc.name+' registered via catalog',actor:'catalog-demo',at:new Date().toISOString()});
+    s.updatedAt=new Date().toISOString();
+    localStorage.setItem('koffi-idp-store',JSON.stringify(s));
+  }catch(e){}
+}
 
 /* ═══ LANG ════════════════════════════════════════════════════════════════════ */
 var LF={de:'🇩🇪',en:'🇬🇧',fr:'🇫🇷'}, LC={de:'DE',en:'EN',fr:'FR'};
@@ -1437,6 +1492,6 @@ window.addEventListener('hashchange', cdApplyHash);
     onAuthStateChanged(_auth, function(u){ umRender(u); }, function(){ umRender(null); });
   }catch(err){ console.warn('[auth] unavailable', err&&err.message); umRender(null); }
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v4</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v5</div>
 </body>
 </html>
