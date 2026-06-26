@@ -2365,7 +2365,9 @@ function showView(viewId) {
   var ss = document.getElementById('view-selfservice');
   if (ss) ss.style.display = viewId === 'selfservice' ? '' : 'none';
   document.querySelectorAll('.idp-view').forEach(function(v) {
-    v.style.display = v.id === 'view-' + viewId ? '' : 'none';
+    // NB: .idp-view has `display:none` in CSS, so the active view MUST be set to
+    // an explicit `block` — using '' would fall back to the CSS rule and stay hidden.
+    v.style.display = v.id === 'view-' + viewId ? 'block' : 'none';
   });
   if (viewId !== 'selfservice' && !viewRendered[viewId]) {
     var el = document.getElementById('view-' + viewId);
@@ -3153,6 +3155,6 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v5</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v6</div>
 </body>
 </html>
