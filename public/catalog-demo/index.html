@@ -280,6 +280,36 @@ input,select{font:inherit;color:inherit}
 @media(max-width:900px){.sidebar{width:52px;min-width:52px}.sb-title,.sb-version,.sb-group,.sb-chip,.sb-uname,.sb-urole{display:none}.kpi-row{grid-template-columns:1fr 1fr}.drawer{width:100%}}
 @media(max-width:640px){.kpi-row{grid-template-columns:1fr}.ph{flex-direction:column}.ph-actions{width:100%}.toolbar{gap:6px}}
 .build-stamp{position:fixed;right:10px;bottom:8px;z-index:50;pointer-events:none;font:600 10px/1 monospace;color:#94a3b8;background:rgba(15,23,42,.06);border:1px solid rgba(148,163,184,.3);border-radius:6px;padding:3px 7px;opacity:.8}
+.cv-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.cv-head h1{font-size:22px;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:11px}
+.cv-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#EEF2FF;color:#6366F1;font-size:17px}
+.cv-head p{font-size:13px;color:#64748B;margin-top:6px;max-width:700px;line-height:1.5}
+.cv-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.cv-kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}
+.cv-kpi .v{font-size:26px;font-weight:800;color:#0F172A;line-height:1}
+.cv-kpi .l{font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-top:7px}
+.cv-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}
+.cv-tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.cv-tbl th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:#64748B;font-weight:700;padding:11px 14px;background:#F8FAFC;border-bottom:1px solid var(--border)}
+.cv-tbl td{padding:12px 14px;border-bottom:1px solid #EEF2F7;font-size:13px;color:#334155;vertical-align:middle}
+.cv-tbl tr:last-child td{border-bottom:0}
+.cv-tbl tr.click{cursor:pointer}.cv-tbl tr.click:hover{background:#F8FAFC}
+.cv-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px}
+.cv-bar{height:7px;background:#E2E8F0;border-radius:999px;overflow:hidden;min-width:90px;display:inline-block;vertical-align:middle}
+.cv-bar > i{display:block;height:100%;border-radius:999px}
+.cv-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:#fff;color:#334155;cursor:pointer;white-space:nowrap}
+.cv-btn:hover{background:#F8FAFC}
+.cv-btn.primary{background:#6366F1;color:#fff;border-color:#6366F1}.cv-btn.primary:hover{background:#4F46E5}
+.cv-btn.green{background:#10B981;color:#fff;border-color:#10B981}.cv-btn.green:hover{background:#059669}
+.cv-btn.red{background:#fff;color:#DC2626;border-color:#FECACA}.cv-btn.red:hover{background:#FEF2F2}
+.cv-btn.sm{padding:5px 9px;font-size:11px}
+.cv-filter{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.cv-chip{font-size:12px;font-weight:700;padding:6px 11px;border-radius:8px;border:1px solid var(--border);background:#fff;color:#475569;cursor:pointer}
+.cv-chip.on{background:#6366F1;color:#fff;border-color:#6366F1}
+.cv-grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:16px}
+.cv-rule{display:flex;align-items:center;gap:9px;padding:8px 0;border-top:1px solid #EEF2F7;font-size:13px;color:#334155}
+.cv-rule i{width:16px;text-align:center}
+.cv-mono{font-family:monospace;font-size:12px;color:#1E293B}
 </style>
   <script src="/assets/js/lang-auto.js"></script>
 </head>
@@ -300,20 +330,20 @@ input,select{font:inherit;color:inherit}
     <div class="sb-group">Navigation</div>
     <a class="sb-link" href="/"><i class="fa-solid fa-house"></i><span>Startseite</span></a>
     <a class="sb-link" href="/idp-platform"><i class="fa-solid fa-gauge-high"></i><span>Platform Overview</span></a>
-    <a class="sb-link active" href="/catalog-demo"><i class="fa-solid fa-layer-group"></i><span>Service Catalog</span><span class="sb-chip">12</span></a>
+    <a class="sb-link active" id="cv-nav-catalog" href="#" onclick="cdShowView('catalog',this);return false"><i class="fa-solid fa-layer-group"></i><span>Service Catalog</span><span class="sb-chip">12</span></a>
     <a class="sb-link" href="/idp-demo"><i class="fa-solid fa-bolt"></i><span>Self-Service</span></a>
     <a class="sb-link" href="/cicd-pipeline-demo"><i class="fa-solid fa-code-branch"></i><span>CI/CD Pipelines</span><span class="sb-chip">5</span></a>
     <div class="sb-group">Insights</div>
-    <a class="sb-link" href="#"><i class="fa-solid fa-chart-bar"></i><span>Scorecards</span></a>
-    <a class="sb-link" href="#"><i class="fa-solid fa-gauge-high"></i><span>Dashboards</span></a>
-    <a class="sb-link" href="#">
+    <a class="sb-link" id="cv-nav-scorecards" href="#" onclick="cdShowView('scorecards',this);return false"><i class="fa-solid fa-chart-bar"></i><span>Scorecards</span></a>
+    <a class="sb-link" id="cv-nav-dashboards" href="#" onclick="cdShowView('dashboards',this);return false"><i class="fa-solid fa-gauge-high"></i><span>Dashboards</span></a>
+    <a class="sb-link" id="cv-nav-incidents" href="#" onclick="cdShowView('incidents',this);return false">
       <i class="fa-solid fa-triangle-exclamation" style="color:#F97316"></i>
       <span>Incidents</span>
-      <span class="sb-chip red">2</span>
+      <span class="sb-chip red" id="cv-inc-badge">2</span>
     </a>
     <div class="sb-group">Platform</div>
-    <a class="sb-link" href="#"><i class="fa-brands fa-docker"></i><span>Environments</span></a>
-    <a class="sb-link" href="#"><i class="fa-solid fa-shield-halved"></i><span>Secrets</span></a>
+    <a class="sb-link" id="cv-nav-environments" href="#" onclick="cdShowView('environments',this);return false"><i class="fa-brands fa-docker"></i><span>Environments</span></a>
+    <a class="sb-link" id="cv-nav-secrets" href="#" onclick="cdShowView('secrets',this);return false"><i class="fa-solid fa-shield-halved"></i><span>Secrets</span></a>
     <a class="sb-link" href="#"><i class="fa-solid fa-clock-rotate-left"></i><span>Audit Log</span></a>
     <div class="sb-group">Admin</div>
     <a class="sb-link" href="#"><i class="fa-solid fa-users"></i><span>Teams</span></a>
@@ -355,6 +385,10 @@ input,select{font:inherit;color:inherit}
 
   <!-- Content -->
   <main class="content" id="mainContent">
+
+    <!-- Dynamic views (Scorecards / Dashboards / Environments / Secrets / Incidents) -->
+    <div id="cvDynamic"></div>
+    <div id="cvCatalog">
 
     <!-- Page Header -->
     <div class="ph">
@@ -469,6 +503,7 @@ input,select{font:inherit;color:inherit}
       <div class="card-grid" id="cardGrid"></div>
     </div>
 
+    </div><!-- /cvCatalog -->
   </main>
 </div><!-- /main -->
 </div><!-- /shell -->
@@ -964,11 +999,258 @@ function openRegister(){showToast((lang==='fr'?'Formulaire d\'enregistrement ouv
 /* ═══ LANG ════════════════════════════════════════════════════════════════════ */
 var LF={de:'🇩🇪',en:'🇬🇧',fr:'🇫🇷'}, LC={de:'DE',en:'EN',fr:'FR'};
 function klT(){document.getElementById('klP').classList.toggle('open')}
-function pL(l){lang=l;localStorage.setItem('preferred-lang',l);document.documentElement.lang=l;document.getElementById('klP').classList.remove('open');document.getElementById('klF').textContent=LF[l];document.getElementById('klC').textContent=LC[l];document.querySelectorAll('.kl-item').forEach(function(i){i.classList.toggle('active',i.dataset.kl===l)});applyFilters();}
+function pL(l){lang=l;localStorage.setItem('preferred-lang',l);document.documentElement.lang=l;document.getElementById('klP').classList.remove('open');document.getElementById('klF').textContent=LF[l];document.getElementById('klC').textContent=LC[l];document.querySelectorAll('.kl-item').forEach(function(i){i.classList.toggle('active',i.dataset.kl===l)});applyFilters();if(typeof cvCurrent!=='undefined'&&cvCurrent!=='catalog')cdShowView(cvCurrent);}
 document.addEventListener('click',function(e){var w=document.getElementById('klW');if(w&&!w.contains(e.target))document.getElementById('klP').classList.remove('open');});
 
 /* ═══ TOAST ════════════════════════════════════════════════════════════════════ */
 function showToast(msg){var el=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},3000);}
+
+/* ═══ MULTI-VIEW SYSTEM (Scorecards / Dashboards / Environments / Secrets / Incidents) ═══ */
+function cT(de,en,fr){ return lang==='fr'?fr:lang==='en'?en:de; }
+var cvCurrent='catalog';
+var CV_VIEWS={};
+function CV_VIEWS_register(name,fn){ CV_VIEWS[name]=fn; }
+var CV_META={
+  catalog:{ic:'fa-solid fa-layer-group',t:function(){return cT('Service Catalog','Service Catalog','Catalogue de services');}},
+  scorecards:{ic:'fa-solid fa-chart-bar',t:function(){return 'Scorecards';}},
+  dashboards:{ic:'fa-solid fa-gauge-high',t:function(){return cT('Dashboards','Dashboards','Tableaux de bord');}},
+  incidents:{ic:'fa-solid fa-triangle-exclamation',t:function(){return 'Incidents';}},
+  environments:{ic:'fa-brands fa-docker',t:function(){return 'Environments';}},
+  secrets:{ic:'fa-solid fa-shield-halved',t:function(){return 'Secrets';}}
+};
+function cdSetActiveNav(name){
+  ['catalog','scorecards','dashboards','incidents','environments','secrets'].forEach(function(n){
+    var el=document.getElementById('cv-nav-'+n); if(el) el.classList.toggle('active', n===name);
+  });
+}
+function cdShowView(name,el){
+  cvCurrent=name;
+  cdSetActiveNav(name);
+  var cat=document.getElementById('cvCatalog'), dyn=document.getElementById('cvDynamic');
+  var cur=document.querySelector('.tb-bc .cur');
+  var m=CV_META[name]||CV_META.catalog;
+  if(cur) cur.innerHTML='<i class="'+m.ic+'"></i> '+m.t();
+  if(name==='catalog'){ cat.style.display='block'; dyn.style.display='none'; dyn.innerHTML=''; return; }
+  cat.style.display='none'; dyn.style.display='block';
+  dyn.innerHTML = CV_VIEWS[name] ? CV_VIEWS[name]() : '<div style="padding:40px;color:#94A3B8">—</div>';
+}
+function cvHead(ic,title,sub,actions){
+  return '<div class="cv-head"><div><h1><span class="cv-ico"><i class="'+ic+'"></i></span>'+title+'</h1><p>'+sub+'</p></div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap">'+(actions||'')+'</div></div>';
+}
+function cvBar(pct,color){ return '<span class="cv-bar"><i style="width:'+pct+'%;background:'+color+'"></i></span>'; }
+
+/* ── SCORECARDS ───────────────────────────────────────────────────────────────── */
+var CV_SCORECARDS=[
+  {id:'prod',name:'Production Readiness',icon:'fa-rocket',color:'#6366F1',rules:[['On-call rotation defined',true],['Runbook linked',true],['SLO defined',true],['Error budget policy',false],['Rollback tested in last 30d',true],['Health check endpoint',true]]},
+  {id:'sec',name:'Security',icon:'fa-shield-halved',color:'#DC2626',rules:[['No critical CVEs',true],['Secrets in Vault (no plaintext)',true],['Dependencies scanned',true],['SAST passing',false],['Image signed (cosign)',false]]},
+  {id:'rel',name:'Reliability',icon:'fa-heart-pulse',color:'#10B981',rules:[['Availability ≥ 99.9%',true],['Autoscaling configured',true],['Multi-AZ deployment',true],['Backups verified',true]]}
+];
+var CV_SVC_SCORES=[
+  {name:'payment-service',team:'Payments',level:'gold',pass:11,total:12},
+  {name:'checkout-api',team:'Payments',level:'silver',pass:9,total:12},
+  {name:'auth-gateway',team:'Security',level:'gold',pass:12,total:12},
+  {name:'data-ingest',team:'Data',level:'bronze',pass:6,total:12},
+  {name:'notification-svc',team:'Platform',level:'silver',pass:8,total:12},
+  {name:'billing-worker',team:'Payments',level:'silver',pass:9,total:12},
+  {name:'edge-router',team:'Platform',level:'gold',pass:11,total:12},
+  {name:'frontend-web',team:'Web',level:'bronze',pass:5,total:12}
+];
+var CV_LVL={gold:{bg:'#FEF9C3',color:'#A16207',dot:'#EAB308',label:'Gold'},silver:{bg:'#F1F5F9',color:'#475569',dot:'#94A3B8',label:'Silver'},bronze:{bg:'#FEF3C7',color:'#B45309',dot:'#D97706',label:'Bronze'}};
+var cvScFilter='all', cvScExpanded=null;
+function cdScFilter(l){ cvScFilter=l; cdShowView('scorecards'); }
+function cdScToggle(id){ cvScExpanded = (cvScExpanded===id?null:id); cdShowView('scorecards'); }
+function cdScReeval(){ showToast(cT('Scorecards neu bewertet — 312 Entities geprüft.','Scorecards re-evaluated — 312 entities checked.','Scorecards réévaluées — 312 entités vérifiées.')); }
+CV_VIEWS_register('scorecards', function(){
+  var cards=CV_SCORECARDS.map(function(sc){
+    var passed=sc.rules.filter(function(r){return r[1];}).length, tot=sc.rules.length;
+    var pct=Math.round(passed/tot*100);
+    var lvl=pct>=90?'gold':pct>=70?'silver':'bronze';
+    var open=cvScExpanded===sc.id;
+    var rules=open?'<div style="margin-top:12px">'+sc.rules.map(function(r){
+      return '<div class="cv-rule"><i class="fa-solid '+(r[1]?'fa-circle-check':'fa-circle-xmark')+'" style="color:'+(r[1]?'#10B981':'#EF4444')+'"></i>'+r[0]+'</div>';
+    }).join('')+'</div>':'';
+    return '<div class="cv-card" style="cursor:pointer" onclick="cdScToggle(\''+sc.id+'\')">'+
+      '<div style="display:flex;align-items:center;gap:11px">'+
+        '<div class="cv-ico" style="background:'+sc.color+'1a;color:'+sc.color+'"><i class="fa-solid '+sc.icon+'"></i></div>'+
+        '<div style="flex:1"><div style="font-weight:800;color:#0F172A;font-size:14px">'+sc.name+'</div>'+
+          '<div style="font-size:11.5px;color:#64748B">'+passed+'/'+tot+' '+cT('Regeln bestanden','rules passing','règles OK')+'</div></div>'+
+        '<span class="cv-badge" style="background:'+CV_LVL[lvl].bg+';color:'+CV_LVL[lvl].color+'"><i class="fa-solid fa-medal"></i>'+CV_LVL[lvl].label+'</span>'+
+        '<i class="fa-solid fa-chevron-'+(open?'up':'down')+'" style="color:#94A3B8;margin-left:4px"></i>'+
+      '</div>'+
+      '<div style="margin-top:11px;display:flex;align-items:center;gap:10px">'+cvBar(pct,sc.color)+'<span style="font-size:12px;font-weight:800;color:'+sc.color+'">'+pct+'%</span></div>'+
+      rules+
+    '</div>';
+  }).join('');
+  var rows=CV_SVC_SCORES.filter(function(s){return cvScFilter==='all'||s.level===cvScFilter;}).map(function(s){
+    var L=CV_LVL[s.level], pct=Math.round(s.pass/s.total*100);
+    return '<tr><td><b style="color:#0F172A">'+s.name+'</b></td><td>'+s.team+'</td>'+
+      '<td><span class="cv-badge" style="background:'+L.bg+';color:'+L.color+'"><span style="width:7px;height:7px;border-radius:50%;background:'+L.dot+'"></span>'+L.label+'</span></td>'+
+      '<td>'+s.pass+'/'+s.total+'</td>'+
+      '<td style="min-width:140px">'+cvBar(pct,L.dot)+' <span style="font-size:11px;color:#64748B">'+pct+'%</span></td></tr>';
+  }).join('');
+  var chips=[['all',cT('Alle','All','Tous')],['gold','Gold'],['silver','Silver'],['bronze','Bronze']].map(function(c){
+    return '<button type="button" class="cv-chip'+(cvScFilter===c[0]?' on':'')+'" onclick="cdScFilter(\''+c[0]+'\')">'+c[1]+'</button>';
+  }).join('');
+  return cvHead('fa-solid fa-chart-bar','Scorecards',
+    cT('Bewerte deine Services anhand von Production-Readiness-, Security- und Reliability-Standards.','Grade your services against production-readiness, security and reliability standards.','Évaluez vos services selon des standards de production, sécurité et fiabilité.'),
+    '<button type="button" class="cv-btn primary" onclick="cdScReeval()"><i class="fa-solid fa-rotate"></i> '+cT('Neu bewerten','Re-evaluate','Réévaluer')+'</button>')+
+    '<div class="cv-grid3">'+cards+'</div>'+
+    '<div class="cv-card" style="padding:0;overflow:hidden">'+
+      '<div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px"><b style="font-size:13px;color:#0F172A">'+cT('Service-Bewertungen','Per-service grades','Notes par service')+'</b><div class="cv-filter" style="margin:0">'+chips+'</div></div>'+
+      '<table class="cv-tbl" style="border:0;border-radius:0"><thead><tr><th>Service</th><th>Team</th><th>Level</th><th>'+cT('Regeln','Rules','Règles')+'</th><th>Score</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '</div>';
+});
+
+/* ── DASHBOARDS ───────────────────────────────────────────────────────────────── */
+var cvDashPeriod='7d';
+var CV_DORA={
+  '7d':{df:'14/'+cT('Tag','day','jour'),lt:'2.3h',cfr:'4.1%',mttr:'28min',health:[10,2,0]},
+  '30d':{df:'9/'+cT('Tag','day','jour'),lt:'3.1h',cfr:'6.8%',mttr:'42min',health:[9,2,1]},
+  '90d':{df:'7/'+cT('Tag','day','jour'),lt:'4.0h',cfr:'9.2%',mttr:'55min',health:[8,3,1]}
+};
+function cdDashPeriod(p){ cvDashPeriod=p; cdShowView('dashboards'); }
+CV_VIEWS_register('dashboards', function(){
+  var d=CV_DORA[cvDashPeriod];
+  var periods=['7d','30d','90d'].map(function(p){return '<button type="button" class="cv-chip'+(cvDashPeriod===p?' on':'')+'" onclick="cdDashPeriod(\''+p+'\')">'+p+'</button>';}).join('');
+  var dora=[
+    [cT('Deployment-Frequenz','Deployment frequency','Fréquence de déploiement'),d.df,'#6366F1','fa-rocket','Elite'],
+    [cT('Lead Time','Lead time','Délai de livraison'),d.lt,'#10B981','fa-stopwatch','Elite'],
+    [cT('Change Failure Rate','Change failure rate','Taux d\'échec'),d.cfr,'#F59E0B','fa-triangle-exclamation','High'],
+    ['MTTR',d.mttr,'#0EA5E9','fa-heart-pulse','Elite']
+  ].map(function(k){return '<div class="cv-kpi"><div style="display:flex;align-items:center;gap:8px;color:'+k[2]+'"><i class="fa-solid '+k[3]+'"></i><span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em">'+k[4]+'</span></div><div class="v" style="margin-top:8px">'+k[1]+'</div><div class="l">'+k[0]+'</div></div>';}).join('');
+  var tot=d.health[0]+d.health[1]+d.health[2];
+  var seg=[['#10B981',d.health[0],cT('Gesund','Healthy','Sain')],['#F59E0B',d.health[1],cT('Degradiert','Degraded','Dégradé')],['#EF4444',d.health[2],cT('Ausgefallen','Down','HS')]];
+  var barSeg=seg.map(function(s){return s[1]>0?'<div style="width:'+(s[1]/tot*100)+'%;background:'+s[0]+'"></div>':'';}).join('');
+  var legend=seg.map(function(s){return '<div style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#334155"><span style="width:10px;height:10px;border-radius:3px;background:'+s[0]+'"></span>'+s[2]+'<b style="margin-left:auto;color:#0F172A">'+s[1]+'</b></div>';}).join('');
+  return cvHead('fa-solid fa-gauge-high',cT('Dashboards','Dashboards','Tableaux de bord'),
+    cT('Engineering-Intelligence: DORA-Metriken, Service-Health und Delivery-Performance.','Engineering intelligence: DORA metrics, service health and delivery performance.','Intelligence d\'ingénierie : métriques DORA, santé des services et performance de livraison.'),
+    '<div class="cv-filter" style="margin:0">'+periods+'</div>')+
+    '<div class="cv-kpis">'+dora+'</div>'+
+    '<div class="cv-grid3" style="grid-template-columns:1.4fr 1fr">'+
+      '<div class="cv-card"><b style="font-size:13px;color:#0F172A">'+cT('Service-Health','Service health','Santé des services')+'</b>'+
+        '<div style="display:flex;height:14px;border-radius:999px;overflow:hidden;margin:14px 0">'+barSeg+'</div>'+
+        '<div style="display:grid;gap:9px">'+legend+'</div></div>'+
+      '<div class="cv-card"><b style="font-size:13px;color:#0F172A">'+cT('Deploys / Woche','Deploys / week','Déploiements / sem.')+'</b>'+
+        '<div style="display:flex;align-items:flex-end;gap:8px;height:120px;margin-top:14px">'+
+        [40,65,52,78,90,60,84].map(function(h){return '<div style="flex:1;background:linear-gradient(#818CF8,#6366F1);border-radius:5px 5px 0 0;height:'+h+'%"></div>';}).join('')+
+        '</div><div style="font-size:11px;color:#94A3B8;margin-top:8px;text-align:center">'+cT('Letzte 7 Wochen','Last 7 weeks','7 dernières semaines')+'</div></div>'+
+    '</div>';
+});
+
+/* ── ENVIRONMENTS ─────────────────────────────────────────────────────────────── */
+var CV_ENVS=[
+  {id:'prod',name:'production',cluster:'prod-k8s-eu',type:'Kubernetes',status:'healthy',cost:'$1 820',ttl:'—',ephemeral:false},
+  {id:'staging',name:'staging',cluster:'staging-k8s-eu',type:'Kubernetes',status:'healthy',cost:'$720',ttl:'—',ephemeral:false},
+  {id:'dev',name:'dev-payments-v2',cluster:'staging-k8s-eu',type:'Kubernetes',status:'healthy',cost:'$140',ttl:'58h',ephemeral:true},
+  {id:'pr1287',name:'pr-1287-preview',cluster:'staging-k8s-eu',type:'Preview',status:'degraded',cost:'$22',ttl:'6h',ephemeral:true},
+  {id:'dr',name:'dr-failover',cluster:'prod-k8s-us',type:'Kubernetes',status:'standby',cost:'$410',ttl:'—',ephemeral:false}
+];
+var CV_ENV_ST={healthy:{bg:'#DCFCE7',color:'#047857',label:cT('Gesund','Healthy','Sain')},degraded:{bg:'#FEF3C7',color:'#B45309',label:cT('Degradiert','Degraded','Dégradé')},standby:{bg:'#DBEAFE',color:'#1D4ED8',label:'Standby'}};
+function cdEnvCreate(){ showToast(cT('Self-Service: Environment-Erstellung gestartet.','Self-service: environment provisioning started.','Self-service : création d\'environnement lancée.')); }
+function cdEnvScale(name){ showToast(cT('Skalierung von ','Scaling ','Mise à l\'échelle de ')+name+'…'); }
+function cdEnvDestroy(id){
+  var e=CV_ENVS.filter(function(x){return x.id===id;})[0];
+  if(!e) return;
+  if(!window.confirm(cT('Environment ','Destroy environment ','Détruire l\'environnement ')+e.name+' ?')) return;
+  CV_ENVS=CV_ENVS.filter(function(x){return x.id!==id;});
+  cdShowView('environments');
+  showToast(cT('Environment ','Environment ','Environnement ')+e.name+cT(' zerstört.',' destroyed.',' détruit.'));
+}
+CV_VIEWS_register('environments', function(){
+  var st={healthy:{bg:'#DCFCE7',color:'#047857'},degraded:{bg:'#FEF3C7',color:'#B45309'},standby:{bg:'#DBEAFE',color:'#1D4ED8'}};
+  var stl={healthy:cT('Gesund','Healthy','Sain'),degraded:cT('Degradiert','Degraded','Dégradé'),standby:'Standby'};
+  var rows=CV_ENVS.map(function(e){
+    var s=st[e.status]||st.healthy;
+    var actions='<button type="button" class="cv-btn sm" onclick="cdEnvScale(\''+e.name+'\')"><i class="fa-solid fa-arrows-up-down"></i> '+cT('Skalieren','Scale','Échelle')+'</button>'+
+      (e.ephemeral?' <button type="button" class="cv-btn sm red" onclick="cdEnvDestroy(\''+e.id+'\')"><i class="fa-solid fa-trash"></i> '+cT('Zerstören','Destroy','Détruire')+'</button>':'');
+    return '<tr><td><b style="color:#0F172A">'+e.name+'</b>'+(e.ephemeral?' <span class="cv-badge" style="background:#EDE9FE;color:#6D28D9;font-size:9.5px">ephemeral</span>':'')+'</td>'+
+      '<td><span class="cv-mono">'+e.cluster+'</span></td><td>'+e.type+'</td>'+
+      '<td><span class="cv-badge" style="background:'+s.bg+';color:'+s.color+'">'+stl[e.status]+'</span></td>'+
+      '<td>'+e.cost+'/mo</td><td>'+e.ttl+'</td><td style="text-align:right;white-space:nowrap">'+actions+'</td></tr>';
+  }).join('');
+  var active=CV_ENVS.length, eph=CV_ENVS.filter(function(e){return e.ephemeral;}).length;
+  return cvHead('fa-brands fa-docker','Environments',
+    cT('Verwalte Cluster-Umgebungen — Kosten, TTL und ephemere Preview-Environments.','Manage cluster environments — cost, TTL and ephemeral preview environments.','Gérez les environnements cluster — coûts, TTL et environnements éphémères.'),
+    '<button type="button" class="cv-btn primary" onclick="cdEnvCreate()"><i class="fa-solid fa-plus"></i> '+cT('Environment erstellen','Create environment','Créer un environnement')+'</button>')+
+    '<div class="cv-kpis"><div class="cv-kpi"><div class="v">'+active+'</div><div class="l">'+cT('Environments','Environments','Environnements')+'</div></div>'+
+      '<div class="cv-kpi"><div class="v" style="color:#7C3AED">'+eph+'</div><div class="l">Ephemeral</div></div>'+
+      '<div class="cv-kpi"><div class="v" style="color:#10B981">$3 112</div><div class="l">'+cT('Kosten/Monat','Cost/month','Coût/mois')+'</div></div></div>'+
+    '<div class="cv-card" style="padding:0;overflow:hidden"><table class="cv-tbl" style="border:0"><thead><tr><th>Name</th><th>Cluster</th><th>Type</th><th>Status</th><th>'+cT('Kosten','Cost','Coût')+'</th><th>TTL</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+});
+
+/* ── SECRETS ──────────────────────────────────────────────────────────────────── */
+var CV_SECRETS=[
+  {id:'s1',path:'/production/db/password',engine:'vault-kv-v2',rotated:'01.04.2026',next:'01.07.2026',status:'healthy',revealed:false},
+  {id:'s2',path:'/production/api/jwt-secret',engine:'vault-kv-v2',rotated:'15.05.2026',next:'15.08.2026',status:'healthy',revealed:false},
+  {id:'s3',path:'/staging/db/password',engine:'vault-kv-v2',rotated:'01.03.2026',next:'01.06.2026',status:'expiring',revealed:false},
+  {id:'s4',path:'/production/payments/stripe-key',engine:'aws-sm',rotated:'01.02.2026',next:'01.05.2026',status:'expired',revealed:false},
+  {id:'s5',path:'/shared/monitoring/grafana-key',engine:'vault-kv-v2',rotated:'01.06.2026',next:'01.09.2026',status:'healthy',revealed:false}
+];
+function cdSecRotate(id){
+  var s=CV_SECRETS.filter(function(x){return x.id===id;})[0]; if(!s) return;
+  s.status='healthy'; s.rotated='26.06.2026'; s.next='26.09.2026';
+  cdShowView('secrets');
+  showToast(cT('Secret rotiert: ','Secret rotated: ','Secret pivoté : ')+s.path);
+}
+function cdSecReveal(id){
+  var s=CV_SECRETS.filter(function(x){return x.id===id;})[0]; if(!s) return;
+  s.revealed=!s.revealed; cdShowView('secrets');
+}
+CV_VIEWS_register('secrets', function(){
+  var st={healthy:{bg:'#DCFCE7',color:'#047857',label:cT('Aktuell','Healthy','À jour')},expiring:{bg:'#FEF3C7',color:'#B45309',label:cT('Läuft ab','Expiring','Expire bientôt')},expired:{bg:'#FEE2E2',color:'#B91C1C',label:cT('Abgelaufen','Expired','Expiré')}};
+  var rows=CV_SECRETS.map(function(s){
+    var c=st[s.status];
+    var val=s.revealed?'<span class="cv-mono" style="color:#DC2626">sk_live_4ab9…f021</span>':'<span class="cv-mono">••••••••••••</span>';
+    return '<tr><td><span class="cv-mono" style="color:#1E293B;font-weight:600">'+s.path+'</span></td>'+
+      '<td>'+val+' <button type="button" class="cv-btn sm" style="padding:2px 7px" onclick="cdSecReveal(\''+s.id+'\')"><i class="fa-solid fa-'+(s.revealed?'eye-slash':'eye')+'"></i></button></td>'+
+      '<td>'+s.engine+'</td><td>'+s.rotated+'</td><td>'+s.next+'</td>'+
+      '<td><span class="cv-badge" style="background:'+c.bg+';color:'+c.color+'">'+c.label+'</span></td>'+
+      '<td style="text-align:right"><button type="button" class="cv-btn sm '+(s.status==='healthy'?'':'green')+'" onclick="cdSecRotate(\''+s.id+'\')"><i class="fa-solid fa-rotate"></i> '+cT('Rotieren','Rotate','Pivoter')+'</button></td></tr>';
+  }).join('');
+  var exp=CV_SECRETS.filter(function(s){return s.status!=='healthy';}).length;
+  return cvHead('fa-solid fa-shield-halved','Secrets',
+    cT('Zentrale Secret-Verwaltung mit Rotation — Vault & AWS Secrets Manager.','Central secret management with rotation — Vault & AWS Secrets Manager.','Gestion centralisée des secrets avec rotation — Vault & AWS Secrets Manager.'),
+    '')+
+    '<div class="cv-kpis"><div class="cv-kpi"><div class="v">'+CV_SECRETS.length+'</div><div class="l">Secrets</div></div>'+
+      '<div class="cv-kpi"><div class="v" style="color:'+(exp?'#D97706':'#10B981')+'">'+exp+'</div><div class="l">'+cT('Aktion nötig','Need attention','À traiter')+'</div></div>'+
+      '<div class="cv-kpi"><div class="v" style="color:#10B981">100%</div><div class="l">'+cT('Verschlüsselt','Encrypted','Chiffrés')+'</div></div></div>'+
+    '<div class="cv-card" style="padding:0;overflow:hidden"><table class="cv-tbl" style="border:0"><thead><tr><th>Path</th><th>Value</th><th>Engine</th><th>'+cT('Rotiert','Rotated','Pivoté')+'</th><th>'+cT('Nächste','Next','Prochaine')+'</th><th>Status</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+});
+
+/* ── INCIDENTS ────────────────────────────────────────────────────────────────── */
+var CV_INCIDENTS=[
+  {id:'INC-0051',title:'checkout-api P1 — elevated 5xx',sev:'P1',service:'checkout-api',status:'firing',age:'12min'},
+  {id:'INC-0049',title:'payment-service latency spike',sev:'P2',service:'payment-service',status:'acknowledged',age:'1h 4min'},
+  {id:'INC-0042',title:'auth-gateway cert expiry',sev:'P2',service:'auth-gateway',status:'resolved',age:'2d'},
+  {id:'INC-0039',title:'data-ingest DLQ backlog',sev:'P3',service:'data-ingest',status:'resolved',age:'3d'}
+];
+function cvIncActive(){ return CV_INCIDENTS.filter(function(i){return i.status!=='resolved';}).length; }
+function cdIncBadge(){ var b=document.getElementById('cv-inc-badge'); if(b){ var n=cvIncActive(); b.textContent=n; b.style.display=n?'':'none'; } }
+function cdIncAck(id){ var i=CV_INCIDENTS.filter(function(x){return x.id===id;})[0]; if(i){i.status='acknowledged'; cdShowView('incidents'); cdIncBadge(); showToast(id+cT(' bestätigt.',' acknowledged.',' confirmé.')); } }
+function cdIncResolve(id){ var i=CV_INCIDENTS.filter(function(x){return x.id===id;})[0]; if(i){i.status='resolved'; cdShowView('incidents'); cdIncBadge(); showToast(id+cT(' gelöst.',' resolved.',' résolu.')); } }
+CV_VIEWS_register('incidents', function(){
+  var sev={P1:{bg:'#FEE2E2',color:'#B91C1C'},P2:{bg:'#FFEDD5',color:'#C2410C'},P3:{bg:'#FEF3C7',color:'#B45309'}};
+  var stt={firing:{bg:'#FEE2E2',color:'#B91C1C',label:cT('Aktiv','Firing','Actif')},acknowledged:{bg:'#DBEAFE',color:'#1D4ED8',label:cT('Bestätigt','Acknowledged','Confirmé')},resolved:{bg:'#DCFCE7',color:'#047857',label:cT('Gelöst','Resolved','Résolu')}};
+  var rows=CV_INCIDENTS.map(function(i){
+    var sv=sev[i.sev], s=stt[i.status];
+    var act=i.status==='firing'?'<button type="button" class="cv-btn sm" onclick="cdIncAck(\''+i.id+'\')"><i class="fa-solid fa-bell"></i> Ack</button> <button type="button" class="cv-btn sm green" onclick="cdIncResolve(\''+i.id+'\')"><i class="fa-solid fa-check"></i> '+cT('Lösen','Resolve','Résoudre')+'</button>':
+      i.status==='acknowledged'?'<button type="button" class="cv-btn sm green" onclick="cdIncResolve(\''+i.id+'\')"><i class="fa-solid fa-check"></i> '+cT('Lösen','Resolve','Résoudre')+'</button>':
+      '<span style="color:#94A3B8;font-size:12px"><i class="fa-solid fa-check"></i></span>';
+    return '<tr><td><span class="cv-mono" style="font-weight:700;color:#6366F1">'+i.id+'</span></td><td><b style="color:#0F172A">'+i.title+'</b></td>'+
+      '<td><span class="cv-badge" style="background:'+sv.bg+';color:'+sv.color+'">'+i.sev+'</span></td><td>'+i.service+'</td>'+
+      '<td><span class="cv-badge" style="background:'+s.bg+';color:'+s.color+'">'+s.label+'</span></td><td>'+i.age+'</td>'+
+      '<td style="text-align:right;white-space:nowrap">'+act+'</td></tr>';
+  }).join('');
+  var active=cvIncActive();
+  return cvHead('fa-solid fa-triangle-exclamation','Incidents',
+    cT('Aktive Vorfälle bestätigen und lösen — direkt verknüpft mit den betroffenen Services.','Acknowledge and resolve active incidents — linked to the affected services.','Confirmez et résolvez les incidents actifs — liés aux services affectés.'),
+    '')+
+    '<div class="cv-kpis"><div class="cv-kpi"><div class="v" style="color:'+(active?'#DC2626':'#10B981')+'">'+active+'</div><div class="l">'+cT('Aktiv','Active','Actifs')+'</div></div>'+
+      '<div class="cv-kpi"><div class="v">'+CV_INCIDENTS.filter(function(i){return i.status==='resolved';}).length+'</div><div class="l">'+cT('Gelöst (7T)','Resolved (7d)','Résolus (7j)')+'</div></div>'+
+      '<div class="cv-kpi"><div class="v" style="color:#0EA5E9">28min</div><div class="l">MTTR</div></div></div>'+
+    '<div class="cv-card" style="padding:0;overflow:hidden"><table class="cv-tbl" style="border:0"><thead><tr><th>ID</th><th>'+cT('Titel','Title','Titre')+'</th><th>Sev</th><th>Service</th><th>Status</th><th>'+cT('Alter','Age','Âge')+'</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+});
 
 /* ═══ KEYBOARD ════════════════════════════════════════════════════════════════ */
 document.addEventListener('keydown',function(e){
@@ -984,6 +1266,6 @@ document.addEventListener('DOMContentLoaded',function(){
   applyFilters();
 });
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v1</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v2</div>
 </body>
 </html>
