@@ -628,6 +628,7 @@ button{cursor:pointer;border:none;background:none;font:inherit}
 .ds-status-txt{font-weight:600}
 .ds-status-txt.healthy{color:#059669}.ds-status-txt.syncing{color:#2563eb}.ds-status-txt.warning{color:#d97706}
 .ds-kind-badge{font-size:10px;font-weight:700;color:#64748b;background:#f1f5f9;border-radius:9px;padding:1px 7px;flex-shrink:0}
+.build-stamp{position:fixed;right:10px;bottom:8px;z-index:50;pointer-events:none;font:600 10px/1 monospace;color:#94a3b8;background:rgba(15,23,42,.06);border:1px solid rgba(148,163,184,.3);border-radius:6px;padding:3px 7px;opacity:.8}
 .team-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:20px}
 .team-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px}
 .team-card-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -2708,5 +2709,6 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 </script>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v3</div>
 </body>
 </html>

@@ -18,6 +18,7 @@ a{text-decoration:none;color:inherit}button,input,select,textarea{font:inherit}b
 @media(max-width:1400px){.exec-kpi-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:700px){.exec-kpi-grid{grid-template-columns:repeat(2,1fr)}.health-svc-grid{grid-template-columns:1fr}}
 @media(max-width:1200px){.cols-4{grid-template-columns:repeat(2,1fr)}.cols-3,.cols-2,.chat-layout{grid-template-columns:1fr}.kanban{grid-template-columns:repeat(2,1fr)}}@media(max-width:800px){.side{width:64px;min-width:64px}.brand strong,.brand span,.group-title,.pill,.nav-btn span:not(.pill),.nav-link span:not(.pill),.side-search{display:none}.nav-btn,.nav-link{justify-content:center;padding:11px}.content{padding:16px}.topbar{padding:0 12px}.crumb{min-width:auto}.global{display:none}.head{display:block}.head .btn{margin-top:12px}.cols-4,.cols-3,.cols-2,.kanban{grid-template-columns:1fr}.graph{min-height:520px}.node{position:static;margin:12px}.edge{display:none}table{min-width:760px}}
 .user-menu{position:relative}.user-trigger{display:flex;align-items:center;gap:8px;padding:3px 8px 3px 4px;border-radius:999px;border:1px solid transparent}.user-trigger:hover{background:#f1f5f9;border-color:var(--line)}.user-trigger .avatar{cursor:pointer}.user-trigger .u-name{font-size:12.5px;font-weight:850;color:#142033;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.user-trigger .fa-chevron-down{font-size:9px;color:#94a3b8}.user-dropdown{position:absolute;right:0;top:46px;width:250px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 18px 42px rgba(15,23,42,.16);padding:6px;display:none;z-index:130}.user-dropdown.open{display:block}.ud-head{padding:10px 12px;border-bottom:1px solid var(--line);margin-bottom:6px}.ud-name{font-size:13px;font-weight:850;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ud-email{font-size:11.5px;color:#66758a;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ud-item{width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;font-size:13px;font-weight:750;color:#334155;text-align:left}.ud-item:hover{background:#f1f5f9}.ud-item i{width:15px;text-align:center;color:#64748b}.ud-item.logout{color:#b91c1c}.ud-item.logout:hover{background:#fef2f2}.ud-item.logout i{color:#dc2626}.ud-item.login{color:#1d4ed8}.ud-item.login i{color:#2563eb}@media(max-width:800px){.user-trigger .u-name,.user-trigger .fa-chevron-down{display:none}}
+.build-stamp{position:fixed;left:10px;bottom:8px;z-index:50;pointer-events:none;font:600 10px/1 monospace;color:#94a3b8;background:rgba(15,23,42,.06);border:1px solid rgba(148,163,184,.3);border-radius:6px;padding:3px 7px;opacity:.8}
 </style>
 </head>
 <body>
@@ -310,5 +311,6 @@ document.addEventListener("DOMContentLoaded",function(){renderNav("");setPage("o
     toast('Signed out.');
   });
 </script>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v3</div>
 </body>
 </html>
