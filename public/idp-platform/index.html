@@ -85,7 +85,7 @@ var groups=[
   {title:"SRE & Incidents",items:[["self-healing-incidents","fa-bandage","Self Healing Incidents"],["incidents-agentic-workflow","fa-route","Incidents Agentic Workflow"],["incident-investigation-room","fa-magnifying-glass-chart","Incident Investigation Room"],["sre-control-center","fa-tower-broadcast","SRE Control Center"],["teams-incidents-intelligence","fa-users-gear","Teams & Incidents Intelligence"]]},
   {title:"Security & Compliance",items:[["security-use-cases","fa-shield","Security Use Cases"],["security-posture","fa-shield-halved","Security Posture"],["incident-log4shell","fa-bug","Incident: log4Shell"],["compliance","fa-scale-balanced","Compliance"],["jit-permissions","fa-key","Just-In-Time Permissions"]]},
   {title:"Other Pages",items:[["other-pages","fa-ellipsis","Other Pages"]]},
-  {title:"Related demos",links:[["/admin/idp-admin.html","fa-sliders","Backend admin"],["/idp-demo","fa-bolt","Self-Service demo"],["/catalog-demo","fa-layer-group","Catalog demo"],["/cicd-pipeline-demo","fa-code-branch","CI/CD demo"]]}
+  {title:"Related demos",links:[["/idp-admin/","fa-sliders","Backend admin"],["/idp-demo","fa-bolt","Self-Service demo"],["/catalog-demo","fa-layer-group","Catalog demo"],["/cicd-pipeline-demo","fa-code-branch","CI/CD demo"]]}
 ];
 var pages={};
 groups.forEach(function(g){(g.items||[]).forEach(function(i){pages[i[0]]={id:i[0],icon:i[1],title:i[2],group:g.title}})});
@@ -290,8 +290,20 @@ function renderRunExecution(run){
     else { finishRun(run); }
   })();
 }
+function pushRunToStore(run){
+  try{
+    var s; try{ s=JSON.parse(localStorage.getItem("koffi-idp-store")||"null"); }catch(e){ s=null; }
+    if(!s||typeof s!=="object") s={workflowRuns:[],auditLogs:[]};
+    s.workflowRuns=s.workflowRuns||[];
+    s.workflowRuns.unshift({id:run.id,workflow:run.workflow,target:run.target,owner:run.owner,context:run.context,status:"done",createdAt:run.createdAt});
+    s.auditLogs=s.auditLogs||[];
+    s.auditLogs.unshift({id:"a-"+Date.now().toString(36),action:"run",entity:"workflow",details:run.workflow+" -> "+run.target,actor:"idp-platform",at:new Date().toISOString()});
+    s.updatedAt=new Date().toISOString();
+    localStorage.setItem("koffi-idp-store",JSON.stringify(s));
+  }catch(e){}
+}
 function finishRun(run){
-  run.status="success"; run.finishedAt=new Date().toISOString(); saveRuns();
+  run.status="success"; run.finishedAt=new Date().toISOString(); saveRuns(); pushRunToStore(run);
   if(typeof events!=="undefined"){ events.unshift(["fa-diagram-project",run.workflow,run.target+" — "+(run.context||run.owner||"governed run"),"just now"]); if(events.length>6) events=events.slice(0,6); }
   document.querySelector(".modal-head>i").className="fa-solid fa-circle-check";
   document.getElementById("modalTitle").textContent="Completed: "+run.workflow;
@@ -372,6 +384,6 @@ document.addEventListener("DOMContentLoaded",function(){renderNav("");injectRuns
     toast('Signed out.');
   });
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v4 (real workflows)</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v5 (real workflows + backend)</div>
 </body>
 </html>
