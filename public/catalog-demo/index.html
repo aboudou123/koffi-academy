@@ -310,6 +310,24 @@ input,select{font:inherit;color:inherit}
 .cv-rule{display:flex;align-items:center;gap:9px;padding:8px 0;border-top:1px solid #EEF2F7;font-size:13px;color:#334155}
 .cv-rule i{width:16px;text-align:center}
 .cv-mono{font-family:monospace;font-size:12px;color:#1E293B}
+/* user menu (logout) — shared standard */
+.um{position:relative}
+.um-btn{display:flex;align-items:center;gap:8px;padding:3px 8px 3px 4px;border-radius:999px;border:1px solid transparent;background:none;cursor:pointer}
+.um-btn:hover{background:#F1F5F9;border-color:#E2E8F0}
+.um-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#6366F1,#8B5CF6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700}
+.um-name{font-size:12.5px;font-weight:700;color:#0F172A;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.um-btn .fa-chevron-down{font-size:9px;color:#94A3B8}
+.um-dd{position:absolute;right:0;top:44px;width:248px;background:#fff;border:1px solid #E2E8F0;border-radius:11px;box-shadow:0 18px 42px rgba(15,23,42,.18);padding:6px;display:none;z-index:60}
+.um-dd.open{display:block}
+.um-head{padding:11px 12px;border-bottom:1px solid #EEF2F7;margin-bottom:6px}
+.um-h-name{font-size:13px;font-weight:750;color:#0F172A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.um-h-email{font-size:11.5px;color:#94A3B8;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.um-item{width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:650;color:#334155;text-align:left;background:none;border:none;cursor:pointer}
+.um-item:hover{background:#F1F5F9}
+.um-item i{width:15px;text-align:center;color:#64748B}
+.um-item.logout{color:#B91C1C}.um-item.logout:hover{background:#FEF2F2}.um-item.logout i{color:#DC2626}
+.um-item.login{color:#2563EB}.um-item.login i{color:#3B82F6}
+@media(max-width:700px){.um-name,.um-btn .fa-chevron-down{display:none}}
 </style>
   <script src="/assets/js/lang-auto.js"></script>
 </head>
@@ -344,10 +362,10 @@ input,select{font:inherit;color:inherit}
     <div class="sb-group">Platform</div>
     <a class="sb-link" id="cv-nav-environments" href="#" onclick="cdShowView('environments',this);return false"><i class="fa-brands fa-docker"></i><span>Environments</span></a>
     <a class="sb-link" id="cv-nav-secrets" href="#" onclick="cdShowView('secrets',this);return false"><i class="fa-solid fa-shield-halved"></i><span>Secrets</span></a>
-    <a class="sb-link" href="#"><i class="fa-solid fa-clock-rotate-left"></i><span>Audit Log</span></a>
+    <a class="sb-link" id="cv-nav-auditlog" href="#" onclick="cdShowView('auditlog',this);return false"><i class="fa-solid fa-clock-rotate-left"></i><span>Audit Log</span></a>
     <div class="sb-group">Admin</div>
-    <a class="sb-link" href="#"><i class="fa-solid fa-users"></i><span>Teams</span></a>
-    <a class="sb-link" href="#"><i class="fa-solid fa-gear"></i><span>Einstellungen</span></a>
+    <a class="sb-link" id="cv-nav-teams" href="#" onclick="cdShowView('teams',this);return false"><i class="fa-solid fa-users"></i><span>Teams</span></a>
+    <a class="sb-link" id="cv-nav-settings" href="#" onclick="cdShowView('settings',this);return false"><i class="fa-solid fa-gear"></i><span>Einstellungen</span></a>
   </nav>
   <div class="sb-foot">
     <div class="sb-user">
@@ -379,7 +397,18 @@ input,select{font:inherit;color:inherit}
           <div class="kl-item" data-kl="fr" onclick="pL('fr')">🇫🇷 Français</div>
         </div>
       </div>
-      <div class="tb-av">KA</div>
+      <div class="um" id="umWrap">
+        <button type="button" class="um-btn" id="umBtn" onclick="umToggle(event)" aria-haspopup="true" aria-expanded="false">
+          <span class="um-av" id="umAv">KA</span>
+          <span class="um-name" id="umName">Guest</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="um-dd" id="umDd" role="menu">
+          <div class="um-head"><div class="um-h-name" id="umHName">Guest user</div><div class="um-h-email" id="umHEmail">Not signed in</div></div>
+          <button type="button" class="um-item login" id="umLogin" onclick="umLogin()"><i class="fa-solid fa-right-to-bracket"></i> <span>Anmelden</span></button>
+          <button type="button" class="um-item logout" id="umLogout" onclick="umLogout()" style="display:none"><i class="fa-solid fa-right-from-bracket"></i> <span>Abmelden</span></button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -999,7 +1028,7 @@ function openRegister(){showToast((lang==='fr'?'Formulaire d\'enregistrement ouv
 /* ═══ LANG ════════════════════════════════════════════════════════════════════ */
 var LF={de:'🇩🇪',en:'🇬🇧',fr:'🇫🇷'}, LC={de:'DE',en:'EN',fr:'FR'};
 function klT(){document.getElementById('klP').classList.toggle('open')}
-function pL(l){lang=l;localStorage.setItem('preferred-lang',l);document.documentElement.lang=l;document.getElementById('klP').classList.remove('open');document.getElementById('klF').textContent=LF[l];document.getElementById('klC').textContent=LC[l];document.querySelectorAll('.kl-item').forEach(function(i){i.classList.toggle('active',i.dataset.kl===l)});applyFilters();if(typeof cvCurrent!=='undefined'&&cvCurrent!=='catalog')cdShowView(cvCurrent);}
+function pL(l){lang=l;localStorage.setItem('preferred-lang',l);document.documentElement.lang=l;document.getElementById('klP').classList.remove('open');document.getElementById('klF').textContent=LF[l];document.getElementById('klC').textContent=LC[l];document.querySelectorAll('.kl-item').forEach(function(i){i.classList.toggle('active',i.dataset.kl===l)});applyFilters();if(typeof cvCurrent!=='undefined'&&cvCurrent!=='catalog')cdShowView(cvCurrent);if(window.umRefresh)umRefresh();}
 document.addEventListener('click',function(e){var w=document.getElementById('klW');if(w&&!w.contains(e.target))document.getElementById('klP').classList.remove('open');});
 
 /* ═══ TOAST ════════════════════════════════════════════════════════════════════ */
@@ -1016,10 +1045,13 @@ var CV_META={
   dashboards:{ic:'fa-solid fa-gauge-high',t:function(){return cT('Dashboards','Dashboards','Tableaux de bord');}},
   incidents:{ic:'fa-solid fa-triangle-exclamation',t:function(){return 'Incidents';}},
   environments:{ic:'fa-brands fa-docker',t:function(){return 'Environments';}},
-  secrets:{ic:'fa-solid fa-shield-halved',t:function(){return 'Secrets';}}
+  secrets:{ic:'fa-solid fa-shield-halved',t:function(){return 'Secrets';}},
+  auditlog:{ic:'fa-solid fa-clock-rotate-left',t:function(){return cT('Audit Log','Audit Log','Journal d\'audit');}},
+  teams:{ic:'fa-solid fa-users',t:function(){return 'Teams';}},
+  settings:{ic:'fa-solid fa-gear',t:function(){return cT('Einstellungen','Settings','Paramètres');}}
 };
 function cdSetActiveNav(name){
-  ['catalog','scorecards','dashboards','incidents','environments','secrets'].forEach(function(n){
+  ['catalog','scorecards','dashboards','incidents','environments','secrets','auditlog','teams','settings'].forEach(function(n){
     var el=document.getElementById('cv-nav-'+n); if(el) el.classList.toggle('active', n===name);
   });
 }
@@ -1252,6 +1284,93 @@ CV_VIEWS_register('incidents', function(){
     '<div class="cv-card" style="padding:0;overflow:hidden"><table class="cv-tbl" style="border:0"><thead><tr><th>ID</th><th>'+cT('Titel','Title','Titre')+'</th><th>Sev</th><th>Service</th><th>Status</th><th>'+cT('Alter','Age','Âge')+'</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 });
 
+/* ── AUDIT LOG ────────────────────────────────────────────────────────────────── */
+var CV_AUDIT=[
+  {time:'26.06.2026 10:42',actor:'K. Aboudou',action:'Deployed payment-service v2.3.1 → production',type:'deploy',result:'ok'},
+  {time:'26.06.2026 09:18',actor:'Automation',action:'Auto-scaled checkout-api 3→5 replicas',type:'scale',result:'ok'},
+  {time:'26.06.2026 08:55',actor:'J. Müller',action:'Rotated /production/db/password',type:'secret',result:'ok'},
+  {time:'25.06.2026 17:23',actor:'K. Aboudou',action:'Created environment dev-payments-v2',type:'env',result:'ok'},
+  {time:'25.06.2026 16:01',actor:'A. Schmidt',action:'Invited m.weber@koffi.dev (Developer)',type:'iam',result:'ok'},
+  {time:'25.06.2026 14:33',actor:'AI Agent',action:'Resolved incident INC-0042 autonomously',type:'incident',result:'ok'},
+  {time:'24.06.2026 23:41',actor:'Automation',action:'Compliance scan: 2 warnings',type:'security',result:'warn'},
+  {time:'24.06.2026 09:22',actor:'CI/CD Bot',action:'Pipeline deploy-production failed — rollback',type:'deploy',result:'err'}
+];
+var cvAuditFilter='all';
+function cdAuditFilter(t){ cvAuditFilter=t; cdShowView('auditlog'); }
+CV_VIEWS_register('auditlog', function(){
+  var ti={deploy:'fa-solid fa-rocket',scale:'fa-solid fa-arrows-up-down',secret:'fa-solid fa-key',env:'fa-brands fa-docker',iam:'fa-solid fa-user-shield',incident:'fa-solid fa-triangle-exclamation',security:'fa-solid fa-shield-halved'};
+  var rc={ok:{bg:'#DCFCE7',color:'#047857',label:'OK'},warn:{bg:'#FEF3C7',color:'#B45309',label:cT('Warnung','Warning','Alerte')},err:{bg:'#FEE2E2',color:'#B91C1C',label:cT('Fehler','Error','Erreur')}};
+  var rows=CV_AUDIT.filter(function(e){return cvAuditFilter==='all'||e.type===cvAuditFilter;}).map(function(e){
+    var r=rc[e.result];
+    return '<tr><td style="white-space:nowrap"><span class="cv-mono" style="color:#94A3B8">'+e.time+'</span></td>'+
+      '<td><i class="'+(ti[e.type]||'fa-solid fa-circle')+'" style="color:#64748B;margin-right:7px"></i><b style="color:#0F172A">'+e.actor+'</b></td>'+
+      '<td>'+e.action+'</td><td><span class="cv-badge" style="background:'+r.bg+';color:'+r.color+'">'+r.label+'</span></td></tr>';
+  }).join('');
+  var chips=[['all',cT('Alle','All','Tous')],['deploy','Deploy'],['secret','Secrets'],['iam','IAM'],['incident','Incidents'],['security','Security']].map(function(c){
+    return '<button type="button" class="cv-chip'+(cvAuditFilter===c[0]?' on':'')+'" onclick="cdAuditFilter(\''+c[0]+'\')">'+c[1]+'</button>';
+  }).join('');
+  return cvHead('fa-solid fa-clock-rotate-left',cT('Audit Log','Audit Log','Journal d\'audit'),
+    cT('Lückenlose Nachverfolgung aller Plattform-Aktionen mit Zeitstempel und Ergebnis.','Full traceability of every platform action with timestamp and result.','Traçabilité complète de chaque action avec horodatage et résultat.'),'')+
+    '<div class="cv-filter">'+chips+'</div>'+
+    '<div class="cv-card" style="padding:0;overflow:hidden"><table class="cv-tbl" style="border:0"><thead><tr><th>'+cT('Zeit','Time','Heure')+'</th><th>'+cT('Benutzer','User','Utilisateur')+'</th><th>'+cT('Aktion','Action','Action')+'</th><th>'+cT('Ergebnis','Result','Résultat')+'</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+});
+
+/* ── TEAMS ────────────────────────────────────────────────────────────────────── */
+var CV_TEAMS=[
+  {name:'Platform Team',abbr:'PT',color:'#3B82F6',members:5,services:12,oncall:'K. Aboudou',slo:'99.8%'},
+  {name:'Payments Team',abbr:'PM',color:'#10B981',members:4,services:3,oncall:'J. Müller',slo:'99.6%'},
+  {name:'SRE Team',abbr:'SR',color:'#F59E0B',members:3,services:8,oncall:'A. Schmidt',slo:'99.9%'},
+  {name:'Security Team',abbr:'SE',color:'#7C3AED',members:2,services:5,oncall:'M. Weber',slo:'100%'}
+];
+function cdTeamContact(name){ showToast(cT('On-Call benachrichtigt: ','Paged on-call: ','On-call notifié : ')+name); }
+CV_VIEWS_register('teams', function(){
+  var cards=CV_TEAMS.map(function(tm){
+    return '<div class="cv-card" style="margin:0">'+
+      '<div style="display:flex;align-items:center;gap:11px;margin-bottom:13px">'+
+        '<div style="width:42px;height:42px;border-radius:11px;background:'+tm.color+';color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px">'+tm.abbr+'</div>'+
+        '<div style="flex:1"><div style="font-weight:800;color:#0F172A;font-size:14px">'+tm.name+'</div><div style="font-size:11.5px;color:#64748B">'+tm.members+' '+cT('Mitglieder','members','membres')+' · '+tm.services+' Services</div></div></div>'+
+      '<div style="display:flex;gap:18px;margin-bottom:13px">'+
+        '<div><div style="font-size:10px;color:#94A3B8;text-transform:uppercase;font-weight:700">On-Call</div><div style="font-size:13px;font-weight:600;color:#0F172A;margin-top:2px"><i class="fa-solid fa-headset" style="color:#10B981;margin-right:5px"></i>'+tm.oncall+'</div></div>'+
+        '<div><div style="font-size:10px;color:#94A3B8;text-transform:uppercase;font-weight:700">SLO</div><div style="font-size:13px;font-weight:600;color:#0F172A;margin-top:2px">'+tm.slo+'</div></div></div>'+
+      '<button type="button" class="cv-btn sm" onclick="cdTeamContact(\''+tm.oncall+'\')"><i class="fa-solid fa-bell"></i> '+cT('On-Call rufen','Page on-call','Joindre on-call')+'</button>'+
+    '</div>';
+  }).join('');
+  return cvHead('fa-solid fa-users','Teams',
+    cT('Ownership und Bereitschaft — wer besitzt was und wer ist erreichbar.','Ownership and on-call — who owns what and who is reachable.','Propriété et astreinte — qui possède quoi et qui est joignable.'),'')+
+    '<div class="cv-kpis"><div class="cv-kpi"><div class="v">'+CV_TEAMS.length+'</div><div class="l">Teams</div></div>'+
+      '<div class="cv-kpi"><div class="v">'+CV_TEAMS.reduce(function(a,t){return a+t.members;},0)+'</div><div class="l">'+cT('Mitglieder','Members','Membres')+'</div></div>'+
+      '<div class="cv-kpi"><div class="v">'+CV_TEAMS.reduce(function(a,t){return a+t.services;},0)+'</div><div class="l">Services</div></div></div>'+
+    '<div class="cv-grid3">'+cards+'</div>';
+});
+
+/* ── SETTINGS ─────────────────────────────────────────────────────────────────── */
+var CV_SETTINGS=[
+  {id:'sso',on:true,t:['SSO erzwingen','Enforce SSO','Forcer le SSO'],d:['Nur Login via SAML / OIDC','Only allow login via SAML / OIDC','Connexion via SAML / OIDC uniquement']},
+  {id:'mfa',on:true,t:['MFA erforderlich','Require MFA','Exiger la MFA'],d:['Zwei-Faktor für alle Nutzer','Two-factor for all users','Double authentification pour tous']},
+  {id:'session',on:false,t:['Session-Timeout','Session timeout','Expiration de session'],d:['Automatischer Logout nach 30 Min','Auto logout after 30 min idle','Déconnexion auto après 30 min']},
+  {id:'audit',on:true,t:['Audit-Export','Audit export','Export d\'audit'],d:['Tägliche Übermittlung an SIEM','Daily delivery to SIEM','Transmission quotidienne au SIEM']},
+  {id:'public',on:false,t:['Öffentlicher Katalog','Public catalog','Catalogue public'],d:['Read-only Zugriff ohne Login','Read-only access without login','Accès lecture seule sans login']}
+];
+function cdSetToggle(id){
+  var s=CV_SETTINGS.filter(function(x){return x.id===id;})[0]; if(!s) return;
+  s.on=!s.on; cdShowView('settings');
+  showToast(cT(s.t[0],s.t[1],s.t[2])+' — '+(s.on?cT('aktiviert','enabled','activé'):cT('deaktiviert','disabled','désactivé')));
+}
+CV_VIEWS_register('settings', function(){
+  var rows=CV_SETTINGS.map(function(s){
+    return '<div style="display:flex;align-items:center;gap:14px;padding:15px 0;border-top:1px solid #EEF2F7">'+
+      '<div style="flex:1"><div style="font-size:13.5px;font-weight:700;color:#0F172A">'+cT(s.t[0],s.t[1],s.t[2])+'</div>'+
+        '<div style="font-size:12px;color:#64748B;margin-top:2px">'+cT(s.d[0],s.d[1],s.d[2])+'</div></div>'+
+      '<button type="button" role="switch" aria-checked="'+s.on+'" onclick="cdSetToggle(\''+s.id+'\')" style="position:relative;width:40px;height:23px;border-radius:999px;border:none;cursor:pointer;flex-shrink:0;transition:background .18s;background:'+(s.on?'#10B981':'#CBD5E1')+'">'+
+        '<span style="position:absolute;top:2px;left:'+(s.on?'19px':'2px')+';width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .18s"></span></button>'+
+    '</div>';
+  }).join('');
+  return cvHead('fa-solid fa-gear',cT('Einstellungen','Settings','Paramètres'),
+    cT('Organisationsweite Richtlinien für Sicherheit, Zugriff und Compliance.','Organization-wide policies for security, access and compliance.','Politiques d\'organisation pour la sécurité, l\'accès et la conformité.'),'')+
+    '<div class="cv-card"><div style="font-size:13px;font-weight:800;color:#0F172A;margin-bottom:4px"><i class="fa-solid fa-shield-halved" style="color:#6366F1;margin-right:7px"></i>'+cT('Sicherheit & Zugriff','Security & access','Sécurité & accès')+'</div>'+rows+'</div>'+
+    '<div class="cv-card" style="display:flex;align-items:center;gap:12px"><i class="fa-solid fa-circle-info" style="color:#3B82F6;font-size:17px"></i><div style="font-size:12.5px;color:#475569">'+cT('Änderungen werden im Audit Log protokolliert.','Changes are recorded in the Audit Log.','Les modifications sont enregistrées dans le journal d\'audit.')+'</div></div>';
+});
+
 /* ═══ KEYBOARD ════════════════════════════════════════════════════════════════ */
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape')closeDrawer();
@@ -1266,6 +1385,50 @@ document.addEventListener('DOMContentLoaded',function(){
   applyFilters();
 });
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v2</div>
+<script type="module">
+  /* User menu with login/logout — Firebase, same standard across all demos */
+  import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { firebaseConfig } from "/assets/js/firebase-config.js";
+  var REDIRECT = '/login/?redirect=' + encodeURIComponent('/catalog-demo/');
+  var _auth=null, _signOut=null, _lastUser=null;
+  function lng(){ try{ return localStorage.getItem('preferred-lang')||'de'; }catch(e){ return 'de'; } }
+  function txt(de,en,fr){ var l=lng(); return l==='fr'?fr:l==='en'?en:de; }
+  function umRender(user){
+    _lastUser=user;
+    var av=document.getElementById('umAv'), nm=document.getElementById('umName'),
+        hn=document.getElementById('umHName'), he=document.getElementById('umHEmail'),
+        li=document.getElementById('umLogin'), lo=document.getElementById('umLogout');
+    if(!av) return;
+    li.querySelector('span').textContent = txt('Anmelden','Sign in','Se connecter');
+    lo.querySelector('span').textContent = txt('Abmelden','Log out','Se déconnecter');
+    if(user){
+      var name=user.displayName||user.email||'User';
+      av.textContent=(name.split(/[ @._-]/).filter(Boolean).map(function(x){return x[0];}).slice(0,2).join('')||'U').toUpperCase();
+      nm.textContent=user.displayName||(user.email?user.email.split('@')[0]:'User');
+      hn.textContent=name; he.textContent=user.email||'';
+      li.style.display='none'; lo.style.display='';
+    } else {
+      nm.textContent=txt('Gast','Guest','Invité');
+      hn.textContent=txt('Gast','Guest user','Invité');
+      he.textContent=txt('Nicht angemeldet','Not signed in','Non connecté');
+      li.style.display=''; lo.style.display='none';
+    }
+  }
+  window.umRefresh=function(){ umRender(_lastUser); };
+  window.umToggle=function(e){ if(e)e.stopPropagation(); var dd=document.getElementById('umDd'); var o=dd.classList.toggle('open'); document.getElementById('umBtn').setAttribute('aria-expanded',o?'true':'false'); };
+  window.umClose=function(){ var dd=document.getElementById('umDd'); if(dd) dd.classList.remove('open'); };
+  window.umLogin=function(){ window.umClose(); location.href=REDIRECT; };
+  window.umLogout=function(){ window.umClose(); var done=function(){ if(window.showToast) showToast(txt('Du bist abgemeldet.','You are signed out.','Vous êtes déconnecté.')); }; if(_signOut&&_auth){ Promise.resolve(_signOut(_auth)).then(done).catch(done); } else done(); };
+  document.addEventListener('click', function(e){ var w=document.getElementById('umWrap'); if(w&&!w.contains(e.target)) window.umClose(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') window.umClose(); });
+  umRender(null);
+  try{
+    var app=getApps().length?getApp():initializeApp(firebaseConfig);
+    _auth=getAuth(app); _signOut=signOut;
+    onAuthStateChanged(_auth, function(u){ umRender(u); }, function(){ umRender(null); });
+  }catch(err){ console.warn('[auth] unavailable', err&&err.message); umRender(null); }
+</script>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v3</div>
 </body>
 </html>

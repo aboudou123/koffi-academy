@@ -252,6 +252,23 @@ a{text-decoration:none;color:inherit} button{cursor:pointer;border:none;backgrou
   .pipeline-stages{display:none}
 }
 .build-stamp{position:fixed;right:10px;bottom:8px;z-index:50;pointer-events:none;font:600 10px/1 monospace;color:#94a3b8;background:rgba(15,23,42,.06);border:1px solid rgba(148,163,184,.3);border-radius:6px;padding:3px 7px;opacity:.8}
+.um{position:relative}
+.um-btn{display:flex;align-items:center;gap:8px;padding:3px 8px 3px 4px;border-radius:999px;border:1px solid transparent;background:none;cursor:pointer}
+.um-btn:hover{background:#f1f5f9;border-color:#e2e8f0}
+.um-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
+.um-name{font-size:12.5px;font-weight:700;color:#0f172a;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.um-btn .fa-chevron-down{font-size:9px;color:#94a3b8}
+.um-dd{position:absolute;right:0;top:46px;width:248px;background:#fff;border:1px solid #e2e8f0;border-radius:11px;box-shadow:0 18px 42px rgba(15,23,42,.18);padding:6px;display:none;z-index:110}
+.um-dd.open{display:block}
+.um-head{padding:11px 12px;border-bottom:1px solid #eef2f7;margin-bottom:6px}
+.um-h-name{font-size:13px;font-weight:750;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.um-h-email{font-size:11.5px;color:#94a3b8;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.um-item{width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:650;color:#334155;text-align:left;background:none;border:none;cursor:pointer}
+.um-item:hover{background:#f1f5f9}
+.um-item i{width:15px;text-align:center;color:#64748b}
+.um-item.logout{color:#b91c1c}.um-item.logout:hover{background:#fef2f2}.um-item.logout i{color:#dc2626}
+.um-item.login{color:#2563eb}.um-item.login i{color:#3b82f6}
+@media(max-width:700px){.um-name,.um-btn .fa-chevron-down{display:none}}
 </style>
   <script src="/assets/js/lang-auto.js"></script>
 </head>
@@ -315,7 +332,18 @@ a{text-decoration:none;color:inherit} button{cursor:pointer;border:none;backgrou
           <div class="kl-opt" data-kl="fr" onclick="pickLang('fr')">🇫🇷 Français</div>
         </div>
       </div>
-      <div class="tb-avatar">KA</div>
+      <div class="um" id="umWrap">
+        <button type="button" class="um-btn" id="umBtn" onclick="umToggle(event)" aria-haspopup="true" aria-expanded="false">
+          <span class="um-av" id="umAv">KA</span>
+          <span class="um-name" id="umName">Guest</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="um-dd" id="umDd" role="menu">
+          <div class="um-head"><div class="um-h-name" id="umHName">Guest user</div><div class="um-h-email" id="umHEmail">Not signed in</div></div>
+          <button type="button" class="um-item login" id="umLogin" onclick="umLogin()"><i class="fa-solid fa-right-to-bracket"></i> <span>Anmelden</span></button>
+          <button type="button" class="um-item logout" id="umLogout" onclick="umLogout()" style="display:none"><i class="fa-solid fa-right-from-bracket"></i> <span>Abmelden</span></button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -555,6 +583,7 @@ function applyLang(l){
     var el=document.getElementById(id); if(el) el.textContent=t(id);
   });
   renderPipelineList(); syncLangUI();
+  if(window.umRefresh)umRefresh();
 }
 function syncLangUI(){
   var f={de:'🇩🇪',en:'🇬🇧',fr:'🇫🇷'},c={de:'DE',en:'EN',fr:'FR'};
@@ -1436,6 +1465,50 @@ document.addEventListener('DOMContentLoaded',function(){
   applyLang(lang);
 });
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v1 (real push)</div>
+<script type="module">
+  /* User menu with login/logout — Firebase, same standard across all demos */
+  import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { firebaseConfig } from "/assets/js/firebase-config.js";
+  var REDIRECT = '/login/?redirect=' + encodeURIComponent('/cicd-pipeline-demo/');
+  var _auth=null, _signOut=null, _lastUser=null;
+  function lng(){ try{ return localStorage.getItem('preferred-lang')||'de'; }catch(e){ return 'de'; } }
+  function txt(de,en,fr){ var l=lng(); return l==='fr'?fr:l==='en'?en:de; }
+  function umRender(user){
+    _lastUser=user;
+    var av=document.getElementById('umAv'), nm=document.getElementById('umName'),
+        hn=document.getElementById('umHName'), he=document.getElementById('umHEmail'),
+        li=document.getElementById('umLogin'), lo=document.getElementById('umLogout');
+    if(!av) return;
+    li.querySelector('span').textContent = txt('Anmelden','Sign in','Se connecter');
+    lo.querySelector('span').textContent = txt('Abmelden','Log out','Se déconnecter');
+    if(user){
+      var name=user.displayName||user.email||'User';
+      av.textContent=(name.split(/[ @._-]/).filter(Boolean).map(function(x){return x[0];}).slice(0,2).join('')||'U').toUpperCase();
+      nm.textContent=user.displayName||(user.email?user.email.split('@')[0]:'User');
+      hn.textContent=name; he.textContent=user.email||'';
+      li.style.display='none'; lo.style.display='';
+    } else {
+      nm.textContent=txt('Gast','Guest','Invité');
+      hn.textContent=txt('Gast','Guest user','Invité');
+      he.textContent=txt('Nicht angemeldet','Not signed in','Non connecté');
+      li.style.display=''; lo.style.display='none';
+    }
+  }
+  window.umRefresh=function(){ umRender(_lastUser); };
+  window.umToggle=function(e){ if(e)e.stopPropagation(); var dd=document.getElementById('umDd'); var o=dd.classList.toggle('open'); document.getElementById('umBtn').setAttribute('aria-expanded',o?'true':'false'); };
+  window.umClose=function(){ var dd=document.getElementById('umDd'); if(dd) dd.classList.remove('open'); };
+  window.umLogin=function(){ window.umClose(); location.href=REDIRECT; };
+  window.umLogout=function(){ window.umClose(); var done=function(){ if(window.showToast) showToast(txt('Du bist abgemeldet.','You are signed out.','Vous êtes déconnecté.')); }; if(_signOut&&_auth){ Promise.resolve(_signOut(_auth)).then(done).catch(done); } else done(); };
+  document.addEventListener('click', function(e){ var w=document.getElementById('umWrap'); if(w&&!w.contains(e.target)) window.umClose(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') window.umClose(); });
+  umRender(null);
+  try{
+    var app=getApps().length?getApp():initializeApp(firebaseConfig);
+    _auth=getAuth(app); _signOut=signOut;
+    onAuthStateChanged(_auth, function(u){ umRender(u); }, function(){ umRender(null); });
+  }catch(err){ console.warn('[auth] unavailable', err&&err.message); umRender(null); }
+</script>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v2 (real push + logout)</div>
 </body>
 </html>
