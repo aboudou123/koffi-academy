@@ -251,6 +251,7 @@ a{text-decoration:none;color:inherit} button{cursor:pointer;border:none;backgrou
   .content{padding:16px 14px 40px}
   .pipeline-stages{display:none}
 }
+.build-stamp{position:fixed;right:10px;bottom:8px;z-index:50;pointer-events:none;font:600 10px/1 monospace;color:#94a3b8;background:rgba(15,23,42,.06);border:1px solid rgba(148,163,184,.3);border-radius:6px;padding:3px 7px;opacity:.8}
 </style>
   <script src="/assets/js/lang-auto.js"></script>
 </head>
@@ -844,15 +845,19 @@ function renderStep4(){
         (lang==='fr'?'Pousser le workflow sur GitHub (optionnel)':lang==='en'?'Push workflow to GitHub (optional)':'Workflow direkt auf GitHub pushen (optional)')+
       '</div>'+
       '<p style="font-size:11px;color:#64748b;margin-bottom:10px">'+
-        (lang==='fr'?'Colle un Personal Access Token (scope: repo) pour créer automatiquement le fichier <code>.github/workflows/'+wizData.name+'.yml</code> dans ton dépôt.':
-        lang==='en'?'Paste a Personal Access Token (scope: repo) to automatically create <code>.github/workflows/'+wizData.name+'.yml</code> in your repository.':
-        'Füge einen Personal Access Token (Scope: repo) ein, um die Datei <code>.github/workflows/'+wizData.name+'.yml</code> direkt in deinem Repository zu erstellen.')+
+        (lang==='fr'?'Colle un Personal Access Token (scope: <b>repo</b>) pour pousser un <b>service complet</b> (README, package.json, Dockerfile, src/, tests + le workflow CI) directement dans <code>'+(wizData.repo||'owner/repo')+'</code>.':
+        lang==='en'?'Paste a Personal Access Token (scope: <b>repo</b>) to push a <b>complete service</b> (README, package.json, Dockerfile, src/, tests + the CI workflow) straight into <code>'+(wizData.repo||'owner/repo')+'</code>.':
+        'Füge einen Personal Access Token (Scope: <b>repo</b>) ein, um einen <b>kompletten Service</b> (README, package.json, Dockerfile, src/, Tests + CI-Workflow) direkt nach <code>'+(wizData.repo||'owner/repo')+'</code> zu pushen.')+
       '</p>'+
+      '<input id="gh-token" type="password" class="fi" style="width:100%;font-family:monospace;font-size:12px;margin-bottom:9px" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">'+
       '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+
-        '<input id="gh-token" type="password" class="fi" style="flex:1;min-width:200px;font-family:monospace;font-size:12px" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">'+
-        '<button onclick="pushToGitHub()" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;background:#24292f;color:#fff;font-size:12px;font-weight:700;cursor:pointer;border:none;white-space:nowrap;transition:background .15s" onmouseover="this.style.background=\'#32383f\'" onmouseout="this.style.background=\'#24292f\'">'+
+        '<button onclick="scaffoldServiceToGitHub()" style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:9px;background:#10b981;color:#fff;font-size:12px;font-weight:700;cursor:pointer;border:none;white-space:nowrap">'+
+          '<i class="fa-solid fa-cubes-stacked"></i> '+
+          (lang==='fr'?'Pousser le service complet':lang==='en'?'Push complete service':'Kompletten Service pushen')+
+        '</button>'+
+        '<button onclick="pushToGitHub()" style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:9px;background:#24292f;color:#fff;font-size:12px;font-weight:700;cursor:pointer;border:none;white-space:nowrap">'+
           '<i class="fa-brands fa-github"></i> '+
-          (lang==='fr'?'Créer sur GitHub':lang==='en'?'Create on GitHub':'Auf GitHub erstellen')+
+          (lang==='fr'?'Workflow seul':lang==='en'?'Workflow only':'Nur Workflow')+
         '</button>'+
       '</div>'+
       '<div id="gh-push-status" style="margin-top:8px;font-size:12px;display:none"></div>'+
@@ -933,6 +938,115 @@ function pushToGitHub(){
   })
   .catch(function(e){
     statusEl.innerHTML='<span style="color:#ef4444"><i class="fa-solid fa-circle-xmark"></i> Erreur: '+e.message+'</span>';
+  });
+}
+
+/* ── Real "scaffold a full service & push every file to the repo" ──────────────── */
+function ghPutFile(repo, token, path, contentStr, message){
+  var content = btoa(unescape(encodeURIComponent(contentStr)));
+  return fetch('https://api.github.com/repos/'+repo+'/contents/'+path, {
+    headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json'}
+  }).then(function(r){ return r.ok ? r.json() : null; })
+  .then(function(existing){
+    var body = { message: message, content: content };
+    if (existing && existing.sha) body.sha = existing.sha;
+    return fetch('https://api.github.com/repos/'+repo+'/contents/'+path, {
+      method:'PUT',
+      headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+  }).then(function(r){
+    if (r && (r.status===200 || r.status===201)) return path;
+    return r.json().then(function(e){ throw new Error(path+' → '+(e.message||('HTTP '+(r?r.status:'?')))); });
+  });
+}
+function buildServiceFiles(name){
+  var wf = lastGeneratedYaml || ['name: '+name,'on: [push]','jobs:','  build:','    runs-on: ubuntu-latest','    steps:','      - uses: actions/checkout@v4','      - run: echo "build"'].join('\n');
+  var stages = (selectedStages||['build','test']).join(', ');
+  var readme = [
+    '# '+name,
+    '',
+    'Service scaffold generated by **Koffi IDP** — Internal Developer Platform.',
+    '',
+    '## Overview',
+    '- Runtime: Node.js 20',
+    '- CI/CD: GitHub Actions (`.github/workflows/'+name+'.yml`)',
+    '- Container: Docker (see `Dockerfile`)',
+    '- Pipeline stages: '+stages,
+    '',
+    '## Local development',
+    '```bash',
+    'npm install',
+    'npm start      # http://localhost:3000',
+    'npm test',
+    '```',
+    '',
+    '> Generated via the Koffi IDP self-service CI/CD wizard.'
+  ].join('\n');
+  var pkg = JSON.stringify({
+    name: name, version: '0.1.0', private: true,
+    description: (wizData.desc || 'Service scaffolded by Koffi IDP'),
+    scripts: { start: 'node src/index.js', test: 'node src/__tests__/app.test.js' },
+    engines: { node: '>=20' }
+  }, null, 2);
+  var index = [
+    "const http = require('http');",
+    'const PORT = process.env.PORT || 3000;',
+    'const server = http.createServer((req, res) => {',
+    "  res.writeHead(200, { 'Content-Type': 'application/json' });",
+    "  res.end(JSON.stringify({ service: '"+name+"', status: 'ok', ts: Date.now() }));",
+    '});',
+    "server.listen(PORT, () => console.log('"+name+" listening on ' + PORT));",
+    'module.exports = server;'
+  ].join('\n');
+  var test = [
+    "const assert = require('assert');",
+    '// minimal smoke test — replace with your framework (jest/vitest)',
+    'assert.strictEqual(1 + 1, 2);',
+    "console.log('OK "+name+" smoke test passed');"
+  ].join('\n');
+  var dockerfile = [
+    'FROM node:20-alpine',
+    'WORKDIR /app',
+    'COPY package.json ./',
+    'RUN npm install --omit=dev || true',
+    'COPY . .',
+    'EXPOSE 3000',
+    'CMD ["node", "src/index.js"]'
+  ].join('\n');
+  var gitignore = ['node_modules/','*.log','.env','dist/','coverage/'].join('\n');
+  return [
+    { path:'README.md', content:readme },
+    { path:'package.json', content:pkg },
+    { path:'src/index.js', content:index },
+    { path:'src/__tests__/app.test.js', content:test },
+    { path:'Dockerfile', content:dockerfile },
+    { path:'.gitignore', content:gitignore },
+    { path:'.github/workflows/'+name+'.yml', content:wf }
+  ];
+}
+function scaffoldServiceToGitHub(){
+  var token=(document.getElementById('gh-token').value||'').trim();
+  var statusEl=document.getElementById('gh-push-status');
+  var repo=wizData.repo||'';
+  statusEl.style.display='block';
+  if(!token){ statusEl.innerHTML='<span style="color:#ef4444"><i class="fa-solid fa-triangle-exclamation"></i> '+(lang==='fr'?'Token requis (scope repo)':lang==='en'?'Token required (repo scope)':'Token erforderlich (repo Scope)')+'</span>'; return; }
+  if(!repo||!repo.includes('/')){ statusEl.innerHTML='<span style="color:#ef4444"><i class="fa-solid fa-triangle-exclamation"></i> '+(lang==='fr'?'Format dépôt invalide. Utilise owner/repo':lang==='en'?'Invalid repo format. Use owner/repo':'Ungültiges Repo-Format. owner/repo')+'</span>'; return; }
+  var name=(wizData.name||'service').replace(/[^a-zA-Z0-9_-]/g,'-');
+  var files=buildServiceFiles(name);
+  var total=files.length, done=0;
+  function render(){ statusEl.innerHTML='<span style="color:#3b82f6"><i class="fa-solid fa-spinner fa-spin"></i> '+(lang==='fr'?'Envoi':lang==='en'?'Pushing':'Sende')+' '+done+'/'+total+' — '+(files[done]?files[done].path:'')+'</span>'; }
+  render();
+  var chain=Promise.resolve();
+  files.forEach(function(f){
+    chain=chain.then(function(){ return ghPutFile(repo, token, f.path, f.content, 'feat('+name+'): scaffold '+f.path+' via Koffi IDP'); })
+      .then(function(){ done++; render(); });
+  });
+  chain.then(function(){
+    statusEl.innerHTML='<span style="color:#10b981"><i class="fa-solid fa-circle-check"></i> '+total+' '+(lang==='fr'?'fichiers créés dans':lang==='en'?'files created in':'Dateien erstellt in')+' <b>'+repo+'</b> — <a href="https://github.com/'+repo+'" target="_blank" style="color:#10b981;font-weight:700;text-decoration:underline">'+(lang==='fr'?'Voir le repo':lang==='en'?'Open repo':'Repo öffnen')+' →</a></span>';
+    showToast('✔ '+(lang==='fr'?'Service complet poussé sur GitHub !':lang==='en'?'Complete service pushed to GitHub!':'Kompletter Service auf GitHub gepusht!'));
+  }).catch(function(e){
+    statusEl.innerHTML='<span style="color:#ef4444"><i class="fa-solid fa-circle-xmark"></i> '+(lang==='fr'?'Erreur':lang==='en'?'Error':'Fehler')+' ('+done+'/'+total+'): '+e.message+'</span>';
   });
 }
 
@@ -1322,5 +1436,6 @@ document.addEventListener('DOMContentLoaded',function(){
   applyLang(lang);
 });
 </script>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v1 (real push)</div>
 </body>
 </html>

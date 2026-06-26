@@ -279,6 +279,7 @@ input,select{font:inherit;color:inherit}
 /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════════ */
 @media(max-width:900px){.sidebar{width:52px;min-width:52px}.sb-title,.sb-version,.sb-group,.sb-chip,.sb-uname,.sb-urole{display:none}.kpi-row{grid-template-columns:1fr 1fr}.drawer{width:100%}}
 @media(max-width:640px){.kpi-row{grid-template-columns:1fr}.ph{flex-direction:column}.ph-actions{width:100%}.toolbar{gap:6px}}
+.build-stamp{position:fixed;right:10px;bottom:8px;z-index:50;pointer-events:none;font:600 10px/1 monospace;color:#94a3b8;background:rgba(15,23,42,.06);border:1px solid rgba(148,163,184,.3);border-radius:6px;padding:3px 7px;opacity:.8}
 </style>
   <script src="/assets/js/lang-auto.js"></script>
 </head>
@@ -293,7 +294,7 @@ input,select{font:inherit;color:inherit}
         <path d="M13 7v20M13 17l9-10M13 17l9 10" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
-    <div><div class="sb-title">Koffi IDP</div><div class="sb-version">Platform v2.4</div></div>
+    <div><div class="sb-title">Koffi IDP</div><div class="sb-version">Platform v3.0</div></div>
   </div>
   <nav class="sb-nav">
     <div class="sb-group">Navigation</div>
@@ -983,5 +984,6 @@ document.addEventListener('DOMContentLoaded',function(){
   applyFilters();
 });
 </script>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v1</div>
 </body>
 </html>
