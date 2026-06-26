@@ -330,9 +330,9 @@ function finishRun(run){
   var verb=isService?"provisioned":run.workflow.indexOf("environment")>=0?"created":"completed";
   var resultLine=isService?('Service registered · <span style="font-family:monospace;color:#2563eb">github.com/koffi/'+run.target+'</span>'):("Run recorded in the backend store");
   document.querySelector(".modal-body").innerHTML='<div style="text-align:center;padding:6px 0 12px"><div style="width:54px;height:54px;border-radius:50%;background:#dcfce7;color:#059669;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 12px"><i class="fa-solid fa-check"></i></div><div style="font-size:15px;font-weight:800;color:#0f172a">'+run.target+" "+verb+'</div><div style="font-size:12.5px;color:#64748b;margin-top:4px">'+run.steps.length+" steps · run "+run.id+'</div><div style="font-size:12px;color:#475569;margin-top:8px">'+resultLine+'</div></div>'+
-    '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;font-size:12px;color:#1d4ed8;margin-bottom:12px;display:flex;gap:8px;align-items:flex-start"><i class="fa-solid fa-circle-info" style="margin-top:1px"></i><span>'+(isService?"Le service a \xe9t\xe9 cr\xe9\xe9 dans le backend. Ouvre le r\xe9sultat pour le voir physiquement.":"Le run est enregistr\xe9 dans le backend (Runs &amp; Audit).")+'</span></div>'+
-    '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button type="button" class="btn btn-primary" onclick="openRunResult(\''+run.resultUrl+'\')"><i class="fa-solid fa-arrow-up-right-from-square"></i> Voir le r\xe9sultat (Backend)</button><button type="button" class="btn btn-light" onclick="closeModal();setPage(\'overview\')"><i class="fa-solid fa-list-check"></i> Audit</button><button type="button" class="btn btn-light" onclick="closeModal()">Close</button></div>';
-  toast("✔ "+run.target+" "+verb+" — r\xe9sultat dans le Backend Admin");
+    '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;font-size:12px;color:#1d4ed8;margin-bottom:12px;display:flex;gap:8px;align-items:flex-start"><i class="fa-solid fa-circle-info" style="margin-top:1px"></i><span>'+(isService?"The service was created in the backend store. Open the result to inspect it.":"The run is recorded in the backend store (Runs &amp; Audit).")+'</span></div>'+
+    '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button type="button" class="btn btn-primary" onclick="openRunResult(\''+run.resultUrl+'\')"><i class="fa-solid fa-arrow-up-right-from-square"></i> View result (Backend)</button><button type="button" class="btn btn-light" onclick="closeModal();setPage(\'overview\')"><i class="fa-solid fa-list-check"></i> Audit</button><button type="button" class="btn btn-light" onclick="closeModal()">Close</button></div>';
+  toast("✔ "+run.target+" "+verb+" — result in Backend Admin");
   var active=document.querySelector(".nav-btn.active"); if(active&&active.dataset.page==="overview") setPage("overview");
 }
 function openRunResult(url){ try{ window.open(url,"_blank"); }catch(e){ location.href=url; } }
@@ -407,6 +407,6 @@ document.addEventListener("DOMContentLoaded",function(){renderNav("");injectRuns
     toast('Signed out.');
   });
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-26 · v6 (real workflows + backend)</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-26 · v7 (real workflows + backend)</div>
 </body>
 </html>
