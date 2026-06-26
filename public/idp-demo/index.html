@@ -559,6 +559,75 @@ button{cursor:pointer;border:none;background:none;font:inherit}
 .audit-result.success{background:#d1fae5;color:#065f46}
 .audit-result.warning{background:#fef3c7;color:#92400e}
 .audit-result.error{background:#fee2e2;color:#991b1b}
+.audit-row{cursor:pointer;transition:background .12s}
+.audit-row:hover{background:#f8fafc}
+.audit-rtype{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:#eef2ff;color:#4338ca;white-space:nowrap}
+.audit-rtype i{font-size:10px}
+.audit-rtype.entity{background:#ecfeff;color:#0e7490}
+.audit-rtype.blueprint{background:#eef2ff;color:#4338ca}
+.audit-rtype.run{background:#f0fdf4;color:#15803d}
+.audit-rtype.integration{background:#fdf4ff;color:#a21caf}
+.audit-rtype.secret{background:#fff7ed;color:#c2410c}
+.audit-rtype.user{background:#f1f5f9;color:#475569}
+.audit-rtype.scorecard{background:#fefce8;color:#a16207}
+.audit-rtype.webhook{background:#eff6ff;color:#1d4ed8}
+.audit-origin{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#64748b}
+.audit-origin i{font-size:11px;color:#94a3b8}
+/* Audit detail drawer (Port-style) */
+.adw-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.45);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);z-index:240;opacity:0;visibility:hidden;transition:opacity .2s}
+.adw-backdrop.open{opacity:1;visibility:visible}
+.adw{position:fixed;top:0;right:0;height:100vh;width:560px;max-width:94vw;background:#fff;box-shadow:-12px 0 40px rgba(15,23,42,.18);z-index:241;transform:translateX(100%);transition:transform .26s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.adw.open{transform:translateX(0)}
+.adw-head{padding:18px 22px;border-bottom:1px solid #eef2f7;display:flex;align-items:flex-start;gap:12px}
+.adw-head-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:#eef2ff;color:#4338ca;flex-shrink:0}
+.adw-head-tt{flex:1;min-width:0}
+.adw-head-tt h3{font-size:15px;font-weight:800;color:#0f172a;line-height:1.3}
+.adw-head-tt p{font-size:12px;color:#64748b;margin-top:3px;font-family:monospace;word-break:break-all}
+.adw-close{width:30px;height:30px;border-radius:8px;border:none;background:#f1f5f9;color:#64748b;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.adw-close:hover{background:#e2e8f0;color:#334155}
+.adw-body{padding:20px 22px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:20px}
+.adw-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.adw-field{display:flex;flex-direction:column;gap:3px}
+.adw-field label{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#94a3b8}
+.adw-field span{font-size:13px;color:#1e293b;font-weight:500}
+.adw-field code{font-size:12px;font-family:monospace;color:#7c3aed;background:#f1f5f9;padding:2px 6px;border-radius:4px;display:inline-block;width:fit-content}
+.adw-sec-title{font-size:12px;font-weight:800;color:#334155;display:flex;align-items:center;gap:7px;margin-bottom:-8px}
+.adw-diff{border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;font-family:monospace;font-size:12px;line-height:1.7}
+.adw-diff-line{display:flex;gap:8px;padding:1px 12px;white-space:pre-wrap;word-break:break-word}
+.adw-diff-line.add{background:#ecfdf5;color:#065f46}
+.adw-diff-line.rem{background:#fef2f2;color:#991b1b}
+.adw-diff-line.ctx{color:#64748b}
+.adw-diff-line .sign{width:10px;flex-shrink:0;font-weight:700}
+.adw-payload{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px 16px;font-family:monospace;font-size:12px;line-height:1.6;overflow:auto;white-space:pre}
+.adw-chips{display:flex;flex-wrap:wrap;gap:6px}
+.adw-chip{font-size:11px;font-weight:600;padding:3px 9px;border-radius:14px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+/* ─── Data Sources page (Port-style integrations catalog) ─────────────────────── */
+.ds-platform{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px}
+.ds-pill{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:9px;padding:8px 13px;cursor:pointer;transition:all .14s}
+.ds-pill:hover{border-color:#c7d2fe;background:#f8fafc;color:#4338ca}
+.ds-pill i{font-size:12px;color:#94a3b8}
+.ds-pill:hover i{color:#6366f1}
+.ds-group{margin-top:26px}
+.ds-group-head{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.ds-group-head h3{font-size:13px;font-weight:800;color:#334155;letter-spacing:.01em}
+.ds-group-head .ds-count{font-size:11px;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:10px;padding:1px 8px}
+.ds-group-head .ds-line{flex:1;height:1px;background:#eef2f7}
+.ds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:13px}
+.ds-card{display:flex;align-items:flex-start;gap:12px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:15px;cursor:pointer;transition:all .15s;position:relative}
+.ds-card:hover{border-color:#c7d2fe;box-shadow:0 6px 18px rgba(67,56,202,.08);transform:translateY(-1px)}
+.ds-logo{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff;flex-shrink:0}
+.ds-card-body{flex:1;min-width:0}
+.ds-card-name{font-size:13.5px;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:7px}
+.ds-card-sub{font-size:11.5px;color:#94a3b8;margin-top:2px}
+.ds-card-meta{display:flex;align-items:center;gap:10px;margin-top:9px;font-size:11px;color:#64748b}
+.ds-card-meta span{display:inline-flex;align-items:center;gap:4px}
+.ds-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ds-dot.healthy{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.15)}
+.ds-dot.syncing{background:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.ds-dot.warning{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.15)}
+.ds-status-txt{font-weight:600}
+.ds-status-txt.healthy{color:#059669}.ds-status-txt.syncing{color:#2563eb}.ds-status-txt.warning{color:#d97706}
+.ds-kind-badge{font-size:10px;font-weight:700;color:#64748b;background:#f1f5f9;border-radius:9px;padding:1px 7px;flex-shrink:0}
 .team-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:20px}
 .team-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px}
 .team-card-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -689,6 +758,11 @@ button{cursor:pointer;border:none;background:none;font:inherit}
       </a>
 
       <div class="sb-section-title" data-i18n="nav.admin">Admin</div>
+      <a class="sb-item" href="#" data-view="datasources">
+        <i class="fa-solid fa-plug-circle-bolt"></i>
+        <span class="sb-label" data-i18n="nav.datasources">Data Sources</span>
+        <span class="sb-badge">14</span>
+      </a>
       <a class="sb-item" href="#" data-view="teams">
         <i class="fa-solid fa-users"></i>
         <span class="sb-label" data-i18n="nav.teams">Teams</span>
@@ -850,6 +924,7 @@ button{cursor:pointer;border:none;background:none;font:inherit}
       <div id="view-environments" class="idp-view"></div>
       <div id="view-secrets" class="idp-view"></div>
       <div id="view-auditlog" class="idp-view"></div>
+      <div id="view-datasources" class="idp-view"></div>
       <div id="view-teams" class="idp-view"></div>
       <div id="view-settings" class="idp-view"></div>
     </main>
@@ -877,6 +952,13 @@ button{cursor:pointer;border:none;background:none;font:inherit}
     </div>
   </div>
 </div>
+
+<!-- ═══ AUDIT LOG DETAIL DRAWER (Port-style before/after diff) ══════════════════ -->
+<div class="adw-backdrop" id="adwBackdrop" onclick="closeAuditDetail()"></div>
+<aside class="adw" id="auditDrawer" role="dialog" aria-modal="true" aria-label="Audit event details">
+  <div class="adw-head" id="adwHead"></div>
+  <div class="adw-body" id="adwBody"></div>
+</aside>
 
 <!-- ═══ AUTH REQUIRED POPUP (only shown on protected actions) ═══════════════════ -->
 <div id="authPrompt" role="dialog" aria-modal="true" aria-labelledby="authPromptTitle">
@@ -913,6 +995,7 @@ var I18N = {
     'nav.selfserve': 'Self-Service', 'nav.scorecards': 'Scorecards', 'nav.dashboards': 'Dashboards',
     'nav.platform': 'Platform', 'nav.services': 'Services', 'nav.environments': 'Environments',
     'nav.secrets': 'Secrets', 'nav.audit': 'Audit Log', 'nav.admin': 'Admin',
+    'nav.datasources': 'Data Sources',
     'nav.teams': 'Teams', 'nav.settings': 'Einstellungen',
     'user.role': 'Platform Engineer',
     'btn.newAction': 'Neue Aktion', 'btn.cancel': 'Abbrechen', 'btn.run': 'Ausführen',
@@ -967,6 +1050,17 @@ var I18N = {
     'aud.col.timeuser':'Zeit / Benutzer','aud.col.action':'Aktion',
     'aud.col.target':'Ziel','aud.col.result':'Ergebnis',
     'aud.res.ok':'OK','aud.res.warn':'Warnung','aud.res.err':'Fehler',
+    'aud.col.rtype':'Ressourcentyp','aud.col.origin':'Herkunft','aud.tbl.hint':'Zeile anklicken f\xfcr Details & Diff',
+    'aud.rt.entity':'Entity','aud.rt.blueprint':'Blueprint','aud.rt.run':'Action Run','aud.rt.integration':'Integration','aud.rt.secret':'Secret','aud.rt.user':'Benutzer','aud.rt.scorecard':'Scorecard','aud.rt.webhook':'Webhook',
+    'aud.dw.status':'Status','aud.dw.action':'Aktion','aud.dw.initiator':'Ausgel\xf6st von','aud.dw.email':'E-Mail','aud.dw.origin':'Herkunft','aud.dw.ip':'IP-Adresse','aud.dw.rtype':'Ressourcentyp','aud.dw.time':'Zeitstempel','aud.dw.identifier':'Identifier','aud.dw.desc':'Beschreibung','aud.dw.diff':'\xc4nderungen (vorher / nachher)','aud.dw.nodiff':'Keine Konfigurations\xe4nderung erfasst.',
+    'ds.sub':'Alle Integrationen, die Daten in den Software-Katalog einspeisen.','ds.btn.add':'Datenquelle hinzuf\xfcgen',
+    'ds.grp.git':'Git & Code','ds.grp.exporter':'Kubernetes & Exporters','ds.grp.obs':'Incident & Observability','ds.grp.pm':'Projekt- & Service-Management','ds.grp.sec':'Security & Code-Qualit\xe4t','ds.grp.ai':'AI & Developer Experience','ds.grp.cloud':'Cloud','ds.grp.core':'Core (REST API)',
+    'ds.st.healthy':'Aktiv','ds.st.syncing':'Synchronisiert','ds.st.warning':'Warnung',
+    'ds.kinds':'Kinds','ds.entities':'Entities',
+    'ds.stat.sources':'Datenquellen','ds.stat.connected':'verbunden','ds.stat.entities':'Entities gesamt',
+    'ds.pf.workflows':'Workflows','ds.pf.automations':'Automations','ds.pf.teams':'Benutzer & Teams','ds.pf.audit':'Audit Log','ds.pf.credentials':'Credentials','ds.pf.org':'Organisation','ds.pf.plugins':'Plugins Manager','ds.pf.platform':'Plattform-Einstellung','ds.pf.open':'\xd6ffnen',
+    'ds.pf.workflows.d':'Definiere mehrstufige Self-Service-Workflows mit Genehmigungen, Bedingungen und automatischen Schritten.','ds.pf.automations.d':'Ereignisgesteuerte Automatisierungen — reagiere auf Katalog-\xc4nderungen, TTLs und Vorf\xe4lle ohne manuelles Zutun.','ds.pf.credentials.d':'Verwalte API-Schl\xfcssel, Tokens und Verbindungs-Credentials f\xfcr alle Integrationen zentral und sicher.','ds.pf.org.d':'Organisationsweite Einstellungen: Name, Region, SSO, Standardrollen und Datenaufbewahrung.','ds.pf.plugins.d':'Installiere und verwalte Plugins, die das Portal um zus\xe4tzliche Datenquellen und Aktionen erweitern.',
+    'ds.dw.status':'Status','ds.dw.method':'Methode','ds.dw.entities':'Entities','ds.dw.lastsync':'Letzte Sync','ds.dw.kinds':'Ingestierte Kinds','ds.dw.mapping':'Mapping-Konfiguration','ds.dw.resync':'Neu synchronisieren','ds.dw.configure':'Konfigurieren',
     'tms.sub':'Teams, Mitglieder und Service-Ownership verwalten.',
     'tms.btn.create':'Team erstellen','tms.stat.members':'Mitglieder',
     'tms.stat.vsmonth':'↑ 2 diesen Monat','tms.stat.incidents':'Offene Incidents',
@@ -1004,6 +1098,7 @@ var I18N = {
     'nav.selfserve': 'Self-Service', 'nav.scorecards': 'Scorecards', 'nav.dashboards': 'Dashboards',
     'nav.platform': 'Platform', 'nav.services': 'Services', 'nav.environments': 'Environments',
     'nav.secrets': 'Secrets', 'nav.audit': 'Audit Log', 'nav.admin': 'Admin',
+    'nav.datasources': 'Data Sources',
     'nav.teams': 'Teams', 'nav.settings': 'Settings',
     'user.role': 'Platform Engineer',
     'btn.newAction': 'New Action', 'btn.cancel': 'Cancel', 'btn.run': 'Run',
@@ -1058,6 +1153,17 @@ var I18N = {
     'aud.col.timeuser':'Time / User','aud.col.action':'Action',
     'aud.col.target':'Target','aud.col.result':'Result',
     'aud.res.ok':'OK','aud.res.warn':'Warning','aud.res.err':'Error',
+    'aud.col.rtype':'Resource Type','aud.col.origin':'Origin','aud.tbl.hint':'Click a row for details & diff',
+    'aud.rt.entity':'Entity','aud.rt.blueprint':'Blueprint','aud.rt.run':'Action Run','aud.rt.integration':'Integration','aud.rt.secret':'Secret','aud.rt.user':'User','aud.rt.scorecard':'Scorecard','aud.rt.webhook':'Webhook',
+    'aud.dw.status':'Status','aud.dw.action':'Action','aud.dw.initiator':'Triggered by','aud.dw.email':'Email','aud.dw.origin':'Origin','aud.dw.ip':'IP address','aud.dw.rtype':'Resource type','aud.dw.time':'Timestamp','aud.dw.identifier':'Identifier','aud.dw.desc':'Description','aud.dw.diff':'Changes (before / after)','aud.dw.nodiff':'No configuration change captured.',
+    'ds.sub':'All integrations that feed data into the software catalog.','ds.btn.add':'Add data source',
+    'ds.grp.git':'Git & Code','ds.grp.exporter':'Kubernetes & Exporters','ds.grp.obs':'Incident & Observability','ds.grp.pm':'Project & Service Management','ds.grp.sec':'Security & Code Quality','ds.grp.ai':'AI & Developer Experience','ds.grp.cloud':'Cloud','ds.grp.core':'Core (REST API)',
+    'ds.st.healthy':'Active','ds.st.syncing':'Syncing','ds.st.warning':'Warning',
+    'ds.kinds':'kinds','ds.entities':'entities',
+    'ds.stat.sources':'Data sources','ds.stat.connected':'connected','ds.stat.entities':'Total entities',
+    'ds.pf.workflows':'Workflows','ds.pf.automations':'Automations','ds.pf.teams':'Users & teams','ds.pf.audit':'Audit log','ds.pf.credentials':'Credentials','ds.pf.org':'Organization','ds.pf.plugins':'Plugins Manager','ds.pf.platform':'Platform setting','ds.pf.open':'Open',
+    'ds.pf.workflows.d':'Define multi-step self-service workflows with approvals, conditions and automated steps.','ds.pf.automations.d':'Event-driven automations — react to catalog changes, TTLs and incidents with no manual work.','ds.pf.credentials.d':'Centrally and securely manage API keys, tokens and connection credentials for all integrations.','ds.pf.org.d':'Organization-wide settings: name, region, SSO, default roles and data retention.','ds.pf.plugins.d':'Install and manage plugins that extend the portal with extra data sources and actions.',
+    'ds.dw.status':'Status','ds.dw.method':'Method','ds.dw.entities':'Entities','ds.dw.lastsync':'Last sync','ds.dw.kinds':'Ingested kinds','ds.dw.mapping':'Mapping configuration','ds.dw.resync':'Resync','ds.dw.configure':'Configure',
     'tms.sub':'Manage teams, members and service ownership.',
     'tms.btn.create':'Create Team','tms.stat.members':'Members',
     'tms.stat.vsmonth':'↑ 2 this month','tms.stat.incidents':'Open Incidents',
@@ -1095,6 +1201,7 @@ var I18N = {
     'nav.selfserve': 'Self-Service', 'nav.scorecards': 'Scorecards', 'nav.dashboards': 'Tableaux de bord',
     'nav.platform': 'Plateforme', 'nav.services': 'Services', 'nav.environments': 'Environnements',
     'nav.secrets': 'Secrets', 'nav.audit': 'Journal d\'audit', 'nav.admin': 'Admin',
+    'nav.datasources': 'Sources de donn\xe9es',
     'nav.teams': 'Équipes', 'nav.settings': 'Paramètres',
     'user.role': 'Platform Engineer',
     'btn.newAction': 'Nouvelle action', 'btn.cancel': 'Annuler', 'btn.run': 'Exécuter',
@@ -1149,6 +1256,17 @@ var I18N = {
     'aud.col.timeuser':'Heure / Utilisateur','aud.col.action':'Action',
     'aud.col.target':'Cible','aud.col.result':'Résultat',
     'aud.res.ok':'OK','aud.res.warn':'Avertissement','aud.res.err':'Erreur',
+    'aud.col.rtype':'Type de ressource','aud.col.origin':'Origine','aud.tbl.hint':'Cliquez une ligne pour le d\xe9tail & le diff',
+    'aud.rt.entity':'Entit\xe9','aud.rt.blueprint':'Blueprint','aud.rt.run':'Ex\xe9cution','aud.rt.integration':'Int\xe9gration','aud.rt.secret':'Secret','aud.rt.user':'Utilisateur','aud.rt.scorecard':'Scorecard','aud.rt.webhook':'Webhook',
+    'aud.dw.status':'Statut','aud.dw.action':'Action','aud.dw.initiator':'D\xe9clench\xe9 par','aud.dw.email':'E-mail','aud.dw.origin':'Origine','aud.dw.ip':'Adresse IP','aud.dw.rtype':'Type de ressource','aud.dw.time':'Horodatage','aud.dw.identifier':'Identifiant','aud.dw.desc':'Description','aud.dw.diff':'Modifications (avant / apr\xe8s)','aud.dw.nodiff':'Aucune modification de configuration enregistr\xe9e.',
+    'ds.sub':'Toutes les int\xe9grations qui alimentent le catalogue logiciel en donn\xe9es.','ds.btn.add':'Ajouter une source',
+    'ds.grp.git':'Git & Code','ds.grp.exporter':'Kubernetes & Exporters','ds.grp.obs':'Incidents & Observabilit\xe9','ds.grp.pm':'Gestion de projet & services','ds.grp.sec':'S\xe9curit\xe9 & Qualit\xe9 du code','ds.grp.ai':'IA & Exp\xe9rience d\xe9veloppeur','ds.grp.cloud':'Cloud','ds.grp.core':'Core (API REST)',
+    'ds.st.healthy':'Actif','ds.st.syncing':'Synchronisation','ds.st.warning':'Avertissement',
+    'ds.kinds':'kinds','ds.entities':'entit\xe9s',
+    'ds.stat.sources':'Sources de donn\xe9es','ds.stat.connected':'connect\xe9es','ds.stat.entities':'Entit\xe9s totales',
+    'ds.pf.workflows':'Workflows','ds.pf.automations':'Automatisations','ds.pf.teams':'Utilisateurs & \xe9quipes','ds.pf.audit':'Journal d\'audit','ds.pf.credentials':'Identifiants','ds.pf.org':'Organisation','ds.pf.plugins':'Gestionnaire de plugins','ds.pf.platform':'Param\xe8tre plateforme','ds.pf.open':'Ouvrir',
+    'ds.pf.workflows.d':'D\xe9finissez des workflows self-service multi-\xe9tapes avec approbations, conditions et \xe9tapes automatis\xe9es.','ds.pf.automations.d':'Automatisations pilot\xe9es par \xe9v\xe9nements — r\xe9agissez aux changements du catalogue, aux TTL et aux incidents sans intervention manuelle.','ds.pf.credentials.d':'G\xe9rez de fa\xe7on centralis\xe9e et s\xe9curis\xe9e les cl\xe9s API, jetons et identifiants de connexion de toutes les int\xe9grations.','ds.pf.org.d':'Param\xe8tres \xe0 l\'\xe9chelle de l\'organisation : nom, r\xe9gion, SSO, r\xf4les par d\xe9faut et r\xe9tention des donn\xe9es.','ds.pf.plugins.d':'Installez et g\xe9rez des plugins qui \xe9tendent le portail avec des sources de donn\xe9es et actions suppl\xe9mentaires.',
+    'ds.dw.status':'Statut','ds.dw.method':'M\xe9thode','ds.dw.entities':'Entit\xe9s','ds.dw.lastsync':'Derni\xe8re sync','ds.dw.kinds':'Kinds ingest\xe9s','ds.dw.mapping':'Configuration du mapping','ds.dw.resync':'Resynchroniser','ds.dw.configure':'Configurer',
     'tms.sub':'Gérer les équipes, les membres et la propriété des services.',
     'tms.btn.create':'Créer une équipe','tms.stat.members':'Membres',
     'tms.stat.vsmonth':'↑ 2 ce mois','tms.stat.incidents':'Incidents ouverts',
@@ -1353,8 +1471,8 @@ function applyLang(l) {
       vEl.innerHTML = viewRegistry[activeView]();
       viewRendered[activeView] = true;
     }
-    var bcI = {environments:'fa-brands fa-docker',secrets:'fa-solid fa-shield-halved',auditlog:'fa-solid fa-clock-rotate-left',teams:'fa-solid fa-users',settings:'fa-solid fa-gear'};
-    var bcNavKey = {environments:'environments',secrets:'secrets',auditlog:'audit',teams:'teams',settings:'settings'};
+    var bcI = {environments:'fa-brands fa-docker',secrets:'fa-solid fa-shield-halved',auditlog:'fa-solid fa-clock-rotate-left',datasources:'fa-solid fa-plug-circle-bolt',teams:'fa-solid fa-users',settings:'fa-solid fa-gear'};
+    var bcNavKey = {environments:'environments',secrets:'secrets',auditlog:'audit',datasources:'datasources',teams:'teams',settings:'settings'};
     var bc2 = document.querySelector('.topbar-breadcrumb');
     if (bc2) bc2.innerHTML = '<i class="' + (bcI[activeView]||'fa-solid fa-circle') + '"></i><span>' + t('nav.' + (bcNavKey[activeView]||activeView)) + '</span>';
   }
@@ -2067,8 +2185,8 @@ function showView(viewId) {
       viewRendered[viewId] = true;
     }
   }
-  var bcIcons = {selfservice:'fa-solid fa-bolt',environments:'fa-brands fa-docker',secrets:'fa-solid fa-shield-halved',auditlog:'fa-solid fa-clock-rotate-left',teams:'fa-solid fa-users',settings:'fa-solid fa-gear'};
-  var bcLabels = {selfservice:'Self-Service',environments:t('nav.environments'),secrets:t('nav.secrets'),auditlog:t('nav.audit'),teams:t('nav.teams'),settings:t('nav.settings')};
+  var bcIcons = {selfservice:'fa-solid fa-bolt',environments:'fa-brands fa-docker',secrets:'fa-solid fa-shield-halved',auditlog:'fa-solid fa-clock-rotate-left',datasources:'fa-solid fa-plug-circle-bolt',teams:'fa-solid fa-users',settings:'fa-solid fa-gear'};
+  var bcLabels = {selfservice:'Self-Service',environments:t('nav.environments'),secrets:t('nav.secrets'),auditlog:t('nav.audit'),datasources:t('nav.datasources'),teams:t('nav.teams'),settings:t('nav.settings')};
   var bc = document.querySelector('.topbar-breadcrumb');
   if (bc) bc.innerHTML = '<i class="' + (bcIcons[viewId]||'fa-solid fa-circle') + '"></i><span>' + (bcLabels[viewId]||viewId) + '</span>';
   activeView = viewId;
@@ -2168,24 +2286,48 @@ viewRegistry['secrets'] = function() {
 
 viewRegistry['auditlog'] = function() {
   var events = [
-    {time:'16.06.2026 10:42',actor:'K. Aboudou',action:'Deployed payment-service v2.3.1 → production',target:'payment-service',type:'deploy',result:'success'},
-    {time:'16.06.2026 09:18',actor:'CI/CD Bot',action:'Auto-scaled checkout-api 3→5 Replicas',target:'checkout-api',type:'scale',result:'success'},
-    {time:'16.06.2026 08:55',actor:'J. M\xfcller',action:'Rotated /production/db/password',target:'Vault',type:'secret',result:'success'},
-    {time:'15.06.2026 17:23',actor:'K. Aboudou',action:'Environment dev-payments-v2 erstellt',target:'dev-payments-v2',type:'env',result:'success'},
-    {time:'15.06.2026 16:01',actor:'A. Schmidt',action:'Benutzer m.weber@koffi.dev eingeladen (Rolle: Developer)',target:'IAM',type:'iam',result:'success'},
-    {time:'15.06.2026 14:33',actor:'AI Agent',action:'Incident INC-0042 autonom gel\xf6st',target:'INC-0042',type:'incident',result:'success'},
-    {time:'15.06.2026 11:09',actor:'K. Aboudou',action:'JIT-Zugriff prod-k8s-eu beantragt (TTL: 1h)',target:'prod-k8s-eu',type:'jit',result:'success'},
-    {time:'14.06.2026 23:41',actor:'Automation',action:'Compliance Scan: 94 Controls bestanden, 2 Warnungen',target:'Security',type:'compliance',result:'warning'},
-    {time:'14.06.2026 18:05',actor:'M. Weber',action:'RBAC-Richtlinie aktualisiert: backend-team → maintainer',target:'RBAC',type:'iam',result:'success'},
-    {time:'14.06.2026 09:22',actor:'CI/CD Bot',action:'Pipeline deploy-production fehlgeschlagen — Rollback ausgel\xf6st',target:'deploy-production',type:'deploy',result:'error'}
+    {time:'16.06.2026 10:42:07',actor:'K. Aboudou',email:'k.aboudou@koffi.dev',verb:'RUN',action:'Deployed payment-service v2.3.1 → production',target:'payment-service',type:'deploy',rtype:'run',origin:'github',ip:'185.42.118.6',result:'success',
+      diff:[{t:'ctx',s:' ',x:'"deployment": {'},{t:'rem',s:'-',x:'  "image": "payment-service:v2.3.0",'},{t:'add',s:'+',x:'  "image": "payment-service:v2.3.1",'},{t:'ctx',s:' ',x:'  "replicas": 4,'},{t:'rem',s:'-',x:'  "strategy": "Recreate"'},{t:'add',s:'+',x:'  "strategy": "RollingUpdate"'},{t:'ctx',s:' ',x:'}'}]},
+    {time:'16.06.2026 09:18:33',actor:'Self-Service Automation',email:'automation@koffi.dev',verb:'UPDATE',action:'Auto-Scaling checkout-api 3 → 5 Replicas',target:'checkout-api',type:'scale',rtype:'entity',origin:'automation',ip:'10.0.4.21',result:'success',
+      diff:[{t:'ctx',s:' ',x:'"spec": {'},{t:'rem',s:'-',x:'  "replicas": 3'},{t:'add',s:'+',x:'  "replicas": 5'},{t:'ctx',s:' ',x:'},'},{t:'ctx',s:' ',x:'"trigger": "cpu > 75% (HPA)"'}]},
+    {time:'16.06.2026 08:55:12',actor:'J. M\xfcller',email:'j.mueller@koffi.dev',verb:'ROTATE',action:'Secret /production/db/password rotiert',target:'production/db/password',type:'secret',rtype:'secret',origin:'vault',ip:'185.42.118.9',result:'success',
+      diff:[{t:'ctx',s:' ',x:'"path": "/production/db/password",'},{t:'rem',s:'-',x:'  "version": 7,'},{t:'add',s:'+',x:'  "version": 8,'},{t:'ctx',s:' ',x:'  "ttl": "90d",'},{t:'ctx',s:' ',x:'  "engine": "vault-kv-v2"'}]},
+    {time:'15.06.2026 17:23:45',actor:'K. Aboudou',email:'k.aboudou@koffi.dev',verb:'CREATE',action:'Environment dev-payments-v2 erstellt',target:'dev-payments-v2',type:'env',rtype:'entity',origin:'ui',ip:'185.42.118.6',result:'success',
+      diff:[{t:'add',s:'+',x:'"identifier": "dev-payments-v2",'},{t:'add',s:'+',x:'"blueprint": "environment",'},{t:'add',s:'+',x:'"cluster": "staging-k8s-eu",'},{t:'add',s:'+',x:'"ttl": "72h",'},{t:'add',s:'+',x:'"owner": "Payments Team"'}]},
+    {time:'15.06.2026 16:01:09',actor:'A. Schmidt',email:'a.schmidt@koffi.dev',verb:'CREATE',action:'Benutzer m.weber@koffi.dev eingeladen (Rolle: Developer)',target:'m.weber@koffi.dev',type:'iam',rtype:'user',origin:'ui',ip:'185.42.118.4',result:'success',
+      diff:[{t:'add',s:'+',x:'"user": "m.weber@koffi.dev",'},{t:'add',s:'+',x:'"role": "Developer",'},{t:'add',s:'+',x:'"teams": ["backend-team"],'},{t:'add',s:'+',x:'"status": "invited"'}]},
+    {time:'15.06.2026 14:33:50',actor:'AI Agent',email:'ai-agent@koffi.dev',verb:'RUN',action:'Incident INC-0042 autonom gel\xf6st (Auto-Remediation)',target:'INC-0042',type:'incident',rtype:'run',origin:'ai',ip:'10.0.9.2',result:'success',
+      diff:[{t:'ctx',s:' ',x:'"incident": "INC-0042",'},{t:'rem',s:'-',x:'  "status": "firing",'},{t:'add',s:'+',x:'  "status": "resolved",'},{t:'add',s:'+',x:'  "remediation": "restart pod + clear cache",'},{t:'add',s:'+',x:'  "mttr": "2m11s"'}]},
+    {time:'15.06.2026 11:09:27',actor:'K. Aboudou',email:'k.aboudou@koffi.dev',verb:'CREATE',action:'JIT-Zugriff prod-k8s-eu beantragt (TTL: 1h)',target:'prod-k8s-eu',type:'jit',rtype:'entity',origin:'api',ip:'185.42.118.6',result:'success',
+      diff:[{t:'add',s:'+',x:'"resource": "prod-k8s-eu",'},{t:'add',s:'+',x:'"role": "cluster-admin",'},{t:'add',s:'+',x:'"ttl": "1h",'},{t:'add',s:'+',x:'"approvedBy": "A. Schmidt",'},{t:'add',s:'+',x:'"reason": "DB migration hotfix"'}]},
+    {time:'14.06.2026 23:41:18',actor:'Compliance Automation',email:'automation@koffi.dev',verb:'RUN',action:'Compliance-Scan: 94 Controls bestanden, 2 Warnungen',target:'production-readiness',type:'compliance',rtype:'scorecard',origin:'automation',ip:'10.0.4.21',result:'warning',
+      diff:[{t:'ctx',s:' ',x:'"scorecard": "production-readiness",'},{t:'rem',s:'-',x:'  "level": "Gold"'},{t:'add',s:'+',x:'  "level": "Silver"'},{t:'add',s:'+',x:'  "failing": ["has-oncall", "log-retention-30d"]'}]},
+    {time:'14.06.2026 18:05:44',actor:'M. Weber',email:'m.weber@koffi.dev',verb:'UPDATE',action:'RBAC-Richtlinie aktualisiert: backend-team → maintainer',target:'rbac-backend-team',type:'iam',rtype:'blueprint',origin:'terraform',ip:'185.42.118.7',result:'success',
+      diff:[{t:'ctx',s:' ',x:'"team": "backend-team",'},{t:'rem',s:'-',x:'  "role": "member"'},{t:'add',s:'+',x:'  "role": "maintainer"'},{t:'ctx',s:' ',x:'"scope": ["checkout-api", "payment-service"]'}]},
+    {time:'14.06.2026 12:30:02',actor:'Platform Sync',email:'integration@koffi.dev',verb:'UPDATE',action:'Kubernetes-Integration synchronisiert (312 Entities)',target:'k8s-exporter',type:'integration',rtype:'integration',origin:'automation',ip:'10.0.4.30',result:'success',
+      diff:[{t:'ctx',s:' ',x:'"integration": "k8s-exporter",'},{t:'rem',s:'-',x:'  "entities": 308,'},{t:'add',s:'+',x:'  "entities": 312,'},{t:'ctx',s:' ',x:'  "lastSync": "14.06.2026 12:30",'},{t:'ctx',s:' ',x:'  "status": "healthy"'}]},
+    {time:'14.06.2026 10:14:55',actor:'A. Schmidt',email:'a.schmidt@koffi.dev',verb:'CREATE',action:'Webhook slack-deploy-notify angelegt',target:'slack-deploy-notify',type:'webhook',rtype:'webhook',origin:'ui',ip:'185.42.118.4',result:'success',
+      diff:[{t:'add',s:'+',x:'"identifier": "slack-deploy-notify",'},{t:'add',s:'+',x:'"url": "https://hooks.slack.com/…/T0****",'},{t:'add',s:'+',x:'"events": ["run.completed", "run.failed"]'}]},
+    {time:'14.06.2026 09:22:31',actor:'CI/CD Bot',email:'ci-bot@koffi.dev',verb:'RUN',action:'Pipeline deploy-production fehlgeschlagen — Rollback ausgel\xf6st',target:'deploy-production',type:'deploy',rtype:'run',origin:'github',ip:'185.42.118.6',result:'error',
+      diff:[{t:'ctx',s:' ',x:'"run": "deploy-production #418",'},{t:'rem',s:'-',x:'  "status": "in_progress",'},{t:'add',s:'+',x:'  "status": "failure",'},{t:'add',s:'+',x:'  "error": "ImagePullBackOff: registry timeout",'},{t:'add',s:'+',x:'  "rollback": "v2.3.0 restored"'}]},
+    {time:'13.06.2026 21:50:08',actor:'TTL Reaper',email:'automation@koffi.dev',verb:'DELETE',action:'Ephemeres Environment pr-1287-preview entfernt (TTL abgelaufen)',target:'pr-1287-preview',type:'env',rtype:'entity',origin:'automation',ip:'10.0.4.21',result:'success',
+      diff:[{t:'rem',s:'-',x:'"identifier": "pr-1287-preview",'},{t:'rem',s:'-',x:'"blueprint": "environment",'},{t:'rem',s:'-',x:'"cluster": "staging-k8s-eu",'},{t:'rem',s:'-',x:'"reason": "ttl_expired (8h)"'}]},
+    {time:'13.06.2026 15:12:40',actor:'K. Aboudou',email:'k.aboudou@koffi.dev',verb:'UPDATE',action:'Blueprint service um Property "tier" erweitert',target:'service',type:'blueprint',rtype:'blueprint',origin:'terraform',ip:'185.42.118.6',result:'success',
+      diff:[{t:'ctx',s:' ',x:'"blueprint": "service",'},{t:'add',s:'+',x:'  "properties.tier": {'},{t:'add',s:'+',x:'    "enum": ["gold", "silver", "bronze"],'},{t:'add',s:'+',x:'    "required": true'},{t:'add',s:'+',x:'  }'}]}
   ];
-  var typeIcons = {deploy:'fa-solid fa-rocket',scale:'fa-solid fa-arrows-up-down',secret:'fa-solid fa-key',env:'fa-brands fa-docker',iam:'fa-solid fa-user-shield',incident:'fa-solid fa-triangle-exclamation',jit:'fa-solid fa-lock-open',compliance:'fa-solid fa-shield-check'};
-  var rows = events.map(function(ev) {
-    return '<tr>' +
+  window.__auditEvents = events;
+  var typeIcons = {deploy:'fa-solid fa-rocket',scale:'fa-solid fa-arrows-up-down',secret:'fa-solid fa-key',env:'fa-brands fa-docker',iam:'fa-solid fa-user-shield',incident:'fa-solid fa-triangle-exclamation',jit:'fa-solid fa-lock-open',compliance:'fa-solid fa-shield-check',integration:'fa-solid fa-plug',webhook:'fa-solid fa-bolt',blueprint:'fa-solid fa-cube'};
+  var rtypeIcons = {entity:'fa-solid fa-cube',blueprint:'fa-solid fa-layer-group',run:'fa-solid fa-play',integration:'fa-solid fa-plug',secret:'fa-solid fa-key',user:'fa-solid fa-user',scorecard:'fa-solid fa-medal',webhook:'fa-solid fa-bolt'};
+  var verbColors = {CREATE:'#15803d',UPDATE:'#1d4ed8',DELETE:'#b91c1c',RUN:'#7c3aed',ROTATE:'#c2410c'};
+  var rows = events.map(function(ev,i) {
+    var oc = auditOrigin(ev.origin);
+    return '<tr class="audit-row" onclick="openAuditDetail(' + i + ')">' +
       '<td><i class="' + (typeIcons[ev.type]||'fa-solid fa-circle') + '" style="color:#64748b;width:14px;font-size:13px"></i></td>' +
       '<td class="audit-meta"><span class="audit-time">' + ev.time + '</span><span class="audit-actor">' + ev.actor + '</span></td>' +
-      '<td style="font-size:12px;color:#475569">' + ev.action + '</td>' +
+      '<td style="font-size:12px;color:#475569"><span style="display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.04em;color:' + (verbColors[ev.verb]||'#64748b') + ';margin-right:6px">' + ev.verb + '</span>' + ev.action + '</td>' +
+      '<td><span class="audit-rtype ' + ev.rtype + '"><i class="' + (rtypeIcons[ev.rtype]||'fa-solid fa-circle') + '"></i>' + t('aud.rt.' + ev.rtype) + '</span></td>' +
       '<td><code style="font-size:11px;background:#f1f5f9;padding:2px 6px;border-radius:4px;color:#7c3aed">' + ev.target + '</code></td>' +
+      '<td><span class="audit-origin"><i class="' + oc.icon + '"></i>' + oc.label + '</span></td>' +
       '<td><span class="audit-result ' + ev.result + '">' +
         (ev.result==='success'?'<i class="fa-solid fa-check"></i> '+t('aud.res.ok'):ev.result==='warning'?'<i class="fa-solid fa-triangle-exclamation"></i> '+t('aud.res.warn'):'<i class="fa-solid fa-xmark"></i> '+t('aud.res.err')) +
       '</span></td>' +
@@ -2199,24 +2341,226 @@ viewRegistry['auditlog'] = function() {
         '<i class="fa-solid fa-download"></i> ' + t('aud.btn.export') + '</button>' +
     '</div></div>' +
     '<div class="stats-row">' +
-      '<div class="stat-card"><span class="stat-num">10</span><span class="stat-label">Events (7d)</span><span class="stat-delta">' + t('aud.stat.vsweek') + '</span></div>' +
-      '<div class="stat-card"><span class="stat-num" style="color:#10b981">8</span><span class="stat-label">' + t('aud.stat.success') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num">14</span><span class="stat-label">Events (7d)</span><span class="stat-delta">' + t('aud.stat.vsweek') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#10b981">12</span><span class="stat-label">' + t('aud.stat.success') + '</span></div>' +
       '<div class="stat-card"><span class="stat-num" style="color:#f59e0b">1</span><span class="stat-label">' + t('aud.stat.warnings') + '</span></div>' +
       '<div class="stat-card"><span class="stat-num" style="color:#ef4444">1</span><span class="stat-label">' + t('aud.stat.errors') + '</span></div>' +
     '</div>' +
     '<div class="vp-card">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e2e8f0;gap:8px">' +
-        '<span style="font-weight:600;font-size:13px">' + t('aud.tbl.title') + '</span>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e2e8f0;gap:8px;flex-wrap:wrap">' +
+        '<span style="font-weight:600;font-size:13px">' + t('aud.tbl.title') + ' <span style="color:#94a3b8;font-weight:500">— ' + t('aud.tbl.hint') + '</span></span>' +
         '<div style="display:flex;gap:8px">' +
-          '<select class="sf-select" style="width:140px"><option>' + t('aud.filter.types') + '</option><option>Deploy</option><option>Secrets</option><option>IAM</option><option>Incidents</option></select>' +
-          '<select class="sf-select" style="width:140px"><option>' + t('aud.filter.users') + '</option><option>K. Aboudou</option><option>J. M\xfcller</option><option>A. Schmidt</option><option>AI Agent</option></select>' +
+          '<select class="sf-select" style="width:150px"><option>' + t('aud.filter.types') + '</option><option>Entity</option><option>Blueprint</option><option>Run</option><option>Secret</option><option>Integration</option><option>User</option><option>Scorecard</option></select>' +
+          '<select class="sf-select" style="width:150px"><option>' + t('aud.filter.users') + '</option><option>K. Aboudou</option><option>J. M\xfcller</option><option>A. Schmidt</option><option>AI Agent</option><option>Automation</option></select>' +
         '</div>' +
       '</div>' +
       '<table class="vp-table"><thead><tr>' +
-        '<th style="width:24px"></th><th>' + t('aud.col.timeuser') + '</th><th>' + t('aud.col.action') + '</th><th>' + t('aud.col.target') + '</th><th>' + t('aud.col.result') + '</th>' +
+        '<th style="width:24px"></th><th>' + t('aud.col.timeuser') + '</th><th>' + t('aud.col.action') + '</th><th>' + t('aud.col.rtype') + '</th><th>' + t('aud.col.target') + '</th><th>' + t('aud.col.origin') + '</th><th>' + t('aud.col.result') + '</th>' +
       '</tr></thead><tbody>' + rows + '</tbody></table>' +
     '</div></div>';
 };
+
+function auditOrigin(o) {
+  var m = {
+    ui:{icon:'fa-solid fa-mouse-pointer',label:'UI'},
+    api:{icon:'fa-solid fa-code',label:'API'},
+    terraform:{icon:'fa-solid fa-cubes',label:'Terraform'},
+    github:{icon:'fa-brands fa-github',label:'GitHub'},
+    automation:{icon:'fa-solid fa-robot',label:'Automation'},
+    ai:{icon:'fa-solid fa-wand-magic-sparkles',label:'AI Agent'},
+    vault:{icon:'fa-solid fa-shield-halved',label:'Vault'}
+  };
+  return m[o] || {icon:'fa-solid fa-circle',label:o};
+}
+
+function openAuditDetail(idx) {
+  var ev = (window.__auditEvents||[])[idx];
+  if (!ev) return;
+  var rtypeIcons = {entity:'fa-solid fa-cube',blueprint:'fa-solid fa-layer-group',run:'fa-solid fa-play',integration:'fa-solid fa-plug',secret:'fa-solid fa-key',user:'fa-solid fa-user',scorecard:'fa-solid fa-medal',webhook:'fa-solid fa-bolt'};
+  var oc = auditOrigin(ev.origin);
+  var resBadge = ev.result==='success'?'<i class="fa-solid fa-check"></i> '+t('aud.res.ok'):ev.result==='warning'?'<i class="fa-solid fa-triangle-exclamation"></i> '+t('aud.res.warn'):'<i class="fa-solid fa-xmark"></i> '+t('aud.res.err');
+  var diff = (ev.diff||[]).map(function(d){
+    return '<div class="adw-diff-line ' + d.t + '"><span class="sign">' + (d.s||' ') + '</span><span>' + d.x + '</span></div>';
+  }).join('');
+  var head = document.getElementById('adwHead');
+  var body = document.getElementById('adwBody');
+  if (!head || !body) return;
+  head.innerHTML =
+    '<div class="adw-head-icon ' + ev.rtype + '" style="background:#eef2ff;color:#4338ca"><i class="' + (rtypeIcons[ev.rtype]||'fa-solid fa-circle') + '"></i></div>' +
+    '<div class="adw-head-tt"><h3>' + ev.verb + ' · ' + t('aud.rt.' + ev.rtype) + '</h3><p>' + ev.target + '</p></div>' +
+    '<button class="adw-close" onclick="closeAuditDetail()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>';
+  body.innerHTML =
+    '<div class="adw-grid">' +
+      '<div class="adw-field"><label>' + t('aud.dw.status') + '</label><span class="audit-result ' + ev.result + '" style="width:fit-content">' + resBadge + '</span></div>' +
+      '<div class="adw-field"><label>' + t('aud.dw.action') + '</label><span>' + ev.verb + '</span></div>' +
+      '<div class="adw-field"><label>' + t('aud.dw.initiator') + '</label><span>' + ev.actor + '</span></div>' +
+      '<div class="adw-field"><label>' + t('aud.dw.email') + '</label><code>' + ev.email + '</code></div>' +
+      '<div class="adw-field"><label>' + t('aud.dw.origin') + '</label><span class="audit-origin"><i class="' + oc.icon + '"></i>' + oc.label + '</span></div>' +
+      '<div class="adw-field"><label>' + t('aud.dw.ip') + '</label><code>' + ev.ip + '</code></div>' +
+      '<div class="adw-field"><label>' + t('aud.dw.rtype') + '</label><span class="audit-rtype ' + ev.rtype + '"><i class="' + (rtypeIcons[ev.rtype]||'fa-solid fa-circle') + '"></i>' + t('aud.rt.' + ev.rtype) + '</span></div>' +
+      '<div class="adw-field"><label>' + t('aud.dw.time') + '</label><span>' + ev.time + '</span></div>' +
+      '<div class="adw-field" style="grid-column:1 / -1"><label>' + t('aud.dw.identifier') + '</label><code>' + ev.target + '</code></div>' +
+    '</div>' +
+    '<div class="adw-field"><label style="margin-bottom:5px">' + t('aud.dw.desc') + '</label><span style="font-weight:400;color:#475569;line-height:1.5">' + ev.action + '</span></div>' +
+    '<div class="adw-sec-title"><i class="fa-solid fa-code-compare" style="color:#7c3aed"></i> ' + t('aud.dw.diff') + '</div>' +
+    '<div class="adw-diff">' + (diff || '<div class="adw-diff-line ctx"><span class="sign"> </span><span>' + t('aud.dw.nodiff') + '</span></div>') + '</div>';
+  document.getElementById('adwBackdrop').classList.add('open');
+  document.getElementById('auditDrawer').classList.add('open');
+}
+
+function closeAuditDetail() {
+  var b = document.getElementById('adwBackdrop'); if (b) b.classList.remove('open');
+  var d = document.getElementById('auditDrawer'); if (d) d.classList.remove('open');
+}
+
+/* ─── Data Sources (Port-style integrations catalog) ──────────────────────────── */
+viewRegistry['datasources'] = function() {
+  var ds = [
+    {id:'github',name:'GitHub',cat:'git',logo:'fa-brands fa-github',color:'#1e293b',status:'healthy',entities:312,sync:'16.06 10:42',method:'Git App',blueprint:'service',slug:'repository',idjq:'.name',props:[['url','.html_url'],['language','.language'],['stars','.stargazers_count']],kinds:['Repository','Pull Request','Branch','Code Owner','GitHub User','Workflow','Workflow Run','Deployment']},
+    {id:'k8s',name:'Kubernetes',cat:'exporter',logo:'fa-solid fa-circle-nodes',color:'#326ce5',status:'healthy',entities:486,sync:'16.06 10:40',method:'Exporter',blueprint:'workload',slug:'apps/v1/deployments',idjq:'.metadata.name',props:[['replicas','.spec.replicas'],['namespace','.metadata.namespace'],['cluster','env.CLUSTER_NAME']],kinds:['K8s Deployment','K8s Resource','Workload','Cluster','Environment']},
+    {id:'pagerduty',name:'PagerDuty',cat:'obs',logo:'fa-solid fa-bell',color:'#06ac38',status:'healthy',entities:38,sync:'16.06 10:35',method:'REST API',blueprint:'service',slug:'services',idjq:'.id',props:[['oncall','.escalation_policy.name'],['status','.status']],kinds:['PagerDuty Service','PagerDuty Oncall Schedule','Security Incident']},
+    {id:'sentry',name:'Sentry',cat:'obs',logo:'fa-solid fa-bug',color:'#6e47a8',status:'syncing',entities:74,sync:'live',method:'REST API',blueprint:'service',slug:'project',idjq:'.slug',props:[['platform','.platform'],['issues','.openIssues']],kinds:['Sentry Project Environment','Sentry Issue']},
+    {id:'newrelic',name:'New Relic',cat:'obs',logo:'fa-solid fa-chart-line',color:'#1ce783',status:'healthy',entities:51,sync:'16.06 10:30',method:'REST API',blueprint:'service',slug:'entity',idjq:'.guid',props:[['domain','.domain'],['alertSeverity','.alertSeverity']],kinds:['New Relic Service','New Relic Alert','New Relic Service Level']},
+    {id:'prometheus',name:'Prometheus',cat:'obs',logo:'fa-solid fa-fire',color:'#e6522c',status:'healthy',entities:120,sync:'16.06 10:28',method:'REST API',blueprint:'alert',slug:'alerts',idjq:'.fingerprint',props:[['severity','.labels.severity'],['state','.state']],kinds:['Prometheus Alerts']},
+    {id:'jira',name:'Jira',cat:'pm',logo:'fa-brands fa-jira',color:'#2684ff',status:'healthy',entities:204,sync:'16.06 10:25',method:'REST API',blueprint:'ticket',slug:'issue',idjq:'.key',props:[['status','.fields.status.name'],['assignee','.fields.assignee.displayName']],kinds:['Jira Project','Jira Issue','DevOps Ticket']},
+    {id:'servicenow',name:'ServiceNow',cat:'pm',logo:'fa-solid fa-cloud',color:'#62d84e',status:'warning',entities:29,sync:'16.06 09:50',method:'REST API',blueprint:'cloudRequest',slug:'cloud_request',idjq:'.sys_id',props:[['state','.state'],['priority','.priority']],kinds:['ServiceNow Cloud Request','Cloud Account']},
+    {id:'sonarqube',name:'SonarQube',cat:'sec',logo:'fa-solid fa-code',color:'#4e9bcd',status:'healthy',entities:96,sync:'16.06 10:20',method:'REST API',blueprint:'service',slug:'projects',idjq:'.key',props:[['coverage','.measures.coverage'],['bugs','.measures.bugs'],['qualityGate','.qualityGate.status']],kinds:['SonarQube Analysis','SonarQube Issue','Snarky Project','Snarky Vulnerability']},
+    {id:'snyk',name:'Snyk',cat:'sec',logo:'fa-solid fa-shield-dog',color:'#4c4a73',status:'healthy',entities:142,sync:'16.06 10:18',method:'REST API',blueprint:'vulnerability',slug:'target',idjq:'.id',props:[['severity','.issueData.severity'],['package','.pkgName']],kinds:['Snyk Target','Dependency']},
+    {id:'wiz',name:'Wiz',cat:'sec',logo:'fa-solid fa-hat-wizard',color:'#2f1c6a',status:'healthy',entities:63,sync:'16.06 10:15',method:'REST API',blueprint:'wizProject',slug:'projects',idjq:'.id',props:[['riskScore','.riskScore'],['cloudType','.cloudType']],kinds:['Wiz Project','Wiz Control']},
+    {id:'cursor',name:'Cursor',cat:'ai',logo:'fa-solid fa-i-cursor',color:'#0f172a',status:'syncing',entities:178,sync:'live',method:'REST API',blueprint:'aiUsage',slug:'usage_record',idjq:'.id',props:[['user','.userEmail'],['linesAccepted','.linesAccepted'],['model','.model']],kinds:['Cursor User Usage Record','Cursor Team Usage Record','Cursor Commit Record','Cursor Daily Commit Record','Cursor AI Code Change']},
+    {id:'aws',name:'AWS',cat:'cloud',logo:'fa-brands fa-aws',color:'#ff9900',status:'healthy',entities:255,sync:'16.06 10:10',method:'Exporter',blueprint:'cloudResource',slug:'AWS::ECR::Repository',idjq:'.Identifier',props:[['region','.Region'],['cost','.monthlyCost']],kinds:['ECR Repository','Cloud Resource Costs','Cloud Account','Domain']},
+    {id:'port',name:'Port Core',cat:'core',logo:'fa-solid fa-anchor',color:'#7c3aed',status:'healthy',entities:540,sync:'16.06 10:42',method:'REST API',blueprint:'service',slug:'service',idjq:'.identifier',props:[['tier','.tier'],['owner','.team'],['scorecard','.scorecardLevel']],kinds:['Service','Scorecard','Scorecard Rule','Team','Skill','Skill Group','Developer Env','Portal Feedback','DevEx Survey Response','Port Dev Productivity Response','Work Item','All Plan','All Agent','Image','Organization']}
+  ];
+  window.__dataSources = ds;
+  var groups = [
+    {key:'git',title:t('ds.grp.git')},
+    {key:'exporter',title:t('ds.grp.exporter')},
+    {key:'obs',title:t('ds.grp.obs')},
+    {key:'pm',title:t('ds.grp.pm')},
+    {key:'sec',title:t('ds.grp.sec')},
+    {key:'ai',title:t('ds.grp.ai')},
+    {key:'cloud',title:t('ds.grp.cloud')},
+    {key:'core',title:t('ds.grp.core')}
+  ];
+  var statusTxt = {healthy:t('ds.st.healthy'),syncing:t('ds.st.syncing'),warning:t('ds.st.warning')};
+  function card(d,i) {
+    return '<div class="ds-card" onclick="openDataSource(' + i + ')">' +
+      '<div class="ds-logo" style="background:' + d.color + '"><i class="' + d.logo + '"></i></div>' +
+      '<div class="ds-card-body">' +
+        '<div class="ds-card-name">' + d.name + '<span class="ds-kind-badge">' + d.kinds.length + ' ' + t('ds.kinds') + '</span></div>' +
+        '<div class="ds-card-sub">' + d.method + ' · ' + d.entities + ' ' + t('ds.entities') + '</div>' +
+        '<div class="ds-card-meta">' +
+          '<span><i class="ds-dot ' + d.status + '"></i><span class="ds-status-txt ' + d.status + '">' + statusTxt[d.status] + '</span></span>' +
+          '<span><i class="fa-regular fa-clock"></i>' + d.sync + '</span>' +
+        '</div>' +
+      '</div></div>';
+  }
+  var sections = groups.map(function(g) {
+    var items = ds.map(function(d,i){return {d:d,i:i};}).filter(function(o){return o.d.cat===g.key;});
+    if (!items.length) return '';
+    return '<div class="ds-group">' +
+      '<div class="ds-group-head"><h3>' + g.title + '</h3><span class="ds-count">' + items.length + '</span><span class="ds-line"></span></div>' +
+      '<div class="ds-grid">' + items.map(function(o){return card(o.d,o.i);}).join('') + '</div>' +
+    '</div>';
+  }).join('');
+  var platform = [
+    {k:'workflows',ic:'fa-solid fa-diagram-project',lbl:t('ds.pf.workflows')},
+    {k:'automations',ic:'fa-solid fa-robot',lbl:t('ds.pf.automations')},
+    {k:'teams',ic:'fa-solid fa-users',lbl:t('ds.pf.teams')},
+    {k:'auditlog',ic:'fa-solid fa-clock-rotate-left',lbl:t('ds.pf.audit')},
+    {k:'credentials',ic:'fa-solid fa-key',lbl:t('ds.pf.credentials')},
+    {k:'orgsettings',ic:'fa-solid fa-building',lbl:t('ds.pf.org')},
+    {k:'plugins',ic:'fa-solid fa-puzzle-piece',lbl:t('ds.pf.plugins')}
+  ].map(function(p){
+    return '<div class="ds-pill" onclick="openPlatformItem(\'' + p.k + '\')"><i class="' + p.ic + '"></i>' + p.lbl + '</div>';
+  }).join('');
+  var totalEntities = ds.reduce(function(a,d){return a+d.entities;},0);
+  var healthy = ds.filter(function(d){return d.status==='healthy';}).length;
+  var syncing = ds.filter(function(d){return d.status==='syncing';}).length;
+  return '<div class="vp">' +
+    '<div class="page-header"><div class="page-header-row">' +
+      '<div><h1 class="page-title">Data Sources</h1>' +
+      '<p class="page-sub">' + t('ds.sub') + '</p></div>' +
+      '<button class="new-action-btn"><i class="fa-solid fa-plus"></i> ' + t('ds.btn.add') + '</button>' +
+    '</div></div>' +
+    '<div class="ds-platform">' + platform + '</div>' +
+    '<div class="stats-row">' +
+      '<div class="stat-card"><span class="stat-num">' + ds.length + '</span><span class="stat-label">' + t('ds.stat.sources') + '</span><span class="stat-delta">' + t('ds.stat.connected') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num">' + totalEntities.toLocaleString() + '</span><span class="stat-label">' + t('ds.stat.entities') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#10b981">' + healthy + '</span><span class="stat-label">' + t('ds.st.healthy') + '</span></div>' +
+      '<div class="stat-card"><span class="stat-num" style="color:#3b82f6">' + syncing + '</span><span class="stat-label">' + t('ds.st.syncing') + '</span></div>' +
+    '</div>' +
+    sections +
+  '</div>';
+};
+
+function openDataSource(idx) {
+  var d = (window.__dataSources||[])[idx];
+  if (!d) return;
+  var statusTxt = {healthy:t('ds.st.healthy'),syncing:t('ds.st.syncing'),warning:t('ds.st.warning')};
+  var propsYaml = d.props.map(function(p){return '            ' + p[0] + ': ' + p[1];}).join('\n');
+  var yaml =
+    'resources:\n' +
+    '  - kind: ' + d.slug + '\n' +
+    '    selector:\n' +
+    "      query: 'true'\n" +
+    '    port:\n' +
+    '      entity:\n' +
+    '        mappings:\n' +
+    '          identifier: ' + d.idjq + '\n' +
+    '          title: ' + d.idjq + '\n' +
+    "          blueprint: '\"" + d.blueprint + "\"'\n" +
+    '          properties:\n' + propsYaml;
+  var chips = d.kinds.map(function(k){return '<span class="adw-chip">' + k + '</span>';}).join('');
+  var head = document.getElementById('adwHead');
+  var body = document.getElementById('adwBody');
+  if (!head || !body) return;
+  head.innerHTML =
+    '<div class="adw-head-icon" style="background:' + d.color + ';color:#fff"><i class="' + d.logo + '"></i></div>' +
+    '<div class="adw-head-tt"><h3>' + d.name + '</h3><p>' + d.method + ' · ' + d.blueprint + '</p></div>' +
+    '<button class="adw-close" onclick="closeAuditDetail()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>';
+  body.innerHTML =
+    '<div class="adw-grid">' +
+      '<div class="adw-field"><label>' + t('ds.dw.status') + '</label><span><i class="ds-dot ' + d.status + '" style="display:inline-block;margin-right:6px"></i><span class="ds-status-txt ' + d.status + '">' + statusTxt[d.status] + '</span></span></div>' +
+      '<div class="adw-field"><label>' + t('ds.dw.method') + '</label><span>' + d.method + '</span></div>' +
+      '<div class="adw-field"><label>' + t('ds.dw.entities') + '</label><span>' + d.entities.toLocaleString() + '</span></div>' +
+      '<div class="adw-field"><label>' + t('ds.dw.lastsync') + '</label><span>' + d.sync + '</span></div>' +
+    '</div>' +
+    '<div class="adw-field"><label style="margin-bottom:6px">' + t('ds.dw.kinds') + ' (' + d.kinds.length + ')</label><div class="adw-chips">' + chips + '</div></div>' +
+    '<div class="adw-sec-title"><i class="fa-solid fa-file-code" style="color:#7c3aed"></i> ' + t('ds.dw.mapping') + '</div>' +
+    '<div class="adw-payload">' + yaml + '</div>' +
+    '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+      '<button class="new-action-btn" style="background:#f1f5f9;color:#475569;border:1px solid #e2e8f0" onclick="closeAuditDetail()"><i class="fa-solid fa-rotate"></i> ' + t('ds.dw.resync') + '</button>' +
+      '<button class="new-action-btn" style="background:#f1f5f9;color:#475569;border:1px solid #e2e8f0" onclick="closeAuditDetail()"><i class="fa-solid fa-sliders"></i> ' + t('ds.dw.configure') + '</button>' +
+    '</div>';
+  document.getElementById('adwBackdrop').classList.add('open');
+  document.getElementById('auditDrawer').classList.add('open');
+}
+
+function openPlatformItem(key) {
+  if (key === 'teams') { showView('teams'); return; }
+  if (key === 'auditlog') { showView('auditlog'); return; }
+  var info = {
+    workflows:{ic:'fa-solid fa-diagram-project',title:t('ds.pf.workflows'),desc:t('ds.pf.workflows.d')},
+    automations:{ic:'fa-solid fa-robot',title:t('ds.pf.automations'),desc:t('ds.pf.automations.d')},
+    credentials:{ic:'fa-solid fa-key',title:t('ds.pf.credentials'),desc:t('ds.pf.credentials.d')},
+    orgsettings:{ic:'fa-solid fa-building',title:t('ds.pf.org'),desc:t('ds.pf.org.d')},
+    plugins:{ic:'fa-solid fa-puzzle-piece',title:t('ds.pf.plugins'),desc:t('ds.pf.plugins.d')}
+  }[key];
+  if (!info) return;
+  var head = document.getElementById('adwHead');
+  var body = document.getElementById('adwBody');
+  if (!head || !body) return;
+  head.innerHTML =
+    '<div class="adw-head-icon"><i class="' + info.ic + '"></i></div>' +
+    '<div class="adw-head-tt"><h3>' + info.title + '</h3><p>' + t('ds.pf.platform') + '</p></div>' +
+    '<button class="adw-close" onclick="closeAuditDetail()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>';
+  body.innerHTML =
+    '<div class="adw-field"><span style="font-weight:400;color:#475569;line-height:1.6">' + info.desc + '</span></div>' +
+    '<div style="display:flex;gap:8px"><button class="new-action-btn" onclick="closeAuditDetail()"><i class="fa-solid fa-arrow-right"></i> ' + t('ds.pf.open') + '</button></div>';
+  document.getElementById('adwBackdrop').classList.add('open');
+  document.getElementById('auditDrawer').classList.add('open');
+}
 
 viewRegistry['teams'] = function() {
   var teams = [
@@ -2354,6 +2698,7 @@ document.addEventListener('DOMContentLoaded', function(){
   });
   document.addEventListener('keydown', function(e){
     if (e.key === 'Escape' && document.getElementById('authPrompt').classList.contains('open')) closeAuthModal();
+    if (e.key === 'Escape' && document.getElementById('auditDrawer') && document.getElementById('auditDrawer').classList.contains('open')) closeAuditDetail();
   });
   document.querySelectorAll('.sb-item[data-view]').forEach(function(item) {
     item.addEventListener('click', function(e) {
