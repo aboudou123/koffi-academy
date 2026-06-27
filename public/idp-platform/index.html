@@ -380,8 +380,8 @@ function openRunResult(url){ try{ window.open(url,"_blank"); }catch(e){ location
 function _sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
 function paintRunSteps(run){
   document.querySelector(".modal-body").innerHTML='<div style="display:grid;gap:8px;max-height:60vh;overflow:auto">'+run.steps.map(function(s){
-    var ic=s.status==="done"?"fa-circle-check":s.status==="running"?"fa-circle-notch fa-spin":s.status==="error"?"fa-circle-xmark":"fa-circle";
-    var col=s.status==="done"?"#059669":s.status==="running"?"#2563eb":s.status==="error"?"#dc2626":"#cbd5e1";
+    var ic=s.status==="done"?"fa-circle-check":s.status==="running"?"fa-circle-notch fa-spin":s.status==="error"?"fa-circle-xmark":s.status==="warn"?"fa-triangle-exclamation":"fa-circle";
+    var col=s.status==="done"?"#059669":s.status==="running"?"#2563eb":s.status==="error"?"#dc2626":s.status==="warn"?"#d97706":"#cbd5e1";
     return '<div style="display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:'+(s.status==="running"?"#eff6ff":"#fff")+'"><i class="fa-solid '+ic+'" style="color:'+col+';margin-top:2px"></i><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;color:#0f172a">'+s.label+'</div>'+(s.log?'<div style="font-size:11.5px;color:#64748b;font-family:monospace;margin-top:3px;word-break:break-all">'+s.log+'</div>':'')+'</div></div>';
   }).join("")+'</div>';
 }
@@ -462,8 +462,15 @@ async function provisionRealService(run, lang, token){
     mark(1,"done", repo.existed?("using existing "+repo.full_name):("created "+repo.full_name));
     for(var fi=0; fi<files.length; fi++){
       var si=2+fi; mark(si,"running");
-      await ghPutFile(repo.full_name, token, files[fi].path, files[fi].content, "chore: scaffold "+files[fi].path+" via Koffi IDP");
-      mark(si,"done","committed to main");
+      var f=files[fi];
+      var isWf=f.path.indexOf(".github/workflows/")===0;
+      try{
+        await ghPutFile(repo.full_name, token, f.path, f.content, "chore: scaffold "+f.path+" via Koffi IDP");
+        mark(si,"done","committed to main");
+      }catch(err){
+        if(isWf){ run.ciSkipped=true; mark(si,"warn","skipped — token needs 'workflow' scope"); }
+        else { throw err; }
+      }
     }
     var last=run.steps.length-1; mark(last,"running"); await _sleep(350); mark(last,"done");
     finishRunReal(run);
@@ -487,7 +494,8 @@ function finishRunReal(run){
   document.getElementById("modalTitle").textContent="Provisioned: "+run.target;
   document.querySelector(".modal-head p").textContent=run.repoFull+" · pushed to GitHub";
   document.querySelector(".modal-body").innerHTML='<div style="text-align:center;padding:6px 0 12px"><div style="width:54px;height:54px;border-radius:50%;background:#dcfce7;color:#059669;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 12px"><i class="fa-brands fa-github"></i></div><div style="font-size:15px;font-weight:800;color:#0f172a">'+run.target+' provisioned</div><div style="font-size:12.5px;color:#64748b;margin-top:4px">'+(run.steps.length)+' steps · real repository created</div><div style="font-size:12px;color:#475569;margin-top:8px">Repository · <span style="font-family:monospace;color:#2563eb">'+run.repoFull+'</span></div></div>'+
-    '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;font-size:12px;color:#166534;margin-bottom:12px;display:flex;gap:8px;align-items:flex-start"><i class="fa-solid fa-circle-check" style="margin-top:1px"></i><span>A real GitHub repository was created with a clean '+(run.golden||"node")+' golden path (code, Dockerfile, CI). It is also registered in the backend catalog.</span></div>'+
+    '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;font-size:12px;color:#166534;margin-bottom:'+(run.ciSkipped?'8px':'12px')+';display:flex;gap:8px;align-items:flex-start"><i class="fa-solid fa-circle-check" style="margin-top:1px"></i><span>A real GitHub repository was created with a clean '+(run.golden||"node")+' golden path (code, Dockerfile'+(run.ciSkipped?'':', CI')+'). It is also registered in the backend catalog.</span></div>'+
+    (run.ciSkipped?'<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 12px;font-size:12px;color:#92400e;margin-bottom:12px;display:flex;gap:8px;align-items:flex-start"><i class="fa-solid fa-triangle-exclamation" style="margin-top:1px"></i><span>The CI workflow file (<code>.github/workflows/ci.yml</code>) was skipped: your token needs the <b>workflow</b> scope (in addition to <b>repo</b>). Everything else was pushed.</span></div>':'')+
     '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button type="button" class="btn btn-primary" onclick="openRunResult(\''+run.repoUrl+'\')"><i class="fa-brands fa-github"></i> Open repository</button><button type="button" class="btn btn-light" onclick="closeModal();setPage(\'overview\')"><i class="fa-solid fa-list-check"></i> Audit</button><button type="button" class="btn btn-light" onclick="closeModal()">Close</button></div>';
   toast("✔ "+run.target+" — real repo pushed: "+run.repoFull);
   var active=document.querySelector(".nav-btn.active"); if(active&&active.dataset.page==="overview") setPage("overview");
@@ -564,6 +572,6 @@ document.addEventListener("DOMContentLoaded",function(){renderNav("");captureWfD
   });
 </script>
 <script type="module" src="/assets/js/idp-store-sync.js"></script>
-<div id="buildStamp" class="build-stamp">build 2026-06-27 · v10 (real workflows + cloud + GitHub provisioning)</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-27 · v11 (GitHub provisioning + CI scope fix)</div>
 </body>
 </html>
