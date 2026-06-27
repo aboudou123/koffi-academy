@@ -25,7 +25,7 @@ import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstat
 import { firebaseConfig } from "/assets/js/firebase-config.js";
 
 const LS_KEY = "koffi-idp-store";
-let db = null, docRef = null, unsub = null, pushTimer = null, applying = false;
+let db = null, docRef = null, unsub = null, pushTimer = null, applying = false, lastSync = null;
 
 function lsGetRaw(){ try { return localStorage.getItem(LS_KEY); } catch (e) { return null; } }
 function lsSetRaw(v){ try { applying = true; localStorage.setItem(LS_KEY, v); } finally { applying = false; } }
@@ -46,8 +46,9 @@ function schedulePush(){ clearTimeout(pushTimer); pushTimer = setTimeout(pushNow
 async function pushNow(){
   if (!docRef) return;
   const raw = lsGetRaw(); if (!raw) return;
+  if (raw === lastSync) return;                 // dedup: nothing actually changed → no loop
   let data; try { data = JSON.parse(raw); } catch (e) { return; }
-  try { await setDoc(docRef, { store: data, updatedAt: Date.now() }); status("synced"); }
+  try { await setDoc(docRef, { store: data, updatedAt: Date.now() }); lastSync = raw; status("synced"); }
   catch (e) { console.warn("[idp-store] cloud push failed:", e && e.message); status("error"); }
 }
 
@@ -67,7 +68,7 @@ try {
     unsub = onSnapshot(docRef, (snap) => {
       if (snap.exists()) {
         const d = snap.data();
-        if (d && d.store) { lsSetRaw(JSON.stringify(d.store)); notify(); status("synced"); }
+        if (d && d.store) { const j = JSON.stringify(d.store); lastSync = j; lsSetRaw(j); notify(); status("synced"); }
       } else {
         // No cloud doc yet → seed it from whatever is in localStorage now
         const raw = lsGetRaw();

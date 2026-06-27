@@ -39,7 +39,7 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer;backgro
       <div><strong>Koffi IDP</strong><span>Control Center</span></div>
     </div>
     <div class="env-card">
-      <div class="env-row"><span class="env-label">Environment</span><span>Local backend</span></div>
+      <div class="env-row"><span class="env-label">Environment</span><span id="envBackend">Local (browser)</span></div>
       <div class="env-row"><span class="env-label">API</span><span><i class="dot" id="statusDot"></i> <span id="statusText">Connecting</span></span></div>
       <div>
         <label class="env-label" for="secretInput">Admin token</label>
@@ -88,7 +88,7 @@ function list(key){return state.store&&Array.isArray(state.store[key])?state.sto
 function labelStatus(value){var labels={ok:"Healthy",warn:"Needs work",bad:"At risk",active:"Active",paused:"Paused",disabled:"Disabled",low:"Low",medium:"Medium",high:"High",requested:"Requested",approved:"Approved",running:"Running",done:"Done"};return labels[value]||value||"Unknown"}
 function badge(value){var cls=value||"info";return '<span class="badge '+esc(cls)+'">'+esc(labelStatus(value))+'</span>'}
 function toast(text){els.toastText.textContent=text;els.toast.classList.add("show");setTimeout(function(){els.toast.classList.remove("show")},2600)}
-function setConnected(ok){state.connected=ok;els.statusDot.classList.toggle("ok",ok);els.statusText.textContent=ok?(USING_LOCAL?"Local store":"Connected"):"Offline"}
+function setConnected(ok){state.connected=ok;if(window.__cloudOn){els.statusDot.classList.add("ok");els.statusText.textContent="Cloud synced";return;}els.statusDot.classList.toggle("ok",ok);els.statusText.textContent=ok?(USING_LOCAL?"Local store":"Connected"):"Offline"}
 /* ── Persistent store: real backend if reachable, else localStorage (browser) ── */
 var LS_KEY="koffi-idp-store";
 function lsLoad(){try{return JSON.parse(localStorage.getItem(LS_KEY)||"null")}catch(e){return null}}
@@ -175,16 +175,26 @@ document.addEventListener("DOMContentLoaded",function(){["mainNav","content","gl
 </script>
 <script type="module" src="/assets/js/idp-store-sync.js"></script>
 <script>
-  /* Re-render the admin when the cloud store syncs in (Firestore -> local). */
-  window.addEventListener("koffi-store-synced", function(){ try { if (typeof load === "function") load(); } catch (e) {} });
+  /* Single source of truth for the cloud status — keeps both labels coherent
+     and prevents setConnected() from flipping it back to "Local store". */
+  window.__cloudOn = false;
   window.addEventListener("koffi-store-status", function(e){
-    var el = document.getElementById("statusText"); if (!el) return;
     var s = e.detail;
-    if (s === "synced") el.textContent = "Cloud synced";
-    else if (s === "connecting") el.textContent = "Connecting…";
-    else if (s === "error") el.textContent = "Local store";
+    window.__cloudOn = (s === "synced" || s === "connecting");
+    var st = document.getElementById("statusText");
+    var dot = document.getElementById("statusDot");
+    var be = document.getElementById("envBackend");
+    if (s === "synced"){ if(st)st.textContent="Cloud synced"; if(dot)dot.classList.add("ok"); if(be)be.textContent="Firestore (cloud)"; }
+    else if (s === "connecting"){ if(st)st.textContent="Connecting…"; if(be)be.textContent="Firestore (cloud)"; }
+    else { if(st)st.textContent="Local store"; if(dot)dot.classList.remove("ok"); if(be)be.textContent="Local (browser)"; }
+  });
+  /* Pull cloud data into the view when it changes (debounced re-render). */
+  var _syncRenderT=null;
+  window.addEventListener("koffi-store-synced", function(){
+    clearTimeout(_syncRenderT);
+    _syncRenderT=setTimeout(function(){ try { if (typeof load === "function") load(); } catch (e) {} }, 250);
   });
 </script>
-<div id="buildStamp" class="build-stamp">build 2026-06-27 · v3 (cloud store)</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-27 · v4 (cloud store)</div>
 </body>
 </html>
