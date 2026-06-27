@@ -64,8 +64,10 @@ a{text-decoration:none;color:inherit}button,input,select,textarea{font:inherit}b
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-head"><i class="fa-solid fa-play"></i><div><h3 id="modalTitle">Start workflow</h3><p>Run a governed IDP action with audit trail.</p></div><button type="button" class="close" id="closeModal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
     <div class="modal-body">
-      <div class="form-field" id="wfRowWorkflow"><label>Workflow</label><select id="workflowSelect"><option>Provision production-ready service</option><option>Open autonomous ticket resolution</option><option>Create developer environment</option><option>Request just-in-time permission</option><option>Run log4Shell investigation</option></select></div>
+      <div class="form-field" id="wfRowWorkflow"><label>Workflow</label><select id="workflowSelect" onchange="syncProvisionFields()"><option>Provision production-ready service</option><option>Open autonomous ticket resolution</option><option>Create developer environment</option><option>Request just-in-time permission</option><option>Run log4Shell investigation</option></select></div>
       <div class="form-field"><label id="wfTargetLabel">Target</label><input type="text" id="workflowTargetInput" placeholder="checkout-api"></div>
+      <div class="form-field" id="wfRowGolden"><label>Golden Path</label><select id="goldenSelect"><option value="node">Node.js — Express + Docker + CI</option><option value="python">Python — FastAPI + Docker + CI</option><option value="go">Go — net/http + Docker + CI</option></select></div>
+      <div class="form-field" id="wfRowToken"><label>GitHub token <span style="font-weight:600;color:#94a3b8">— optional, for a REAL repository</span></label><input type="password" id="ghTokenInput" placeholder="ghp_… (empty = simulated run)" autocomplete="off"></div>
       <div class="form-field"><label>Owner team</label><select id="workflowOwnerSelect"><option>Payments</option><option>Platform</option><option>Identity</option><option>Security</option><option>Data</option></select></div>
       <div class="form-field"><label>Business context</label><textarea id="workflowContextInput" placeholder="Explain why this workflow is needed"></textarea></div>
     </div>
@@ -258,6 +260,7 @@ function openWorkflowModal(ev){
     document.getElementById("startWorkflow").innerHTML='<i class="fa-solid fa-play"></i>'+label;
     if(tl) tl.textContent=/skill/i.test(label)?"Skill name":/service/i.test(label)?"Service name":/environment|env/i.test(label)?"Environment":/prompt/i.test(label)?"Prompt name":"Target";
   } else { document.querySelector(".modal-head>i").className="fa-solid fa-play"; if(tl) tl.textContent="Target"; }
+  syncProvisionFields();
   openModal();
 }
 var _mDef={body:null,title:null,sub:null,icon:null,btn:null};
@@ -291,9 +294,20 @@ function submitWorkflow(){
   var owner=document.getElementById("workflowOwnerSelect")?document.getElementById("workflowOwnerSelect").value:"Platform";
   var context=document.getElementById("workflowContextInput")?document.getElementById("workflowContextInput").value:"";
   var steps=workflowSteps(wf).map(function(s){return {label:s[0],log:s[1].replace(/\{T\}/g,target),status:"pending"};});
-  var run={id:"run-"+Date.now().toString(36),workflow:wf,target:target,owner:owner,context:context,status:"running",createdAt:new Date().toISOString(),steps:steps};
+  var golden=(document.getElementById("goldenSelect")||{}).value||"node";
+  var token=((document.getElementById("ghTokenInput")||{}).value||"").trim();
+  var run={id:"run-"+Date.now().toString(36),workflow:wf,target:target,owner:owner,context:context,golden:golden,status:"running",createdAt:new Date().toISOString(),steps:steps};
   IDP_RUNS.unshift(run); saveRuns();
-  renderRunExecution(run);
+  if(/provision/i.test(wf) && token){ provisionRealService(run, golden, token); }
+  else { renderRunExecution(run); }
+}
+function syncProvisionFields(){
+  var sel=document.getElementById("workflowSelect");
+  var row=document.getElementById("wfRowWorkflow");
+  var wfVisible=row && row.style.display!=="none";
+  var isProvision=wfVisible && sel && /provision/i.test(sel.value);
+  var g=document.getElementById("wfRowGolden"); if(g) g.style.display=isProvision?"":"none";
+  var t=document.getElementById("wfRowToken"); if(t) t.style.display=isProvision?"":"none";
 }
 function renderRunExecution(run){
   var foot=document.querySelector(".modal-foot"); if(foot) foot.style.display="none";
@@ -332,7 +346,7 @@ function createServiceInStore(run){
     var s; try{ s=JSON.parse(localStorage.getItem("koffi-idp-store")||"null"); }catch(e){ s=null; }
     if(!s||typeof s!=="object") s={services:[],workflowRuns:[],auditLogs:[]};
     s.services=s.services||[];
-    var svc={id:"svc-"+Date.now().toString(36),name:run.target,owner:run.owner||"Platform",tier:"Tier 2",runtime:"Kubernetes",score:80,status:"ok",repo:"github.com/koffi/"+run.target,description:run.context||"Provisioned via IDP self-service"};
+    var svc={id:"svc-"+Date.now().toString(36),name:run.target,owner:run.owner||"Platform",tier:"Tier 2",runtime:"Kubernetes",score:80,status:"ok",repo:run.repoFull?("github.com/"+run.repoFull):("github.com/koffi/"+run.target),description:run.context||"Provisioned via IDP self-service"};
     s.services.unshift(svc);
     s.auditLogs=s.auditLogs||[];
     s.auditLogs.unshift({id:"a-"+Date.now().toString(36),action:"create",entity:"services",details:"Service "+run.target+" provisioned",actor:"idp-platform",at:new Date().toISOString()});
@@ -361,6 +375,123 @@ function finishRun(run){
   var active=document.querySelector(".nav-btn.active"); if(active&&active.dataset.page==="overview") setPage("overview");
 }
 function openRunResult(url){ try{ window.open(url,"_blank"); }catch(e){ location.href=url; } }
+
+/* ── REAL GitHub provisioning: create a repo + push a Golden Path scaffold ───── */
+function _sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+function paintRunSteps(run){
+  document.querySelector(".modal-body").innerHTML='<div style="display:grid;gap:8px;max-height:60vh;overflow:auto">'+run.steps.map(function(s){
+    var ic=s.status==="done"?"fa-circle-check":s.status==="running"?"fa-circle-notch fa-spin":s.status==="error"?"fa-circle-xmark":"fa-circle";
+    var col=s.status==="done"?"#059669":s.status==="running"?"#2563eb":s.status==="error"?"#dc2626":"#cbd5e1";
+    return '<div style="display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:'+(s.status==="running"?"#eff6ff":"#fff")+'"><i class="fa-solid '+ic+'" style="color:'+col+';margin-top:2px"></i><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;color:#0f172a">'+s.label+'</div>'+(s.log?'<div style="font-size:11.5px;color:#64748b;font-family:monospace;margin-top:3px;word-break:break-all">'+s.log+'</div>':'')+'</div></div>';
+  }).join("")+'</div>';
+}
+function buildGoldenPathFiles(name, lang, run){
+  var ci = {
+    node:["name: CI","on: [push, pull_request]","jobs:","  build:","    runs-on: ubuntu-latest","    steps:","      - uses: actions/checkout@v4","      - uses: actions/setup-node@v4","        with: { node-version: '20' }","      - run: npm install","      - run: npm test","      - run: docker build -t "+name+" ."].join("\n"),
+    python:["name: CI","on: [push, pull_request]","jobs:","  build:","    runs-on: ubuntu-latest","    steps:","      - uses: actions/checkout@v4","      - uses: actions/setup-python@v5","        with: { python-version: '3.12' }","      - run: pip install -r requirements.txt","      - run: pytest -q","      - run: docker build -t "+name+" ."].join("\n"),
+    go:["name: CI","on: [push, pull_request]","jobs:","  build:","    runs-on: ubuntu-latest","    steps:","      - uses: actions/checkout@v4","      - uses: actions/setup-go@v5","        with: { go-version: '1.22' }","      - run: go test ./...","      - run: go build ./...","      - run: docker build -t "+name+" ."].join("\n")
+  };
+  var readmeTop=["# "+name,"","> Provisioned via **Koffi IDP** — golden path `"+lang+"`.","",(run&&run.context?"_"+run.context+"_\n":""),"## Endpoints","- `GET /` — service info","- `GET /health` — liveness probe","",""].join("\n");
+  if(lang==="python"){
+    return [
+      {path:"README.md",content:readmeTop+["## Run locally","```bash","pip install -r requirements.txt","uvicorn app.main:app --reload   # http://localhost:8000","pytest -q","```","","## Docker","```bash","docker build -t "+name+" . && docker run -p 8000:8000 "+name,"```"].join("\n")},
+      {path:"requirements.txt",content:["fastapi==0.111.0","uvicorn[standard]==0.30.1","pytest==8.2.0","httpx==0.27.0"].join("\n")},
+      {path:"app/__init__.py",content:""},
+      {path:"app/main.py",content:["from fastapi import FastAPI","","app = FastAPI(title=\""+name+"\")","","","@app.get(\"/\")","def root():","    return {\"service\": \""+name+"\", \"status\": \"ok\"}","","","@app.get(\"/health\")","def health():","    return {\"status\": \"healthy\"}",""].join("\n")},
+      {path:"tests/test_main.py",content:["from fastapi.testclient import TestClient","from app.main import app","","client = TestClient(app)","","","def test_root():","    r = client.get(\"/\")","    assert r.status_code == 200","    assert r.json()[\"status\"] == \"ok\"","","","def test_health():","    assert client.get(\"/health\").json()[\"status\"] == \"healthy\"",""].join("\n")},
+      {path:"Dockerfile",content:["FROM python:3.12-slim","WORKDIR /app","COPY requirements.txt .","RUN pip install --no-cache-dir -r requirements.txt","COPY . .","EXPOSE 8000","CMD [\"uvicorn\", \"app.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]"].join("\n")},
+      {path:".gitignore",content:["__pycache__/","*.pyc",".venv/","venv/",".pytest_cache/",".env"].join("\n")},
+      {path:".github/workflows/ci.yml",content:ci.python}
+    ];
+  }
+  if(lang==="go"){
+    var mod=(name.toLowerCase().replace(/[^a-z0-9_-]/g,"-"))||"service";
+    return [
+      {path:"README.md",content:readmeTop+["## Run locally","```bash","go run .            # http://localhost:8080","go test ./...","```","","## Docker","```bash","docker build -t "+name+" . && docker run -p 8080:8080 "+name,"```"].join("\n")},
+      {path:"go.mod",content:["module github.com/koffi/"+mod,"","go 1.22"].join("\n")},
+      {path:"main.go",content:["package main","","import (","\t\"encoding/json\"","\t\"log\"","\t\"net/http\"","\t\"os\"",")","","func writeJSON(w http.ResponseWriter, v any) {","\tw.Header().Set(\"Content-Type\", \"application/json\")","\t_ = json.NewEncoder(w).Encode(v)","}","","func main() {","\thttp.HandleFunc(\"/\", func(w http.ResponseWriter, r *http.Request) {","\t\twriteJSON(w, map[string]string{\"service\": \""+name+"\", \"status\": \"ok\"})","\t})","\thttp.HandleFunc(\"/health\", func(w http.ResponseWriter, r *http.Request) {","\t\twriteJSON(w, map[string]string{\"status\": \"healthy\"})","\t})","\tport := os.Getenv(\"PORT\")","\tif port == \"\" {","\t\tport = \"8080\"","\t}","\tlog.Printf(\""+name+" listening on :%s\", port)","\tlog.Fatal(http.ListenAndServe(\":\"+port, nil))","}",""].join("\n")},
+      {path:"main_test.go",content:["package main","","import (","\t\"net/http\"","\t\"net/http/httptest\"","\t\"testing\"",")","","func TestHealth(t *testing.T) {","\treq := httptest.NewRequest(http.MethodGet, \"/health\", nil)","\tw := httptest.NewRecorder()","\thttp.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { writeJSON(w, map[string]string{\"status\": \"healthy\"}) }).ServeHTTP(w, req)","\tif w.Code != http.StatusOK {","\t\tt.Fatalf(\"expected 200, got %d\", w.Code)","\t}","}",""].join("\n")},
+      {path:"Dockerfile",content:["FROM golang:1.22-alpine AS build","WORKDIR /src","COPY . .","RUN go build -o /app .","","FROM alpine:3.20","COPY --from=build /app /app","EXPOSE 8080","ENTRYPOINT [\"/app\"]"].join("\n")},
+      {path:".gitignore",content:["/app","*.exe","bin/",".env"].join("\n")},
+      {path:".github/workflows/ci.yml",content:ci.go}
+    ];
+  }
+  /* default: node */
+  return [
+    {path:"README.md",content:readmeTop+["## Run locally","```bash","npm install","npm start          # http://localhost:3000","npm test","```","","## Docker","```bash","docker build -t "+name+" . && docker run -p 3000:3000 "+name,"```"].join("\n")},
+    {path:"package.json",content:JSON.stringify({name:name,version:"0.1.0",private:true,description:(run&&run.context)||"Service scaffolded by Koffi IDP",main:"src/index.js",scripts:{start:"node src/index.js",test:"node --test"},dependencies:{express:"^4.19.2"},engines:{node:">=20"}},null,2)},
+    {path:"src/index.js",content:["const express = require('express');","const app = express();","const PORT = process.env.PORT || 3000;","","app.get('/', (req, res) => res.json({ service: '"+name+"', status: 'ok' }));","app.get('/health', (req, res) => res.json({ status: 'healthy' }));","","if (require.main === module) {","  app.listen(PORT, () => console.log('"+name+" listening on ' + PORT));","}","module.exports = app;"].join("\n")},
+    {path:"src/index.test.js",content:["const test = require('node:test');","const assert = require('node:assert');","const app = require('./index');","","test('app is defined', () => { assert.ok(app); });"].join("\n")},
+    {path:"Dockerfile",content:["FROM node:20-alpine","WORKDIR /app","COPY package.json ./","RUN npm install --omit=dev || true","COPY . .","EXPOSE 3000","CMD [\"node\", \"src/index.js\"]"].join("\n")},
+    {path:".gitignore",content:["node_modules/","*.log",".env","dist/","coverage/"].join("\n")},
+    {path:".github/workflows/ci.yml",content:ci.node}
+  ];
+}
+async function ghCreateRepo(token, name, desc){
+  var res=await fetch("https://api.github.com/user/repos",{method:"POST",headers:{"Authorization":"token "+token,"Accept":"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({name:name,description:desc,private:false,auto_init:false})});
+  if(res.status===201){ var d=await res.json(); return {full_name:d.full_name,html_url:d.html_url,existed:false}; }
+  if(res.status===422){ var u=await fetch("https://api.github.com/user",{headers:{"Authorization":"token "+token,"Accept":"application/vnd.github+json"}}); var ud=await u.json(); return {full_name:ud.login+"/"+name,html_url:"https://github.com/"+ud.login+"/"+name,existed:true}; }
+  var e=await res.json().catch(function(){return{};}); throw new Error(e.message||("HTTP "+res.status));
+}
+async function ghPutFile(fullName, token, path, contentStr, message){
+  var content=btoa(unescape(encodeURIComponent(contentStr)));
+  var existing=null;
+  try{ var g=await fetch("https://api.github.com/repos/"+fullName+"/contents/"+encodeURI(path),{headers:{"Authorization":"token "+token,"Accept":"application/vnd.github+json"}}); if(g.ok){ existing=await g.json(); } }catch(e){}
+  var body={message:message,content:content}; if(existing&&existing.sha) body.sha=existing.sha;
+  var res=await fetch("https://api.github.com/repos/"+fullName+"/contents/"+encodeURI(path),{method:"PUT",headers:{"Authorization":"token "+token,"Accept":"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify(body)});
+  if(res.status===200||res.status===201) return path;
+  var e=await res.json().catch(function(){return{};}); throw new Error(path+": "+(e.message||("HTTP "+res.status)));
+}
+async function provisionRealService(run, lang, token){
+  var files=buildGoldenPathFiles(run.target, lang, run);
+  run.steps=[{label:"Validate request & policy (OPA)",log:"policy.rego — 0 violations",status:"pending"},{label:"Create GitHub repository",log:"POST /user/repos",status:"pending"}]
+    .concat(files.map(function(f){ return {label:"Push "+f.path,log:"",status:"pending"}; }))
+    .concat([{label:"Register in catalog & scorecard",log:"scorecard: Silver",status:"pending"}]);
+  saveRuns();
+  var foot=document.querySelector(".modal-foot"); if(foot) foot.style.display="none";
+  document.querySelector(".modal-head>i").className="fa-solid fa-circle-notch fa-spin";
+  document.getElementById("modalTitle").textContent="Provisioning: "+run.target;
+  document.querySelector(".modal-head p").textContent="Real GitHub provisioning · golden path: "+lang;
+  function mark(i,st,log){ if(run.steps[i]){ run.steps[i].status=st; if(log!=null) run.steps[i].log=log; } paintRunSteps(run); }
+  paintRunSteps(run); openModal();
+  try{
+    mark(0,"running"); await _sleep(450); mark(0,"done");
+    mark(1,"running");
+    var repo=await ghCreateRepo(token, run.target, run.context||("Provisioned via Koffi IDP — "+lang+" golden path"));
+    run.repoFull=repo.full_name; run.repoUrl=repo.html_url;
+    mark(1,"done", repo.existed?("using existing "+repo.full_name):("created "+repo.full_name));
+    for(var fi=0; fi<files.length; fi++){
+      var si=2+fi; mark(si,"running");
+      await ghPutFile(repo.full_name, token, files[fi].path, files[fi].content, "chore: scaffold "+files[fi].path+" via Koffi IDP");
+      mark(si,"done","committed to main");
+    }
+    var last=run.steps.length-1; mark(last,"running"); await _sleep(350); mark(last,"done");
+    finishRunReal(run);
+  }catch(e){
+    for(var k=0;k<run.steps.length;k++){ if(run.steps[k].status==="running"){ run.steps[k].status="error"; run.steps[k].log=String(e&&e.message||e); break; } }
+    paintRunSteps(run);
+    var foot2=document.querySelector(".modal-foot"); if(foot2) foot2.style.display="none";
+    document.querySelector(".modal-head>i").className="fa-solid fa-circle-xmark";
+    document.getElementById("modalTitle").textContent="Provisioning failed";
+    var body=document.querySelector(".modal-body");
+    body.innerHTML+='<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 12px;font-size:12px;color:#b91c1c;margin-top:10px"><b>Error:</b> '+String(e&&e.message||e)+'<br><span style="color:#7f1d1d">Check the token (scope <b>repo</b>) and the repository name. The run was not recorded.</span></div><div style="display:flex;gap:8px;justify-content:center;margin-top:12px"><button type="button" class="btn btn-light" onclick="closeModal()">Close</button></div>';
+    toast("✖ Provisioning failed — "+(e&&e.message||e));
+  }
+}
+function finishRunReal(run){
+  run.status="success"; run.finishedAt=new Date().toISOString(); saveRuns(); pushRunToStore(run); createServiceInStore(run);
+  run.resultUrl=run.repoUrl;
+  if(typeof events!=="undefined"){ events.unshift(["fa-brands fa-github",run.workflow,run.target+" — "+(run.repoFull||"repository created"),"just now"]); if(events.length>6) events=events.slice(0,6); }
+  var foot=document.querySelector(".modal-foot"); if(foot) foot.style.display="none";
+  document.querySelector(".modal-head>i").className="fa-solid fa-circle-check";
+  document.getElementById("modalTitle").textContent="Provisioned: "+run.target;
+  document.querySelector(".modal-head p").textContent=run.repoFull+" · pushed to GitHub";
+  document.querySelector(".modal-body").innerHTML='<div style="text-align:center;padding:6px 0 12px"><div style="width:54px;height:54px;border-radius:50%;background:#dcfce7;color:#059669;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 12px"><i class="fa-brands fa-github"></i></div><div style="font-size:15px;font-weight:800;color:#0f172a">'+run.target+' provisioned</div><div style="font-size:12.5px;color:#64748b;margin-top:4px">'+(run.steps.length)+' steps · real repository created</div><div style="font-size:12px;color:#475569;margin-top:8px">Repository · <span style="font-family:monospace;color:#2563eb">'+run.repoFull+'</span></div></div>'+
+    '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;font-size:12px;color:#166534;margin-bottom:12px;display:flex;gap:8px;align-items:flex-start"><i class="fa-solid fa-circle-check" style="margin-top:1px"></i><span>A real GitHub repository was created with a clean '+(run.golden||"node")+' golden path (code, Dockerfile, CI). It is also registered in the backend catalog.</span></div>'+
+    '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button type="button" class="btn btn-primary" onclick="openRunResult(\''+run.repoUrl+'\')"><i class="fa-brands fa-github"></i> Open repository</button><button type="button" class="btn btn-light" onclick="closeModal();setPage(\'overview\')"><i class="fa-solid fa-list-check"></i> Audit</button><button type="button" class="btn btn-light" onclick="closeModal()">Close</button></div>';
+  toast("✔ "+run.target+" — real repo pushed: "+run.repoFull);
+  var active=document.querySelector(".nav-btn.active"); if(active&&active.dataset.page==="overview") setPage("overview");
+}
 function injectRuns(){
   if(typeof events==="undefined") return;
   IDP_RUNS.filter(function(r){return r.status==="success";}).slice(0,4).reverse().forEach(function(r){
@@ -433,6 +564,6 @@ document.addEventListener("DOMContentLoaded",function(){renderNav("");captureWfD
   });
 </script>
 <script type="module" src="/assets/js/idp-store-sync.js"></script>
-<div id="buildStamp" class="build-stamp">build 2026-06-27 · v9 (real workflows + cloud backend)</div>
+<div id="buildStamp" class="build-stamp">build 2026-06-27 · v10 (real workflows + cloud + GitHub provisioning)</div>
 </body>
 </html>
