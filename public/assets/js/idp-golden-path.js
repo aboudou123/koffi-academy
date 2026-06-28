@@ -375,6 +375,35 @@
     ].join("\n");
   }
 
+  // GitHub Actions : s'execute automatiquement et passe au vert sans secret (gratuit).
+  function githubActions(c) {
+    return [
+      "name: CI",
+      "on:",
+      "  push: { branches: [main] }",
+      "  pull_request: {}",
+      "jobs:",
+      "  validate:",
+      "    runs-on: ubuntu-latest",
+      "    steps:",
+      "      - uses: actions/checkout@v4",
+      "      - name: Pflichtdateien pruefen",
+      "        run: |",
+      "          for f in Dockerfile catalog-info.yaml k8s/deployment.yaml k8s/service.yaml k8s/ingress.yaml; do",
+      '            test -f "$f" && echo "OK $f" || { echo "FEHLT $f"; exit 1; }',
+      "          done",
+      "      - name: YAML validieren",
+      "        run: |",
+      "          python -m pip install --quiet pyyaml",
+      "          python - <<'PY'",
+      "          import glob, yaml",
+      "          for f in glob.glob('**/*.y*ml', recursive=True):",
+      "              list(yaml.safe_load_all(open(f, encoding='utf-8')))",
+      "              print('valid', f)",
+      "          PY"
+    ].join("\n");
+  }
+
   function buildFiles(c) {
     var f = [];
     function add(group, path, content) { f.push({ group: group, path: path, content: content }); }
@@ -382,6 +411,7 @@
     add("Repo", "Dockerfile", dockerfile(c));
     add("Repo", src.path, src.content);
     add("Backstage", "catalog-info.yaml", catalogInfo(c));
+    add("CI/CD", ".github/workflows/ci.yml", githubActions(c));
     add("CI/CD", "azure-pipelines.yml", azurePipelines(c));
     add("Kubernetes", "k8s/deployment.yaml", deploymentYaml(c));
     add("Kubernetes", "k8s/service.yaml", serviceYaml(c));
@@ -445,6 +475,109 @@
     return L;
   }
 
+  // ── Creation reelle GitHub (API, gratuit ; token uniquement en memoire) ─────
+  function b64(s) { return btoa(unescape(encodeURIComponent(s))); }
+
+  function ghReq(method, url, token, body) {
+    return fetch(url, {
+      method: method,
+      headers: {
+        "Authorization": "Bearer " + token,
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Content-Type": "application/json"
+      },
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok) {
+          var e = new Error((data && data.message) || ("HTTP " + res.status));
+          e.status = res.status;
+          throw e;
+        }
+        return data;
+      });
+    });
+  }
+
+  // Cree le repo puis pousse tous les fichiers en un seul commit "initial".
+  function ghCreate(c, token, visibility, log) {
+    var files = buildFiles(c);
+    var full, htmlUrl, login;
+    return ghReq("GET", "https://api.github.com/user", token).then(function (me) {
+      login = me.login;
+      log("Authentifiziert als " + login);
+      var owner = (c.githubOwner && c.githubOwner.toLowerCase() !== login.toLowerCase()) ? c.githubOwner : login;
+      var repoBody = { name: c.repositoryName, private: visibility === "private", auto_init: false, description: c.description };
+      log("Erstelle Repository " + owner + "/" + c.repositoryName + " (" + visibility + ")");
+      var url = owner.toLowerCase() === login.toLowerCase()
+        ? "https://api.github.com/user/repos"
+        : "https://api.github.com/orgs/" + owner + "/repos";
+      return ghReq("POST", url, token, repoBody);
+    }).then(function (repo) {
+      full = repo.full_name;
+      htmlUrl = repo.html_url;
+      log("Repository erstellt: " + repo.html_url);
+      var tree = [];
+      var chain = Promise.resolve();
+      files.forEach(function (f, i) {
+        chain = chain.then(function () {
+          log("Upload (" + (i + 1) + "/" + files.length + "): " + f.path);
+          return ghReq("POST", "https://api.github.com/repos/" + full + "/git/blobs", token, { content: b64(f.content), encoding: "base64" })
+            .then(function (blob) { tree.push({ path: f.path, mode: "100644", type: "blob", sha: blob.sha }); });
+        });
+      });
+      return chain.then(function () { return tree; });
+    }).then(function (tree) {
+      log("Erzeuge Git-Tree");
+      return ghReq("POST", "https://api.github.com/repos/" + full + "/git/trees", token, { tree: tree });
+    }).then(function (t) {
+      log("Erzeuge Commit");
+      return ghReq("POST", "https://api.github.com/repos/" + full + "/git/commits", token, { message: "initial commit (Golden Path)", tree: t.sha });
+    }).then(function (commit) {
+      log("Erzeuge Branch main");
+      return ghReq("POST", "https://api.github.com/repos/" + full + "/git/refs", token, { ref: "refs/heads/main", sha: commit.sha });
+    }).then(function () {
+      log("Fertig. GitHub Actions startet automatisch (Tab 'Actions').");
+      return htmlUrl;
+    });
+  }
+
+  function runReal(c, token, visibility) {
+    body().innerHTML =
+      '<div class="gp-top"><h3><i class="fa-brands fa-github"></i> Veroeffentlichung in GitHub</h3></div>' +
+      '<div class="gp-log" id="gpLog"></div>' +
+      '<div class="gp-nav"><button class="gp-btn" type="button" id="gpBackReal"><i class="fa-solid fa-arrow-left"></i> Zurueck</button>' +
+      '<span id="gpRealActions"></span></div>';
+    document.getElementById("gpBackReal").addEventListener("click", function () { state.step = 5; renderReview(); });
+    var logEl = document.getElementById("gpLog");
+    var n = 0;
+    function log(line, cls) {
+      n++;
+      var ts = new Date().toISOString().replace(/\.\d+Z$/, "Z");
+      logEl.insertAdjacentHTML("beforeend",
+        '<div class="gp-logline"><span class="gp-logn">' + n + '</span><span><span class="gp-logt">' + ts + "</span> " +
+        (cls ? '<span class="' + cls + '">' + esc(line) + "</span>" : esc(line)) + "</span></div>");
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+    log("Starte echte Veroeffentlichung...", "gp-logbeg");
+    ghCreate(c, token, visibility, log).then(function (url) {
+      log("Erfolgreich abgeschlossen.", "gp-logbeg");
+      var files = buildFiles(c);
+      document.getElementById("gpRealActions").innerHTML =
+        '<a class="gp-btn" href="' + url + '" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Repository oeffnen</a> ' +
+        '<a class="gp-btn p" href="' + url + '/actions" target="_blank" rel="noopener"><i class="fa-solid fa-play"></i> Actions ansehen</a>';
+    }).catch(function (err) {
+      log("Fehler: " + (err && err.message ? err.message : "unbekannt"), "gp-logerr");
+      if (err && err.status === 422) log("Hinweis: Repository-Name existiert evtl. bereits. Anderen Namen waehlen.", "gp-logerr");
+      if (err && err.status === 403) log("Hinweis: Token-Scopes pruefen (repo, workflow).", "gp-logerr");
+      document.getElementById("gpRealActions").innerHTML =
+        '<button class="gp-btn p" type="button" id="gpRetry">Erneut versuchen</button>';
+      var r = document.getElementById("gpRetry");
+      if (r) r.addEventListener("click", function () { state.step = 5; renderReview(); });
+    });
+  }
+
   function download(filename, content) {
     var blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     var a = document.createElement("a");
@@ -501,6 +634,12 @@
       ".gp-logn{color:#5b6b86;flex:none;width:26px;text-align:right;user-select:none}",
       ".gp-logt{color:#7aa2f7}",
       ".gp-logbeg{color:#9ece6a;font-weight:700}",
+      ".gp-logerr{color:#ff6b6b;font-weight:700}",
+      ".gp-pub{margin-top:18px;padding:16px;border:1px solid #e5e9f0;border-radius:11px;background:#f8fafc}",
+      ".gp-check{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;font-weight:700;color:#0f1c2e;cursor:pointer}",
+      ".gp-check input{margin-top:2px}",
+      ".gp-note{font-size:12px;color:#5b6b80;line-height:1.5;margin-top:10px;background:#fff;border:1px solid #e5e9f0;border-radius:8px;padding:9px 11px}",
+      ".gp-note i{color:#1a9e57}",
       ".gp-res{display:grid;grid-template-columns:230px 1fr;gap:16px;min-height:340px}",
       ".gp-files{border-right:1px solid #e5e9f0;padding-right:8px;max-height:58vh;overflow:auto}",
       ".gp-grp{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;margin:12px 0 5px}",
@@ -606,15 +745,36 @@
     body().innerHTML = stepperHtml() +
       '<h3 class="gp-stitle">Review</h3>' +
       '<table class="gp-rev">' + rows + "</table>" +
+      '<div class="gp-pub">' +
+        '<label class="gp-check"><input type="checkbox" id="gpReal"> Wirklich in GitHub veroeffentlichen (Repository + Dateien werden real erstellt)</label>' +
+        '<div id="gpRealOpts" style="display:none;margin-top:12px">' +
+          '<div class="gp-grid">' +
+            '<div class="gp-field"><label>GitHub Personal Access Token</label><input id="gpToken" type="password" placeholder="ghp_..." autocomplete="off"><div class="gp-err" id="gperr_token"></div></div>' +
+            '<div class="gp-field"><label>Sichtbarkeit</label><select id="gpVis"><option value="private">private</option><option value="public">public (unbegrenzte Actions-Minuten)</option></select></div>' +
+          "</div>" +
+          '<div class="gp-note"><i class="fa-solid fa-shield-halved"></i> Kostenlos. Das Token wird nur im Browser fuer die API-Aufrufe verwendet und <b>nirgends gespeichert</b>. Benoetigte Scopes: <b>repo</b> und <b>workflow</b>. Ohne Haken: nur Vorschau (kein echtes Repo).</div>' +
+        "</div>" +
+      "</div>" +
       '<div class="gp-nav">' +
         '<button class="gp-btn" type="button" id="gpPrev"><i class="fa-solid fa-arrow-left"></i> Zurueck</button>' +
         '<button class="gp-btn p" type="button" id="gpCreate"><i class="fa-solid fa-rocket"></i> Erstellen</button>' +
       "</div>";
     document.getElementById("gpPrev").addEventListener("click", function () { state.step = 4; renderStep(); });
+    var realCb = document.getElementById("gpReal");
+    realCb.addEventListener("change", function () {
+      document.getElementById("gpRealOpts").style.display = realCb.checked ? "block" : "none";
+    });
     document.getElementById("gpCreate").addEventListener("click", function () {
       var bad = firstInvalidStep();
       if (bad !== -1) { state.step = bad; renderStep(); validateFields(STEPS[bad].fields); return; }
-      renderRun();
+      if (realCb.checked) {
+        var token = (document.getElementById("gpToken").value || "").trim();
+        var vis = document.getElementById("gpVis").value;
+        if (!token) { document.getElementById("gperr_token").textContent = "Token erforderlich (Scopes: repo, workflow)."; return; }
+        runReal(state.cfg, token, vis);
+      } else {
+        renderRun();
+      }
     });
   }
 
