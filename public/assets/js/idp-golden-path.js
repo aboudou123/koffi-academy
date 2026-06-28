@@ -505,24 +505,32 @@
     });
   }
 
-  // Cree le repo puis pousse tous les fichiers en un seul commit "initial".
+  // Cree le repo (initialise) puis committe tous les fichiers par-dessus le
+  // commit de base. auto_init=true evite l'erreur "Git Repository is empty".
   function ghCreate(c, token, visibility, log) {
     var files = buildFiles(c);
-    var full, htmlUrl, login;
+    var full, htmlUrl, branch, baseCommitSha, baseTreeSha;
     return ghReq("GET", "https://api.github.com/user", token).then(function (me) {
-      login = me.login;
-      log("Authentifiziert als " + login);
-      var owner = (c.githubOwner && c.githubOwner.toLowerCase() !== login.toLowerCase()) ? c.githubOwner : login;
-      var repoBody = { name: c.repositoryName, private: visibility === "private", auto_init: false, description: c.description };
+      log("Authentifiziert als " + me.login);
+      var owner = (c.githubOwner && c.githubOwner.toLowerCase() !== me.login.toLowerCase()) ? c.githubOwner : me.login;
+      var repoBody = { name: c.repositoryName, private: visibility === "private", auto_init: true, description: c.description };
       log("Erstelle Repository " + owner + "/" + c.repositoryName + " (" + visibility + ")");
-      var url = owner.toLowerCase() === login.toLowerCase()
+      var url = owner.toLowerCase() === me.login.toLowerCase()
         ? "https://api.github.com/user/repos"
         : "https://api.github.com/orgs/" + owner + "/repos";
       return ghReq("POST", url, token, repoBody);
     }).then(function (repo) {
       full = repo.full_name;
       htmlUrl = repo.html_url;
+      branch = repo.default_branch || "main";
       log("Repository erstellt: " + repo.html_url);
+      log("Lese Basis-Commit (" + branch + ")");
+      return ghReq("GET", "https://api.github.com/repos/" + full + "/git/ref/heads/" + branch, token);
+    }).then(function (ref) {
+      baseCommitSha = ref.object.sha;
+      return ghReq("GET", "https://api.github.com/repos/" + full + "/git/commits/" + baseCommitSha, token);
+    }).then(function (commit) {
+      baseTreeSha = commit.tree.sha;
       var tree = [];
       var chain = Promise.resolve();
       files.forEach(function (f, i) {
@@ -535,13 +543,13 @@
       return chain.then(function () { return tree; });
     }).then(function (tree) {
       log("Erzeuge Git-Tree");
-      return ghReq("POST", "https://api.github.com/repos/" + full + "/git/trees", token, { tree: tree });
+      return ghReq("POST", "https://api.github.com/repos/" + full + "/git/trees", token, { base_tree: baseTreeSha, tree: tree });
     }).then(function (t) {
       log("Erzeuge Commit");
-      return ghReq("POST", "https://api.github.com/repos/" + full + "/git/commits", token, { message: "initial commit (Golden Path)", tree: t.sha });
+      return ghReq("POST", "https://api.github.com/repos/" + full + "/git/commits", token, { message: "feat: scaffold via Golden Path", tree: t.sha, parents: [baseCommitSha] });
     }).then(function (commit) {
-      log("Erzeuge Branch main");
-      return ghReq("POST", "https://api.github.com/repos/" + full + "/git/refs", token, { ref: "refs/heads/main", sha: commit.sha });
+      log("Aktualisiere Branch " + branch);
+      return ghReq("PATCH", "https://api.github.com/repos/" + full + "/git/refs/heads/" + branch, token, { sha: commit.sha, force: true });
     }).then(function () {
       log("Fertig. GitHub Actions startet automatisch (Tab 'Actions').");
       return htmlUrl;
