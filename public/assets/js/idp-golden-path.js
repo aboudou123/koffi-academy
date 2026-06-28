@@ -882,7 +882,7 @@
       "<p>Vollstaendiger Enterprise-Golden-Path zur standardisierten Erstellung eines neuen Services mit Repository, Catalog-Metadaten, Dokumentation, Dockerfile, CI/CD-Grundlage, Kubernetes-Manifests, Security-Dateien und Readiness-Checkliste.</p></div>" +
       '<div class="gp-body" id="gpBody"></div></div>';
     document.body.appendChild(ov);
-    ov.addEventListener("click", function (e) { if (e.target === ov) closeModal(); });
+    // La popup ne se ferme QUE via le bouton X (pas au clic sur le fond / la page).
     ov.querySelector("#gpX").addEventListener("click", closeModal);
     return ov;
   }
