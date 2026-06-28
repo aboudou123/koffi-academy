@@ -16,14 +16,14 @@
     serviceName: { label: "Technischer Servicename", ph: "z. B. payment-service", validate: function (v) { if (!/^[a-z][a-z0-9-]{1,48}[a-z0-9]$/.test(v)) return "Kleinbuchstaben, Ziffern, Bindestriche; Anfang ein Buchstabe."; } },
     serviceTitle: { label: "Anzeigename", ph: "z. B. Payment Service", validate: function (v) { if (v.length < 3) return "Mindestens 3 Zeichen."; } },
     description: { label: "Beschreibung", ph: "Kurze fachliche Beschreibung des Service", validate: function (v) { if (v.length < 10) return "Mindestens 10 Zeichen."; } },
-    owner: { label: "Verantwortlicher Owner", def: "group:default/platform-team", ph: "group:default/team-name", validate: function (v) { if (!/^(group|user):[a-z0-9-]+\/[a-z0-9-]+$/.test(v)) return "Format: group:default/team oder user:default/name."; } },
+    owner: { label: "Verantwortliches Team (Backstage Owner, kein GitHub)", def: "group:default/platform-team", ph: "group:default/team-name", validate: function (v) { if (!/^(group|user):[a-z0-9-]+\/[a-z0-9-]+$/.test(v)) return "Format: group:default/team oder user:default/name."; } },
     system: { label: "Zugehoeriges System", type: "select", opts: ["manufacturing-platform", "developer-platform"], def: "manufacturing-platform" },
     lifecycle: { label: "Lebenszyklus", type: "select", opts: ["experimental", "production", "deprecated"], def: "experimental" },
     businessCriticality: { label: "Business Criticality", type: "select", opts: ["low", "medium", "high", "critical"], def: "medium" },
     dataClassification: { label: "Data Classification", type: "select", opts: ["public", "internal", "confidential", "restricted"], def: "internal" },
-    githubOwner: { label: "GitHub Owner oder Organisation", ph: "dein GitHub-Benutzername (z. B. aboudou123)", validate: vGithub },
+    githubOwner: { label: "GitHub Organisation (optional)", optional: true, ph: "leer lassen = dein eigenes Konto", validate: vGithub },
     repositoryName: { label: "Repository-Name", ph: "z. B. payment-service", validate: function (v) { if (!/^[A-Za-z0-9._-]{1,100}$/.test(v)) return "Erlaubt: Buchstaben, Ziffern, . _ -"; } },
-    codeOwnerUsername: { label: "GitHub CODEOWNER", ph: "GitHub-Benutzername", validate: vGithub },
+    codeOwnerUsername: { label: "GitHub CODEOWNER (optional)", optional: true, ph: "leer = dein Konto", validate: vGithub },
     namespace: { label: "Kubernetes Namespace", def: "idp-apps", ph: "z. B. payments", validate: function (v) { if (v.length > 63 || !/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/.test(v)) return "DNS-1123: Kleinbuchstaben/Ziffern/Bindestriche, max 63."; } },
     servicePort: { label: "Service Port", type: "number", def: 80, ph: "z. B. 80", validate: vPort },
     containerPort: { label: "Container Port", type: "number", def: 8080, ph: "z. B. 8080", validate: vPort },
@@ -34,7 +34,7 @@
 
   function fieldError(key, v) {
     v = (v == null ? "" : String(v)).trim();
-    if (!v) return "Pflichtfeld.";
+    if (!v) return FIELDS[key].optional ? "" : "Pflichtfeld.";
     var fn = FIELDS[key].validate;
     return fn ? (fn(v) || "") : "";
   }
@@ -514,12 +514,15 @@
   // Cree le repo (initialise) puis committe tous les fichiers par-dessus le
   // commit de base. auto_init=true evite l'erreur "Git Repository is empty".
   function ghCreate(c, token, visibility, log) {
-    var files = buildFiles(c);
-    var full, htmlUrl, branch, baseCommitSha, baseTreeSha;
+    var files, full, htmlUrl, branch, baseCommitSha, baseTreeSha;
     return ghReq("GET", "https://api.github.com/user", token).then(function (me) {
       var login = me.login;
       log("Authentifiziert als " + login);
-      var owner = (c.githubOwner && c.githubOwner.toLowerCase() !== login.toLowerCase()) ? c.githubOwner : login;
+      // Champs optionnels laisses vides -> on utilise le compte authentifie.
+      if (!c.githubOwner) c.githubOwner = login;
+      if (!c.codeOwnerUsername) c.codeOwnerUsername = login;
+      files = buildFiles(c);
+      var owner = (c.githubOwner.toLowerCase() !== login.toLowerCase()) ? c.githubOwner : login;
       var repoBody = { name: c.repositoryName, private: visibility === "private", auto_init: true, description: c.description };
       log("Erstelle Repository " + owner + "/" + c.repositoryName + " (" + visibility + ")");
       if (owner.toLowerCase() === login.toLowerCase()) {
