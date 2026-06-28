@@ -17,19 +17,19 @@
     serviceTitle: { label: "Anzeigename", ph: "z. B. Payment Service", validate: function (v) { if (v.length < 3) return "Mindestens 3 Zeichen."; } },
     description: { label: "Beschreibung", ph: "Kurze fachliche Beschreibung des Service", validate: function (v) { if (v.length < 10) return "Mindestens 10 Zeichen."; } },
     owner: { label: "Verantwortlicher Owner", def: "group:default/platform-team", ph: "group:default/team-name", validate: function (v) { if (!/^(group|user):[a-z0-9-]+\/[a-z0-9-]+$/.test(v)) return "Format: group:default/team oder user:default/name."; } },
-    system: { label: "Zugehoeriges System", type: "select", opts: ["manufacturing-platform", "developer-platform"] },
-    lifecycle: { label: "Lebenszyklus", type: "select", opts: ["experimental", "production", "deprecated"] },
-    businessCriticality: { label: "Business Criticality", type: "select", opts: ["low", "medium", "high", "critical"] },
-    dataClassification: { label: "Data Classification", type: "select", opts: ["public", "internal", "confidential", "restricted"] },
+    system: { label: "Zugehoeriges System", type: "select", opts: ["manufacturing-platform", "developer-platform"], def: "manufacturing-platform" },
+    lifecycle: { label: "Lebenszyklus", type: "select", opts: ["experimental", "production", "deprecated"], def: "experimental" },
+    businessCriticality: { label: "Business Criticality", type: "select", opts: ["low", "medium", "high", "critical"], def: "medium" },
+    dataClassification: { label: "Data Classification", type: "select", opts: ["public", "internal", "confidential", "restricted"], def: "internal" },
     githubOwner: { label: "GitHub Owner oder Organisation", ph: "z. B. meine-org", validate: vGithub },
     repositoryName: { label: "Repository-Name", ph: "z. B. payment-service", validate: function (v) { if (!/^[A-Za-z0-9._-]{1,100}$/.test(v)) return "Erlaubt: Buchstaben, Ziffern, . _ -"; } },
     codeOwnerUsername: { label: "GitHub CODEOWNER", ph: "GitHub-Benutzername", validate: vGithub },
-    namespace: { label: "Kubernetes Namespace", ph: "z. B. payments", validate: function (v) { if (v.length > 63 || !/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/.test(v)) return "DNS-1123: Kleinbuchstaben/Ziffern/Bindestriche, max 63."; } },
-    servicePort: { label: "Service Port", type: "number", ph: "z. B. 80", validate: vPort },
-    containerPort: { label: "Container Port", type: "number", ph: "z. B. 8080", validate: vPort },
+    namespace: { label: "Kubernetes Namespace", def: "idp-apps", ph: "z. B. payments", validate: function (v) { if (v.length > 63 || !/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/.test(v)) return "DNS-1123: Kleinbuchstaben/Ziffern/Bindestriche, max 63."; } },
+    servicePort: { label: "Service Port", type: "number", def: 80, ph: "z. B. 80", validate: vPort },
+    containerPort: { label: "Container Port", type: "number", def: 8080, ph: "z. B. 8080", validate: vPort },
     serviceHost: { label: "Ingress Host", ph: "z. B. payment.example.com", validate: function (v) { if (!/^([a-z0-9-]+\.)+[a-z0-9-]{2,}$/.test(v)) return "Gueltiger Hostname, z. B. service.example.com."; } },
     pipelineName: { label: "Pipeline-Name", ph: "z. B. payment-service-ci", validate: function (v) { if (!/^[a-z0-9][a-z0-9-]*$/.test(v)) return "Kleinbuchstaben, Ziffern, Bindestriche."; } },
-    runtime: { label: "Runtime", type: "select", opts: ["nodejs", "python", "go", "java"] }
+    runtime: { label: "Runtime", type: "select", opts: ["nodejs", "python", "go", "java"], def: "nodejs" }
   };
 
   function fieldError(key, v) {
@@ -738,7 +738,17 @@
     return -1;
   }
 
+  // Pre-remplit les champs DERIVES tant qu'ils sont vides (l'utilisateur peut les modifier).
+  function autofill() {
+    var c = state.cfg;
+    if (!c.repositoryName && c.serviceName) c.repositoryName = c.serviceName;
+    if (!c.pipelineName && c.serviceName) c.pipelineName = c.serviceName + "-ci";
+    if (!c.serviceHost && c.serviceName) c.serviceHost = c.serviceName + ".idp.local";
+    if (!c.codeOwnerUsername && c.githubOwner) c.codeOwnerUsername = c.githubOwner;
+  }
+
   function renderStep() {
+    autofill();
     var st = STEPS[state.step];
     var html = stepperHtml() + '<h3 class="gp-stitle">' + esc(st.title) + "</h3>";
     html += '<div class="gp-grid">' + st.fields.map(fieldHtml).join("") + "</div>";
