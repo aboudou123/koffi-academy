@@ -496,7 +496,13 @@
     }).then(function (res) {
       return res.json().catch(function () { return {}; }).then(function (data) {
         if (!res.ok) {
-          var e = new Error((data && data.message) || ("HTTP " + res.status));
+          var msg = (data && data.message) || ("HTTP " + res.status);
+          if (data && data.errors && data.errors.length) {
+            msg += " - " + data.errors.map(function (x) {
+              return x.message || ((x.field || "") + " " + (x.code || "")).trim();
+            }).join("; ");
+          }
+          var e = new Error(msg);
           e.status = res.status;
           throw e;
         }
