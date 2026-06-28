@@ -16,7 +16,7 @@
     serviceName: { label: "Technischer Servicename", ph: "z. B. payment-service", validate: function (v) { if (!/^[a-z][a-z0-9-]{1,48}[a-z0-9]$/.test(v)) return "Kleinbuchstaben, Ziffern, Bindestriche; Anfang ein Buchstabe."; } },
     serviceTitle: { label: "Anzeigename", ph: "z. B. Payment Service", validate: function (v) { if (v.length < 3) return "Mindestens 3 Zeichen."; } },
     description: { label: "Beschreibung", ph: "Kurze fachliche Beschreibung des Service", validate: function (v) { if (v.length < 10) return "Mindestens 10 Zeichen."; } },
-    owner: { label: "Verantwortlicher Owner", ph: "group:default/team-name", validate: function (v) { if (!/^(group|user):[a-z0-9-]+\/[a-z0-9-]+$/.test(v)) return "Format: group:default/team oder user:default/name."; } },
+    owner: { label: "Verantwortlicher Owner", def: "group:default/platform-team", ph: "group:default/team-name", validate: function (v) { if (!/^(group|user):[a-z0-9-]+\/[a-z0-9-]+$/.test(v)) return "Format: group:default/team oder user:default/name."; } },
     system: { label: "Zugehoeriges System", type: "select", opts: ["manufacturing-platform", "developer-platform"] },
     lifecycle: { label: "Lebenszyklus", type: "select", opts: ["experimental", "production", "deprecated"] },
     businessCriticality: { label: "Business Criticality", type: "select", opts: ["low", "medium", "high", "critical"] },
@@ -52,7 +52,7 @@
 
   function defaults() {
     var c = {};
-    Object.keys(FIELDS).forEach(function (k) { c[k] = ""; });
+    Object.keys(FIELDS).forEach(function (k) { c[k] = FIELDS[k].def || ""; });
     return c;
   }
 
