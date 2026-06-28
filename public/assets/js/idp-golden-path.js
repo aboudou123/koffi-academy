@@ -60,6 +60,11 @@
     return String(s).replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; });
   }
 
+  // Token GitHub : memorise uniquement pour la session (efface a la fermeture du tab).
+  function gpGetToken() { try { return sessionStorage.getItem("gp_gh_token") || ""; } catch (e) { return ""; } }
+  function gpSetToken(t) { try { sessionStorage.setItem("gp_gh_token", t); } catch (e) {} }
+  function gpForgetToken() { try { sessionStorage.removeItem("gp_gh_token"); } catch (e) {} }
+
   // ── Generateurs de fichiers ────────────────────────────────────────────────
   function image(c) { return "ghcr.io/" + c.githubOwner + "/" + c.repositoryName; }
 
@@ -571,6 +576,7 @@
       log("Fehler: " + (err && err.message ? err.message : "unbekannt"), "gp-logerr");
       if (err && err.status === 422) log("Hinweis: Repository-Name existiert evtl. bereits. Anderen Namen waehlen.", "gp-logerr");
       if (err && err.status === 403) log("Hinweis: Token-Scopes pruefen (repo, workflow).", "gp-logerr");
+      if (err && err.status === 401) { gpForgetToken(); log("Token ungueltig oder abgelaufen, wurde verworfen. Bitte neu eingeben.", "gp-logerr"); }
       document.getElementById("gpRealActions").innerHTML =
         '<button class="gp-btn p" type="button" id="gpRetry">Erneut versuchen</button>';
       var r = document.getElementById("gpRetry");
@@ -640,6 +646,9 @@
       ".gp-check input{margin-top:2px}",
       ".gp-note{font-size:12px;color:#5b6b80;line-height:1.5;margin-top:10px;background:#fff;border:1px solid #e5e9f0;border-radius:8px;padding:9px 11px}",
       ".gp-note i{color:#1a9e57}",
+      ".gp-tokok{font-size:13px;color:#1a7f4b;font-weight:600;background:#eafaf0;border:1px solid #b7e4c7;border-radius:8px;padding:9px 11px}",
+      ".gp-tokok i{margin-right:6px}",
+      ".gp-link{background:none;border:none;color:#1b2a6b;font-weight:700;text-decoration:underline;cursor:pointer;font-size:13px;padding:0}",
       ".gp-res{display:grid;grid-template-columns:230px 1fr;gap:16px;min-height:340px}",
       ".gp-files{border-right:1px solid #e5e9f0;padding-right:8px;max-height:58vh;overflow:auto}",
       ".gp-grp{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;margin:12px 0 5px}",
@@ -742,17 +751,22 @@
     var rows = Object.keys(FIELDS).map(function (k) {
       return "<tr><td>" + esc(FIELDS[k].label) + "</td><td>" + esc(state.cfg[k]) + "</td></tr>";
     }).join("");
+    var hasTok = !!gpGetToken();
+    var tokenBlock = hasTok
+      ? '<div class="gp-tokok"><i class="fa-solid fa-circle-check"></i> GitHub-Token fuer diese Session gespeichert. ' +
+          '<button type="button" class="gp-link" id="gpForget">Token aendern / vergessen</button></div>'
+      : '<div class="gp-field"><label>GitHub Personal Access Token (Scopes: repo, workflow)</label>' +
+          '<input id="gpToken" type="password" placeholder="ghp_..." autocomplete="off"><div class="gp-err" id="gperr_token"></div></div>';
     body().innerHTML = stepperHtml() +
       '<h3 class="gp-stitle">Review</h3>' +
       '<table class="gp-rev">' + rows + "</table>" +
       '<div class="gp-pub">' +
-        '<label class="gp-check"><input type="checkbox" id="gpReal"> Wirklich in GitHub veroeffentlichen (Repository + Dateien werden real erstellt)</label>' +
-        '<div id="gpRealOpts" style="display:none;margin-top:12px">' +
-          '<div class="gp-grid">' +
-            '<div class="gp-field"><label>GitHub Personal Access Token</label><input id="gpToken" type="password" placeholder="ghp_..." autocomplete="off"><div class="gp-err" id="gperr_token"></div></div>' +
-            '<div class="gp-field"><label>Sichtbarkeit</label><select id="gpVis"><option value="private">private</option><option value="public">public (unbegrenzte Actions-Minuten)</option></select></div>' +
-          "</div>" +
-          '<div class="gp-note"><i class="fa-solid fa-shield-halved"></i> Kostenlos. Das Token wird nur im Browser fuer die API-Aufrufe verwendet und <b>nirgends gespeichert</b>. Benoetigte Scopes: <b>repo</b> und <b>workflow</b>. Ohne Haken: nur Vorschau (kein echtes Repo).</div>' +
+        '<label class="gp-check"><input type="checkbox" id="gpReal"' + (hasTok ? " checked" : "") + "> Wirklich in GitHub veroeffentlichen (Repository + Dateien werden real erstellt)</label>" +
+        '<div id="gpRealOpts" style="margin-top:12px;display:' + (hasTok ? "block" : "none") + '">' +
+          tokenBlock +
+          '<div class="gp-field" style="margin-top:10px;max-width:340px"><label>Sichtbarkeit</label>' +
+            '<select id="gpVis"><option value="private">private</option><option value="public">public (unbegrenzte Actions-Minuten)</option></select></div>' +
+          '<div class="gp-note"><i class="fa-solid fa-shield-halved"></i> Das Token wird nur in <b>dieser Browser-Session</b> gehalten (sessionStorage) und beim Schliessen des Tabs geloescht. <b>Einmal eingeben, danach 1-Klick</b> fuer jeden weiteren Service. Scopes: repo, workflow. Ohne Haken: nur Vorschau.</div>' +
         "</div>" +
       "</div>" +
       '<div class="gp-nav">' +
@@ -764,17 +778,21 @@
     realCb.addEventListener("change", function () {
       document.getElementById("gpRealOpts").style.display = realCb.checked ? "block" : "none";
     });
+    var forget = document.getElementById("gpForget");
+    if (forget) forget.addEventListener("click", function () { gpForgetToken(); renderReview(); });
     document.getElementById("gpCreate").addEventListener("click", function () {
       var bad = firstInvalidStep();
       if (bad !== -1) { state.step = bad; renderStep(); validateFields(STEPS[bad].fields); return; }
-      if (realCb.checked) {
-        var token = (document.getElementById("gpToken").value || "").trim();
-        var vis = document.getElementById("gpVis").value;
-        if (!token) { document.getElementById("gperr_token").textContent = "Token erforderlich (Scopes: repo, workflow)."; return; }
-        runReal(state.cfg, token, vis);
-      } else {
-        renderRun();
+      if (!realCb.checked) { renderRun(); return; }
+      var vis = (document.getElementById("gpVis") || {}).value || "private";
+      var token = gpGetToken();
+      if (!token) {
+        var f = document.getElementById("gpToken");
+        token = f ? f.value.trim() : "";
+        if (!token) { var e = document.getElementById("gperr_token"); if (e) e.textContent = "Token erforderlich (Scopes: repo, workflow)."; return; }
+        gpSetToken(token); // memorise pour la session : saisi une seule fois
       }
+      runReal(state.cfg, token, vis);
     });
   }
 
