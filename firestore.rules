@@ -1,0 +1,93 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Règles de sécurité Firestore — Koffi Academy
+//
+// Principe : "deny by default". Tout est interdit sauf ce qui est explicitement
+// autorisé ci-dessous. La clé API Firebase étant publique (visible dans le code
+// client), CES RÈGLES sont la seule barrière qui protège réellement la base.
+//
+// Déploiement :
+//   Console Firebase → Firestore Database → Règles → coller ce contenu → Publier
+//   (ou : firebase deploy --only firestore:rules)
+//
+// Lecture admin (contacts, orders, etc.) : se fait depuis la console Firebase ou
+// un backend avec le SDK Admin, qui IGNORE ces règles. Le client web n'a donc
+// jamais besoin de lire ces collections sensibles.
+// ─────────────────────────────────────────────────────────────────────────────
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isNonEmptyString(v, maxLen) {
+      return v is string && v.size() > 0 && v.size() <= maxLen;
+    }
+
+    // ── Formulaire de contact ───────────────────────────────────────────────
+    // Public : n'importe qui peut ENVOYER un message, personne ne peut LIRE,
+    // modifier ou supprimer depuis le client. Validation anti-spam basique.
+    match /contacts/{docId} {
+      allow read, update, delete: if false;
+      allow create: if isNonEmptyString(request.resource.data.email, 254)
+                    && request.resource.data.message is string
+                    && request.resource.data.message.size() <= 5000;
+    }
+
+    // ── Commandes / sponsoring ──────────────────────────────────────────────
+    // Création seulement, par l'utilisateur connecté en son propre nom
+    // (userId == uid). Aucune lecture/modif côté client (traitement admin).
+    match /orders/{docId} {
+      allow read, update, delete: if false;
+      allow create: if isSignedIn()
+                    && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ── Profils utilisateurs ────────────────────────────────────────────────
+    // Lecture réservée aux utilisateurs connectés (nécessaire à la messagerie
+    // pour afficher les destinataires). Écriture limitée à SON PROPRE document.
+    // Suppression interdite. L'id du document DOIT être l'uid du compte.
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow create, update: if isOwner(uid)
+                            && request.resource.data.email is string;
+      allow delete: if false;
+    }
+
+    // ── Messagerie interne ──────────────────────────────────────────────────
+    // Lecture : uniquement l'expéditeur ou le destinataire du message.
+    // Création : seulement en son propre nom (senderId == uid authentifié).
+    // Le destinataire peut marquer "lu" ; pas de suppression.
+    match /messages/{msgId} {
+      allow read: if isSignedIn()
+                  && (resource.data.senderId == request.auth.uid
+                      || resource.data.recipientId == request.auth.uid);
+      allow create: if isSignedIn()
+                    && request.resource.data.senderId == request.auth.uid
+                    && request.resource.data.recipientId is string
+                    && request.resource.data.content is string
+                    && request.resource.data.content.size() <= 10000;
+      allow update: if isSignedIn()
+                    && resource.data.recipientId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    // ── Stores IDP (synchronisation par utilisateur) ────────────────────────
+    // Chaque utilisateur ne lit/écrit que son propre store (clé = uid).
+    match /idpStores/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // ── Tout le reste : interdit ────────────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
