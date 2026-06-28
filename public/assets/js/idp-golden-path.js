@@ -586,35 +586,88 @@
     if (ov) ov.classList.remove("open");
   }
 
-  function injectBanner() {
-    var view = document.getElementById("view-selfservice");
-    if (!view || document.getElementById("gpBanner")) return;
-    var header = view.querySelector(".page-header");
-    var banner = document.createElement("div");
-    banner.id = "gpBanner";
-    banner.className = "gp-banner";
-    banner.innerHTML = [
-      "<div><h3><i class=\"fa-solid fa-wand-magic-sparkles\"></i> Golden Path</h3>",
-      "<p>Neuen Microservice standardisiert erstellen: Repo, Kubernetes, CI/CD, Docs und Governance in einem Schritt.</p></div>",
-      '<button type="button" id="gpLaunch"><i class="fa-solid fa-rocket"></i> Service erstellen</button>'
-    ].join("");
-    if (header && header.parentNode) {
-      header.parentNode.insertBefore(banner, header.nextSibling);
-    } else {
-      view.insertBefore(banner, view.firstChild);
+  // ── Carte "Golden Path" injectee dans la grille des actions ────────────────
+  function gpLang() { return window.lang === "fr" || window.lang === "en" ? window.lang : "de"; }
+  function gpRunLabel() { var l = gpLang(); return l === "fr" ? "Exécuter" : l === "en" ? "Run" : "Ausführen"; }
+  function gpComplexityLabel() { var l = gpLang(); return l === "fr" ? "Moyen" : l === "en" ? "Medium" : "Mittel"; }
+  function gpTitle() { var l = gpLang(); return l === "fr" ? "Golden Path : Microservice" : "Golden Path: Microservice"; }
+  function gpDesc() {
+    var l = gpLang();
+    if (l === "fr") return "Créer un microservice standardisé : repo, Kubernetes, CI/CD, docs, gouvernance et Backstage en une étape.";
+    if (l === "en") return "Create a standardized microservice: repo, Kubernetes, CI/CD, docs, governance and Backstage in one step.";
+    return "Neuen Microservice standardisiert erstellen: Repo, Kubernetes, CI/CD, Docs, Governance und Backstage in einem Schritt.";
+  }
+
+  function gpCardHtml() {
+    return '<div class="action-card" id="gpCard" style="--card-color:#d6a02d;--card-icon-bg:#fff3d6" data-id="golden-path">' +
+      '<div class="card-header">' +
+        '<div class="card-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>' +
+        '<div class="card-meta">' +
+          '<div class="card-title">' + gpTitle() + "</div>" +
+          '<div class="card-category">GOLDEN PATH</div>' +
+        "</div>" +
+      "</div>" +
+      '<p class="card-desc">' + gpDesc() + "</p>" +
+      '<div class="card-tags">' +
+        '<span class="card-tag purple">Backstage</span>' +
+        '<span class="card-tag blue">Kubernetes</span>' +
+        '<span class="card-tag green">CI/CD</span>' +
+      "</div>" +
+      '<div class="card-footer">' +
+        '<div class="card-complexity"><div class="complexity-dots"><span class="cd on"></span><span class="cd on"></span><span class="cd"></span></div> ' + gpComplexityLabel() + "</div>" +
+        '<button class="run-btn" type="button" style="background:#d6a02d"><i class="fa-solid fa-play"></i> ' + gpRunLabel() + "</button>" +
+      "</div>" +
+    "</div>";
+  }
+
+  function gpShouldShow() {
+    var active = document.querySelector(".filter-row .filter-tab.active");
+    var filter = active ? active.getAttribute("data-filter") : "all";
+    if (filter && filter !== "all" && filter !== "cicd" && filter !== "kubernetes") return false;
+    var s = document.getElementById("cardSearch");
+    var q = s ? s.value.trim().toLowerCase() : "";
+    if (q && "golden path microservice scaffolder backstage kubernetes ci/cd repo service".indexOf(q) === -1) return false;
+    return true;
+  }
+
+  function injectCard() {
+    var grid = document.getElementById("cardsGrid");
+    if (!grid) return;
+    var existing = document.getElementById("gpCard");
+    if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+    if (!gpShouldShow()) return;
+    var tmp = document.createElement("div");
+    tmp.innerHTML = gpCardHtml();
+    var card = tmp.firstChild;
+    grid.insertBefore(card, grid.firstChild);
+    var btn = card.querySelector(".run-btn");
+    if (btn) btn.addEventListener("click", openModal);
+  }
+
+  var gpObs = null;
+  function watchGrid() {
+    var grid = document.getElementById("cardsGrid");
+    if (!grid) return false;
+    injectCard();
+    if (!gpObs) {
+      gpObs = new MutationObserver(function () {
+        gpObs.disconnect();
+        injectCard();
+        gpObs.observe(grid, { childList: true });
+      });
+      gpObs.observe(grid, { childList: true });
     }
-    document.getElementById("gpLaunch").addEventListener("click", openModal);
+    return true;
   }
 
   function init() {
     injectStyle();
-    injectBanner();
-    // Au cas ou la vue self-service est rendue plus tard par la SPA
+    if (watchGrid()) return;
+    // La SPA rend peut-etre la grille plus tard : on reessaie jusqu'a la trouver.
     var tries = 0;
     var iv = setInterval(function () {
-      injectBanner();
-      if (document.getElementById("gpBanner") || ++tries > 20) clearInterval(iv);
-    }, 400);
+      if (watchGrid() || ++tries > 40) clearInterval(iv);
+    }, 300);
   }
 
   window.gpOpen = openModal;
