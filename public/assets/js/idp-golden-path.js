@@ -21,7 +21,7 @@
     lifecycle: { label: "Lebenszyklus", type: "select", opts: ["experimental", "production", "deprecated"], def: "experimental" },
     businessCriticality: { label: "Business Criticality", type: "select", opts: ["low", "medium", "high", "critical"], def: "medium" },
     dataClassification: { label: "Data Classification", type: "select", opts: ["public", "internal", "confidential", "restricted"], def: "internal" },
-    githubOwner: { label: "GitHub Organisation (optional)", optional: true, ph: "leer lassen = dein eigenes Konto", validate: vGithub },
+    githubOwner: { label: "GitHub Owner oder Organisation", def: "aboudou123", optional: true, ph: "dein Konto oder eine Organisation", validate: vGithub },
     repositoryName: { label: "Repository-Name", ph: "z. B. payment-service", validate: function (v) { if (!/^[A-Za-z0-9._-]{1,100}$/.test(v)) return "Erlaubt: Buchstaben, Ziffern, . _ -"; } },
     codeOwnerUsername: { label: "GitHub CODEOWNER (optional)", optional: true, ph: "leer = dein Konto", validate: vGithub },
     namespace: { label: "Kubernetes Namespace", def: "idp-apps", ph: "z. B. payments", validate: function (v) { if (v.length > 63 || !/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/.test(v)) return "DNS-1123: Kleinbuchstaben/Ziffern/Bindestriche, max 63."; } },
