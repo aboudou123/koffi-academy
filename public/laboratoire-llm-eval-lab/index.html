@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Build LLM Evaluation Pipeline | Atelier — Koffi Academy</title>
+  <title>Build LLM Evaluation Pipeline | Atelier | Koffi Academy</title>
   <meta name="description" content="Atelier pratique Koffi Academy : construisez et validez un jeu d'évaluation pour mesurer la qualité des réponses d'un LLM, directement dans un terminal guidé. DE / FR / EN.">
   <meta name="theme-color" content="#071a2f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -328,7 +328,7 @@ ls -la /root/evaluation/datasets/</pre></div>
             <span data-i18n="s2b">Toujours dans le terminal, collez ce second bloc. Il écrit <code>validate_dataset.py</code> et le rend exécutable avec <code>chmod +x</code>. Le script vérifie les champs obligatoires, les identifiants en double, la longueur des questions et la présence de chaque mot-clé dans la réponse de référence.</span>
             <div class="codewrap"><button type="button" class="copybtn" data-i18n="copy">Copier</button><pre class="codebox" id="srcScript">cat > /root/evaluation/datasets/validate_dataset.py &lt;&lt; 'EOF'
 #!/usr/bin/env python3
-"""Structure check for an LLM evaluation set — Koffi Academy."""
+"""Structure check for an LLM evaluation set | Koffi Academy."""
 import json
 import sys
 from collections import Counter
@@ -551,7 +551,7 @@ window.I18N = {
     "hint2":"Paste the validate_dataset.py script and save it before running it.",
     "hint3":"In the terminal: activate the venv, then run python validate_dataset.py datasets/kubernetes_eval.json.",
     "hint4":"Type check to see which criteria are still pending.",
-    "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS — Koffi Academy workstation (llm-eval)",
+    "bSsh":"SSH connection established.","bUbuntu":"Ubuntu 24.04 LTS | Koffi Academy workstation (llm-eval)",
     "bEnv":"Python environment ready in /root/evaluation","bTip":"Tip: type `help` for the command list, `check` for your progress.",
     "hHeader":"Available commands:","hMkdir":"create the working folder","hWrite":"write a file (here-document)","hChmod":"make the script executable","hLs":"list files","hCat":"show a file","hSource":"activate the Python environment","hPython":"validate the dataset","hCheck":"check your progress","hClear":"clear the terminal",
     "venvOn":"Virtual environment activated.","sourceUsage":"source: usage — source venv/bin/activate",

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
   <link rel="shortcut icon" href="../assets/images/logo.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-i18n="page-title">Paiement – Koffi Academy</title>
+<title data-i18n="page-title">Paiement | Koffi Academy</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -73,9 +73,9 @@ var PAYPAL_MERCHANT_ID = "NCN47ZKS6S8AE";
 /* ================================================================= */
 
 var i18n={
- fr:{'page-title':'Paiement – Koffi Academy','lab':'Laboratoire','access-note':"Accès unique au contenu du laboratoire (vidéos + environnement).",'paypal-heading':'Paiement sécurisé','btn-paypal':'Payer avec PayPal','secure':'PayPal ou carte bancaire · paiement chiffré SSL','or':'ou','btn-bank':'Payer par virement bancaire','back':'← Retour aux laboratoires'},
- de:{'page-title':'Bezahlung – Koffi Academy','lab':'Labor','access-note':'Einmaliger Zugang zum Lab-Inhalt (Videos + Umgebung).','paypal-heading':'Sichere Zahlung','btn-paypal':'Mit PayPal bezahlen','secure':'PayPal oder Kreditkarte · SSL-verschlüsselt','or':'oder','btn-bank':'Per Banküberweisung zahlen','back':'← Zurück zu den Laboren'},
- en:{'page-title':'Checkout – Koffi Academy','lab':'Lab','access-note':'One-time access to the lab content (videos + environment).','paypal-heading':'Secure payment','btn-paypal':'Pay with PayPal','secure':'PayPal or credit card · SSL encrypted','or':'or','btn-bank':'Pay by bank transfer','back':'← Back to labs'}
+ fr:{'page-title':'Paiement | Koffi Academy','lab':'Laboratoire','access-note':"Accès unique au contenu du laboratoire (vidéos + environnement).",'paypal-heading':'Paiement sécurisé','btn-paypal':'Payer avec PayPal','secure':'PayPal ou carte bancaire · paiement chiffré SSL','or':'ou','btn-bank':'Payer par virement bancaire','back':'← Retour aux laboratoires'},
+ de:{'page-title':'Bezahlung | Koffi Academy','lab':'Labor','access-note':'Einmaliger Zugang zum Lab-Inhalt (Videos + Umgebung).','paypal-heading':'Sichere Zahlung','btn-paypal':'Mit PayPal bezahlen','secure':'PayPal oder Kreditkarte · SSL-verschlüsselt','or':'oder','btn-bank':'Per Banküberweisung zahlen','back':'← Zurück zu den Laboren'},
+ en:{'page-title':'Checkout | Koffi Academy','lab':'Lab','access-note':'One-time access to the lab content (videos + environment).','paypal-heading':'Secure payment','btn-paypal':'Pay with PayPal','secure':'PayPal or credit card · SSL encrypted','or':'or','btn-bank':'Pay by bank transfer','back':'← Back to labs'}
 };
 function setLanguage(l){if(!i18n[l])return;document.querySelectorAll('[data-i18n]').forEach(function(e){var k=e.getAttribute('data-i18n');if(i18n[l][k]!==undefined)e.textContent=i18n[l][k];});document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-lang')===l);});document.documentElement.lang=l;localStorage.setItem('preferred-lang',l);if(i18n[l]['page-title'])document.title=i18n[l]['page-title'];}
 
@@ -103,7 +103,7 @@ function buildPayPalUrl(){
   var params={
     cmd:'_xclick',
     business:PAYPAL_MERCHANT_ID,
-    item_name:(TITLE+' — Koffi Academy Laboratoire').slice(0,127),
+    item_name:(TITLE+' | Koffi Academy Laboratoire').slice(0,127),
     item_number:COURSE,
     amount:parseFloat(PRICE).toFixed(2),
     currency_code:CUR,
