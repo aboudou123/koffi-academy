@@ -167,12 +167,22 @@
       "  annotations:",
       "    github.com/project-slug: " + c.githubOwner + "/" + c.repositoryName,
       "    backstage.io/techdocs-ref: dir:.",
+      "    backstage.io/kubernetes-namespace: " + c.namespace,
+      "    backstage.io/kubernetes-label-selector: app=" + c.serviceName,
       "  labels:",
       "    business-criticality: " + c.businessCriticality,
       "    data-classification: " + c.dataClassification,
       "  tags:",
       "    - golden-path",
       "    - " + c.runtime,
+      "    - kubernetes",
+      "  links:",
+      "    - url: https://" + c.serviceHost,
+      "      title: Service Endpoint",
+      "      icon: web",
+      "    - url: https://github.com/" + c.githubOwner + "/" + c.repositoryName + "/actions",
+      "      title: CI/CD Pipeline",
+      "      icon: dashboard",
       "spec:",
       "  type: service",
       "  lifecycle: " + c.lifecycle,
@@ -356,8 +366,54 @@
       "- **Ingress:** https://" + c.serviceHost,
       "",
       "Der Service laeuft als containerisierter Workload auf Kubernetes und wird ueber " +
-        "die Plattform-Pipeline (" + c.pipelineName + ") ausgeliefert."
+        "die Plattform-Pipeline (" + c.pipelineName + ") ausgeliefert.",
+      "",
+      "## Flow",
+      "```mermaid",
+      "flowchart LR",
+      "  Dev[Entwickler] --> Repo[GitHub: " + c.githubOwner + "/" + c.repositoryName + "]",
+      "  Repo --> CI[CI/CD: " + c.pipelineName + "]",
+      "  CI --> Img[Container Image]",
+      "  Img --> K8s[Kubernetes ns: " + c.namespace + "]",
+      "  K8s --> Ingress[Ingress: " + c.serviceHost + "]",
+      "  Ingress --> User[Nutzer]",
+      "```"
     ].join("\n");
+  }
+
+  // Production-Readiness Scorecard (Backstage-Soundcheck-Stil).
+  function scoreData(c) {
+    var checks = [
+      { n: "Owner / verantwortliches Team", ok: !!c.owner },
+      { n: "System zugeordnet", ok: !!c.system },
+      { n: "Data Classification gesetzt", ok: !!c.dataClassification },
+      { n: "Backstage Catalog Entity", ok: true },
+      { n: "TechDocs (docs + mkdocs)", ok: true },
+      { n: "Dockerfile", ok: true },
+      { n: "CI/CD Pipeline", ok: true },
+      { n: "Kubernetes Manifests", ok: true },
+      { n: "Health Probes (readiness/liveness)", ok: true },
+      { n: "Resource Limits", ok: true },
+      { n: "CODEOWNERS", ok: true },
+      { n: "SECURITY.md", ok: true },
+      { n: "Readiness Checkliste", ok: true },
+      { n: "Production Lifecycle", ok: c.lifecycle === "production" }
+    ];
+    var passed = checks.filter(function (x) { return x.ok; }).length;
+    return { checks: checks, passed: passed, total: checks.length, score: Math.round(passed / checks.length * 100) };
+  }
+
+  function scorecard(c) {
+    var d = scoreData(c);
+    var rows = d.checks.map(function (x) { return "| " + (x.ok ? "OK" : "TODO") + " | " + x.n + " |"; });
+    return [
+      "# Production Readiness Scorecard - " + c.serviceTitle,
+      "",
+      "**Score: " + d.score + "/100** (" + d.passed + "/" + d.total + " Checks erfuellt)",
+      "",
+      "| Status | Check |",
+      "| --- | --- |"
+    ].concat(rows).join("\n");
   }
   function docsRunbook(c) {
     return [
@@ -455,6 +511,7 @@
     add("Governance", "SECURITY.md", security(c));
     add("Governance", ".github/CODEOWNERS", codeowners(c));
     add("Governance", "readiness-checklist.md", readiness(c));
+    add("Governance", "scorecard.md", scorecard(c));
     return f;
   }
 
@@ -550,18 +607,30 @@
       files = buildFiles(c);
       var owner = (c.githubOwner.toLowerCase() !== login.toLowerCase()) ? c.githubOwner : login;
       var repoBody = { name: c.repositoryName, private: visibility === "private", auto_init: true, description: c.description };
-      log("Erstelle Repository " + owner + "/" + c.repositoryName + " (" + visibility + ")");
-      if (owner.toLowerCase() === login.toLowerCase()) {
-        return ghReq("POST", "https://api.github.com/user/repos", token, repoBody);
-      }
-      // owner != compte : on tente l'organisation, sinon repli sous le compte authentifie.
-      return ghReq("POST", "https://api.github.com/orgs/" + owner + "/repos", token, repoBody).catch(function (e) {
-        if (e.status === 404 || e.status === 403) {
-          log("Organisation '" + owner + "' nicht gefunden oder kein Zugriff. Erstelle unter " + login + ".", "gp-logerr");
+      function create() {
+        log("Erstelle Repository " + owner + "/" + c.repositoryName + " (" + visibility + ")");
+        if (owner.toLowerCase() === login.toLowerCase()) {
           return ghReq("POST", "https://api.github.com/user/repos", token, repoBody);
         }
-        throw e;
-      });
+        return ghReq("POST", "https://api.github.com/orgs/" + owner + "/repos", token, repoBody).catch(function (e) {
+          if (e.status === 404 || e.status === 403) {
+            log("Organisation '" + owner + "' nicht gefunden oder kein Zugriff. Erstelle unter " + login + ".", "gp-logerr");
+            return ghReq("POST", "https://api.github.com/user/repos", token, repoBody);
+          }
+          throw e;
+        });
+      }
+      // Garde-fou : verifier d'abord si le depot existe deja (pas d'ecrasement).
+      log("Pruefe, ob Repository bereits existiert ...");
+      return ghReq("GET", "https://api.github.com/repos/" + owner + "/" + c.repositoryName, token)
+        .then(function () {
+          var e = new Error("Repository " + owner + "/" + c.repositoryName + " existiert bereits. Bitte anderen Repository-Namen waehlen.");
+          e.status = 409;
+          throw e;
+        }, function (e) {
+          if (e.status === 404) return create(); // n'existe pas -> on cree
+          throw e;
+        });
     }).then(function (repo) {
       full = repo.full_name;
       htmlUrl = repo.html_url;
@@ -638,12 +707,40 @@
   }
 
   function download(filename, content) {
-    var blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    downloadBlob(filename, new Blob([content], { type: "text/plain;charset=utf-8" }));
+  }
+  function downloadBlob(filename, blob) {
     var a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = filename;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+  // Charge JSZip a la demande (CDN autorise par la CSP) pour l'export ZIP.
+  function loadJSZip() {
+    return new Promise(function (resolve, reject) {
+      if (window.JSZip) return resolve(window.JSZip);
+      var s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+      s.onload = function () { resolve(window.JSZip); };
+      s.onerror = function () { reject(new Error("JSZip konnte nicht geladen werden")); };
+      document.head.appendChild(s);
+    });
+  }
+  function downloadZip(c, files, btn) {
+    var orig = btn ? btn.innerHTML : "";
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ZIP ...'; }
+    loadJSZip().then(function (JSZip) {
+      var zip = new JSZip();
+      var root = zip.folder(c.repositoryName);
+      files.forEach(function (f) { root.file(f.path, f.content); });
+      return zip.generateAsync({ type: "blob" });
+    }).then(function (blob) {
+      downloadBlob(c.repositoryName + ".zip", blob);
+      if (btn) { btn.disabled = false; btn.innerHTML = orig; }
+    }).catch(function () {
+      if (btn) { btn.disabled = false; btn.innerHTML = orig; }
+    });
   }
 
   // ── CSS ─────────────────────────────────────────────────────────────────────
@@ -684,6 +781,7 @@
       ".gp-btn.p{background:#1b2a6b;color:#fff;border-color:#1b2a6b}",
       ".gp-btn.p:hover{background:#24337e}",
       ".gp-btn:disabled{opacity:.5;cursor:default}",
+      ".gp-score{display:inline-block;color:#fff;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:middle}",
       ".gp-rev{width:100%;border-collapse:collapse;font-size:13.5px}",
       ".gp-rev td{padding:9px 12px;border-bottom:1px solid #eef1f6;vertical-align:top}",
       ".gp-rev td:first-child{color:#64748b;width:42%;font-weight:600}",
@@ -786,10 +884,20 @@
     if (!c.codeOwnerUsername && c.githubOwner) c.codeOwnerUsername = c.githubOwner;
   }
 
+  function loadExample() {
+    state.cfg.serviceName = "invoice-service";
+    state.cfg.serviceTitle = "Invoice Service";
+    state.cfg.description = "Service de facturation pour la plateforme interne.";
+    renderStep();
+  }
+
   function renderStep() {
     autofill();
     var st = STEPS[state.step];
-    var html = stepperHtml() + '<h3 class="gp-stitle">' + esc(st.title) + "</h3>";
+    var example = state.step === 0
+      ? '<button class="gp-link" type="button" id="gpExample" style="float:right"><i class="fa-solid fa-wand-magic-sparkles"></i> Beispiel laden</button>'
+      : "";
+    var html = stepperHtml() + '<h3 class="gp-stitle">' + esc(st.title) + example + "</h3>";
     html += '<div class="gp-grid">' + st.fields.map(fieldHtml).join("") + "</div>";
     var next = state.step === 4 ? "Review" : "Weiter";
     html += '<div class="gp-nav">' +
@@ -797,6 +905,8 @@
       '<button class="gp-btn p" type="button" id="gpNext">' + next + ' <i class="fa-solid fa-arrow-right"></i></button>' +
       "</div>";
     body().innerHTML = html;
+    var ex = document.getElementById("gpExample");
+    if (ex) ex.addEventListener("click", function () { collect(); loadExample(); });
     document.getElementById("gpPrev").addEventListener("click", function () {
       collect();
       if (state.step > 0) { state.step--; renderStep(); }
@@ -897,9 +1007,13 @@
       list += '<div class="gp-grp">' + esc(g) + "</div>";
       all.forEach(function (f, idx) { if (f.group === g) list += '<button type="button" class="gp-file" data-idx="' + idx + '">' + esc(f.path) + "</button>"; });
     });
+    var sc = scoreData(c);
+    var scColor = sc.score >= 90 ? "#1a7f4b" : sc.score >= 70 ? "#b8860b" : "#c0392b";
     body().innerHTML =
-      '<div class="gp-top"><h3>' + esc(c.repositoryName) + " &middot; " + all.length + " Dateien</h3>" +
+      '<div class="gp-top"><h3>' + esc(c.repositoryName) + " &middot; " + all.length + " Dateien " +
+      '<span class="gp-score" style="background:' + scColor + '" title="Production Readiness Score">' + sc.score + "/100</span></h3>" +
       '<div class="gp-vbtns"><button class="gp-btn" type="button" id="gpBack2"><i class="fa-solid fa-arrow-left"></i> Log</button>' +
+      '<button class="gp-btn" type="button" id="gpZip"><i class="fa-solid fa-file-zipper"></i> ZIP</button>' +
       '<button class="gp-btn p" type="button" id="gpDlAll"><i class="fa-solid fa-download"></i> scaffold.sh</button></div></div>' +
       '<div class="gp-res"><div class="gp-files">' + list + "</div>" +
       '<div class="gp-view"><div class="gp-vbar"><span class="gp-vpath" id="gpPath"></span><span class="gp-vbtns">' +
@@ -919,6 +1033,7 @@
       b.addEventListener("click", function () { show(parseInt(b.getAttribute("data-idx"), 10)); });
     });
     document.getElementById("gpBack2").addEventListener("click", renderRun);
+    document.getElementById("gpZip").addEventListener("click", function () { downloadZip(c, files, this); });
     document.getElementById("gpCopy").addEventListener("click", function () {
       if (navigator.clipboard) navigator.clipboard.writeText(all[cur].content);
       var b = document.getElementById("gpCopy"), t = b.innerHTML;
