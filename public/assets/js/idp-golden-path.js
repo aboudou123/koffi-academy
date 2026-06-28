@@ -21,7 +21,7 @@
     lifecycle: { label: "Lebenszyklus", type: "select", opts: ["experimental", "production", "deprecated"], def: "experimental" },
     businessCriticality: { label: "Business Criticality", type: "select", opts: ["low", "medium", "high", "critical"], def: "medium" },
     dataClassification: { label: "Data Classification", type: "select", opts: ["public", "internal", "confidential", "restricted"], def: "internal" },
-    githubOwner: { label: "GitHub Owner oder Organisation", ph: "z. B. meine-org", validate: vGithub },
+    githubOwner: { label: "GitHub Owner oder Organisation", ph: "dein GitHub-Benutzername (z. B. aboudou123)", validate: vGithub },
     repositoryName: { label: "Repository-Name", ph: "z. B. payment-service", validate: function (v) { if (!/^[A-Za-z0-9._-]{1,100}$/.test(v)) return "Erlaubt: Buchstaben, Ziffern, . _ -"; } },
     codeOwnerUsername: { label: "GitHub CODEOWNER", ph: "GitHub-Benutzername", validate: vGithub },
     namespace: { label: "Kubernetes Namespace", def: "idp-apps", ph: "z. B. payments", validate: function (v) { if (v.length > 63 || !/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/.test(v)) return "DNS-1123: Kleinbuchstaben/Ziffern/Bindestriche, max 63."; } },
@@ -517,14 +517,22 @@
     var files = buildFiles(c);
     var full, htmlUrl, branch, baseCommitSha, baseTreeSha;
     return ghReq("GET", "https://api.github.com/user", token).then(function (me) {
-      log("Authentifiziert als " + me.login);
-      var owner = (c.githubOwner && c.githubOwner.toLowerCase() !== me.login.toLowerCase()) ? c.githubOwner : me.login;
+      var login = me.login;
+      log("Authentifiziert als " + login);
+      var owner = (c.githubOwner && c.githubOwner.toLowerCase() !== login.toLowerCase()) ? c.githubOwner : login;
       var repoBody = { name: c.repositoryName, private: visibility === "private", auto_init: true, description: c.description };
       log("Erstelle Repository " + owner + "/" + c.repositoryName + " (" + visibility + ")");
-      var url = owner.toLowerCase() === me.login.toLowerCase()
-        ? "https://api.github.com/user/repos"
-        : "https://api.github.com/orgs/" + owner + "/repos";
-      return ghReq("POST", url, token, repoBody);
+      if (owner.toLowerCase() === login.toLowerCase()) {
+        return ghReq("POST", "https://api.github.com/user/repos", token, repoBody);
+      }
+      // owner != compte : on tente l'organisation, sinon repli sous le compte authentifie.
+      return ghReq("POST", "https://api.github.com/orgs/" + owner + "/repos", token, repoBody).catch(function (e) {
+        if (e.status === 404 || e.status === 403) {
+          log("Organisation '" + owner + "' nicht gefunden oder kein Zugriff. Erstelle unter " + login + ".", "gp-logerr");
+          return ghReq("POST", "https://api.github.com/user/repos", token, repoBody);
+        }
+        throw e;
+      });
     }).then(function (repo) {
       full = repo.full_name;
       htmlUrl = repo.html_url;
