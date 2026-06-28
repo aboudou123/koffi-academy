@@ -619,10 +619,12 @@
     log("Starte echte Veroeffentlichung...", "gp-logbeg");
     ghCreate(c, token, visibility, log).then(function (url) {
       log("Erfolgreich abgeschlossen.", "gp-logbeg");
-      var files = buildFiles(c);
       document.getElementById("gpRealActions").innerHTML =
+        '<button class="gp-btn" type="button" id="gpShowReal"><i class="fa-solid fa-folder-open"></i> Dateien anzeigen</button> ' +
         '<a class="gp-btn" href="' + url + '" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Repository oeffnen</a> ' +
         '<a class="gp-btn p" href="' + url + '/actions" target="_blank" rel="noopener"><i class="fa-solid fa-play"></i> Actions ansehen</a>';
+      var sb = document.getElementById("gpShowReal");
+      if (sb) sb.addEventListener("click", function () { renderFiles(c, buildFiles(c)); });
     }).catch(function (err) {
       log("Fehler: " + (err && err.message ? err.message : "unbekannt"), "gp-logerr");
       if (err && err.status === 422) log("Hinweis: Repository-Name existiert evtl. bereits. Anderen Namen waehlen.", "gp-logerr");
