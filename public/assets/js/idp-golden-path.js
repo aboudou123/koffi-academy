@@ -7,26 +7,37 @@
 (function () {
   "use strict";
 
-  // ── Definition des champs (labels alignes sur le template Backstage reel) ───
+  // ── Validateurs (format ; le champ vide est traite comme "Pflichtfeld") ─────
+  function vGithub(v) { if (!/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38}[A-Za-z0-9])?$/.test(v)) return "Gueltiger GitHub-Name: Buchstaben, Ziffern, Bindestriche."; }
+  function vPort(v) { if (!/^\d+$/.test(v) || +v < 1 || +v > 65535) return "Ganzzahl zwischen 1 und 65535."; }
+
+  // ── Definition des champs : AUCUNE valeur par defaut, saisie manuelle ───────
   var FIELDS = {
-    serviceName: { label: "Technischer Servicename", def: "enterprise-demo-service09" },
-    serviceTitle: { label: "Anzeigename", def: "Enterprise Demo Service09" },
-    description: { label: "Beschreibung", def: "Standardisierter Enterprise-Service, der ueber Backstage erzeugt wurde." },
-    owner: { label: "Verantwortlicher Owner", def: "group:default/platform-team" },
-    system: { label: "Zugehoeriges System", type: "select", opts: ["manufacturing-platform", "developer-platform"], def: "manufacturing-platform" },
-    lifecycle: { label: "Lebenszyklus", type: "select", opts: ["experimental", "production", "deprecated"], def: "experimental" },
-    businessCriticality: { label: "Business Criticality", type: "select", opts: ["low", "medium", "high", "critical"], def: "medium" },
-    dataClassification: { label: "Data Classification", type: "select", opts: ["public", "internal", "confidential", "restricted"], def: "internal" },
-    githubOwner: { label: "GitHub Owner oder Organisation", def: "aboudou123" },
-    repositoryName: { label: "Repository-Name", def: "enterprise-demo-serviceko" },
-    codeOwnerUsername: { label: "GitHub CODEOWNER", def: "aboudou123" },
-    namespace: { label: "Kubernetes Namespace", def: "idpapp" },
-    servicePort: { label: "Service Port", type: "number", def: 80 },
-    containerPort: { label: "Container Port", type: "number", def: 8080 },
-    serviceHost: { label: "Ingress Host", def: "enterprise-demo-service.local" },
-    pipelineName: { label: "Pipeline-Name", def: "enterprise-demo-service-ci" },
-    runtime: { label: "Runtime", type: "select", opts: ["nodejs", "python", "go", "java"], def: "nodejs" }
+    serviceName: { label: "Technischer Servicename", ph: "z. B. payment-service", validate: function (v) { if (!/^[a-z][a-z0-9-]{1,48}[a-z0-9]$/.test(v)) return "Kleinbuchstaben, Ziffern, Bindestriche; Anfang ein Buchstabe."; } },
+    serviceTitle: { label: "Anzeigename", ph: "z. B. Payment Service", validate: function (v) { if (v.length < 3) return "Mindestens 3 Zeichen."; } },
+    description: { label: "Beschreibung", ph: "Kurze fachliche Beschreibung des Service", validate: function (v) { if (v.length < 10) return "Mindestens 10 Zeichen."; } },
+    owner: { label: "Verantwortlicher Owner", ph: "group:default/team-name", validate: function (v) { if (!/^(group|user):[a-z0-9-]+\/[a-z0-9-]+$/.test(v)) return "Format: group:default/team oder user:default/name."; } },
+    system: { label: "Zugehoeriges System", type: "select", opts: ["manufacturing-platform", "developer-platform"] },
+    lifecycle: { label: "Lebenszyklus", type: "select", opts: ["experimental", "production", "deprecated"] },
+    businessCriticality: { label: "Business Criticality", type: "select", opts: ["low", "medium", "high", "critical"] },
+    dataClassification: { label: "Data Classification", type: "select", opts: ["public", "internal", "confidential", "restricted"] },
+    githubOwner: { label: "GitHub Owner oder Organisation", ph: "z. B. meine-org", validate: vGithub },
+    repositoryName: { label: "Repository-Name", ph: "z. B. payment-service", validate: function (v) { if (!/^[A-Za-z0-9._-]{1,100}$/.test(v)) return "Erlaubt: Buchstaben, Ziffern, . _ -"; } },
+    codeOwnerUsername: { label: "GitHub CODEOWNER", ph: "GitHub-Benutzername", validate: vGithub },
+    namespace: { label: "Kubernetes Namespace", ph: "z. B. payments", validate: function (v) { if (v.length > 63 || !/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/.test(v)) return "DNS-1123: Kleinbuchstaben/Ziffern/Bindestriche, max 63."; } },
+    servicePort: { label: "Service Port", type: "number", ph: "z. B. 80", validate: vPort },
+    containerPort: { label: "Container Port", type: "number", ph: "z. B. 8080", validate: vPort },
+    serviceHost: { label: "Ingress Host", ph: "z. B. payment.example.com", validate: function (v) { if (!/^([a-z0-9-]+\.)+[a-z0-9-]{2,}$/.test(v)) return "Gueltiger Hostname, z. B. service.example.com."; } },
+    pipelineName: { label: "Pipeline-Name", ph: "z. B. payment-service-ci", validate: function (v) { if (!/^[a-z0-9][a-z0-9-]*$/.test(v)) return "Kleinbuchstaben, Ziffern, Bindestriche."; } },
+    runtime: { label: "Runtime", type: "select", opts: ["nodejs", "python", "go", "java"] }
   };
+
+  function fieldError(key, v) {
+    v = (v == null ? "" : String(v)).trim();
+    if (!v) return "Pflichtfeld.";
+    var fn = FIELDS[key].validate;
+    return fn ? (fn(v) || "") : "";
+  }
 
   var STEPS = [
     { title: "Service-Informationen", fields: ["serviceName", "serviceTitle", "description"] },
@@ -41,7 +52,7 @@
 
   function defaults() {
     var c = {};
-    Object.keys(FIELDS).forEach(function (k) { c[k] = FIELDS[k].def; });
+    Object.keys(FIELDS).forEach(function (k) { c[k] = ""; });
     return c;
   }
 
@@ -472,6 +483,9 @@
       ".gp-field.full{grid-column:1/-1}",
       ".gp-field label{font-size:12.5px;font-weight:700;color:#34465c}",
       ".gp-field input,.gp-field select{padding:10px 12px;border:1px solid #d1d9e3;border-radius:9px;font-size:14px;font-family:inherit;background:#fff}",
+      ".gp-field input:focus,.gp-field select:focus{outline:none;border-color:#1b2a6b;box-shadow:0 0 0 3px rgba(27,42,107,.12)}",
+      ".gp-field input.invalid,.gp-field select.invalid{border-color:#c0392b;background:#fff7f6}",
+      ".gp-err{color:#c0392b;font-size:11.5px;min-height:14px;font-weight:600}",
       ".gp-nav{display:flex;justify-content:space-between;gap:10px;margin-top:22px;padding-top:16px;border-top:1px solid #eef1f6}",
       ".gp-btn{border:1px solid #d1d9e3;background:#fff;border-radius:9px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;color:#1b2a6b}",
       ".gp-btn:hover{background:#f1f5f9}",
@@ -516,24 +530,50 @@
   }
 
   function fieldHtml(key) {
-    var f = FIELDS[key], val = state.cfg[key], full = key === "description" ? " full" : "";
+    var f = FIELDS[key], val = state.cfg[key] || "", full = key === "description" ? " full" : "";
     var input;
     if (f.type === "select") {
-      input = '<select id="gp_' + key + '">' + f.opts.map(function (o) {
-        return '<option' + (o === val ? " selected" : "") + ">" + esc(o) + "</option>";
-      }).join("") + "</select>";
+      input = '<select id="gp_' + key + '">' +
+        '<option value="" disabled' + (val ? "" : " selected") + ">— bitte auswaehlen —</option>" +
+        f.opts.map(function (o) { return '<option' + (o === val ? " selected" : "") + ">" + esc(o) + "</option>"; }).join("") +
+        "</select>";
     } else {
-      input = '<input id="gp_' + key + '" type="' + (f.type === "number" ? "number" : "text") + '" value="' + esc(val) + '">';
+      input = '<input id="gp_' + key + '" type="' + (f.type === "number" ? "number" : "text") +
+        '" placeholder="' + esc(f.ph || "") + '" value="' + esc(val) + '" autocomplete="off">';
     }
-    return '<div class="gp-field' + full + '"><label>' + esc(f.label) + "</label>" + input + "</div>";
+    return '<div class="gp-field' + full + '"><label>' + esc(f.label) + ' <span style="color:#c0392b">*</span></label>' +
+      input + '<div class="gp-err" id="gperr_' + key + '"></div></div>';
   }
 
   function collect() {
     STEPS[state.step].fields.forEach(function (key) {
       var el = document.getElementById("gp_" + key);
-      if (!el) return;
-      state.cfg[key] = FIELDS[key].type === "number" ? (parseInt(el.value, 10) || FIELDS[key].def) : el.value;
+      if (el) state.cfg[key] = el.value;
     });
+  }
+
+  // Valide une liste de champs, affiche les erreurs inline, retourne true si tout est valide.
+  function validateFields(keys) {
+    var ok = true;
+    keys.forEach(function (key) {
+      var err = fieldError(key, state.cfg[key]);
+      var input = document.getElementById("gp_" + key);
+      var box = document.getElementById("gperr_" + key);
+      if (box) box.textContent = err;
+      if (input) input.classList.toggle("invalid", !!err);
+      if (err) ok = false;
+    });
+    return ok;
+  }
+
+  // Retourne l'index de la premiere etape invalide, ou -1 si tout est valide.
+  function firstInvalidStep() {
+    for (var i = 0; i < 5; i++) {
+      for (var j = 0; j < STEPS[i].fields.length; j++) {
+        if (fieldError(STEPS[i].fields[j], state.cfg[STEPS[i].fields[j]])) return i;
+      }
+    }
+    return -1;
   }
 
   function renderStep() {
@@ -546,8 +586,16 @@
       '<button class="gp-btn p" type="button" id="gpNext">' + next + ' <i class="fa-solid fa-arrow-right"></i></button>' +
       "</div>";
     body().innerHTML = html;
-    document.getElementById("gpPrev").addEventListener("click", function () { collect(); state.step--; renderStep(); });
-    document.getElementById("gpNext").addEventListener("click", function () { collect(); state.step = 5; renderReview(); });
+    document.getElementById("gpPrev").addEventListener("click", function () {
+      collect();
+      if (state.step > 0) { state.step--; renderStep(); }
+    });
+    document.getElementById("gpNext").addEventListener("click", function () {
+      collect();
+      if (!validateFields(STEPS[state.step].fields)) return; // bloque tant que l'etape n'est pas valide
+      if (state.step < 4) { state.step++; renderStep(); }
+      else renderReview();
+    });
   }
 
   function renderReview() {
@@ -563,7 +611,11 @@
         '<button class="gp-btn p" type="button" id="gpCreate"><i class="fa-solid fa-rocket"></i> Erstellen</button>' +
       "</div>";
     document.getElementById("gpPrev").addEventListener("click", function () { state.step = 4; renderStep(); });
-    document.getElementById("gpCreate").addEventListener("click", renderRun);
+    document.getElementById("gpCreate").addEventListener("click", function () {
+      var bad = firstInvalidStep();
+      if (bad !== -1) { state.step = bad; renderStep(); validateFields(STEPS[bad].fields); return; }
+      renderRun();
+    });
   }
 
   function renderRun() {
