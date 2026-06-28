@@ -379,22 +379,26 @@
     });
   }
 
-  // ── Interception de la carte create-env ─────────────────────────────────────
-  function hook() {
-    if (typeof window.openModal === "function" && !window.openModal.__ceWrapped) {
+  // ── Interception via registre partage (un seul wrap, pas de conflit) ────────
+  function register() {
+    window.__idpModalHandlers = window.__idpModalHandlers || {};
+    window.__idpModalHandlers["create-env"] = open;
+    if (typeof window.openModal === "function" && !window.openModal.__idpWrapped) {
       var original = window.openModal;
-      window.openModal = function (id) {
-        if (id === "create-env") { open(); return; }
+      var wrapped = function (id) {
+        var h = window.__idpModalHandlers || {};
+        if (h[id]) { h[id](); return; }
         return original.apply(this, arguments);
       };
-      window.openModal.__ceWrapped = true;
+      wrapped.__idpWrapped = true;
+      window.openModal = wrapped;
     }
   }
   function init() {
     injectStyle();
-    hook();
+    register();
     var tries = 0;
-    var iv = setInterval(function () { hook(); if ((window.openModal && window.openModal.__ceWrapped) || ++tries > 40) clearInterval(iv); }, 300);
+    var iv = setInterval(function () { register(); if ((window.openModal && window.openModal.__idpWrapped) || ++tries > 40) clearInterval(iv); }, 300);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
