@@ -486,13 +486,23 @@ window.I18N = {
   var st={plan:false,strategy:false,validate:false,rationale:false};
   var validated=false; var hi=0;
 
+  /* Single source of truth: once the LabVM shell is ready, its filesystem holds
+     the design files. FS mirrors it so terminal and Design Files tab stay in sync. */
+  var vm=null;
+  var editorDirty=false;
+  var VPC="/root/vpc-design/";
+  var VALIDATE_SH="#!/usr/bin/env bash\n# validate_cidr.sh - prueft die CIDR-Bloecke auf Ueberschneidung und Groesse\nset -euo pipefail\nPLAN=\"${1:-environment_plan.yml}\"\ngrep -q \"environments:\" \"$PLAN\" || { echo \"error: kein environments-Block\"; exit 1; }\necho \"[ok] Validierung abgeschlossen\"\n";
+  function readFile(name){ if(vm && vm.fs.exists(VPC+name)){ var c=vm.fs.read(VPC+name); return c==null?"":c; } return FS[name]||""; }
+  function writeFileFS(name,val){ FS[name]=val; if(vm) vm.fs.writeFile(VPC+name,val,{makeParents:true}); }
+  function syncFromVM(){ if(!vm) return; FILES.forEach(function(f){ if(vm.fs.exists(VPC+f)){ var c=vm.fs.read(VPC+f); FS[f]=c==null?"":c; } }); }
+
   var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput"), editor=document.getElementById("fileEditor");
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
   function print(text,cls){String(text).split("\n").forEach(function(line){var l=document.createElement("div");if(cls)l.className=cls;l.innerHTML=esc(line);out.appendChild(l);});out.scrollTop=out.scrollHeight;}
   function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
   function banner(){out.innerHTML="";print(t("bSsh"),"line-muted");print(t("bUbuntu"),"line-muted");print(t("bEnv"),"line-muted");print(t("bTip"),"line-muted");print("");}
 
-  function envCount(){var y=FS["environment_plan.yml"]||"";return ["development:","staging:","production:"].filter(function(e){return y.indexOf(e)!==-1;}).length;}
+  function envCount(){var y=readFile("environment_plan.yml");return ["development:","staging:","production:"].filter(function(e){return y.indexOf(e)!==-1;}).length;}
   function setStep(n,d){if(st[n]===d)return;st[n]=d;var el=document.querySelector('.step[data-step="'+n+'"]');if(el)el.classList.toggle("is-done",d);var tot=0;["plan","strategy","validate","rationale"].forEach(function(k){if(st[k])tot++;});document.getElementById("progressText").textContent=tot+" / 4";document.getElementById("progressFill").style.width=(tot/4*100)+"%";if(tot===4)toast(t("tDone"));}
   function refresh(){document.getElementById("mEnvs").textContent=envCount()+"/3";document.getElementById("mValid").textContent=validated?"OK":"—";}
 
@@ -500,10 +510,10 @@ window.I18N = {
   function resolve(p){p=norm(p);return FS[p]!==undefined?p:null;}
 
   function checkSaves(){
-    var y=FS["environment_plan.yml"]||"";
+    var y=readFile("environment_plan.yml");
     if(/environments:/.test(y)&&envCount()>=3)setStep("plan",true);
     if(/subnet_strategy:/.test(y))setStep("strategy",true);
-    var r=FS["design_rationale.md"]||"";
+    var r=readFile("design_rationale.md");
     if(/Rationale|rationale|Decision|##/.test(r)&&r.trim().length>40)setStep("rationale",true);
     refresh();
   }
@@ -525,7 +535,7 @@ window.I18N = {
       return;
     }
     if(/validate_cidr\.sh/.test(cmd)){
-      var y=FS["environment_plan.yml"]||"";
+      var y=readFile("environment_plan.yml");
       if(/environments:/.test(y)&&envCount()>=3){print(t("valOk"),"line-ok");validated=true;refresh();setStep("validate",true);}
       else{print(t("valNoFile"),"line-error");}
       return;
@@ -578,13 +588,22 @@ window.I18N = {
       var m=base.match(/([^\s@(]+)@([^:\s]+):/);
       var user=m?m[1]:"koffi",host=m?m[2]:"lab";
       var sym=/#\s*$/.test(base)?"#":"$";
-      var vm=window.LabVM.create({
+      vm=window.LabVM.create({
         user:user,host:host,home:"/root",
         print:vprint,clear:function(){out.innerHTML="";},
         prompt:function(v){var pre=(pp&&/\(venv\)/.test(pp.textContent))?"(venv) ":"";return pre+user+"@"+host+":"+v.displayCwd()+sym;},
-        fallback:function(line){handle(line);}
+        fallback:function(line){handle(line);},
+        onChange:function(){ syncFromVM(); if(!editorDirty&&vm.fs.exists(VPC+currentFile)){ editor.value=vm.fs.read(VPC+currentFile)||""; } checkSaves(); }
       });
-      vm.fs.mkdirp("/root");
+      // Seed the shared filesystem: requirements, validation script, and the two
+      // design files (empty until authored) all live under /root/vpc-design.
+      vm.fs.mkdirp("/root/vpc-design/scripts");
+      vm.fs.writeFile("/root/vpc-design/taskflow-requirements.txt",t("requirements")+"\n",{makeParents:true});
+      vm.fs.writeFile("/root/vpc-design/scripts/validate_cidr.sh",VALIDATE_SH,{makeParents:true});
+      var vsh=vm.fs.nodeAt("/root/vpc-design/scripts/validate_cidr.sh"); if(vsh)vsh.exec=true;
+      FILES.forEach(function(f){ vm.fs.writeFile(VPC+f,FS[f]||"",{makeParents:true}); });
+      vm.cwd="/root/vpc-design";
+      selectFile(currentFile); refresh();
       // Full Ubuntu MOTD on top of the lab's own welcome lines.
       var labLines=Array.prototype.slice.call(out.children).map(function(n){return {t:n.textContent,c:n.className};});
       out.innerHTML="";
@@ -603,10 +622,11 @@ window.I18N = {
 
   document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");var tb=b.getAttribute("data-tab");document.getElementById("terminalView").classList.toggle("is-active",tb==="terminal");document.getElementById("datasetsView").classList.toggle("is-active",tb==="datasets");if(tb==="terminal")input.focus();});});
   function switchTab(w){document.querySelectorAll(".tab").forEach(function(b){if(b.getAttribute("data-tab")===w)b.click();});}
-  function selectFile(p){currentFile=p;editor.value=FS[p];document.getElementById("fileLabel").textContent="/root/vpc-design/"+p;document.querySelectorAll(".filetab").forEach(function(b){b.classList.toggle("is-active",b.getAttribute("data-file")===p);});}
-  document.querySelectorAll(".filetab").forEach(function(b){b.addEventListener("click",function(){FS[currentFile]=editor.value;selectFile(b.getAttribute("data-file"));});});
-  document.getElementById("saveFile").addEventListener("click",function(){FS[currentFile]=editor.value;toast(t("tSavedFile"));checkSaves();});
-  document.getElementById("resetFile").addEventListener("click",function(){editor.value="";FS[currentFile]="";});
+  function selectFile(p){currentFile=p;editor.value=readFile(p);editorDirty=false;document.getElementById("fileLabel").textContent="/root/vpc-design/"+p;document.querySelectorAll(".filetab").forEach(function(b){b.classList.toggle("is-active",b.getAttribute("data-file")===p);});}
+  editor.addEventListener("input",function(){editorDirty=true;});
+  document.querySelectorAll(".filetab").forEach(function(b){b.addEventListener("click",function(){if(editorDirty)writeFileFS(currentFile,editor.value);selectFile(b.getAttribute("data-file"));});});
+  document.getElementById("saveFile").addEventListener("click",function(){writeFileFS(currentFile,editor.value);editorDirty=false;toast(t("tSavedFile"));checkSaves();});
+  document.getElementById("resetFile").addEventListener("click",function(){editor.value="";editorDirty=false;writeFileFS(currentFile,"");});
   document.getElementById("reloadBtn").addEventListener("click",function(){banner();switchTab("terminal");input.focus();});
   document.querySelectorAll(".step__top").forEach(function(top){top.addEventListener("click",function(){top.parentElement.classList.toggle("is-open");});});
   document.getElementById("checkBtn").addEventListener("click",function(){switchTab("terminal");runCheck();});
