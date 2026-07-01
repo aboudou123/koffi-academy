@@ -1466,7 +1466,7 @@
     // to config.fallback so each lab keeps its own scripted behaviour.
     var OWNED_FS = {
       cd:1, pwd:1, mkdir:1, rmdir:1, touch:1, rm:1, mv:1, cp:1, chmod:1, tree:1, head:1, tail:1, wc:1,
-      nano:1, vi:1, vim:1, edit:1,
+      nano:1, vi:1, vim:1, edit:1, echo:1,
       grep:1, find:1, sort:1, uniq:1, sed:1, awk:1, cut:1, tr:1, xargs:1, tee:1, apt:1, "apt-get":1
     };
     function vfsHasTarget(ctx) {
@@ -1520,6 +1520,20 @@
       return { delim: m[2], command: before };
     }
 
+    /* Strip a shell comment: an unquoted `#` at start-of-line or after
+       whitespace begins a comment that runs to end of line (bash behaviour).
+       `echo http://x` keeps its `#`-less word; `echo hi # note` drops the note. */
+    function stripComment(line) {
+      var q = null;
+      for (var i = 0; i < line.length; i++) {
+        var ch = line.charAt(i);
+        if (q) { if (ch === q) q = null; continue; }
+        if (ch === '"' || ch === "'") { q = ch; continue; }
+        if (ch === "#" && (i === 0 || /\s/.test(line.charAt(i - 1)))) return line.slice(0, i).replace(/\s+$/, "");
+      }
+      return line;
+    }
+
     /* ---- process a single input line (heredoc-aware) ---- */
     function processLine(line) {
       if (vm.heredoc) {
@@ -1532,6 +1546,8 @@
         vm.heredoc.body.push(line);
         return;
       }
+      line = stripComment(line);
+      if (line.trim() === "") return; // blank or comment-only line: nothing to do
       var hs = heredocStart(line);
       if (hs) { vm.heredoc = { delim: hs.delim, command: hs.command, body: [] }; return; }
       runCommandLine(line);
