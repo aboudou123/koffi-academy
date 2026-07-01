@@ -481,8 +481,10 @@ window.I18N = {
   var st={fences:false,runagent:false,run:false};
   var hi=0;
   var fileContent=window.AGENT_PY_STUB;
+  var vm=null, AGENT_PATH="/root/agent.py", edDirty=false;
   var out=document.getElementById("terminalOutput"), input=document.getElementById("terminalInput"), editor=document.getElementById("fileEditor");
   editor.value=fileContent;
+  editor.addEventListener("input",function(){edDirty=true;});
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
   function print(text,cls){String(text).replace(/\\n/g,"\n").split("\n").forEach(function(line){var l=document.createElement("div");if(cls)l.className=cls;l.innerHTML=esc(line);out.appendChild(l);});out.scrollTop=out.scrollHeight;}
   function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.add("is-on");clearTimeout(el._tm);el._tm=setTimeout(function(){el.classList.remove("is-on");},2200);}
@@ -556,13 +558,15 @@ window.I18N = {
       var m=base.match(/([^\s@(]+)@([^:\s]+):/);
       var user=m?m[1]:"koffi",host=m?m[2]:"lab";
       var sym=/#\s*$/.test(base)?"#":"$";
-      var vm=window.LabVM.create({
+      vm=window.LabVM.create({
         user:user,host:host,home:"/root",
         print:vprint,clear:function(){out.innerHTML="";},
         prompt:function(v){var pre=(pp&&/\(venv\)/.test(pp.textContent))?"(venv) ":"";return pre+user+"@"+host+":"+v.displayCwd()+sym;},
-        fallback:function(line){handle(line);}
+        fallback:function(line){handle(line);},
+        onChange:function(){try{var c=vm.fs.read(AGENT_PATH);if(c!=null){fileContent=c;if(!edDirty)editor.value=c;}checkSaves();}catch(_){}}
       });
       vm.fs.mkdirp("/root");
+      try{vm.fs.writeFile(AGENT_PATH,fileContent,{makeParents:true});}catch(_){}
       // Full Ubuntu MOTD on top of the lab's own welcome lines.
       var labLines=Array.prototype.slice.call(out.children).map(function(n){return {t:n.textContent,c:n.className};});
       out.innerHTML="";
@@ -581,8 +585,8 @@ window.I18N = {
 
   document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");var tb=b.getAttribute("data-tab");document.getElementById("terminalView").classList.toggle("is-active",tb==="terminal");document.getElementById("datasetsView").classList.toggle("is-active",tb==="datasets");if(tb==="terminal")input.focus();});});
   function switchTab(w){document.querySelectorAll(".tab").forEach(function(b){if(b.getAttribute("data-tab")===w)b.click();});}
-  document.getElementById("saveFile").addEventListener("click",function(){fileContent=editor.value;toast(t("tSaved"));checkSaves();});
-  document.getElementById("resetFile").addEventListener("click",function(){editor.value=window.AGENT_PY_STUB;fileContent=window.AGENT_PY_STUB;});
+  document.getElementById("saveFile").addEventListener("click",function(){fileContent=editor.value;edDirty=false;if(vm)try{vm.fs.writeFile(AGENT_PATH,fileContent,{makeParents:true});}catch(_){}toast(t("tSaved"));checkSaves();});
+  document.getElementById("resetFile").addEventListener("click",function(){editor.value=window.AGENT_PY_STUB;fileContent=window.AGENT_PY_STUB;edDirty=false;if(vm)try{vm.fs.writeFile(AGENT_PATH,window.AGENT_PY_STUB,{makeParents:true});}catch(_){}});
   document.getElementById("reloadBtn").addEventListener("click",function(){banner();switchTab("terminal");input.focus();});
   document.querySelectorAll(".step__top").forEach(function(top){top.addEventListener("click",function(){top.parentElement.classList.toggle("is-open");});});
   document.getElementById("checkBtn").addEventListener("click",function(){switchTab("terminal");runCheck();});
