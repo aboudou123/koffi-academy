@@ -30,6 +30,99 @@
 
   function now() { return Date.now(); }
 
+  /* ---------------------------------------------------------------- editor helpers */
+  function mk(tag, cls, txt) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (txt != null) n.textContent = txt;
+    return n;
+  }
+
+  function countLines(v) {
+    if (v === "") return 0;
+    var n = v.split("\n").length;
+    if (v.charAt(v.length - 1) === "\n") n--;
+    return n;
+  }
+
+  function posToLineCol(v, pos) {
+    var before = v.slice(0, pos);
+    return { line: before.split("\n").length, col: pos - before.lastIndexOf("\n") };
+  }
+
+  function lineColToPos(v, line, col) {
+    var lines = v.split("\n");
+    line = Math.max(1, Math.min(line, lines.length));
+    var pos = 0;
+    for (var i = 0; i < line - 1; i++) pos += lines[i].length + 1;
+    var maxc = (lines[line - 1] || "").length + 1;
+    col = Math.max(1, Math.min(col || 1, maxc));
+    return pos + col - 1;
+  }
+
+  /* Locate the terminal container to overlay the editor on. When a command is
+     submitted the terminal input still has focus, so its ancestor pane is the
+     right target; fall back to the active pane / first terminal view. */
+  function findEditorHost() {
+    var active = document.activeElement;
+    var host = active && active.closest ? active.closest(".ubuntu-terminal__pane, .terminal-view") : null;
+    if (!host) host = document.querySelector(".ubuntu-terminal__pane.is-active") || document.querySelector(".terminal-view");
+    return host;
+  }
+
+  var NANO_BAR = [
+    ["^G", "Help"], ["^O", "Write Out"], ["^W", "Where Is"], ["^K", "Cut"],
+    ["^C", "Location"], ["^X", "Exit"], ["^R", "Read File"], ["^\\", "Replace"],
+    ["^U", "Paste"], ["^J", "Justify"], ["^/", "Go To Line"], ["^T", "Execute"],
+    ["M-U", "Undo"], ["M-E", "Redo"], ["M-6", "Copy"], ["^A/^E", "Line Start/End"]
+  ];
+
+  var NANO_HELP = [
+    "GNU nano — Kurzhilfe / aide-mémoire",
+    "",
+    "  ^O  Datei speichern (Write Out) — fragt den Dateinamen, Enter bestätigt",
+    "  ^X  Editor verlassen (Exit) — fragt bei ungespeicherten Änderungen nach",
+    "  ^W  Suchen (Where Is) — springt zum nächsten Treffer",
+    "  ^\\  Suchen und Ersetzen (Replace) — ersetzt alle Vorkommen",
+    "  ^K  Aktuelle Zeile / Auswahl ausschneiden (Cut)",
+    "  ^U  Ausgeschnittenen Text einfügen (Paste)",
+    "  M-6 Auswahl kopieren (Copy)     M-U Rückgängig     M-E Wiederholen",
+    "  ^C  Cursorposition anzeigen (Location)",
+    "  ^/  Zu Zeile springen (Go To Line)",
+    "  ^R  Andere Datei an Cursor einfügen (Read File)",
+    "  ^J  Absatz umbrechen (Justify)",
+    "  ^A / ^E  Zeilenanfang / Zeilenende",
+    "  Pfeiltasten, Pos1/Ende, Bild auf/ab, Tab, Backspace: wie gewohnt",
+    "",
+    "  Diese Hilfe schließen: ^X oder Esc"
+  ].join("\n");
+
+  function ensureNanoStyle() {
+    if (document.getElementById("labvm-nano-style")) return;
+    var css = ""
+      + ".labvm-nano{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;background:#0d0f12;color:#e8edf2;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.5}"
+      + ".labvm-nano__title{display:flex;align-items:center;gap:16px;background:#e8edf2;color:#0d0f12;padding:4px 12px;font-weight:600;flex:0 0 auto}"
+      + ".labvm-nano__title .t-file{flex:1;text-align:center;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}"
+      + ".labvm-nano__title .t-mod{min-width:72px;text-align:right}"
+      + ".labvm-nano__area{flex:1 1 auto;min-height:0;width:100%;box-sizing:border-box;border:0;outline:0;resize:none;background:transparent;color:inherit;font:inherit;line-height:1.5;padding:8px 12px;white-space:pre-wrap;overflow-wrap:anywhere;overflow:auto;tab-size:2}"
+      + ".labvm-nano__msg{flex:0 0 auto;min-height:20px;text-align:center;padding:2px 12px;color:#0d0f12}"
+      + ".labvm-nano__msg.show{background:#e8edf2}"
+      + ".labvm-nano__prompt{display:none;align-items:center;gap:8px;padding:3px 12px;background:#e8edf2;color:#0d0f12;flex:0 0 auto}"
+      + ".labvm-nano__prompt.show{display:flex}"
+      + ".labvm-nano__prompt label{white-space:nowrap;font-weight:600}"
+      + ".labvm-nano__prompt input{flex:1;min-width:0;border:0;outline:0;background:#fff;color:#0d0f12;font:inherit;padding:2px 6px}"
+      + ".labvm-nano__bar{display:grid;grid-template-columns:repeat(2,1fr);gap:0 20px;padding:4px 12px 8px;flex:0 0 auto}"
+      + "@media(min-width:720px){.labvm-nano__bar{grid-template-columns:repeat(4,1fr)}}"
+      + ".labvm-nano__bar .k{display:flex;gap:8px;padding:1px 0;align-items:center}"
+      + ".labvm-nano__bar .k b{background:#e8edf2;color:#0d0f12;padding:0 4px;font-weight:600;white-space:nowrap}"
+      + ".labvm-nano__bar .k span{color:#e8edf2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}"
+      + ".labvm-nano__help{position:absolute;inset:0;z-index:70;background:#0d0f12;color:#e8edf2;padding:16px 20px;overflow:auto;white-space:pre-wrap;font:inherit;line-height:1.6}";
+    var style = document.createElement("style");
+    style.id = "labvm-nano-style";
+    style.textContent = css;
+    document.head.appendChild(style);
+  }
+
   /* ---------------------------------------------------------------- filesystem */
   function createFS(home) {
     var root = { type: "dir", children: {}, mtime: now() };
@@ -446,11 +539,310 @@
       emit("  pwd  cd  ls [-la]  mkdir [-p]  rmdir  rm [-rf]  touch  cat", "line-muted");
       emit("  echo [> file]  cat > file << EOF … EOF  chmod  mv  cp  tree  wc  head  tail", "line-muted");
       emit("  clear  whoami  date  help", "line-muted");
+      emit("  nano / vi / vim <fichier>   Editor: bearbeiten + speichern (^O), verlassen (^X)", "line-muted");
       if (config.commands) {
         var extra = Object.keys(config.commands);
         if (extra.length) emit("  " + extra.join("  "), "line-muted");
       }
     };
+
+    /* ---- nano-style full-screen editor (nano / vi / vim / edit) ---- */
+    function openNano(ctx) {
+      ensureNanoStyle();
+      var host = findEditorHost();
+      if (!host) { emit("nano: kann das Terminal nicht finden", "line-error"); return; }
+
+      var curName = (ctx.operands && ctx.operands[0]) || "";
+      var abs = curName ? fs.resolve(curName, vm.cwd) : null;
+      if (abs && fs.isDir(abs)) { emit("nano: " + curName + ": Is a directory", "line-error"); return; }
+      var existed = !!(abs && fs.isFile(abs));
+      var content = existed ? (fs.read(abs) || "") : "";
+
+      var termInput = host.querySelector(".terminal-input, .ubuntu-terminal__input");
+      var prevPos = host.style.position;
+      if (window.getComputedStyle(host).position === "static") host.style.position = "relative";
+
+      var modified = false, cutbuffer = "", lastSearch = "", mode = "normal", promptConfirm = null, helpEl = null;
+
+      var root = mk("div", "labvm-nano");
+      var title = mk("div", "labvm-nano__title");
+      var tfile = mk("span", "t-file", curName || "New Buffer");
+      var tmod = mk("span", "t-mod", "");
+      title.append(mk("span", "t-ver", "GNU nano 7.2"), tfile, tmod);
+
+      var ta = mk("textarea", "labvm-nano__area");
+      ta.value = content;
+      ta.setAttribute("spellcheck", "false");
+      ta.setAttribute("autocomplete", "off");
+
+      var msg = mk("div", "labvm-nano__msg", "");
+      var pwrap = mk("div", "labvm-nano__prompt");
+      var plabel = mk("label");
+      var pinput = mk("input");
+      pinput.type = "text";
+      pinput.autocomplete = "off";
+      pwrap.append(plabel, pinput);
+
+      var bar = mk("div", "labvm-nano__bar");
+      NANO_BAR.forEach(function (it) {
+        var k = mk("div", "k");
+        k.append(mk("b", null, it[0]), mk("span", null, it[1]));
+        bar.appendChild(k);
+      });
+
+      root.append(title, ta, msg, pwrap, bar);
+      host.appendChild(root);
+
+      function setMsg(t) { msg.textContent = t || ""; msg.classList.toggle("show", !!t); }
+      function refreshTitle() { tmod.textContent = modified ? "Modified" : ""; tfile.textContent = curName || "New Buffer"; }
+      function markDirty() { if (!modified) { modified = true; refreshTitle(); } }
+
+      function ensureCaretVisible() {
+        var lc = posToLineCol(ta.value, ta.selectionStart);
+        var lineH = parseFloat(window.getComputedStyle(ta).lineHeight) || 18;
+        var y = (lc.line - 1) * lineH;
+        if (y < ta.scrollTop) ta.scrollTop = y;
+        else if (y > ta.scrollTop + ta.clientHeight - lineH) ta.scrollTop = y - ta.clientHeight + lineH * 2;
+      }
+
+      function insertAtCursor(t) {
+        var s = ta.selectionStart, e = ta.selectionEnd, v = ta.value;
+        ta.value = v.slice(0, s) + t + v.slice(e);
+        ta.selectionStart = ta.selectionEnd = s + t.length;
+        markDirty();
+        ensureCaretVisible();
+      }
+
+      function openPrompt(label, initial, onConfirm) {
+        mode = "prompt";
+        plabel.textContent = label;
+        pinput.value = initial || "";
+        pwrap.classList.add("show");
+        promptConfirm = onConfirm;
+        window.setTimeout(function () { pinput.focus(); pinput.select(); }, 0);
+      }
+      function closePrompt() { pwrap.classList.remove("show"); mode = "normal"; promptConfirm = null; }
+
+      function destroy() {
+        root.remove();
+        if (prevPos) host.style.position = prevPos; else host.style.removeProperty("position");
+        if (termInput) { try { termInput.focus(); } catch (_) {} }
+      }
+
+      function writeOut(after) {
+        openPrompt("File Name to Write: ", curName, function (name) {
+          name = (name || "").trim();
+          if (!name) { setMsg("[ Cancelled ]"); ta.focus(); return; }
+          var a = fs.resolve(name, vm.cwd);
+          if (fs.isDir(a)) { setMsg("[ " + name + " is a directory ]"); ta.focus(); return; }
+          var r = fs.writeFile(a, ta.value, { makeParents: true });
+          if (r && r.error) { setMsg("[ Error writing " + name + " ]"); ta.focus(); return; }
+          curName = name;
+          modified = false;
+          refreshTitle();
+          changed();
+          setMsg("[ Wrote " + countLines(ta.value) + " lines ]");
+          ta.focus();
+          if (after) after();
+        });
+      }
+
+      function doExit() {
+        if (!modified) { destroy(); return; }
+        mode = "exit";
+        setMsg("Save modified buffer?   Y Yes   N No   ^C Cancel");
+      }
+
+      function cutLine() {
+        var v = ta.value, s = ta.selectionStart, e = ta.selectionEnd;
+        if (s !== e) {
+          cutbuffer = v.slice(s, e);
+          ta.value = v.slice(0, s) + v.slice(e);
+          ta.selectionStart = ta.selectionEnd = s;
+        } else {
+          var ls = v.lastIndexOf("\n", s - 1) + 1;
+          var le = v.indexOf("\n", s);
+          if (le === -1) le = v.length;
+          var end = le < v.length ? le + 1 : le;
+          cutbuffer = v.slice(ls, end);
+          ta.value = v.slice(0, ls) + v.slice(end);
+          ta.selectionStart = ta.selectionEnd = ls;
+        }
+        markDirty();
+        setMsg("");
+      }
+      function pasteBuf() { if (!cutbuffer) { setMsg("[ Cut buffer is empty ]"); return; } insertAtCursor(cutbuffer); }
+      function copySel() {
+        var s = ta.selectionStart, e = ta.selectionEnd;
+        if (s === e) { setMsg("[ Nothing is selected ]"); return; }
+        cutbuffer = ta.value.slice(s, e);
+        setMsg("[ Copied selection ]");
+      }
+
+      function doSearch(term) {
+        var v = ta.value, from = ta.selectionEnd;
+        var idx = v.indexOf(term, from);
+        if (idx === -1) idx = v.indexOf(term, 0);
+        if (idx === -1) { setMsg('[ "' + term + '" not found ]'); return; }
+        ta.focus();
+        ta.selectionStart = idx;
+        ta.selectionEnd = idx + term.length;
+        ensureCaretVisible();
+      }
+      function openSearch() {
+        openPrompt("Search: ", lastSearch, function (term) {
+          term = term || lastSearch;
+          if (!term) return;
+          lastSearch = term;
+          doSearch(term);
+        });
+      }
+      function openReplace() {
+        openPrompt("Search (to replace): ", lastSearch, function (term) {
+          term = term || lastSearch;
+          if (!term) return;
+          lastSearch = term;
+          openPrompt("Replace with: ", "", function (rep) {
+            var v = ta.value, count = v.split(term).length - 1;
+            if (!count) { setMsg('[ "' + term + '" not found ]'); return; }
+            ta.value = v.split(term).join(rep);
+            markDirty();
+            setMsg("[ Replaced " + count + " occurrence" + (count > 1 ? "s" : "") + " ]");
+          });
+        });
+      }
+      function openGoto() {
+        openPrompt("Enter line number: ", "", function (val) {
+          var line = parseInt((val || "").trim(), 10);
+          if (isNaN(line)) return;
+          ta.focus();
+          ta.selectionStart = ta.selectionEnd = lineColToPos(ta.value, line, 1);
+          ensureCaretVisible();
+        });
+      }
+      function openReadFile() {
+        openPrompt("File to insert: ", "", function (name) {
+          name = (name || "").trim();
+          if (!name) return;
+          var a = fs.resolve(name, vm.cwd);
+          if (!fs.isFile(a)) { setMsg("[ " + name + ": not found ]"); return; }
+          insertAtCursor(fs.read(a) || "");
+          setMsg("[ Inserted " + name + " ]");
+        });
+      }
+      function justify() {
+        var v = ta.value, s = ta.selectionStart;
+        var ps = v.lastIndexOf("\n\n", s - 1); ps = ps === -1 ? 0 : ps + 2;
+        var pe = v.indexOf("\n\n", s); if (pe === -1) pe = v.length;
+        var para = v.slice(ps, pe).replace(/\s+/g, " ").trim();
+        if (!para) return;
+        var out = "", lineLen = 0;
+        para.split(" ").forEach(function (w) {
+          if (lineLen + w.length + 1 > 72 && lineLen > 0) { out += "\n"; lineLen = 0; }
+          if (lineLen > 0) { out += " "; lineLen++; }
+          out += w; lineLen += w.length;
+        });
+        ta.value = v.slice(0, ps) + out + v.slice(pe);
+        markDirty();
+        setMsg("[ Justified paragraph ]");
+      }
+      function showLocation() {
+        var v = ta.value, pos = ta.selectionStart, lc = posToLineCol(v, pos);
+        setMsg("[ line " + lc.line + "/" + countLines(v) + ", col " + lc.col + ", char " + pos + "/" + v.length + " ]");
+      }
+      function toLineStart() { var v = ta.value, s = ta.selectionStart; ta.selectionStart = ta.selectionEnd = v.lastIndexOf("\n", s - 1) + 1; }
+      function toLineEnd() { var v = ta.value, s = ta.selectionStart, le = v.indexOf("\n", s); if (le === -1) le = v.length; ta.selectionStart = ta.selectionEnd = le; }
+      function doUndo() { ta.focus(); try { document.execCommand("undo"); } catch (_) {} }
+      function doRedo() { ta.focus(); try { document.execCommand("redo"); } catch (_) {} }
+
+      function openHelp() {
+        mode = "help";
+        helpEl = mk("div", "labvm-nano__help", NANO_HELP);
+        helpEl.tabIndex = 0;
+        root.appendChild(helpEl);
+        helpEl.focus();
+      }
+      function closeHelp() { if (helpEl) { helpEl.remove(); helpEl = null; } mode = "normal"; ta.focus(); }
+
+      function handleShortcut(e) {
+        var key = e.key;
+        var low = key.length === 1 ? key.toLowerCase() : key;
+        if (e.altKey && !e.ctrlKey) {
+          if (low === "u") { e.preventDefault(); doUndo(); }
+          else if (low === "e") { e.preventDefault(); doRedo(); }
+          else if (low === "6") { e.preventDefault(); copySel(); }
+          else if (key === "\\") { e.preventDefault(); openReplace(); }
+          return;
+        }
+        if (e.ctrlKey && !e.altKey) {
+          switch (low) {
+            case "o": e.preventDefault(); writeOut(); break;
+            case "x": e.preventDefault(); doExit(); break;
+            case "w": e.preventDefault(); openSearch(); break;
+            case "\\": e.preventDefault(); openReplace(); break;
+            case "k": e.preventDefault(); cutLine(); break;
+            case "u": e.preventDefault(); pasteBuf(); break;
+            case "c": e.preventDefault(); showLocation(); break;
+            case "g": e.preventDefault(); openHelp(); break;
+            case "r": e.preventDefault(); openReadFile(); break;
+            case "j": e.preventDefault(); justify(); break;
+            case "t": e.preventDefault(); setMsg("[ ^T Execute steht in diesem Lab nicht zur Verfuegung ]"); break;
+            case "a": e.preventDefault(); toLineStart(); break;
+            case "e": e.preventDefault(); toLineEnd(); break;
+            case "y": e.preventDefault(); ta.scrollTop -= ta.clientHeight; break;
+            case "v": e.preventDefault(); ta.scrollTop += ta.clientHeight; break;
+            case "_": case "/": e.preventDefault(); openGoto(); break;
+            default: break;
+          }
+          return;
+        }
+        if (key === "Tab") { e.preventDefault(); insertAtCursor("  "); return; }
+        if (key.length === 1 || key === "Enter" || key === "Backspace" || key === "Delete") setMsg("");
+      }
+
+      pinput.addEventListener("keydown", function (e) {
+        e.stopPropagation();
+        if (e.key === "Enter") {
+          e.preventDefault();
+          var v = pinput.value, cb = promptConfirm;
+          closePrompt();
+          ta.focus();
+          if (cb) cb(v);
+        } else if (e.key === "Escape" || (e.ctrlKey && e.key.toLowerCase() === "c")) {
+          e.preventDefault();
+          closePrompt();
+          setMsg("[ Cancelled ]");
+          ta.focus();
+        }
+      });
+
+      root.addEventListener("keydown", function (e) {
+        if (mode === "prompt") return;
+        e.stopPropagation();
+        if (mode === "exit") {
+          var k = e.key.toLowerCase();
+          if (k === "y") { e.preventDefault(); mode = "normal"; writeOut(function () { destroy(); }); }
+          else if (k === "n") { e.preventDefault(); destroy(); }
+          else if (k === "escape" || (e.ctrlKey && k === "c")) { e.preventDefault(); mode = "normal"; setMsg("[ Cancelled ]"); ta.focus(); }
+          else e.preventDefault();
+          return;
+        }
+        if (mode === "help") {
+          if (e.key === "Escape" || (e.ctrlKey && e.key.toLowerCase() === "x")) { e.preventDefault(); closeHelp(); }
+          else e.preventDefault();
+          return;
+        }
+        handleShortcut(e);
+      }, true);
+
+      ta.addEventListener("input", markDirty);
+
+      refreshTitle();
+      setMsg(existed ? "[ Read " + countLines(content) + " lines ]" : "[ New File ]");
+      window.setTimeout(function () { ta.focus(); }, 0);
+    }
+
+    builtins.nano = builtins.vi = builtins.vim = builtins.edit = function (ctx) { openNano(ctx); };
 
     /* ---- dispatch one already-parsed command line (no heredoc handling) ---- */
     function dispatch(line) {
@@ -494,7 +886,7 @@
     // In "fallback" mode the VM owns only real filesystem commands and hands
     // everything else (the lab's simulated CLI: kubectl, akeyless, git, check…)
     // to config.fallback so each lab keeps its own scripted behaviour.
-    var OWNED_FS = { cd:1, pwd:1, mkdir:1, rmdir:1, touch:1, rm:1, mv:1, cp:1, chmod:1, tree:1, head:1, tail:1, wc:1 };
+    var OWNED_FS = { cd:1, pwd:1, mkdir:1, rmdir:1, touch:1, rm:1, mv:1, cp:1, chmod:1, tree:1, head:1, tail:1, wc:1, nano:1, vi:1, vim:1, edit:1 };
     function vfsHasTarget(ctx) {
       var op = ctx.operands[0];
       if (op === undefined) return true; // bare `ls`/`cat` → use the VFS
